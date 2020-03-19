@@ -1,0 +1,162 @@
+{
+  "id": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "leader": "01542ccm a2200361   4500",
+  "records": [
+    {
+      "tag": "001",
+      "content": "393893"
+    },
+    {
+      "tag": "005",
+      "content": "20141107001016.0"
+    },
+    {
+      "tag": "008",
+      "content": {
+        "Type": "c",
+        "BLvl": "m",
+        "Entered": "830419",
+        "DtSt": "m",
+        "Date1": "1955",
+        "Date2": "9999",
+        "Ctry": "gw ",
+        "Comp": "mu",
+        "FMus": "a",
+        "Part": " ",
+        "Audn": " ",
+        "Form": " ",
+        "AccM": ["h", "i", "z", " ", " ", " "],
+        "LTxT": "n ",
+        "TrAr": " ",
+        "Lang": "lat",
+        "MRec": " ",
+        "Srce": " "
+      }
+    },
+    {
+      "tag": "010",
+      "content": "$a   55001156/M ",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "035",
+      "content": "$a (OCoLC)63611770",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "035",
+      "content": "$a 393893",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "040",
+      "content": "$c UPB $d UPB $d NIC $d NIC",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "041",
+      "content": "$a latitager $g ger",
+      "indicators": ["0", " "]
+    },
+    {
+      "tag": "045",
+      "content": "$a v6v9",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "047",
+      "content": "$a cn $a ct $a co $a df $a dv $a ft $a fg $a ms $a mi $a nc $a op $a ov $a rq $a sn $a su $a sy $a vr $a zz",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "050",
+      "content": "$a M3 $b .M896",
+      "indicators": ["0", " "]
+    },
+    {
+      "tag": "100",
+      "content": "$a Mozart, Wolfgang Amadeus, $d 1756-1791.",
+      "indicators": ["1", " "]
+    },
+    {
+      "tag": "240",
+      "content": "$a Works",
+      "indicators": ["1", "0"]
+    },
+    {
+      "tag": "245",
+      "content": "$a Neue Ausgabe sa\\\\\\\\u0308mtlicher Werke, $b in Verbindicatorsung mit den Mozartsta\\\\\\\\u0308dten, Augsburg, Salzburg und Wien. $c Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg.\"",
+      "indicators": ["1", "0"]
+    },
+    {
+      "tag": "246",
+      "content": "$a Neue Mozart-Ausgabe",
+      "indicators": ["3", "3"]
+    },
+    {
+      "tag": "260",
+      "content": "$a Kassel, $b Ba\\̈renreiter, $c c1955-",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "300",
+      "content": "$a v. $b facsims. $c 33 cm.",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "505",
+      "content": "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesa\\\\u0308nge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fu\\\\u0308r gro\\\\u0308ssere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+      "indicators": ["0", " "]
+    },
+    {
+      "tag": "650",
+      "content": "$a Vocal music",
+      "indicators": [" ", "0"]
+    },
+    {
+      "tag": "650",
+      "content": "$a Instrumental music",
+      "indicators": [" ", "0"]
+    },
+    {
+      "tag": "650",
+      "content": "$a Instrumental music $2 fast $0 (OCoLC)fst00974414",
+      "indicators": [" ", "7"]
+    },
+    {
+      "tag": "650",
+      "content": "$a Vocal music $2 fast $0 (OCoLC)fst01168379",
+      "indicators": [" ", "7"]
+    },
+    {
+      "tag": "902",
+      "content": "$a pfnd $b Austin Music",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "905",
+      "content": "$a 19980728120000.0",
+      "indicators": [" ", " "]
+    },
+    {
+      "tag": "948",
+      "content": "$a 20100622 $b s $d lap11 $e lts $x ToAddCatStat",
+      "indicators": ["1", " "]
+    },
+    {
+      "tag": "948",
+      "content": "$a 20110818 $b r $d np55 $e lts",
+      "indicators": ["0", " "]
+    },
+    {
+      "tag": "948",
+      "content": "$a 20130128 $b m $d bmt1 $e lts",
+      "indicators": ["0", " "]
+    },
+    {
+      "tag": "948",
+      "content": "$a 20141106 $b m $d batch $e lts",
+      "indicators": ["2", " "]
+    }
+  ]
+}

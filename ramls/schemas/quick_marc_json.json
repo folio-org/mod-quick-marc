@@ -1,0 +1,64 @@
+{
+  "$id": "https://example.com/arrays.schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "A representation of MARC record for QuickMARC",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "leader": {
+      "description": "Leader record",
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24
+    },
+    "records": {
+      "description": "MARC record fields",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "description": "MARC record tag name",
+            "type": "string",
+            "pattern": "^[0-9]{3}$"
+          },
+          "content": {
+            "description": "MARC record tag content",
+            "type": [
+              "string",
+              "object"
+            ]
+          },
+          "indicators": {
+            "description": "MARC record tag indicator values",
+            "type": "array",
+            "items": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "required": [
+          "tag",
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "minItems" : 3
+    }
+  },
+  "required": ["id", "leader", "records"]
+}

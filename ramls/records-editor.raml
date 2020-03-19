@@ -1,0 +1,78 @@
+#%RAML 1.0
+
+title: quickMARC Editor Records
+version: v1.0
+protocols: [ HTTP, HTTPS ]
+baseUri: http://github.com/folio-org/mod-quck-marc
+
+documentation:
+  - title: quickMARC record API
+    content: This documents the API calls that can be made to work with MARC records
+
+types:
+  quickMarcJson: !include schemas/quick_marc_json.json
+  sample: !include examples/quick_marc_json.sample
+  errors: !include raml-storage/raml-util/schemas/errors.schema
+  UUID:
+    type: string
+    pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+
+traits:
+  validate: !include raml-storage/raml-util/traits/validation.raml
+  language: !include raml-storage/raml-util/traits/language.raml
+
+resourceTypes:
+  item-get: !include raml-storage/raml-util/rtypes/item-collection-get.raml
+
+/records-editor/records:
+  displayName: MARC-UI
+  description: Get MARC-UI
+  type:
+    item-get:
+      schema: quickMarcJson
+      exampleItem: sample
+  get:
+    is: [validate]
+    queryParameters:
+      id:
+        description: UUID of the MARC record
+        type:        UUID
+        required:    false
+        example:     f6c574b5-b1d5-4e5e-a28b-161b7e03e81a
+      instanceId:
+        description: UUID of the instance that is related to the MARC record
+        type:        UUID
+        required:    false
+        example:     f6c574b5-b1d5-4e5e-a28b-161b7e03e81a
+  /{id}:
+    is: [validate, language]
+    uriParameters:
+      id:
+        description: The UUID of a MARC record
+        type: UUID
+    put:
+      description: Edit a MARC record
+      body:
+        application/json:
+          type: quickMarcJson
+          example:
+            strict: false
+            value: sample
+      responses:
+        204:
+          description: "MARC record successfully updated"
+        404:
+          description: "MARC record with a given ID not found"
+          body:
+            text/plain:
+              example: "MARC record not found"
+        400:
+          description: "Bad request, e.g. malformed request body or query parameter. Details of the error (e.g. name of the parameter or line/character number with malformed data) provided in the response."
+          body:
+            text/plain:
+              example: "Unable to update MARC record -- malformed JSON at 13:4"
+        500:
+          description: "Internal server error, e.g. due to misconfiguration"
+          body:
+            text/plain:
+              example: "internal server error, contact administrator"

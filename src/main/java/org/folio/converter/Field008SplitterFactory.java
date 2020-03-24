@@ -27,6 +27,7 @@ import static org.folio.converter.StringConstants.LITF;
 import static org.folio.converter.StringConstants.LTXT;
 import static org.folio.converter.StringConstants.MREC;
 import static org.folio.converter.StringConstants.ORIG;
+import static org.folio.converter.StringConstants.PART;
 import static org.folio.converter.StringConstants.PROJ;
 import static org.folio.converter.StringConstants.REGL;
 import static org.folio.converter.StringConstants.RELF;
@@ -188,7 +189,7 @@ public class Field008SplitterFactory {
     JsonObject jsonObject = splitHeader(source);
     jsonObject.put(COMP, source.substring(18, 20));
     jsonObject.put(FMUS, source.substring(20, 21));
-    jsonObject.put(FMUS, source.substring(21, 22));
+    jsonObject.put(PART, source.substring(21, 22));
     jsonObject.put(AUDN, source.substring(22, 23));
     jsonObject.put(FORM, source.substring(23, 24));
     String[] accm = {

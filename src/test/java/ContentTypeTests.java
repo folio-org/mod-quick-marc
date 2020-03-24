@@ -1,4 +1,5 @@
 import org.folio.converter.ContentType;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
@@ -19,4 +20,9 @@ public class ContentTypeTests {
         assertEquals(testField.getContentType().getName(), ContentType.detectContentType(t, b).getName())));
   }
 
+  @Test
+  public void testGetContentTypeByUndefinedName(){
+    logger.info("Test get ContentType by undefined name");
+    assertEquals(ContentType.UNKNOWN, ContentType.getByName("Undefined"));
+  }
 }

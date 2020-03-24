@@ -1,6 +1,6 @@
 package org.folio.converter;
 
-import com.sun.tools.javac.util.List;
+import java.util.Arrays;
 
 public enum ContentType {
   BOOKS("Books"),
@@ -33,7 +33,7 @@ public enum ContentType {
   public static ContentType detectContentType(String type, String bLvl) {
     switch (type) {
       case "a":
-        return (List.of("b", "i", "s").contains(bLvl))? CONTINUING: BOOKS;
+        return (Arrays.asList("b", "i", "s").contains(bLvl))? CONTINUING: BOOKS;
       case "t":
         return BOOKS;
       case "m":

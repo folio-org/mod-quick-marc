@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
   ContentTypeTests.class,
-  Field008SpliterFactoryTests.class,
+  Field008SplitterFactoryTests.class,
   Field008RestoreFactoryTests.class,
   RecordToQuickMarcConverterTest.class,
   QuickMarcToRecordConverterTest.class

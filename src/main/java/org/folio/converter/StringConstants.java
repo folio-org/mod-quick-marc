@@ -50,4 +50,6 @@ public class StringConstants {
   public static final String FIVE_SPACES =   "     ";
   public static final String SIX_SPACES =    "      ";
   public static final String ELEVEN_SPACES = "           ";
+
+  private StringConstants(){}
 }

@@ -17,6 +17,7 @@
     <raml-module-builder.version>29.3.1</raml-module-builder.version>
     <vertx.version>3.8.5</vertx.version>
     <junit.jupiter.version>5.6.0</junit.jupiter.version>
+    <junit.platform.version>1.6.1</junit.platform.version>
     <rest-assured.version>4.3.0</rest-assured.version>
     <log4j-slf4j-impl.version>2.13.1</log4j-slf4j-impl.version>
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
@@ -24,6 +25,7 @@
     <generated_sources_dir>${project.build.directory}/generated-sources</generated_sources_dir>
     <jsonschema2pojo_output_dir>${generated_sources_dir}/jsonschema2pojo</jsonschema2pojo_output_dir>
     <folio-di-support.version>1.0.0</folio-di-support.version>
+    <marc4j.version>2.9.1</marc4j.version>
   </properties>
 
   <dependencies>
@@ -57,13 +59,13 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite-api</artifactId>
-      <version>1.6.1</version>
+      <version>${junit.platform.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-runner</artifactId>
-      <version>1.6.1</version>
+      <version>${junit.platform.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -80,7 +82,7 @@
     <dependency>
       <groupId>org.marc4j</groupId>
       <artifactId>marc4j</artifactId>
-      <version>2.9.1</version>
+      <version>${marc4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.folio</groupId>

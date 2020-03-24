@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Field008RestoreFactory {
-  private static String oneSpace =     " ";
-  private static String twoSpaces =    "  ";
-  private static String threeSpaces =  "   ";
-  private static String fourSpaces =   "    ";
-  private static String fiveSpaces =   "     ";
-  private static String sixSpaces =    "      ";
-  private static String elevenSpaces = "           ";
+  private static final String oneSpace =     " ";
+  private static final String twoSpaces =    "  ";
+  private static final String threeSpaces =  "   ";
+  private static final String fourSpaces =   "    ";
+  private static final String fiveSpaces =   "     ";
+  private static final String sixSpaces =    "      ";
+  private static final String elevenSpaces = "           ";
 
   private static EnumMap<ContentType, Field008RestoreStrategy> map = new EnumMap(ContentType.class);
 

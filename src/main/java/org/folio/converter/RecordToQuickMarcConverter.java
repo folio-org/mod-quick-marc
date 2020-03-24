@@ -1,6 +1,7 @@
 package org.folio.converter;
 
 import io.vertx.core.json.JsonObject;
+import org.folio.exeptions.EmptyRawRecordException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.RawRecord;
@@ -43,7 +44,7 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
     MarcReader reader = new MarcStreamReader(inputStream);
 
     if (reader.hasNext()) return reader.next();
-    else throw new RuntimeException("No content");
+    else throw new EmptyRawRecordException();
   }
 
   private List<Field> createQuickMarcFields(org.marc4j.marc.Record record) {

@@ -1,13 +1,18 @@
 package org.folio.converter;
 
 import io.vertx.core.json.JsonObject;
+import org.folio.exeptions.WrongField008LengthException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.RawRecord;
 import org.folio.srs.model.Record;
 import org.marc4j.MarcStreamWriter;
 import org.marc4j.MarcWriter;
-import org.marc4j.marc.*;
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.Leader;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -65,7 +70,7 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     JsonObject jsonObject = new JsonObject(s);
     ContentType contentType = ContentType.getByName(jsonObject.getString("Content"));
     String result = Field008RestoreFactory.getStrategy(contentType).restore(jsonObject);
-    if (result.length() != ITEM008_LENGTH) throw new RuntimeException("Data corrupted!");
+    if (result.length() != ITEM008_LENGTH) throw new WrongField008LengthException();
     return result;
   }
 

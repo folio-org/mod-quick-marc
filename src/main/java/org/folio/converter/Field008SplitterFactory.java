@@ -3,12 +3,14 @@ package org.folio.converter;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 
 
 public class Field008SplitterFactory {
-  private static Map<ContentType, Field008SplitStrategy> map = new HashMap<>();
+  private static EnumMap<ContentType, Field008SplitStrategy> map = new EnumMap(ContentType.class);
+
+  private Field008SplitterFactory(){}
+
   static {
     map.put(ContentType.BOOKS, source -> {
       JsonObject jsonObject = splitHeader(source);
@@ -96,57 +98,9 @@ public class Field008SplitterFactory {
       return jsonObject;
     });
 
-    map.put(ContentType.SCORES, source -> {
-      JsonObject jsonObject = splitHeader(source);
-      jsonObject.put("Comp", source.substring(18, 20));
-      jsonObject.put("FMus", source.substring(20, 21));
-      jsonObject.put("Part", source.substring(21, 22));
-      jsonObject.put("Audn", source.substring(22, 23));
-      jsonObject.put("Form", source.substring(23, 24));
-      String[] accm = {
-        source.substring(24, 25),
-        source.substring(25, 26),
-        source.substring(26, 27),
-        source.substring(27, 28),
-        source.substring(28, 29),
-        source.substring(29, 30)
-      };
-      jsonObject.put("AccM", Arrays.asList(accm));
-      String[] ltxt = {
-        source.substring(30, 31),
-        source.substring(31, 32)
-      };
-      jsonObject.put("LTxt", Arrays.asList(ltxt));
-      jsonObject.put("TrAr", source.substring(33, 34));
-      jsonObject.mergeIn(splitFooter(source));
-      return jsonObject;
-    });
+    map.put(ContentType.SCORES, Field008SplitterFactory::splitField008ForScoresOrSound);
 
-    map.put(ContentType.SOUND, source -> {
-      JsonObject jsonObject = splitHeader(source);
-      jsonObject.put("Comp", source.substring(18, 20));
-      jsonObject.put("FMus", source.substring(20, 21));
-      jsonObject.put("Part", source.substring(21, 22));
-      jsonObject.put("Audn", source.substring(22, 23));
-      jsonObject.put("Form", source.substring(23, 24));
-      String[] accm = {
-        source.substring(24, 25),
-        source.substring(25, 26),
-        source.substring(26, 27),
-        source.substring(27, 28),
-        source.substring(28, 29),
-        source.substring(29, 30)
-      };
-      jsonObject.put("AccM", Arrays.asList(accm));
-      String[] ltxt = {
-        source.substring(30, 31),
-        source.substring(31, 32)
-      };
-      jsonObject.put("LTxt", Arrays.asList(ltxt));
-      jsonObject.put("TrAr", source.substring(33, 34));
-      jsonObject.mergeIn(splitFooter(source));
-      return jsonObject;
-    });
+    map.put(ContentType.SOUND, Field008SplitterFactory::splitField008ForScoresOrSound);
 
     map.put(ContentType.VISUAL, source -> {
       JsonObject jsonObject = splitHeader(source);
@@ -188,6 +142,32 @@ public class Field008SplitterFactory {
     jsonObject.put("Lang", source.substring(35, 38));
     jsonObject.put("MRec", source.substring(38, 39));
     jsonObject.put("Srce", source.substring(39, 40));
+    return jsonObject;
+  }
+
+  private static JsonObject splitField008ForScoresOrSound(String source) {
+    JsonObject jsonObject = splitHeader(source);
+    jsonObject.put("Comp", source.substring(18, 20));
+    jsonObject.put("FMus", source.substring(20, 21));
+    jsonObject.put("Part", source.substring(21, 22));
+    jsonObject.put("Audn", source.substring(22, 23));
+    jsonObject.put("Form", source.substring(23, 24));
+    String[] accm = {
+      source.substring(24, 25),
+      source.substring(25, 26),
+      source.substring(26, 27),
+      source.substring(27, 28),
+      source.substring(28, 29),
+      source.substring(29, 30)
+    };
+    jsonObject.put("AccM", Arrays.asList(accm));
+    String[] ltxt = {
+      source.substring(30, 31),
+      source.substring(31, 32)
+    };
+    jsonObject.put("LTxt", Arrays.asList(ltxt));
+    jsonObject.put("TrAr", source.substring(33, 34));
+    jsonObject.mergeIn(splitFooter(source));
     return jsonObject;
   }
 

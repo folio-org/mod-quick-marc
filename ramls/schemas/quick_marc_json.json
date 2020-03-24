@@ -14,7 +14,7 @@
       "minLength": 24,
       "maxLength": 24
     },
-    "records": {
+    "fields": {
       "description": "MARC record fields",
       "type": "array",
       "items": {

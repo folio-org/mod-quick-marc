@@ -1,0 +1,20 @@
+{
+  "Entered" : "abcdef",
+  "DtSt" : "g",
+  "Date1" : "hijk",
+  "Date2" : "lmno",
+  "Ctry" : "pqr",
+  "Ills" : [ "a", "b", "c", "d" ],
+  "Audn" : "e",
+  "Form" : "f",
+  "Cont" : [ "g", "h", "i", "j" ],
+  "GPub" : "k",
+  "Conf" : "l",
+  "Fest" : "m",
+  "Indx" : "n",
+  "LitF" : "o",
+  "Biog" : "p",
+  "Lang" : "stu",
+  "MRec" : "v",
+  "Srce" : "w"
+}

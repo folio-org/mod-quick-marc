@@ -31,7 +31,7 @@ public class QuickMarcToRecordConverterTest {
   public void exceptionWhen008WrongLength() {
     logger.info("Testing field 008 wrong length after editing - WrongField008LengthException expected");
     QuickMarcToRecordConverter converter = new QuickMarcToRecordConverter();
-    QuickMarcJson wrongFile = getMockAsJson("mockData/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
+    QuickMarcJson wrongFile = getMockAsJson("mockdata/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
     assertThrows(WrongField008LengthException.class, () -> converter.convert(wrongFile));
   }
 }

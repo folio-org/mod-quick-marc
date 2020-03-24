@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Field008RestoreFactory {
-  private static final String oneSpace =     " ";
-  private static final String twoSpaces =    "  ";
-  private static final String threeSpaces =  "   ";
-  private static final String fourSpaces =   "    ";
-  private static final String fiveSpaces =   "     ";
-  private static final String sixSpaces =    "      ";
-  private static final String elevenSpaces = "           ";
+  private static final String ONE_SPACE =     " ";
+  private static final String TWO_SPACES =    "  ";
+  private static final String THREE_SPACES =  "   ";
+  private static final String FOUR_SPACES =   "    ";
+  private static final String FIVE_SPACES =   "     ";
+  private static final String SIX_SPACES =    "      ";
+  private static final String ELEVEN_SPACES = "           ";
 
   private static EnumMap<ContentType, Field008RestoreStrategy> map = new EnumMap(ContentType.class);
 
@@ -30,28 +30,28 @@ public class Field008RestoreFactory {
         .concat(jsonObject.getString("Conf"))
         .concat(jsonObject.getString("Fest"))
         .concat(jsonObject.getString("Indx"))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("LitF"))
         .concat(jsonObject.getString("Biog"))
         .concat(restoreFooter(jsonObject)));
 
     map.put(ContentType.FILES, jsonObject ->
       restoreHeader(jsonObject)
-        .concat(fourSpaces)
+        .concat(FOUR_SPACES)
         .concat(jsonObject.getString("Audn"))
         .concat(jsonObject.getString("Form"))
-        .concat(twoSpaces)
+        .concat(TWO_SPACES)
         .concat(jsonObject.getString("File"))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("GPub"))
-        .concat(sixSpaces)
+        .concat(SIX_SPACES)
         .concat(restoreFooter(jsonObject)));
 
     map.put(ContentType.CONTINUING, jsonObject ->
       restoreHeader(jsonObject)
         .concat(jsonObject.getString("Freq"))
         .concat(jsonObject.getString("Regl"))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("SrTp"))
         .concat(jsonObject.getString("Orig"))
         .concat(jsonObject.getString("Form"))
@@ -59,7 +59,7 @@ public class Field008RestoreFactory {
         .concat(arrayToString("Cont", jsonObject))
         .concat(jsonObject.getString("GPub"))
         .concat(jsonObject.getString("Conf"))
-        .concat(threeSpaces)
+        .concat(THREE_SPACES)
         .concat(jsonObject.getString("Alph"))
         .concat(jsonObject.getString("S/L"))
         .concat(restoreFooter(jsonObject)));
@@ -68,22 +68,22 @@ public class Field008RestoreFactory {
       restoreHeader(jsonObject)
         .concat(arrayToString("Relf", jsonObject))
         .concat(jsonObject.getString("Proj"))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("CrTp"))
-        .concat(twoSpaces)
+        .concat(TWO_SPACES)
         .concat(jsonObject.getString("GPub"))
         .concat(jsonObject.getString("Form"))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("Indx"))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("SpFm"))
         .concat(restoreFooter(jsonObject)));
 
     map.put(ContentType.MIXED, jsonObject ->
       restoreHeader(jsonObject)
-        .concat(fiveSpaces)
+        .concat(FIVE_SPACES)
         .concat(jsonObject.getString("Form"))
-        .concat(elevenSpaces)
+        .concat(ELEVEN_SPACES)
         .concat(restoreFooter(jsonObject)));
 
     map.put(ContentType.SCORES, Field008RestoreFactory::restoreValueForScoresOrSound);
@@ -93,12 +93,12 @@ public class Field008RestoreFactory {
     map.put(ContentType.VISUAL, jsonObject ->
       restoreHeader(jsonObject)
         .concat(arrayToString("Time", jsonObject))
-        .concat(oneSpace)
+        .concat(ONE_SPACE)
         .concat(jsonObject.getString("Audn"))
-        .concat(fiveSpaces)
+        .concat(FIVE_SPACES)
         .concat(jsonObject.getString("GPub"))
         .concat(jsonObject.getString("Form"))
-        .concat(threeSpaces)
+        .concat(THREE_SPACES)
         .concat(jsonObject.getString("TMat"))
         .concat(jsonObject.getString("Tech"))
         .concat(restoreFooter(jsonObject)));
@@ -132,9 +132,9 @@ public class Field008RestoreFactory {
       .concat(jsonObject.getString("Form"))
       .concat(arrayToString("AccM", jsonObject))
       .concat(arrayToString("LTxt", jsonObject))
-      .concat(oneSpace)
+      .concat(ONE_SPACE)
       .concat(jsonObject.getString("TrAr"))
-      .concat(oneSpace)
+      .concat(ONE_SPACE)
       .concat(restoreFooter(jsonObject));
   }
 

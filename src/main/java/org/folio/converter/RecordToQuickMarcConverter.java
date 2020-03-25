@@ -1,6 +1,11 @@
 package org.folio.converter;
 
-import io.vertx.core.json.JsonObject;
+import static org.folio.converter.StringConstants.BLVL;
+import static org.folio.converter.StringConstants.CONTENT;
+import static org.folio.converter.StringConstants.TYPE;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.folio.exeptions.ConversionException;
 import org.folio.exeptions.EmptyRawRecordException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -16,7 +21,9 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -79,16 +86,19 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
   }
 
   private String splitField008(String content, String type, String bLvl){
-    JsonObject jsonObject = new JsonObject();
-
     ContentType contentType = ContentType.detectContentType(type, bLvl);
 
-    jsonObject.put("Content", contentType.getName());
-    jsonObject.put("Type", type);
-    jsonObject.put("BLvl", bLvl);
-    jsonObject.mergeIn(Field008SplitterFactory.getStrategy(contentType).split(content));
+    Map<String, Object> map = new LinkedHashMap<>();
+    map.put(CONTENT, contentType.getName());
+    map.put(TYPE, type);
+    map.put(BLVL, bLvl);
+    map.putAll(Field008SplitterFactory.getStrategy(contentType).split(content));
 
-    return jsonObject.encodePrettily();
+    try {
+      return new ObjectMapper().writeValueAsString(map);
+    } catch (Exception e) {
+      throw new ConversionException(e.getMessage());
+    }
   }
 
   private Field dataFieldToQuickMarcField(DataField dataField) {

@@ -48,10 +48,9 @@ import static org.folio.converter.StringConstants.TRAR;
 import static org.folio.converter.StringConstants.TWO_SPACES;
 import static org.folio.converter.StringConstants.VALUE;
 
-import io.vertx.core.json.JsonObject;
-
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Field008RestoreFactory {
@@ -61,126 +60,136 @@ public class Field008RestoreFactory {
   private Field008RestoreFactory(){}
 
   static {
-    map.put(ContentType.BOOKS, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(arrayToString(ILLS, jsonObject))
-        .concat(jsonObject.getString(AUDN))
-        .concat(jsonObject.getString(FORM))
-        .concat(arrayToString(CONT, jsonObject))
-        .concat(jsonObject.getString(GPUB))
-        .concat(jsonObject.getString(CONF))
-        .concat(jsonObject.getString(FEST))
-        .concat(jsonObject.getString(INDX))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(LITF))
-        .concat(jsonObject.getString(BIOG))
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.BOOKS, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(arrayToString(ILLS, map))
+        .append(map.get(AUDN))
+        .append(map.get(FORM))
+        .append(arrayToString(CONT, map))
+        .append(map.get(GPUB))
+        .append(map.get(CONF))
+        .append(map.get(FEST))
+        .append(map.get(INDX))
+        .append(ONE_SPACE)
+        .append(map.get(LITF))
+        .append(map.get(BIOG))
+        .append(restoreFooter(map))
+        .toString());
 
-    map.put(ContentType.FILES, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(FOUR_SPACES)
-        .concat(jsonObject.getString(AUDN))
-        .concat(jsonObject.getString(FORM))
-        .concat(TWO_SPACES)
-        .concat(jsonObject.getString(FILE))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(GPUB))
-        .concat(SIX_SPACES)
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.FILES, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(FOUR_SPACES)
+        .append(map.get(AUDN))
+        .append(map.get(FORM))
+        .append(TWO_SPACES)
+        .append(map.get(FILE))
+        .append(ONE_SPACE)
+        .append(map.get(GPUB))
+        .append(SIX_SPACES)
+        .append(restoreFooter(map))
+        .toString());
 
-    map.put(ContentType.CONTINUING, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(jsonObject.getString(FREQ))
-        .concat(jsonObject.getString(REGL))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(SRTP))
-        .concat(jsonObject.getString(ORIG))
-        .concat(jsonObject.getString(FORM))
-        .concat(jsonObject.getString(ENTW))
-        .concat(arrayToString(CONT, jsonObject))
-        .concat(jsonObject.getString(GPUB))
-        .concat(jsonObject.getString(CONF))
-        .concat(THREE_SPACES)
-        .concat(jsonObject.getString(ALPH))
-        .concat(jsonObject.getString(SL))
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.CONTINUING, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(map.get(FREQ))
+        .append(map.get(REGL))
+        .append(ONE_SPACE)
+        .append(map.get(SRTP))
+        .append(map.get(ORIG))
+        .append(map.get(FORM))
+        .append(map.get(ENTW))
+        .append(arrayToString(CONT, map))
+        .append(map.get(GPUB))
+        .append(map.get(CONF))
+        .append(THREE_SPACES)
+        .append(map.get(ALPH))
+        .append(map.get(SL))
+        .append(restoreFooter(map))
+        .toString());
 
-    map.put(ContentType.MAPS, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(arrayToString(RELF, jsonObject))
-        .concat(jsonObject.getString(PROJ))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(CRTP))
-        .concat(TWO_SPACES)
-        .concat(jsonObject.getString(GPUB))
-        .concat(jsonObject.getString(FORM))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(INDX))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(SPFM))
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.MAPS, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(arrayToString(RELF, map))
+        .append(map.get(PROJ))
+        .append(ONE_SPACE)
+        .append(map.get(CRTP))
+        .append(TWO_SPACES)
+        .append(map.get(GPUB))
+        .append(map.get(FORM))
+        .append(ONE_SPACE)
+        .append(map.get(INDX))
+        .append(ONE_SPACE)
+        .append(map.get(SPFM))
+        .append(restoreFooter(map))
+        .toString());
 
-    map.put(ContentType.MIXED, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(FIVE_SPACES)
-        .concat(jsonObject.getString(FORM))
-        .concat(ELEVEN_SPACES)
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.MIXED, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(FIVE_SPACES)
+        .append(map.get(FORM))
+        .append(ELEVEN_SPACES)
+        .append(restoreFooter(map))
+        .toString());
 
     map.put(ContentType.SCORES, Field008RestoreFactory::restoreValueForScoresOrSound);
 
     map.put(ContentType.SOUND, Field008RestoreFactory::restoreValueForScoresOrSound);
 
-    map.put(ContentType.VISUAL, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(arrayToString(TIME, jsonObject))
-        .concat(ONE_SPACE)
-        .concat(jsonObject.getString(AUDN))
-        .concat(FIVE_SPACES)
-        .concat(jsonObject.getString(GPUB))
-        .concat(jsonObject.getString(FORM))
-        .concat(THREE_SPACES)
-        .concat(jsonObject.getString(TMAT))
-        .concat(jsonObject.getString(TECH))
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.VISUAL, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(arrayToString(TIME, map))
+        .append(ONE_SPACE)
+        .append(map.get(AUDN))
+        .append(FIVE_SPACES)
+        .append(map.get(GPUB))
+        .append(map.get(FORM))
+        .append(THREE_SPACES)
+        .append(map.get(TMAT))
+        .append(map.get(TECH))
+        .append(restoreFooter(map))
+        .toString());
 
-    map.put(ContentType.UNKNOWN, jsonObject ->
-      restoreHeader(jsonObject)
-        .concat(jsonObject.getString(VALUE))
-        .concat(restoreFooter(jsonObject)));
+    map.put(ContentType.UNKNOWN, map ->
+      new StringBuilder(restoreHeader(map))
+        .append(map.get(VALUE))
+        .append(restoreFooter(map))
+        .toString());
   }
 
-  private static String restoreHeader(JsonObject jsonObject) {
-    return jsonObject.getString(ENTERED)
-      .concat(jsonObject.getString(DTST))
-      .concat(jsonObject.getString(DATE1))
-      .concat(jsonObject.getString(DATE2))
-      .concat(jsonObject.getString(CTRY));
+  private static String restoreHeader(Map<String, Object> map) {
+    return new StringBuilder(map.get(ENTERED).toString())
+      .append(map.get(DTST))
+      .append(map.get(DATE1))
+      .append(map.get(DATE2))
+      .append(map.get(CTRY))
+      .toString();
   }
 
-  private static String restoreFooter(JsonObject jsonObject) {
-    return jsonObject.getString(LANG)
-      .concat(jsonObject.getString(MREC))
-      .concat(jsonObject.getString(SRCE));
+  private static String restoreFooter(Map<String, Object> map) {
+    return new StringBuilder(map.get(LANG).toString())
+      .append(map.get(MREC))
+      .append(map.get(SRCE))
+      .toString();
   }
 
-  private static String restoreValueForScoresOrSound(JsonObject jsonObject){
-    return restoreHeader(jsonObject)
-      .concat(jsonObject.getString(COMP))
-      .concat(jsonObject.getString(FMUS))
-      .concat(jsonObject.getString(PART))
-      .concat(jsonObject.getString(AUDN))
-      .concat(jsonObject.getString(FORM))
-      .concat(arrayToString(ACCM, jsonObject))
-      .concat(arrayToString(LTXT, jsonObject))
-      .concat(ONE_SPACE)
-      .concat(jsonObject.getString(TRAR))
-      .concat(ONE_SPACE)
-      .concat(restoreFooter(jsonObject));
+  private static String restoreValueForScoresOrSound(Map<String, Object> map){
+    return new StringBuilder(restoreHeader(map))
+      .append(map.get(COMP))
+      .append(map.get(FMUS))
+      .append(map.get(PART))
+      .append(map.get(AUDN))
+      .append(map.get(FORM))
+      .append(arrayToString(ACCM, map))
+      .append(arrayToString(LTXT, map))
+      .append(ONE_SPACE)
+      .append(map.get(TRAR))
+      .append(ONE_SPACE)
+      .append(restoreFooter(map))
+      .toString();
   }
 
-  private static String arrayToString(String key, JsonObject jsonObject) {
-    return ((List<String>)jsonObject.getJsonArray(key).getList()).stream().collect(Collectors.joining());
+  private static String arrayToString(String key, Map<String, Object> map) {
+    return ((List<String>) map.get(key)).stream().collect(Collectors.joining());
   }
 
   public static Field008RestoreStrategy getStrategy(ContentType contentType){

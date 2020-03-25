@@ -1,8 +1,8 @@
 package org.folio.converter;
 
-import io.vertx.core.json.JsonObject;
+import java.util.Map;
 
 @FunctionalInterface
 public interface Field008SplitStrategy {
-  JsonObject split(String source);
+  Map<String, Object> split(String source);
 }

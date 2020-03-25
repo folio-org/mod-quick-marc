@@ -1,14 +1,14 @@
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.platform.suite.api.SelectClasses;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Nested;
 
-@RunWith(JUnitPlatform.class)
-@SelectClasses({
-  ContentTypeTests.class,
-  Field008SplitterFactoryTests.class,
-  Field008RestoreFactoryTests.class,
-  RecordToQuickMarcConverterTest.class,
-  QuickMarcToRecordConverterTest.class
-})
 public class TestSuite {
+  @Nested
+  class ContentTypeTestsNested extends ContentTypeTests {}
+  @Nested
+  class Field008SplitterFactoryTestsNested extends Field008SplitterFactoryTests {}
+  @Nested
+  class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTests {}
+  @Nested
+  class RecordToQuickMarcConverterTestNested extends RecordToQuickMarcConverterTest {}
+  @Nested
+  class QuickMarcToRecordConverterTestNested extends QuickMarcToRecordConverterTest {}
 }

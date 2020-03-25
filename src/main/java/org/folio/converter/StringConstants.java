@@ -6,10 +6,12 @@ public class StringConstants {
   public static final String AUDN = "Audn";
   public static final String ALPH = "Alph";
   public static final String BIOG = "Biog";
+  public static final String BLVL = "BLvl";
   public static final String CTRY = "Ctry";
   public static final String CRTP = "CrTp";
   public static final String COMP = "Comp";
   public static final String CONT = "Cont";
+  public static final String CONTENT = "Content";
   public static final String CONF = "Conf";
   public static final String DATE1 = "Date1";
   public static final String DATE2 = "Date2";
@@ -39,6 +41,7 @@ public class StringConstants {
   public static final String TIME = "Time";
   public static final String TMAT = "TMat";
   public static final String TRAR = "TrAr";
+  public static final String TYPE = "Type";
   public static final String SRCE = "Srce";
   public static final String SRTP = "SrTp";
   public static final String VALUE = "Value";

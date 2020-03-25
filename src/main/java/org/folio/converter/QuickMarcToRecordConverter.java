@@ -1,6 +1,9 @@
 package org.folio.converter;
 
-import io.vertx.core.json.JsonObject;
+import static org.folio.converter.StringConstants.CONTENT;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.folio.exeptions.ConversionException;
 import org.folio.exeptions.WrongField008LengthException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -18,8 +21,11 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
@@ -67,11 +73,15 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
   }
 
   private String restoreField008(String s) {
-    JsonObject jsonObject = new JsonObject(s);
-    ContentType contentType = ContentType.getByName(jsonObject.getString("Content"));
-    String result = Field008RestoreFactory.getStrategy(contentType).restore(jsonObject);
-    if (result.length() != ITEM008_LENGTH) throw new WrongField008LengthException();
-    return result;
+    try{
+      Map<String, Object> map = new ObjectMapper().readValue(s, LinkedHashMap.class);
+      ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
+      String result = Field008RestoreFactory.getStrategy(contentType).restore(map);
+      if (result.length() != ITEM008_LENGTH) throw new WrongField008LengthException();
+      return result;
+    } catch (IOException e) {
+      throw new ConversionException(e.getMessage());
+    }
   }
 
   private List<Subfield> stringToSubfields(String s){

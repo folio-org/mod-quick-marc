@@ -1,9 +1,7 @@
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utils.TestUtils.getMockAsJson;
 
 import io.vertx.core.json.JsonObject;
 import org.folio.converter.RecordToQuickMarcConverter;
-import org.folio.exeptions.EmptyRawRecordException;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Assertions;
@@ -13,14 +11,6 @@ import org.slf4j.LoggerFactory;
 
 public class RecordToQuickMarcConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(RecordToQuickMarcConverterTest.class);
-
-  @Test
-  public void exceptionIsThrownWhenNoRecord() {
-    logger.info("Testing empty field 008  - EmptyRawRecordException expected");
-    RecordToQuickMarcConverter converter = new RecordToQuickMarcConverter();
-    Record emptyRecord = getMockAsJson("mockdata/recordWithEmptyRawRecord.json").mapTo(Record.class);
-    assertThrows(EmptyRawRecordException.class, () -> converter.convert(emptyRecord));
-  }
 
   @Test
   public void testRecordToQuickMarcJsonConversion(){

@@ -4,25 +4,24 @@ import static org.folio.converter.StringConstants.BLVL;
 import static org.folio.converter.StringConstants.CONTENT;
 import static org.folio.converter.StringConstants.TYPE;
 
+import io.vertx.core.json.JsonObject;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.exeptions.ConversionException;
-import org.folio.exeptions.EmptyRawRecordException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
-import org.folio.srs.model.RawRecord;
+import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.Record;
+import org.marc4j.MarcJsonReader;
 import org.marc4j.MarcReader;
-import org.marc4j.MarcStreamReader;
-import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,59 +29,29 @@ import java.util.stream.Collectors;
 public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJson> {
   @Override
   public QuickMarcJson convert(Record record) {
-    org.marc4j.marc.Record marcRecord = extractMarcRecord(record);
-
-    String id = record.getRawRecord().getId();
-    String leader = marcRecord.getLeader().toString();
-    List<Field> fields = createQuickMarcFields(marcRecord);
+    ParsedRecord parsedRecord = record.getParsedRecord();
+    InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8);
+    MarcReader reader = new MarcJsonReader(input);
+    org.marc4j.marc.Record r = reader.next();
 
     QuickMarcJson quickMarcJson = new QuickMarcJson();
-    quickMarcJson.setId(id);
-    quickMarcJson.setLeader(leader);
-    quickMarcJson.setFields(fields);
+    quickMarcJson.setId(parsedRecord.getId());
 
-    return quickMarcJson;
-  }
-
-  private org.marc4j.marc.Record extractMarcRecord(Record record) {
-    RawRecord rawRecord = record.getRawRecord();
-
-    InputStream inputStream = new ByteArrayInputStream(rawRecord.getContent().getBytes());
-    MarcReader reader = new MarcStreamReader(inputStream);
-
-    if (reader.hasNext()) return reader.next();
-    else throw new EmptyRawRecordException();
-  }
-
-  private List<Field> createQuickMarcFields(org.marc4j.marc.Record record) {
-    String leader = record.getLeader().toString();
+    String leader = r.getLeader().marshal();
     String type = leader.substring(6, 7);
     String bLvl = leader.substring(7, 8);
 
-    List<Field> result = record.getControlFields().stream()
-      .map(controlField -> controlFieldToQuickMarcField(controlField, type, bLvl))
-      .collect(Collectors.toList());
+    quickMarcJson.setLeader(leader);
+    r.getControlFields().forEach(f -> {
+      Field field = new Field();
+      field.setTag(f.getTag());
+      field.setContent(("008".equals(f.getTag()))? splitField008(f.getData(), type, bLvl): f.getData());
+      quickMarcJson.getFields().add(field);
+    });
 
-    result.addAll(record.getDataFields().stream()
-      .map(this::dataFieldToQuickMarcField)
-      .collect(Collectors.toList()));
+    r.getDataFields().forEach(f -> quickMarcJson.getFields().add(dataFieldToQuickMarcField(f)));
 
-    return result;
-  }
-
-  private Field controlFieldToQuickMarcField(ControlField controlField, String type, String bLvl) {
-    Field field = new Field();
-
-    String tag = controlField.getTag();
-    field.setTag(tag);
-
-    if("008".equals(tag)){
-      field.setContent(splitField008(controlField.getData(), type, bLvl));
-    } else {
-      field.setContent(controlField.getData());
-    }
-
-    return field;
+    return quickMarcJson;
   }
 
   private String splitField008(String content, String type, String bLvl){
@@ -92,7 +61,7 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
     map.put(CONTENT, contentType.getName());
     map.put(TYPE, type);
     map.put(BLVL, bLvl);
-    map.putAll(Field008SplitterFactory.getStrategy(contentType).split(content));
+    map.putAll(Field008SplitterFactory.getStrategy(contentType).apply(content));
 
     try {
       return new ObjectMapper().writeValueAsString(map);

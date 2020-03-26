@@ -76,7 +76,7 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     try{
       Map<String, Object> map = new ObjectMapper().readValue(s, LinkedHashMap.class);
       ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
-      String result = Field008RestoreFactory.getStrategy(contentType).restore(map);
+      String result = Field008RestoreFactory.getStrategy(contentType).apply(map);
       if (result.length() != ITEM008_LENGTH) throw new WrongField008LengthException();
       return result;
     } catch (IOException e) {

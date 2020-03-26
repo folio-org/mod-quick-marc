@@ -51,11 +51,12 @@ import static org.folio.converter.StringConstants.VALUE;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Field008RestoreFactory {
 
-  private static EnumMap<ContentType, Field008RestoreStrategy> map = new EnumMap<>(ContentType.class);
+  private static EnumMap<ContentType, Function<Map<String, Object>, String>> map = new EnumMap<>(ContentType.class);
 
   private Field008RestoreFactory(){}
 
@@ -192,7 +193,7 @@ public class Field008RestoreFactory {
     return ((List<String>) map.get(key)).stream().collect(Collectors.joining());
   }
 
-  public static Field008RestoreStrategy getStrategy(ContentType contentType){
+  public static Function<Map<String, Object>, String> getStrategy(ContentType contentType){
     return map.get(contentType);
   }
 }

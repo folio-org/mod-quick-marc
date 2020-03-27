@@ -89,6 +89,31 @@
       <artifactId>vertx-junit5</artifactId>
       <version>3.8.5</version>
       <scope>test</scope>
+      <version>2.13.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.folio</groupId>
+      <artifactId>folio-di-support</artifactId>
+      <version>${folio-di-support.version}</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>me.escoffier.vertx</groupId>
+      <artifactId>vertx-completable-future</artifactId>
+      <version>0.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>4.0.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-junit5</artifactId>
+      <version>3.8.5</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.marc4j</groupId>
@@ -148,6 +173,29 @@
                   <value>${project.baseUri}src/main/resources/log4j2.properties</value>
                 </property>
               </properties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jsonschema2pojo</groupId>
+        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+        <version>0.5.1</version>
+        <configuration>
+          <includes><include>*.json</include></includes>
+          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
+          <generateBuilders>true</generateBuilders>
+        </configuration>
+        <executions>
+          <execution>
+            <id>dto</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
+              <targetPackage>org.folio.srs.model</targetPackage>
             </configuration>
           </execution>
         </executions>

@@ -28,18 +28,18 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
 
   @Override
   @Validate
-  public void putRecordsEditorRecordsById(String id, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithTextPlain("Is not implemented yet")));
-  }
-
-  @Override
-  @Validate
-  public void getRecordsEditorRecordsById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getRecordsEditorRecordsByInstanceId(String instanceId, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     try {
       asyncResultHandler.handle(succeededFuture(Response.ok(getMockData(RESPONSE_MOCK), APPLICATION_JSON).build()));
     } catch (IOException e) {
       asyncResultHandler.handle(succeededFuture(Response.serverError().build()));
     }
+  }
+
+  @Override
+  @Validate
+  public void putRecordsEditorRecordsById(String id, String lang, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithTextPlain("Is not implemented yet")));
   }
 
   protected static String getMockData(String path) throws IOException {

@@ -11,7 +11,27 @@
     "indicators" : [ ]
   }, {
     "tag" : "008",
-    "content" : "{\n  \"Content\" : \"Scores\",\n  \"Type\" : \"c\",\n  \"BLvl\" : \"m\",\n  \"Entered\" : \"830419\",\n  \"DtSt\" : \"m\",\n  \"Date1\" : \"19551\",\n  \"Date2\" : \"99999\",\n  \"Ctry\" : \"gw \",\n  \"Comp\" : \"mu\",\n  \"FMus\" : \"a\",\n  \"Part\" : \" \",\n  \"Audn\" : \" \",\n  \"Form\" : \" \",\n  \"AccM\" : [ \"h\", \"i\", \"z\", \" \", \" \", \" \" ],\n  \"LTxt\" : [ \"n\", \" \" ],\n  \"TrAr\" : \" \",\n  \"Lang\" : \"lat\",\n  \"MRec\" : \" \",\n  \"Srce\" : \" \"\n}",
+    "content" : {
+      "Content" : "Scores",
+      "Type" : "c",
+      "BLvl" : "m",
+      "Entered" : "83041912",
+      "DtSt" : "m",
+      "Date1" : "195512",
+      "Date2" : "999912",
+      "Ctry" : "gw ",
+      "Comp" : "mu",
+      "FMus" : "a",
+      "Part" : " ",
+      "Audn" : " ",
+      "Form" : " ",
+      "AccM" : [ "h", "i", "z", " ", " ", " " ],
+      "LTxt" : [ "n", " " ],
+      "TrAr" : " ",
+      "Lang" : "lat",
+      "MRec" : " ",
+      "Srce" : " "
+    },
     "indicators" : [ ]
   }, {
     "tag" : "010",

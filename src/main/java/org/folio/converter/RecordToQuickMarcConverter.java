@@ -55,7 +55,7 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
   }
 
   private JsonObject splitField008(String content, String type, String bLvl){
-    ContentType contentType = ContentType.detectContentType(type, bLvl);
+    ContentType contentType = ContentType.resolveContentType(type, bLvl);
 
     Map<String, Object> map = new LinkedHashMap<>();
     map.put(CONTENT, contentType.getName());

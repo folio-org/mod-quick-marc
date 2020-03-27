@@ -25,12 +25,14 @@ public enum ContentType {
 
   public static ContentType getByName(String name) {
     for(ContentType type: values()) {
-      if (type.name.equals(name)) return type;
+      if (type.name.equals(name)) {
+        return type;
+      }
     }
     return UNKNOWN;
   }
 
-  public static ContentType detectContentType(String type, String bLvl) {
+  public static ContentType resolveContentType(String type, String bLvl) {
     switch (type) {
       case "a":
         return (Arrays.asList("b", "i", "s").contains(bLvl))? CONTINUING: BOOKS;

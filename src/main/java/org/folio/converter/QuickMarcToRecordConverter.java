@@ -75,7 +75,9 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
       Map<String, Object> map = new ObjectMapper().readValue(s, LinkedHashMap.class);
       ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
       String result = Field008RestoreFactory.getStrategy(contentType).apply(map);
-      if (result.length() != ITEM008_LENGTH) throw new IllegalArgumentException("Filed 008 must be 40 characters length");
+      if (result.length() != ITEM008_LENGTH) {
+        throw new IllegalArgumentException("Filed 008 must be 40 characters length");
+      }
       return result;
     } catch (IOException e) {
       throw new IllegalArgumentException(e.getMessage());
@@ -98,8 +100,9 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     String[] tokens = s.split("[$]");
     for (int i = 1; i < tokens.length; i++) {
       String token = tokens[i];
-      if ((token.charAt(token.length() - 1) == ' ') && (i < tokens.length - 1))
+      if ((token.charAt(token.length() - 1) == ' ') && (i < tokens.length - 1)) {
         token = token.substring(0, token.length() - 1);
+      }
       result.add(token);
     }
     return result;

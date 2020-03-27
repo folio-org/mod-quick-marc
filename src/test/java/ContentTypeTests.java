@@ -17,7 +17,7 @@ public class ContentTypeTests {
     logger.info("Test content type detection");
     testField.getTypes().forEach(t ->
       testField.getBlvls().forEach(b ->
-        assertEquals(testField.getContentType().getName(), ContentType.detectContentType(t, b).getName())));
+        assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(t, b).getName())));
   }
 
   @Test

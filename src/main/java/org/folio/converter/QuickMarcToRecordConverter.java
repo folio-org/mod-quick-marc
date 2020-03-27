@@ -52,12 +52,12 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
 
   private void restoreRecord(Field source, org.marc4j.marc.Record dest){
     String tag = source.getTag();
-    String data = source.getContent();
+    String data = source.getContent().toString();
     if (Pattern.compile("[0][0][1-9]$").matcher(tag).matches()){
       ControlField field = factory.newControlField();
       field.setTag(tag);
       if ("008".equals(tag)) {
-        field.setData(restoreField008(source.getContent()));
+        field.setData(restoreField008(source.getContent().toString()));
       } else {
         field.setData(data);
       }
@@ -65,7 +65,7 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     } else {
       DataField dataField = factory.newDataField();
       dataField.setTag(source.getTag());
-      dataField.getSubfields().addAll(stringToSubfields(source.getContent()));
+      dataField.getSubfields().addAll(stringToSubfields(source.getContent().toString()));
       dataField.setIndicator1(source.getIndicators().get(0).toString().charAt(0));
       dataField.setIndicator2(source.getIndicators().get(1).toString().charAt(0));
       dest.getDataFields().add(dataField);

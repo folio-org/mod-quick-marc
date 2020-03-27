@@ -51,10 +51,12 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
 
     r.getDataFields().forEach(f -> quickMarcJson.getFields().add(dataFieldToQuickMarcField(f)));
 
+    System.out.println(JsonObject.mapFrom(quickMarcJson).encodePrettily());
+
     return quickMarcJson;
   }
 
-  private String splitField008(String content, String type, String bLvl){
+  private JsonObject splitField008(String content, String type, String bLvl){
     ContentType contentType = ContentType.detectContentType(type, bLvl);
 
     Map<String, Object> map = new LinkedHashMap<>();
@@ -63,11 +65,7 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
     map.put(BLVL, bLvl);
     map.putAll(Field008SplitterFactory.getStrategy(contentType).apply(content));
 
-    try {
-      return new ObjectMapper().writeValueAsString(map);
-    } catch (Exception e) {
-      throw new ConversionException(e.getMessage());
-    }
+    return JsonObject.mapFrom(map);
   }
 
   private Field dataFieldToQuickMarcField(DataField dataField) {

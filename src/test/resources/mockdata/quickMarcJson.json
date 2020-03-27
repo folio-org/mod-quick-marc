@@ -11,7 +11,27 @@
     "indicators" : [ ]
   }, {
     "tag" : "008",
-    "content" : "{\"Content\":\"Scores\",\"Type\":\"c\",\"BLvl\":\"m\",\"Entered\":\"830419\",\"DtSt\":\"m\",\"Date1\":\"1955\",\"Date2\":\"9999\",\"Ctry\":\"gw \",\"Comp\":\"mu\",\"FMus\":\"a\",\"Part\":\" \",\"Audn\":\" \",\"Form\":\" \",\"AccM\":[\"h\",\"i\",\"z\",\" \",\" \",\" \"],\"LTxt\":[\"n\",\" \"],\"TrAr\":\" \",\"Lang\":\"lat\",\"MRec\":\" \",\"Srce\":\" \"}",
+    "content" : {
+      "Content" : "Scores",
+      "Type" : "c",
+      "BLvl" : "m",
+      "Entered" : "830419",
+      "DtSt" : "m",
+      "Date1" : "1955",
+      "Date2" : "9999",
+      "Ctry" : "gw ",
+      "Comp" : "mu",
+      "FMus" : "a",
+      "Part" : " ",
+      "Audn" : " ",
+      "Form" : " ",
+      "AccM" : [ "h", "i", "z", " ", " ", " " ],
+      "LTxt" : [ "n", " " ],
+      "TrAr" : " ",
+      "Lang" : "lat",
+      "MRec" : " ",
+      "Srce" : " "
+    },
     "indicators" : [ ]
   }, {
     "tag" : "010",

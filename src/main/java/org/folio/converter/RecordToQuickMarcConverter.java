@@ -6,8 +6,6 @@ import static org.folio.converter.StringConstants.TYPE;
 
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.folio.exeptions.ConversionException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
@@ -50,8 +48,6 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
     });
 
     r.getDataFields().forEach(f -> quickMarcJson.getFields().add(dataFieldToQuickMarcField(f)));
-
-    System.out.println(JsonObject.mapFrom(quickMarcJson).encodePrettily());
 
     return quickMarcJson;
   }

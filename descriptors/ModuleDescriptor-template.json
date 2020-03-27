@@ -23,6 +23,17 @@
           "modulePermissions": [
             "source-storage.records.get"
           ]
+        },
+        {
+          "methods": [
+            "PUT"
+          ],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": [
+            "records-editor.records.item.put"
+          ],
+          "modulePermissions": [
+          ]
         }
       ]
     },
@@ -53,17 +64,23 @@
       "description": "Get a record"
     },
     {
-      "permissionName": "records-editor.all",
-      "displayName": "All records-editor permissions",
-      "description": "All permissions for the records-editor",
-      "subPermissions": [
-        "records-editor.records.item.get"
+      "permissionName": "records-editor.records.item.put",
+      "displayName": "records-editor - update a record",
+      "description": "Update a record"
+    },
+    {
+      "permissionName" : "records-editor.all",
+      "displayName" : "All records-editor permissions",
+      "description" : "All permissions for the records-editor",
+      "subPermissions" : [
+        "records-editor.records.item.get",
+        "records-editor.records.item.put"
       ]
     }
   ],
   "metadata": {
     "containerMemory": "256",
-    "databaseConnection": "true"
+    "databaseConnection": "false"
   },
   "launchDescriptor": {
     "dockerImage": "${artifactId}:${version}",

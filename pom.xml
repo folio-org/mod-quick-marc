@@ -181,7 +181,6 @@
           </systemPropertyVariables>
           <excludes>
             <exclude>org/folio/rest/impl/**Test.class</exclude>
-            <exclude>org/folio/converter/**Test.class</exclude>
           </excludes>
           <includes>
             <include>org/folio/rest/impl/TestSuite.class</include>
@@ -440,6 +439,7 @@
           <localCheckout>true</localCheckout>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 

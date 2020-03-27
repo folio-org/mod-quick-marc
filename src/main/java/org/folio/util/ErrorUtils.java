@@ -16,6 +16,8 @@ import io.vertx.core.json.JsonObject;
 
 public class ErrorUtils {
 
+  private ErrorUtils() {}
+
   public static Parameter buildErrorParameter(String key, String value) {
     return new Parameter().withKey(key)
       .withValue(value);

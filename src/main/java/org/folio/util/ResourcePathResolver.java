@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class ResourcePathResolver {
 
+  private ResourcePathResolver() {}
+
   public static final String SRS_RECORDS = "source-records-storage.records";
 
   private static final Map<String, String> APIS;

@@ -46,7 +46,7 @@ public class MarcRecordServiceImpl extends BaseServiceImpl implements MarcRecord
         if (collection.getTotalRecords() == 0) {
           int code = 404;
           List<Parameter> parameters = buildErrorParameters(buildErrorParameter(INSTANCE_ID, instanceId));
-          Errors errors = buildErrors(buildError(code, "Illegal query parameters", parameters));
+          Errors errors = buildErrors(buildError(code, "Record not found", parameters));
           throw new CompletionException(new HttpException(code, JsonObject.mapFrom(errors)));
         }
         return converter.convert(collection.getRecords().get(0));

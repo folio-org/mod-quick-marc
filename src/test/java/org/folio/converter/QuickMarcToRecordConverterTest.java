@@ -1,7 +1,8 @@
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static utils.TestUtils.getMockAsJson;
+package org.folio.converter;
 
-import org.folio.converter.QuickMarcToRecordConverter;
+import static org.folio.converter.TestUtils.getMockAsJson;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ public class QuickMarcToRecordConverterTest {
   public void exceptionWhen008WrongLength() {
     logger.info("Testing field 008 wrong length after editing - WrongField008LengthException expected");
     QuickMarcToRecordConverter converter = new QuickMarcToRecordConverter();
-    QuickMarcJson wrongFile = getMockAsJson("mockdata/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
+    QuickMarcJson wrongFile = getMockAsJson("mockdata/quick-marc-json/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
     assertThrows(IllegalArgumentException.class, () -> converter.convert(wrongFile));
   }
 }

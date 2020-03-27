@@ -30,24 +30,26 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
     ParsedRecord parsedRecord = record.getParsedRecord();
     InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8);
     MarcReader reader = new MarcJsonReader(input);
-    org.marc4j.marc.Record r = reader.next();
+    org.marc4j.marc.Record marcRecord = reader.next();
 
     QuickMarcJson quickMarcJson = new QuickMarcJson();
     quickMarcJson.setId(parsedRecord.getId());
 
-    String leader = r.getLeader().marshal();
+    String leader = marcRecord.getLeader().marshal();
     String type = leader.substring(6, 7);
     String bLvl = leader.substring(7, 8);
 
     quickMarcJson.setLeader(leader);
-    r.getControlFields().forEach(f -> {
+    marcRecord.getControlFields().forEach(controlField -> {
       Field field = new Field();
-      field.setTag(f.getTag());
-      field.setContent(("008".equals(f.getTag()))? splitField008(f.getData(), type, bLvl): f.getData());
+      field.setTag(controlField.getTag());
+      field.setContent(("008".equals(controlField.getTag()))? splitField008(controlField.getData(), type, bLvl): controlField.getData());
       quickMarcJson.getFields().add(field);
     });
 
-    r.getDataFields().forEach(f -> quickMarcJson.getFields().add(dataFieldToQuickMarcField(f)));
+    marcRecord.getDataFields().forEach(f -> quickMarcJson.getFields().add(dataFieldToQuickMarcField(f)));
+
+    System.out.println(JsonObject.mapFrom(quickMarcJson).encodePrettily());
 
     return quickMarcJson;
   }

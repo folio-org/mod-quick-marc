@@ -3,8 +3,6 @@ package org.folio.converter;
 import static org.folio.converter.StringConstants.CONTENT;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.folio.exeptions.ConversionException;
-import org.folio.exeptions.WrongField008LengthException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.RawRecord;
@@ -41,7 +39,7 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     org.marc4j.marc.Record marcRecord = factory.newRecord();
     Leader leader = factory.newLeader(quickMarcJson.getLeader());
     marcRecord.setLeader(leader);
-    quickMarcJson.getFields().forEach(f -> restoreRecord(f, marcRecord));
+    quickMarcJson.getFields().forEach(field -> restoreRecord(field, marcRecord));
     RawRecord rawRecord = new RawRecord();
     rawRecord.setId(quickMarcJson.getId());
     rawRecord.setContent(marcRecordToString(marcRecord));
@@ -77,10 +75,10 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
       Map<String, Object> map = new ObjectMapper().readValue(s, LinkedHashMap.class);
       ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
       String result = Field008RestoreFactory.getStrategy(contentType).apply(map);
-      if (result.length() != ITEM008_LENGTH) throw new WrongField008LengthException();
+      if (result.length() != ITEM008_LENGTH) throw new IllegalArgumentException("Filed 008 must be 40 characters length");
       return result;
     } catch (IOException e) {
-      throw new ConversionException(e.getMessage());
+      throw new IllegalArgumentException(e.getMessage());
     }
   }
 

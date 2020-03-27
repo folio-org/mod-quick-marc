@@ -25,7 +25,7 @@ public enum ContentType {
 
   public static ContentType getByName(String name) {
     for(ContentType type: values()) {
-      if(name.equals(type.name)) return type;
+      if (type.name.equals(name)) return type;
     }
     return UNKNOWN;
   }

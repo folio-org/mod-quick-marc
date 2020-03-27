@@ -2,10 +2,6 @@
   "id": "${artifactId}-${version}",
   "name": "quickMARC",
   "requires": [
-    {
-      "id": "source-storage-records",
-      "version": "1.0"
-    }
   ],
   "provides": [
     {
@@ -16,12 +12,22 @@
           "methods": [
             "GET"
           ],
-          "pathPattern": "/records-editor/records",
+          "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": [
             "records-editor.records.item.get"
           ],
           "modulePermissions": [
-            "source-storage.records.get"
+          ]
+        },
+        {
+          "methods": [
+            "PUT"
+          ],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": [
+            "records-editor.records.item.put"
+          ],
+          "modulePermissions": [
           ]
         }
       ]
@@ -53,11 +59,17 @@
       "description": "Get a record"
     },
     {
+      "permissionName": "records-editor.records.item.put",
+      "displayName": "records-editor - update a record",
+      "description": "Update a record"
+    },
+    {
       "permissionName" : "records-editor.all",
       "displayName" : "All records-editor permissions",
       "description" : "All permissions for the records-editor",
       "subPermissions" : [
-        "records-editor.records.item.get"
+        "records-editor.records.item.get",
+        "records-editor.records.item.put"
       ]
     }
   ],

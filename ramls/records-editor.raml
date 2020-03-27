@@ -26,13 +26,25 @@ resourceTypes:
 
 /records-editor/records:
   displayName: quickMARC
-  /{id}:
-    description: Get quickMARC record
+  is: [validate]
+  /{instanceId}:
+    uriParameters:
+      instanceId:
+        description: The UUID of an instance associated with record
+        type: UUID
     type:
       item-get:
         schema: quickMarcJson
         exampleItem: sample
+    get:
+      description: Get quickMARC record by instanceId
+  /{id}:
+    uriParameters:
+      id:
+        description: The UUID of a record
+        type: UUID
     put:
+      is: [language]
       description: Edit quickMARC record
       body:
         application/json:

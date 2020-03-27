@@ -1,13 +1,15 @@
-import static utils.TestUtils.getMockAsJson;
+package org.folio.converter;
 
-import io.vertx.core.json.JsonObject;
-import org.folio.converter.RecordToQuickMarcConverter;
+import static org.folio.converter.TestUtils.getMockAsJson;
+
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.vertx.core.json.JsonObject;
 
 public class RecordToQuickMarcConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(RecordToQuickMarcConverterTest.class);

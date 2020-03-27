@@ -1,15 +1,15 @@
-import org.folio.converter.ContentType;
+package org.folio.converter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.TestEntities;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class ContentTypeTests {
-  private static final Logger logger = LoggerFactory.getLogger(ContentTypeTests.class);
+public class ContentTypeTest {
+  private static final Logger logger = LoggerFactory.getLogger(ContentTypeTest.class);
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)

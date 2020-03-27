@@ -1,3 +1,5 @@
+package org.folio.converter;
+
 import static org.folio.converter.StringConstants.ACCM;
 import static org.folio.converter.StringConstants.ALPH;
 import static org.folio.converter.StringConstants.AUDN;
@@ -41,18 +43,16 @@ import static org.folio.converter.StringConstants.VALUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
-import org.folio.converter.ContentType;
-import org.folio.converter.Field008SplitterFactory;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Field008SplitterFactoryTests {
-  private static final Logger logger = LoggerFactory.getLogger(Field008SplitterFactoryTests.class);
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Field008SplitterFactoryTest {
+  private static final Logger logger = LoggerFactory.getLogger(Field008SplitterFactoryTest.class);
 
   @Test
   public void testField008SplitHeaderAndFooter() {

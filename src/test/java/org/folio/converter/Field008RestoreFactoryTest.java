@@ -1,20 +1,21 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.folio.converter.Field008RestoreFactory;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.TestEntities;
+package org.folio.converter;
+
+import static org.folio.converter.TestUtils.getMockData;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static utils.TestUtils.getMockData;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Field008RestoreFactoryTests {
-  private static final Logger logger = LoggerFactory.getLogger(Field008RestoreFactoryTests.class);
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class Field008RestoreFactoryTest {
+  private static final Logger logger = LoggerFactory.getLogger(Field008RestoreFactoryTest.class);
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)

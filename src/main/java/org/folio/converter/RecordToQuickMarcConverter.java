@@ -4,7 +4,13 @@ import static org.folio.converter.StringConstants.BLVL;
 import static org.folio.converter.StringConstants.CONTENT;
 import static org.folio.converter.StringConstants.TYPE;
 
-import io.vertx.core.json.JsonObject;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.commons.io.IOUtils;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -16,12 +22,7 @@ import org.marc4j.marc.DataField;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import io.vertx.core.json.JsonObject;
 
 @Component
 public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJson> {

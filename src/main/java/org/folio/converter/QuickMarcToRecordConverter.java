@@ -2,6 +2,14 @@ package org.folio.converter;
 
 import static org.folio.converter.StringConstants.CONTENT;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -17,14 +25,6 @@ import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 @Component
 public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Record> {

@@ -29,13 +29,11 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
   private static final Logger logger = LoggerFactory.getLogger(RecordsEditorRecordsImpl.class);
   private static final String RESPONSE_MOCK = "quick_marc_json.json";
 
-
   @Override
   @Validate
   public void putRecordsEditorRecordsById(String id, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithTextPlain("Is not implemented yet")));
   }
-
 
   @Override
   @Validate
@@ -50,15 +48,7 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
   protected static String getMockData(String path) throws IOException {
     logger.info("Using mock datafile: {}", path);
     try (InputStream resourceAsStream = RecordsEditorRecordsImpl.class.getClassLoader().getResourceAsStream(path)) {
-      if (resourceAsStream != null) {
-        return IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
-      } else {
-        StringBuilder sb = new StringBuilder();
-        try (Stream<String> lines = Files.lines(Paths.get(path))) {
-          lines.forEach(sb::append);
-        }
-        return sb.toString();
-      }
+      return IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
     }
   }
 }

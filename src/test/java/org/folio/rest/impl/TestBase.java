@@ -36,7 +36,7 @@ public class TestBase {
 
   @BeforeAll
   public static void before() throws InterruptedException, ExecutionException, TimeoutException {
-    if(TestSuite.isNotInitialised()) {
+    if (TestSuite.isNotInitialised()) {
       logger.info("Running test on own, initialising suite manually");
       runningOnOwn = true;
       TestSuite.before();
@@ -45,7 +45,7 @@ public class TestBase {
 
   @AfterAll
   public static void after() {
-    if(runningOnOwn) {
+    if (runningOnOwn) {
       logger.info("Running test on own, un-initialising suite manually");
       TestSuite.after();
     }
@@ -56,10 +56,8 @@ public class TestBase {
     MockServer.release();
   }
 
-
   public Response verifyGetRequest(String url, int code) {
-    return RestAssured
-      .with()
+    return RestAssured.with()
       .header(X_OKAPI_URL)
       .header(NON_EXIST_CONFIG_X_OKAPI_TENANT)
       .get(url)
@@ -84,7 +82,8 @@ public class TestBase {
 
   protected static String getMockData(String path) throws IOException {
     logger.info("Using mock datafile: {}", path);
-    try (InputStream resourceAsStream = TestBase.class.getClassLoader().getResourceAsStream(path)) {
+    try (InputStream resourceAsStream = TestBase.class.getClassLoader()
+      .getResourceAsStream(path)) {
       if (resourceAsStream != null) {
         return IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
       } else {

@@ -5,6 +5,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.folio.converter.ContentTypeTest;
+import org.folio.converter.Field008RestoreFactoryTest;
+import org.folio.converter.Field008SplitterFactoryTest;
+import org.folio.converter.QuickMarcToRecordConverterTest;
+import org.folio.converter.RecordToQuickMarcConverterTest;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.tools.utils.NetworkUtils;
 import org.junit.jupiter.api.AfterAll;
@@ -19,7 +24,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.VertxExtension;
 
 @ExtendWith(VertxExtension.class)
-public class TestSuite  {
+public class TestSuite {
 
   private static final int okapiPort = NetworkUtils.nextFreePort();
   static final int mockPort = NetworkUtils.nextFreePort();
@@ -46,10 +51,9 @@ public class TestSuite  {
     final DeploymentOptions opt = new DeploymentOptions().setConfig(conf);
     CompletableFuture<String> deploymentComplete = new CompletableFuture<>();
     vertx.deployVerticle(RestVerticle.class.getName(), opt, res -> {
-      if(res.succeeded()) {
+      if (res.succeeded()) {
         deploymentComplete.complete(res.result());
-      }
-      else {
+      } else {
         deploymentComplete.completeExceptionally(res.cause());
       }
     });
@@ -69,5 +73,26 @@ public class TestSuite  {
   }
 
   @Nested
-  class TestGetRecords extends GetRecordsTest{}
+  class TestGetRecords extends GetRecordsTest {
+  }
+
+  @Nested
+  class ContentTypeTestsNested extends ContentTypeTest {
+  }
+
+  @Nested
+  class Field008SplitterFactoryTestsNested extends Field008SplitterFactoryTest {
+  }
+
+  @Nested
+  class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTest {
+  }
+
+  @Nested
+  class RecordToQuickMarcConverterTestNested extends RecordToQuickMarcConverterTest {
+  }
+
+  @Nested
+  class QuickMarcToRecordConverterTestNested extends QuickMarcToRecordConverterTest {
+  }
 }

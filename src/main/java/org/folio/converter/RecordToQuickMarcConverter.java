@@ -5,8 +5,8 @@ import static org.folio.converter.StringConstants.CONTENT;
 import static org.folio.converter.StringConstants.TYPE;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.folio.exeptions.ConversionException;
-import org.folio.exeptions.EmptyRawRecordException;
+import org.folio.exception.ConversionException;
+import org.folio.exception.EmptyRawRecordException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.RawRecord;

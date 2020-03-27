@@ -19,6 +19,8 @@
     <junit.jupiter.version>5.6.0</junit.jupiter.version>
     <rest-assured.version>4.3.0</rest-assured.version>
     <log4j-slf4j-impl.version>2.13.1</log4j-slf4j-impl.version>
+    <vertx-completable-future.version>0.1.2</vertx-completable-future.version>
+    <awaitility.version>4.0.2</awaitility.version>
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <generated_sources_dir>${project.build.directory}/generated-sources</generated_sources_dir>
@@ -64,61 +66,25 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
-      <version>2.13.1</version>
+      <version>${log4j-slf4j-impl.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>folio-di-support</artifactId>
-      <version>${folio-di-support.version}</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>me.escoffier.vertx</groupId>
       <artifactId>vertx-completable-future</artifactId>
-      <version>0.1.2</version>
+      <version>${vertx-completable-future.version}</version>
     </dependency>
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
-      <version>4.0.2</version>
+      <version>${awaitility.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-junit5</artifactId>
-      <version>3.8.5</version>
+      <version>${vertx.version}</version>
       <scope>test</scope>
-      <version>2.13.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>folio-di-support</artifactId>
-      <version>${folio-di-support.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>me.escoffier.vertx</groupId>
-      <artifactId>vertx-completable-future</artifactId>
-      <version>0.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.awaitility</groupId>
-      <artifactId>awaitility</artifactId>
-      <version>4.0.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-junit5</artifactId>
-      <version>3.8.5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.marc4j</groupId>
-      <artifactId>marc4j</artifactId>
-      <version>2.9.1</version>
     </dependency>
     <dependency>
       <groupId>org.marc4j</groupId>
@@ -183,30 +149,9 @@
         <artifactId>jsonschema2pojo-maven-plugin</artifactId>
         <version>0.5.1</version>
         <configuration>
-          <includes><include>*.json</include></includes>
-          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
-          <generateBuilders>true</generateBuilders>
-        </configuration>
-        <executions>
-          <execution>
-            <id>dto</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
-              <targetPackage>org.folio.srs.model</targetPackage>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.jsonschema2pojo</groupId>
-        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-        <version>0.5.1</version>
-        <configuration>
-          <includes><include>*.json</include></includes>
+          <includes>
+            <include>*.json</include>
+          </includes>
           <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
           <generateBuilders>true</generateBuilders>
         </configuration>
@@ -236,6 +181,7 @@
           </systemPropertyVariables>
           <excludes>
             <exclude>org/folio/rest/impl/**Test.class</exclude>
+            <exclude>org/folio/converter/**Test.class</exclude>
           </excludes>
           <includes>
             <include>org/folio/rest/impl/TestSuite.class</include>
@@ -476,7 +422,7 @@
                   </excludes>
                 </filter>
               </filters>
-              <artifactSet />
+              <artifactSet/>
               <outputFile>${project.build.directory}/${project.artifactId}-fat.jar</outputFile>
             </configuration>
           </execution>
@@ -494,30 +440,6 @@
           <localCheckout>true</localCheckout>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.jsonschema2pojo</groupId>
-        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-        <version>0.5.1</version>
-        <configuration>
-          <includes><include>*.json</include></includes>
-          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
-          <generateBuilders>true</generateBuilders>
-        </configuration>
-        <executions>
-          <execution>
-            <id>quick-marc</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
-              <targetPackage>org.folio.srs.model</targetPackage>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 

@@ -1,4 +1,4 @@
-package org.folio.exeptions;
+package org.folio.exception;
 
 public class WrongField008LengthException extends RuntimeException {
   public WrongField008LengthException() {

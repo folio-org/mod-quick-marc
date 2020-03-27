@@ -9,17 +9,13 @@ import static org.folio.util.ResourcePathResolver.SRS_RECORDS;
 import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
 import static org.folio.util.ResourcePathResolver.getResourcesPath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import org.folio.HttpStatus;
 import org.folio.converter.RecordToQuickMarcConverter;
 import org.folio.exception.HttpException;
-import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Errors;
 import org.folio.rest.jaxrs.model.Parameter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;

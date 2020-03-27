@@ -1,7 +1,7 @@
-package org.folio.exeptions;
+package org.folio.exception;
 
 public class EmptyRawRecordException extends RuntimeException {
-  public EmptyRawRecordException(){
+  public EmptyRawRecordException() {
     super("RawRecord content should not be empty");
   }
 }

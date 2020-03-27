@@ -53,10 +53,10 @@
       "description": "Get a record"
     },
     {
-      "permissionName" : "records-editor.all",
-      "displayName" : "All records-editor permissions",
-      "description" : "All permissions for the records-editor",
-      "subPermissions" : [
+      "permissionName": "records-editor.all",
+      "displayName": "All records-editor permissions",
+      "description": "All permissions for the records-editor",
+      "subPermissions": [
         "records-editor.records.item.get"
       ]
     }
@@ -75,7 +75,8 @@
       }
     },
     "env": [
-      { "name": "JAVA_OPTIONS",
+      {
+        "name": "JAVA_OPTIONS",
         "value": "-XX:MaxRAMPercentage=66.0"
       }
     ]

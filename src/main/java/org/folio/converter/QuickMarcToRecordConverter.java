@@ -3,8 +3,8 @@ package org.folio.converter;
 import static org.folio.converter.StringConstants.CONTENT;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.folio.exeptions.ConversionException;
-import org.folio.exeptions.WrongField008LengthException;
+import org.folio.exception.ConversionException;
+import org.folio.exception.WrongField008LengthException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.RawRecord;

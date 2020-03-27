@@ -73,25 +73,26 @@ public class MockServer {
     this.vertx = Vertx.vertx();
   }
 
-  void start() throws InterruptedException, ExecutionException, TimeoutException {
+  public void start() throws InterruptedException, ExecutionException, TimeoutException {
     HttpServer server = vertx.createHttpServer();
     CompletableFuture<HttpServer> deploymentComplete = new CompletableFuture<>();
-    server.requestHandler(defineRoutes()).listen(port, result -> {
-      if(result.succeeded()) {
-        deploymentComplete.complete(result.result());
-      }
-      else {
-        deploymentComplete.completeExceptionally(result.cause());
-      }
-    });
+    server.requestHandler(defineRoutes())
+      .listen(port, result -> {
+        if (result.succeeded()) {
+          deploymentComplete.complete(result.result());
+        } else {
+          deploymentComplete.completeExceptionally(result.cause());
+        }
+      });
     deploymentComplete.get(60, TimeUnit.SECONDS);
   }
 
-  void close() {
+  public void close() {
     vertx.close(res -> {
       if (res.failed()) {
         logger.error("Failed to shut down mock server", res.cause());
-        fail(res.cause().getMessage());
+        fail(res.cause()
+          .getMessage());
       } else {
         logger.info("Successfully shut down mock server");
       }
@@ -103,7 +104,11 @@ public class MockServer {
   }
 
   private void processServerResponse(String resource, RoutingContext ctx, int statusCode, String contentType, String body) {
-    addServerRqRsData(ctx.request().method(), resource, ctx.request().uri(), body);
+    addServerRqRsData(ctx.request()
+      .method(), resource,
+        ctx.request()
+          .uri(),
+        body);
     ctx.response()
       .setStatusCode(statusCode)
       .putHeader(HttpHeaders.CONTENT_TYPE, contentType)
@@ -125,15 +130,20 @@ public class MockServer {
 
   private Router defineRoutes() {
     Router router = Router.router(vertx);
-    router.route().handler(BodyHandler.create());
-    router.get(getResourceByIdPath(SRS_RECORDS)).handler(this::handleGetMarcJsonRecord);
-    router.get(getResourcesPath(SRS_RECORDS)).handler(this::handleGetMarcJsonRecords);
+    router.route()
+      .handler(BodyHandler.create());
+    router.get(getResourceByIdPath(SRS_RECORDS))
+      .handler(this::handleGetMarcJsonRecord);
+    router.get(getResourcesPath(SRS_RECORDS))
+      .handler(this::handleGetMarcJsonRecords);
     return router;
   }
 
   private void handleGetMarcJsonRecord(RoutingContext ctx) {
-    logger.info("got: " + ctx.request().path());
-    String id = ctx.request().getParam(ID);
+    logger.info("got: " + ctx.request()
+      .path());
+    String id = ctx.request()
+      .getParam(ID);
     logger.info("id: " + id);
 
     List<Record> records = getSrsRecordsBySearchParameter(ID, id);
@@ -141,19 +151,23 @@ public class MockServer {
     if (ID_BAD_REQUEST_FORMAT.equals(id)) {
       processServerResponse(SRS_RECORDS, ctx, 422, APPLICATION_JSON, "invalid input syntax for type uuid: " + id);
     } else if (ID_FOR_INTERNAL_SERVER_ERROR.equals(id)) {
-        processServerResponse(SRS_RECORDS, ctx, 500, TEXT_PLAIN, INTERNAL_SERVER_ERROR.getReasonPhrase());
+      processServerResponse(SRS_RECORDS, ctx, 500, TEXT_PLAIN, INTERNAL_SERVER_ERROR.getReasonPhrase());
     } else if (!records.isEmpty()) {
-      processServerResponse(SRS_RECORDS, ctx, 200, APPLICATION_JSON, JsonObject.mapFrom(records.get(0)).encodePrettily());
-    }  else {
-      processServerResponse(SRS_RECORDS, ctx, 404, TEXT_PLAIN, "Record with id '" + id +"' was not found");
+      processServerResponse(SRS_RECORDS, ctx, 200, APPLICATION_JSON, JsonObject.mapFrom(records.get(0))
+        .encodePrettily());
+    } else {
+      processServerResponse(SRS_RECORDS, ctx, 404, TEXT_PLAIN, "Record with id '" + id + "' was not found");
     }
   }
 
   private void handleGetMarcJsonRecords(RoutingContext ctx) {
-    logger.info("got: " + ctx.request().path());
+    logger.info("got: " + ctx.request()
+      .path());
 
-    String query = StringUtils.trimToEmpty(ctx.request().getParam(QUERY));
-    Matcher matcher = Pattern.compile(".*externalIdsHolder.instanceId==(\\S[^)]+).*").matcher(query);
+    String query = StringUtils.trimToEmpty(ctx.request()
+      .getParam(QUERY));
+    Matcher matcher = Pattern.compile(".*externalIdsHolder.instanceId==(\\S[^)]+).*")
+      .matcher(query);
     final String instanceId = matcher.find() ? matcher.group(1) : EMPTY;
 
     if (query.contains(ID_FOR_INTERNAL_SERVER_ERROR)) {
@@ -161,10 +175,10 @@ public class MockServer {
     } else {
       try {
         List<Record> records = getSrsRecordsBySearchParameter(INSTANCE_ID, instanceId);
-        RecordCollection collection = new RecordCollection()
-          .withRecords(records)
+        RecordCollection collection = new RecordCollection().withRecords(records)
           .withTotalRecords(records.size());
-        processServerResponse(SRS_RECORDS, ctx, 200, APPLICATION_JSON, JsonObject.mapFrom(collection).encodePrettily());
+        processServerResponse(SRS_RECORDS, ctx, 200, APPLICATION_JSON, JsonObject.mapFrom(collection)
+          .encodePrettily());
       } catch (Exception e) {
         processServerResponse(SRS_RECORDS, ctx, 500, APPLICATION_JSON, INTERNAL_SERVER_ERROR.getReasonPhrase());
       }
@@ -176,14 +190,16 @@ public class MockServer {
     List<Record> records;
 
     try {
-      records = new JsonObject(getMockData(SRS_RECORDS_COLLECTION_PATH)).mapTo(RecordCollection.class).getRecords();
+      records = new JsonObject(getMockData(SRS_RECORDS_COLLECTION_PATH)).mapTo(RecordCollection.class)
+        .getRecords();
     } catch (IOException e) {
       records = new ArrayList<>();
     }
 
-    if(INSTANCE_ID.equals(key)) {
-      records.removeIf(record -> !Objects.equals(record.getExternalIdsHolder().getInstanceId(), value));
-    } else if(ID.equals(key)) {
+    if (INSTANCE_ID.equals(key)) {
+      records.removeIf(record -> !Objects.equals(record.getExternalIdsHolder()
+        .getInstanceId(), value));
+    } else if (ID.equals(key)) {
       records.removeIf(record -> !Objects.equals(record.getId(), value));
     } else {
       records.clear();
@@ -202,7 +218,8 @@ public class MockServer {
 
   private static String getMockData(String path) throws IOException {
     logger.info("Using mock datafile: {}", path);
-    try (InputStream stream = MockServer.class.getClassLoader().getResourceAsStream(path)) {
+    try (InputStream stream = MockServer.class.getClassLoader()
+      .getResourceAsStream(path)) {
       if (stream != null) {
         return IOUtils.toString(stream, StandardCharsets.UTF_8);
       } else {

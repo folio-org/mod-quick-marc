@@ -67,6 +67,3 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
     return null;
   }
 }
-
-
-

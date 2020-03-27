@@ -3,6 +3,9 @@ package org.folio.util;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.folio.HttpStatus;
 import org.folio.exception.HttpException;
 import org.folio.rest.jaxrs.model.Error;
@@ -11,13 +14,11 @@ import org.folio.rest.jaxrs.model.Parameter;
 
 import io.vertx.core.json.JsonObject;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ErrorUtils {
 
   public static Parameter buildErrorParameter(String key, String value) {
-    return new Parameter().withKey(key).withValue(value);
+    return new Parameter().withKey(key)
+      .withValue(value);
   }
 
   public static List<Parameter> buildErrorParameters(Parameter... parameters) {
@@ -26,7 +27,8 @@ public class ErrorUtils {
 
   public static Error buildError(int code, String message, List<Parameter> parameters) {
     Error error = new Error();
-    error.setCode(HttpStatus.get(code).name());
+    error.setCode(HttpStatus.get(code)
+      .name());
     error.setMessage(message);
     error.setParameters(parameters);
     return error;
@@ -56,7 +58,8 @@ public class ErrorUtils {
           .withValue(entry.getValue()
             .toString())));
       String message = jsonObjectError.getString("errorMessage");
-      error.setCode(HttpStatus.get(code).name());
+      error.setCode(HttpStatus.get(code)
+        .name());
       error.setMessage(message);
 
       responseBuilder = javax.ws.rs.core.Response.status(code)

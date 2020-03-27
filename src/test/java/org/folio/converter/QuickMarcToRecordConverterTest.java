@@ -1,10 +1,10 @@
+package org.folio.converter;
+
+import static org.folio.converter.TestUtils.getMockAsJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static utils.TestUtils.getMockAsJson;
 
-import org.folio.converter.QuickMarcToRecordConverter;
-import org.folio.converter.RecordToQuickMarcConverter;
-import org.folio.exeptions.WrongField008LengthException;
+import org.folio.exception.WrongField008LengthException;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Test;
@@ -15,15 +15,17 @@ public class QuickMarcToRecordConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(QuickMarcToRecordConverterTest.class);
 
   @Test
-  public void testRecordsAreEqual(){
+  public void testRecordsAreEqual() {
     logger.info("Source record and converted/restored one should be equal");
     QuickMarcToRecordConverter quickMarcToRecordConverter = new QuickMarcToRecordConverter();
     RecordToQuickMarcConverter recordToQuickMarcConverter = new RecordToQuickMarcConverter();
-    Record sourceRecord = getMockAsJson("mockdata/record.json").mapTo(Record.class);
-    String sourceRawRecord = sourceRecord.getRawRecord().getContent();
+    Record sourceRecord = getMockAsJson("mockdata/srs-records/record.json").mapTo(Record.class);
+    String sourceRawRecord = sourceRecord.getRawRecord()
+      .getContent();
     QuickMarcJson quickMarcJson = recordToQuickMarcConverter.convert(sourceRecord);
     Record convertedRecord = quickMarcToRecordConverter.convert(quickMarcJson);
-    String convertedRawRecord = convertedRecord.getRawRecord().getContent();
+    String convertedRawRecord = convertedRecord.getRawRecord()
+      .getContent();
     assertEquals(sourceRawRecord, convertedRawRecord);
   }
 
@@ -31,7 +33,7 @@ public class QuickMarcToRecordConverterTest {
   public void exceptionWhen008WrongLength() {
     logger.info("Testing field 008 wrong length after editing - WrongField008LengthException expected");
     QuickMarcToRecordConverter converter = new QuickMarcToRecordConverter();
-    QuickMarcJson wrongFile = getMockAsJson("mockdata/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
+    QuickMarcJson wrongFile = getMockAsJson("mockdata/quick-marc-json/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
     assertThrows(WrongField008LengthException.class, () -> converter.convert(wrongFile));
   }
 }

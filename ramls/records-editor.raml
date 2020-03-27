@@ -3,7 +3,7 @@
 title: quickMARC Editor Records
 version: v1.0
 protocols: [ HTTP, HTTPS ]
-baseUri: http://github.com/folio-org/mod-quck-marc
+baseUri: http://github.com/folio-org/mod-quick-marc
 
 documentation:
   - title: quickMARC record API
@@ -25,33 +25,15 @@ resourceTypes:
   item-get: !include raml-storage/raml-util/rtypes/item-collection-get.raml
 
 /records-editor/records:
-  displayName: MARC-UI
-  description: Get MARC-UI
-  type:
-    item-get:
-      schema: quickMarcJson
-      exampleItem: sample
-  get:
-    is: [validate]
-    queryParameters:
-      id:
-        description: UUID of the MARC record
-        type:        UUID
-        required:    false
-        example:     f6c574b5-b1d5-4e5e-a28b-161b7e03e81a
-      instanceId:
-        description: UUID of the instance that is related to the MARC record
-        type:        UUID
-        required:    false
-        example:     f6c574b5-b1d5-4e5e-a28b-161b7e03e81a
+  displayName: quickMARC
   /{id}:
-    is: [validate, language]
-    uriParameters:
-      id:
-        description: The UUID of a MARC record
-        type: UUID
+    description: Get quickMARC record
+    type:
+      item-get:
+        schema: quickMarcJson
+        exampleItem: sample
     put:
-      description: Edit a MARC record
+      description: Edit quickMARC record
       body:
         application/json:
           type: quickMarcJson

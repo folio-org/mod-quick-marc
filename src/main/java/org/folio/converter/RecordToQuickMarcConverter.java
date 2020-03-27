@@ -49,8 +49,6 @@ public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJs
 
     marcRecord.getDataFields().forEach(f -> quickMarcJson.getFields().add(dataFieldToQuickMarcField(f)));
 
-    System.out.println(JsonObject.mapFrom(quickMarcJson).encodePrettily());
-
     return quickMarcJson;
   }
 

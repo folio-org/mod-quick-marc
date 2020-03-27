@@ -1,5 +1,5 @@
 {
-  "id" : "2f390fa6-a2f8-4027-abaf-ee61952668bc",
+  "id" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
   "leader" : "01542ccm a2200361   4500",
   "fields" : [ {
     "tag" : "001",
@@ -11,7 +11,27 @@
     "indicators" : [ ]
   }, {
     "tag" : "008",
-    "content" : "{\"Content\":\"Scores\",\"Type\":\"c\",\"BLvl\":\"m\",\"Entered\":\"830419\",\"DtSt\":\"m\",\"Date1\":\"1955\",\"Date2\":\"9999\",\"Ctry\":\"gw \",\"Comp\":\"mu\",\"FMus\":\"a\",\"Part\":\" \",\"Audn\":\" \",\"Form\":\" \",\"AccM\":[\"h\",\"i\",\"z\",\" \",\" \",\" \"],\"LTxt\":[\"n\",\" \"],\"TrAr\":\" \",\"Lang\":\"lat\",\"MRec\":\" \",\"Srce\":\" \"}",
+    "content" : {
+      "Content" : "Scores",
+      "Type" : "c",
+      "BLvl" : "m",
+      "Entered" : "830419",
+      "DtSt" : "m",
+      "Date1" : "1955",
+      "Date2" : "9999",
+      "Ctry" : "gw ",
+      "Comp" : "mu",
+      "FMus" : "a",
+      "Part" : " ",
+      "Audn" : " ",
+      "Form" : " ",
+      "AccM" : [ "h", "i", "z", " ", " ", " " ],
+      "LTxt" : [ "n", " " ],
+      "TrAr" : " ",
+      "Lang" : "lat",
+      "MRec" : " ",
+      "Srce" : " "
+    },
     "indicators" : [ ]
   }, {
     "tag" : "010",

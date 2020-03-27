@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Field008SplitterFactory {
-  private static EnumMap<ContentType, Field008SplitStrategy> map = new EnumMap<>(ContentType.class);
+  private static EnumMap<ContentType, Function<String, Map<String, Object>>> map = new EnumMap<>(ContentType.class);
 
   private Field008SplitterFactory(){}
 
@@ -172,7 +173,7 @@ public class Field008SplitterFactory {
     return map;
   }
 
-  public static Field008SplitStrategy getStrategy(ContentType contentType){
+  public static Function<String, Map<String, Object>> getStrategy(ContentType contentType){
     return map.get(contentType);
   }
 }

@@ -3,8 +3,6 @@ package org.folio.converter;
 import static org.folio.converter.StringConstants.CONTENT;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.folio.exception.ConversionException;
-import org.folio.exception.WrongField008LengthException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.RawRecord;
@@ -41,7 +39,7 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     org.marc4j.marc.Record marcRecord = factory.newRecord();
     Leader leader = factory.newLeader(quickMarcJson.getLeader());
     marcRecord.setLeader(leader);
-    quickMarcJson.getFields().forEach(f -> restoreRecord(f, marcRecord));
+    quickMarcJson.getFields().forEach(field -> restoreRecord(field, marcRecord));
     RawRecord rawRecord = new RawRecord();
     rawRecord.setId(quickMarcJson.getId());
     rawRecord.setContent(marcRecordToString(marcRecord));
@@ -52,12 +50,12 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
 
   private void restoreRecord(Field source, org.marc4j.marc.Record dest){
     String tag = source.getTag();
-    String data = source.getContent();
+    String data = source.getContent().toString();
     if (Pattern.compile("[0][0][1-9]$").matcher(tag).matches()){
       ControlField field = factory.newControlField();
       field.setTag(tag);
       if ("008".equals(tag)) {
-        field.setData(restoreField008(source.getContent()));
+        field.setData(restoreField008(source.getContent().toString()));
       } else {
         field.setData(data);
       }
@@ -65,7 +63,7 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     } else {
       DataField dataField = factory.newDataField();
       dataField.setTag(source.getTag());
-      dataField.getSubfields().addAll(stringToSubfields(source.getContent()));
+      dataField.getSubfields().addAll(stringToSubfields(source.getContent().toString()));
       dataField.setIndicator1(source.getIndicators().get(0).toString().charAt(0));
       dataField.setIndicator2(source.getIndicators().get(1).toString().charAt(0));
       dest.getDataFields().add(dataField);
@@ -76,11 +74,13 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     try{
       Map<String, Object> map = new ObjectMapper().readValue(s, LinkedHashMap.class);
       ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
-      String result = Field008RestoreFactory.getStrategy(contentType).restore(map);
-      if (result.length() != ITEM008_LENGTH) throw new WrongField008LengthException();
+      String result = Field008RestoreFactory.getStrategy(contentType).apply(map);
+      if (result.length() != ITEM008_LENGTH) {
+        throw new IllegalArgumentException("Filed 008 must be 40 characters length");
+      }
       return result;
     } catch (IOException e) {
-      throw new ConversionException(e.getMessage());
+      throw new IllegalArgumentException(e.getMessage());
     }
   }
 
@@ -100,8 +100,9 @@ public class QuickMarcToRecordConverter implements Converter<QuickMarcJson, Reco
     String[] tokens = s.split("[$]");
     for (int i = 1; i < tokens.length; i++) {
       String token = tokens[i];
-      if ((token.charAt(token.length() - 1) == ' ') && (i < tokens.length - 1))
+      if ((token.charAt(token.length() - 1) == ' ') && (i < tokens.length - 1)) {
         token = token.substring(0, token.length() - 1);
+      }
       result.add(token);
     }
     return result;

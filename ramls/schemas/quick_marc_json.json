@@ -27,9 +27,13 @@
           },
           "content": {
             "description": "MARC record tag content",
-            "type": [
-              "string",
-              "object"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
             ]
           },
           "indicators": {

@@ -44,12 +44,16 @@ traits:
           description: "MARC record with a given ID not found"
           body:
             application/json:
-              example: "MARC record not found"
+              example:
+                strict: false
+                value: errors
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
             application/json:
-              example: "internal server error, contact administrator"
+              example:
+                strict: false
+                value: errors
   /{id}:
     uriParameters:
       id:
@@ -72,18 +76,24 @@ traits:
               example:
                 strict: false
                 value: sample
-        404:
-          description: "MARC record with a given ID not found"
-          body:
-            application/json:
-              example: "MARC record not found"
         400:
           description: "Bad request, e.g. malformed request body or query parameter. Details of the error (e.g. name of the parameter or line/character number with malformed data) provided in the response."
           body:
             application/json:
-              example: "Unable to update MARC record -- malformed JSON at 13:4"
+              example:
+                strict: false
+                value: errors
+        404:
+          description: "MARC record with a given ID not found"
+          body:
+            application/json:
+              example:
+                strict: false
+                value: errors
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
             application/json:
-              example: "internal server error, contact administrator"
+              example:
+                strict: false
+                value: errors

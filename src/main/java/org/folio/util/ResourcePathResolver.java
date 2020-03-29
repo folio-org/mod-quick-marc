@@ -21,8 +21,4 @@ public class ResourcePathResolver {
   public static String getResourcesPath(String field) {
     return APIS.get(field);
   }
-
-  public static String getResourceByIdPath(String field, String id) {
-    return APIS.get(field) + "/" + id;
-  }
 }

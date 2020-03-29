@@ -4,9 +4,6 @@ import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
 import static org.folio.util.Constants.EMPTY_STRING;
 import static org.folio.util.Constants.OKAPI_URL;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -60,10 +57,6 @@ public class BaseServiceImpl {
     return future;
   }
 
-  String buildQuery(String query) {
-    return "?query=" + encodeQuery(query);
-  }
-
   private HttpClientInterface getHttpClient(Map<String, String> okapiHeaders) {
     final String okapiURL = okapiHeaders.getOrDefault(OKAPI_URL, EMPTY_STRING);
     final String tenantId = TenantTool.calculateTenantId(okapiHeaders.get(OKAPI_HEADER_TENANT));
@@ -77,14 +70,4 @@ public class BaseServiceImpl {
     }
     return response.getBody();
   }
-
-  private String encodeQuery(String query) {
-    try {
-      return URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-    } catch (UnsupportedEncodingException e) {
-      logger.error("Error happened while attempting to encode '{}'", e, query);
-      throw new CompletionException(e);
-    }
-  }
-
 }

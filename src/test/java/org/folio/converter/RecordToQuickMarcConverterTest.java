@@ -19,7 +19,7 @@ public class RecordToQuickMarcConverterTest {
     logger.info("Testing Record -> QuickMarcJson conversion");
     RecordToQuickMarcConverter converter = new RecordToQuickMarcConverter();
     Record record = getMockAsJson("mockdata/srs-records/record.json").mapTo(Record.class);
-    QuickMarcJson quickMarcJson = converter.convert(record);
+    QuickMarcJson quickMarcJson = converter.convert(record.getParsedRecord());
     QuickMarcJson expected = getMockAsJson("mockdata/quick-marc-json/quickMarcJson.json").mapTo(QuickMarcJson.class);
     String expectedString = JsonObject.mapFrom(expected).encodePrettily();
     String convertedString = JsonObject.mapFrom(quickMarcJson).encodePrettily();

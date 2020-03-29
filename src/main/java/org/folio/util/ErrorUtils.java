@@ -19,8 +19,7 @@ public class ErrorUtils {
   private ErrorUtils() {}
 
   public static Parameter buildErrorParameter(String key, String value) {
-    return new Parameter().withKey(key)
-      .withValue(value);
+    return new Parameter().withKey(key).withValue(value);
   }
 
   public static List<Parameter> buildErrorParameters(Parameter... parameters) {
@@ -28,12 +27,7 @@ public class ErrorUtils {
   }
 
   public static Error buildError(int code, String message, List<Parameter> parameters) {
-    Error error = new Error();
-    error.setCode(HttpStatus.get(code)
-      .name());
-    error.setMessage(message);
-    error.setParameters(parameters);
-    return error;
+    return new Error().withCode(HttpStatus.get(code).name()).withMessage(message).withParameters(parameters);
   }
 
   public static Errors buildErrors(Error... errors) {
@@ -50,7 +44,7 @@ public class ErrorUtils {
     final Throwable cause = throwable.getCause();
     final JsonObject jsonObjectError;
     Error error = new Error();
-    int code = 500;
+    int code = HttpStatus.HTTP_INTERNAL_SERVER_ERROR.toInt();
 
     if (cause instanceof HttpException) {
       code = ((HttpException) cause).getCode();
@@ -60,18 +54,15 @@ public class ErrorUtils {
           .withValue(entry.getValue()
             .toString())));
       String message = jsonObjectError.getString("errorMessage");
-      error.setCode(HttpStatus.get(code)
-        .name());
+      error.setCode(HttpStatus.get(code).name());
       error.setMessage(message);
-
-      responseBuilder = javax.ws.rs.core.Response.status(code)
-        .entity(jsonObjectError);
+      responseBuilder = javax.ws.rs.core.Response.status(code).entity(jsonObjectError);
     }
 
-    return responseBuilder.header(CONTENT_TYPE, APPLICATION_JSON)
+    return responseBuilder
+      .header(CONTENT_TYPE, APPLICATION_JSON)
       .status(code)
       .entity(error)
       .build();
   }
-
 }

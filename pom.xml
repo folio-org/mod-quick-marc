@@ -27,6 +27,7 @@
     <jsonschema2pojo_output_dir>${generated_sources_dir}/jsonschema2pojo</jsonschema2pojo_output_dir>
     <folio-di-support.version>1.0.0</folio-di-support.version>
     <marc4j.version>2.9.1</marc4j.version>
+    <wiremock.version>2.26.3</wiremock.version>
   </properties>
 
   <dependencies>
@@ -96,6 +97,12 @@
       <artifactId>folio-di-support</artifactId>
       <version>${folio-di-support.version}</version>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8-standalone</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

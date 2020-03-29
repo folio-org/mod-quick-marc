@@ -25,10 +25,9 @@ import org.springframework.stereotype.Component;
 import io.vertx.core.json.JsonObject;
 
 @Component
-public class RecordToQuickMarcConverter implements Converter<Record, QuickMarcJson> {
+public class RecordToQuickMarcConverter implements Converter<ParsedRecord, QuickMarcJson> {
   @Override
-  public QuickMarcJson convert(Record record) {
-    ParsedRecord parsedRecord = record.getParsedRecord();
+  public QuickMarcJson convert(ParsedRecord parsedRecord) {
     InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8);
     MarcReader reader = new MarcJsonReader(input);
     org.marc4j.marc.Record marcRecord = reader.next();

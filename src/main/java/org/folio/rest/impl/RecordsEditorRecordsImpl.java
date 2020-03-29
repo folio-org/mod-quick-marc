@@ -2,25 +2,16 @@ package org.folio.rest.impl;
 
 import static io.vertx.core.Future.succeededFuture;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static org.folio.util.ErrorUtils.buildError;
-import static org.folio.util.ErrorUtils.buildErrorParameter;
-import static org.folio.util.ErrorUtils.buildErrorParameters;
-import static org.folio.util.ErrorUtils.buildErrors;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.ws.rs.core.Response;
 
 import org.folio.rest.annotations.Validate;
-import org.folio.rest.jaxrs.model.Errors;
-import org.folio.rest.jaxrs.model.Parameter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.rest.jaxrs.resource.RecordsEditorRecords;
 import org.folio.service.MarcRecordsService;
 import org.folio.spring.SpringContextUtil;
-import org.folio.util.Constants;
 import org.folio.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,20 +31,10 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
 
   @Override
   @Validate
-  public void getRecordsEditorRecords(String id, String instanceId, String lang, Map<String, String> headers, Handler<AsyncResult<Response>> handler, Context context) {
-    if(Objects.nonNull(id) && Objects.isNull(instanceId)) {
-      service.getMarcRecordById(id, context, headers)
-        .thenAccept(body -> handler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON_TYPE).build())))
-        .exceptionally(t -> handleErrorResponse(handler, t));
-    } else if (Objects.nonNull(instanceId) && Objects.isNull(id)) {
-      service.getMarcRecordByInstanceId(instanceId, context, headers)
-        .thenAccept(body -> handler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON_TYPE).build())))
-        .exceptionally(t -> handleErrorResponse(handler, t));
-    } else {
-      List<Parameter> parameters = buildErrorParameters(buildErrorParameter(Constants.ID, id), buildErrorParameter(Constants.INSTANCE_ID, instanceId));
-      Errors errors = buildErrors(buildError(422, "Illegal query parameters", parameters));
-      handler.handle(succeededFuture(GetRecordsEditorRecordsResponse.respond422WithApplicationJson(errors)));
-    }
+  public void getRecordsEditorRecordsByInstanceId(String instanceId, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    service.getMarcRecordByInstanceId(instanceId, vertxContext, okapiHeaders)
+      .thenAccept(body -> asyncResultHandler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON_TYPE).build())))
+      .exceptionally(t -> handleErrorResponse(asyncResultHandler, t));
   }
 
   @Override

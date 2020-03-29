@@ -12,6 +12,7 @@ documentation:
 types:
   quickMarcJson: !include schemas/quick_marc_json.json
   sample: !include examples/quick_marc_json.sample
+  error: !include raml-storage/raml-util/schemas/error.schema
   errors: !include raml-storage/raml-util/schemas/errors.schema
   UUID:
     type: string
@@ -44,16 +45,18 @@ traits:
           description: "MARC record with a given ID not found"
           body:
             application/json:
+              type: error
               example:
                 strict: false
-                value: errors
+                value: !include /raml-storage/raml-util/examples/error.sample
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
             application/json:
+              type: error
               example:
                 strict: false
-                value: errors
+                value: !include /raml-storage/raml-util/examples/error.sample
   /{id}:
     uriParameters:
       id:
@@ -76,24 +79,27 @@ traits:
               example:
                 strict: false
                 value: sample
-        400:
-          description: "Bad request, e.g. malformed request body or query parameter. Details of the error (e.g. name of the parameter or line/character number with malformed data) provided in the response."
-          body:
-            application/json:
-              example:
-                strict: false
-                value: errors
         404:
           description: "MARC record with a given ID not found"
           body:
             application/json:
+              type: error
               example:
                 strict: false
-                value: errors
+                value: !include /raml-storage/raml-util/examples/error.sample
+        400:
+          description: "Bad request, e.g. malformed request body or query parameter. Details of the error (e.g. name of the parameter or line/character number with malformed data) provided in the response."
+          body:
+            application/json:
+              type: error
+              example:
+                strict: false
+                value: !include /raml-storage/raml-util/examples/error.sample
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
             application/json:
+              type: error
               example:
                 strict: false
-                value: errors
+                value: !include /raml-storage/raml-util/examples/error.sample

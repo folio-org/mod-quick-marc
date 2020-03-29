@@ -2,6 +2,7 @@ package org.folio.util;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.folio.HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.List;
 import org.folio.HttpStatus;
 import org.folio.exception.HttpException;
 import org.folio.rest.jaxrs.model.Error;
-import org.folio.rest.jaxrs.model.Errors;
 import org.folio.rest.jaxrs.model.Parameter;
 
 import io.vertx.core.json.JsonObject;
@@ -26,12 +26,16 @@ public class ErrorUtils {
     return Arrays.asList(parameters);
   }
 
-  public static Error buildError(int code, String message, List<Parameter> parameters) {
-    return new Error().withCode(HttpStatus.get(code).name()).withMessage(message).withParameters(parameters);
+  public static Error buildError(int status, String message) {
+    return new Error().withCode(HttpStatus.get(status).name()).withMessage(message);
   }
 
-  public static Errors buildErrors(Error... errors) {
-    return new Errors().withErrors(Arrays.asList(errors));
+  public static Error buildError(int status, ErrorType type, String message) {
+    return new Error().withCode(HttpStatus.get(status).name()).withType(type.getTypeCode()).withMessage(message);
+  }
+
+  public static Error buildError(int status, ErrorType type, String message, List<Parameter> parameters) {
+    return new Error().withCode(HttpStatus.get(status).name()).withType(type.getTypeCode()).withMessage(message).withParameters(parameters);
   }
 
   public static javax.ws.rs.core.Response getErrorResponse(Throwable throwable) {
@@ -39,30 +43,43 @@ public class ErrorUtils {
   }
 
   private static javax.ws.rs.core.Response buildErrorResponse(Throwable throwable) {
-    javax.ws.rs.core.Response.ResponseBuilder responseBuilder = javax.ws.rs.core.Response.serverError();
-
+    int status;
+    Error error;
     final Throwable cause = throwable.getCause();
-    final JsonObject jsonObjectError;
-    Error error = new Error();
-    int code = HttpStatus.HTTP_INTERNAL_SERVER_ERROR.toInt();
+    try {
+      if (cause instanceof HttpException) {
+        status = ((HttpException) cause).getCode();
+        JsonObject errorJsonObject = ((HttpException) cause).getError();
+        String type = errorJsonObject.getString("type");
+        if (ErrorType.INTERNAL.getTypeCode().equals(type)) {
+          error = errorJsonObject.mapTo(Error.class);
+        } else {
+          error = new Error().withCode("EXTERNAL_OR_UNDEFINED_ERROR").withMessage("External or undefined error").withType(ErrorType.EXTERNAL_OR_UNDEFINED.getTypeCode());
+        }
+      } else {
+        status = HTTP_INTERNAL_SERVER_ERROR.toInt();
+        error = buildError(status, ErrorType.INTERNAL, "Internal server error");
+      }
+    } catch (Exception e) {
+      status = HTTP_INTERNAL_SERVER_ERROR.toInt();
+      error = buildError(status, ErrorType.UNKNOWN, "Internal server error");
+    }
+    return javax.ws.rs.core.Response.status(status).header(CONTENT_TYPE, APPLICATION_JSON).type(APPLICATION_JSON).entity(error).build();
+  }
 
-    if (cause instanceof HttpException) {
-      code = ((HttpException) cause).getCode();
-      jsonObjectError = ((HttpException) cause).getError();
-      jsonObjectError.forEach(entry -> error.getParameters()
-        .add(new Parameter().withKey(entry.getKey())
-          .withValue(entry.getValue()
-            .toString())));
-      String message = jsonObjectError.getString("errorMessage");
-      error.setCode(HttpStatus.get(code).name());
-      error.setMessage(message);
-      responseBuilder = javax.ws.rs.core.Response.status(code).entity(jsonObjectError);
+  public enum ErrorType {
+    INTERNAL("-1"),
+    EXTERNAL_OR_UNDEFINED("-2"),
+    UNKNOWN("-3");
+
+    private String code;
+
+    ErrorType(String code) {
+      this.code = code;
     }
 
-    return responseBuilder
-      .header(CONTENT_TYPE, APPLICATION_JSON)
-      .status(code)
-      .entity(error)
-      .build();
+    public String getTypeCode() {
+      return code;
+    }
   }
 }

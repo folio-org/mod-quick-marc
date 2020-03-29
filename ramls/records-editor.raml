@@ -21,30 +21,41 @@ traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
   language: !include raml-storage/raml-util/traits/language.raml
 
-resourceTypes:
-  item-get: !include raml-storage/raml-util/rtypes/item-collection-get.raml
-
 /records-editor/records:
   displayName: quickMARC
-  is: [validate]
+  is: [language, validate]
   /{instanceId}:
     uriParameters:
       instanceId:
         description: The UUID of an instance associated with record
         type: UUID
-    type:
-      item-get:
-        schema: quickMarcJson
-        exampleItem: sample
     get:
       description: Get quickMARC record by instanceId
+      responses:
+        200:
+          description: "MARC record successfully updated"
+          body:
+            application/json:
+              type: quickMarcJson
+              example:
+                strict: false
+                value: sample
+        404:
+          description: "MARC record with a given ID not found"
+          body:
+            application/json:
+              example: "MARC record not found"
+        500:
+          description: "Internal server error, e.g. due to misconfiguration"
+          body:
+            application/json:
+              example: "internal server error, contact administrator"
   /{id}:
     uriParameters:
       id:
         description: The UUID of a record
         type: UUID
     put:
-      is: [language]
       description: Edit quickMARC record
       body:
         application/json:
@@ -55,18 +66,24 @@ resourceTypes:
       responses:
         204:
           description: "MARC record successfully updated"
+          body:
+            application/json:
+              type: quickMarcJson
+              example:
+                strict: false
+                value: sample
         404:
           description: "MARC record with a given ID not found"
           body:
-            text/plain:
+            application/json:
               example: "MARC record not found"
         400:
           description: "Bad request, e.g. malformed request body or query parameter. Details of the error (e.g. name of the parameter or line/character number with malformed data) provided in the response."
           body:
-            text/plain:
+            application/json:
               example: "Unable to update MARC record -- malformed JSON at 13:4"
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
-            text/plain:
+            application/json:
               example: "internal server error, contact administrator"

@@ -190,7 +190,7 @@
             <exclude>org/folio/rest/impl/**Test.class</exclude>
           </excludes>
           <includes>
-            <include>org/folio/rest/impl/TestSuite.class</include>
+            <include>org/folio/TestSuite.class</include>
           </includes>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>

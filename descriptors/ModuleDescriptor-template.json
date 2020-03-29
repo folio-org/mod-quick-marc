@@ -2,10 +2,6 @@
   "id": "${artifactId}-${version}",
   "name": "quickMARC",
   "requires": [
-    {
-      "id": "source-storage-records",
-      "version": "1.0"
-    }
   ],
   "provides": [
     {
@@ -16,12 +12,22 @@
           "methods": [
             "GET"
           ],
-          "pathPattern": "/records-editor/records",
+          "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": [
             "records-editor.records.item.get"
           ],
           "modulePermissions": [
-            "source-storage.records.get"
+          ]
+        },
+        {
+          "methods": [
+            "PUT"
+          ],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": [
+            "records-editor.records.item.put"
+          ],
+          "modulePermissions": [
           ]
         },
         {

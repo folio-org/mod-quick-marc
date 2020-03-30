@@ -4,9 +4,11 @@ import static io.vertx.core.Future.succeededFuture;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
+import java.util.Objects;
 
 import javax.ws.rs.core.Response;
 
+import org.folio.rest.annotations.Validate;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.rest.jaxrs.resource.RecordsEditorRecords;
 import org.folio.service.MarcRecordsService;
@@ -29,13 +31,19 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
   }
 
   @Override
-  public void getRecordsEditorRecordsByInstanceId(String instanceId, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    service.getMarcRecordByInstanceId(instanceId, vertxContext, okapiHeaders)
-      .thenAccept(body -> asyncResultHandler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON).build())))
-      .exceptionally(t -> handleErrorResponse(asyncResultHandler, t));
+  @Validate
+  public void getRecordsEditorRecords(String instanceId, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    if (Objects.nonNull(instanceId)) {
+      service.getMarcRecordByInstanceId(instanceId, vertxContext, okapiHeaders)
+        .thenAccept(body -> asyncResultHandler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON).build())))
+        .exceptionally(t -> handleErrorResponse(asyncResultHandler, t));
+    } else {
+      asyncResultHandler.handle(succeededFuture(GetRecordsEditorRecordsResponse.respond400WithApplicationJson(ErrorUtils.buildError(400, ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, "instanceId parameter is not presented"))));
+    }
   }
 
   @Override
+  @Validate
   public void putRecordsEditorRecordsById(String id, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithApplicationJson(ErrorUtils.buildError(500, "Is not implemented yet"))));
   }

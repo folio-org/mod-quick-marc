@@ -13,7 +13,7 @@ quickMARC API provides the following URLs:
 
 |  Method | URL| Permissions  | Description  | 
 |---|---|---|---|
-| GET | /records-editor/records/{instanceId}  |records-editor.records.item.get   | Retrieves QuickMarcJson by instance's id  |
+| GET | /records-editor/records?instanceId={instanceId}  |records-editor.records.item.get   | Retrieves QuickMarcJson by instance's id  |
 | PUT | /records-editor/records/{recordId}  |records-editor.records.item.get   | Updates SRS record |
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).

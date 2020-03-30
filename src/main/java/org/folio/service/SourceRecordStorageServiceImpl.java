@@ -35,7 +35,7 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
 
   @Override
   public CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers) {
-    return handleGetRequest(getResourcesPath(SRS_RECORDS) + buildQuery("externalIdsHolder.instanceId==" + instanceId), context, headers)
+    return handleGetRequest(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + instanceId), context, headers)
       .thenApply(records -> {
         RecordCollection collection = records.mapTo(RecordCollection.class);
         if (collection.getTotalRecords() == 0) {

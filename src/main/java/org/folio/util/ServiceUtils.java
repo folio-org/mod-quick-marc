@@ -14,8 +14,8 @@ public class ServiceUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(ServiceUtils.class);
 
-  public static String buildQuery(String query) {
-    return "?query=" + encodeQuery(query);
+  public static String buildQuery(String parameter, String query) {
+    return String.format("?%s=%s", parameter, encodeQuery(query));
   }
 
   private static String encodeQuery(String query) {

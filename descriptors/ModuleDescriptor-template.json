@@ -12,7 +12,7 @@
           "methods": [
             "GET"
           ],
-          "pathPattern": "/records-editor/records/{id}",
+          "pathPattern": "/records-editor/records",
           "permissionsRequired": [
             "records-editor.records.item.get"
           ],

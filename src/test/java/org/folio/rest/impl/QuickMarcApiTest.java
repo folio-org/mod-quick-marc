@@ -23,19 +23,19 @@ public class QuickMarcApiTest extends ApiTestBase {
   private static final Logger logger = LoggerFactory.getLogger(QuickMarcApiTest.class);
   private static final String EXISTED_INSTANCE_ID = "54cc0262-76df-4cac-acca-b10e9bc5c79a";
   private static final String CONTENT_TYPE = "Content-type";
-  private static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records/";
+  private static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
 
   @Test
   public void testGetQuickMarcRecord() {
     logger.info("===== Verify GET record: Successful =====");
 
     wireMockServer
-      .stubFor(get(urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("externalIdsHolder.instanceId==" + EXISTED_INSTANCE_ID)))
+      .stubFor(get(urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + EXISTED_INSTANCE_ID)))
         .willReturn(aResponse().withBody(getSrsRecordsBySearchParameter(EXISTED_INSTANCE_ID).encode())
           .withHeader(CONTENT_TYPE, APPLICATION_JSON)
           .withStatus(200)));
 
-    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + EXISTED_INSTANCE_ID, 200);
+    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("instanceId", EXISTED_INSTANCE_ID), 200);
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
@@ -46,13 +46,13 @@ public class QuickMarcApiTest extends ApiTestBase {
     String recordNotFoundId = UUID.randomUUID().toString();
 
     wireMockServer
-      .stubFor(get(urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("externalIdsHolder.instanceId==" + recordNotFoundId)))
+      .stubFor(get(urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + recordNotFoundId)))
         .willReturn(aResponse()
           .withBody(getSrsRecordsBySearchParameter(recordNotFoundId).encode())
           .withHeader("Content-type", APPLICATION_JSON)
           .withStatus(200)));
 
-    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + recordNotFoundId, 404);
+    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("instanceId", recordNotFoundId), 404);
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
@@ -63,12 +63,21 @@ public class QuickMarcApiTest extends ApiTestBase {
     String internalServerErrorInstanceId = UUID.randomUUID().toString();
 
     wireMockServer.stubFor(get(
-        urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("externalIdsHolder.instanceId==" + internalServerErrorInstanceId)))
+        urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + internalServerErrorInstanceId)))
           .willReturn(aResponse().withBody("Internal server error")
             .withHeader("Content-type", TEXT_PLAIN)
             .withStatus(500)));
 
-    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + internalServerErrorInstanceId, 500);
+    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("instanceId", internalServerErrorInstanceId), 500);
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
+  }
+
+  @Test
+  public void testGetQuickMarcRecordWithoutInstanceIdParameter() {
+    logger.info("===== Verify GET record: Request without instanceId =====");
+
+    String id = UUID.randomUUID().toString();
+
+    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("X", id), 400);
   }
 }

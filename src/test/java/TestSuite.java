@@ -8,7 +8,7 @@ public class TestSuite {
   @Nested
   class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTests {}
   @Nested
-  class RecordToQuickMarcConverterTestNested extends RecordToQuickMarcConverterTest {}
+  class ParsedRecordToQuickMarcConverterTestNested extends ParsedRecordToQuickMarcConverterTest {}
   @Nested
-  class QuickMarcToRecordConverterTestNested extends QuickMarcToRecordConverterTest {}
+  class QuickMarcToParsedRecordConverterTestNested extends QuickMarcToParsedRecordConverterTest {}
 }

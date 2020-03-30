@@ -1,10 +1,12 @@
+package org.folio.rest.impl;
+
 import org.folio.converter.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.TestEntities;
+import org.folio.rest.impl.utils.TestEntities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

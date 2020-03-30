@@ -1,4 +1,4 @@
-package utils;
+package org.folio.rest.impl.utils;
 
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.IOUtils;

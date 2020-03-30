@@ -1,3 +1,5 @@
+package org.folio.rest.impl;
+
 import org.junit.jupiter.api.Nested;
 
 public class TestSuite {

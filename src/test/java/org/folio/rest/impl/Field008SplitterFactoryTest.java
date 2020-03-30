@@ -1,3 +1,5 @@
+package org.folio.rest.impl;
+
 import static org.folio.converter.StringConstants.ACCM;
 import static org.folio.converter.StringConstants.ALPH;
 import static org.folio.converter.StringConstants.AUDN;

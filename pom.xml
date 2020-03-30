@@ -127,10 +127,10 @@
         <version>2.22.1</version>
         <configuration>
           <excludes>
-            <exclude>**Test.class</exclude>
+            <exclude>org/folio/rest/impl/**Test.class</exclude>
           </excludes>
           <includes>
-            <include>TestSuite.class</include>
+            <include>org.folio.rest.impl.TestSuite.class</include>
           </includes>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>

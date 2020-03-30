@@ -1,4 +1,4 @@
-package org.folio.rest.impl;
+package org.folio.converter;
 
 import static org.folio.converter.StringConstants.ACCM;
 import static org.folio.converter.StringConstants.ALPH;
@@ -43,8 +43,6 @@ import static org.folio.converter.StringConstants.VALUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
-import org.folio.converter.ContentType;
-import org.folio.converter.Field008SplitterFactory;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

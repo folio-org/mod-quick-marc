@@ -1,4 +1,4 @@
-package org.folio.rest.impl.utils;
+package org.folio.converter;
 
 import org.folio.converter.ContentType;
 

@@ -1,10 +1,9 @@
-package org.folio.rest.impl;
+package org.folio.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.folio.rest.impl.utils.TestUtils.getMockAsJson;
+import static org.folio.converter.TestUtils.getMockAsJson;
 
 import io.vertx.core.json.JsonObject;
-import org.folio.converter.ParsedRecordToQuickMarcConverter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecordDto;
 import org.junit.jupiter.api.Test;

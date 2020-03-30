@@ -1,10 +1,15 @@
-package org.folio.rest.impl;
+package org.folio;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.folio.converter.ContentTypeTest;
+import org.folio.converter.Field008RestoreFactoryTest;
+import org.folio.converter.Field008SplitterFactoryTest;
+import org.folio.converter.ParsedRecordToQuickMarcConverterTest;
+import org.folio.converter.QuickMarcToParsedRecordConverterTest;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.tools.utils.NetworkUtils;
 import org.junit.jupiter.api.AfterAll;
@@ -63,14 +68,11 @@ public class TestSuite {
   }
 
   @Nested
-  class TestGetRecords extends GetRecordsTest {
-  }
-  @Nested
   class ContentTypeTestNested extends ContentTypeTest {}
   @Nested
   class Field008SplitterFactoryTestNested extends Field008SplitterFactoryTest {}
   @Nested
-  class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTest {}
+  class Field008RestoreFactoryTestNested extends Field008RestoreFactoryTest {}
   @Nested
   class ParsedRecordToQuickMarcConverterTestNested extends ParsedRecordToQuickMarcConverterTest {}
   @Nested

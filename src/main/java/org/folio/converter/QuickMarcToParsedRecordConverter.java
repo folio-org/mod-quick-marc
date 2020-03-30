@@ -34,11 +34,9 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     contentMap.put("fields", extractFields(marcRecord));
     contentMap.put("leader", marcRecord.getLeader().marshal());
 
-    ParsedRecord parsedRecord = new ParsedRecord()
+    return new ParsedRecord()
       .withId(quickMarcJson.getId())
       .withContent(contentMap);
-
-    return parsedRecord;
   }
 
   private Record quickMarcJsonToMarcRecord(QuickMarcJson quickMarcJson){
@@ -47,7 +45,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     quickMarcJson.getFields().forEach(field -> {
       String tag = field.getTag();
       String data = field.getContent().toString();
-      if (field.getIndicators().size() == 0) {
+      if (field.getIndicators().isEmpty()) {
         ControlField controlField = factory.newControlField();
         controlField.setTag(tag);
         if ("008".equals(tag)) {

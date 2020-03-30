@@ -13,8 +13,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.TestUtils.getMockData;
 
-public class Field008RestoreFactoryTests {
-  private static final Logger logger = LoggerFactory.getLogger(Field008RestoreFactoryTests.class);
+public class Field008RestoreFactoryTest {
+  private static final Logger logger = LoggerFactory.getLogger(Field008RestoreFactoryTest.class);
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)

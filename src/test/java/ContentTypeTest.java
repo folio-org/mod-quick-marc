@@ -8,8 +8,8 @@ import utils.TestEntities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ContentTypeTests {
-  private static final Logger logger = LoggerFactory.getLogger(ContentTypeTests.class);
+public class ContentTypeTest {
+  private static final Logger logger = LoggerFactory.getLogger(ContentTypeTest.class);
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)

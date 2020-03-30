@@ -51,8 +51,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Field008SplitterFactoryTests {
-  private static final Logger logger = LoggerFactory.getLogger(Field008SplitterFactoryTests.class);
+public class Field008SplitterFactoryTest {
+  private static final Logger logger = LoggerFactory.getLogger(Field008SplitterFactoryTest.class);
 
   @Test
   public void testField008SplitHeaderAndFooter() {

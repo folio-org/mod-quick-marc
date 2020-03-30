@@ -2,11 +2,11 @@ import org.junit.jupiter.api.Nested;
 
 public class TestSuite {
   @Nested
-  class ContentTypeTestsNested extends ContentTypeTests {}
+  class ContentTypeTestNested extends ContentTypeTest {}
   @Nested
-  class Field008SplitterFactoryTestsNested extends Field008SplitterFactoryTests {}
+  class Field008SplitterFactoryTestNested extends Field008SplitterFactoryTest {}
   @Nested
-  class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTests {}
+  class Field008RestoreFactoryTestNested extends Field008RestoreFactoryTest {}
   @Nested
   class ParsedRecordToQuickMarcConverterTestNested extends ParsedRecordToQuickMarcConverterTest {}
   @Nested

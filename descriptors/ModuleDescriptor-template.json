@@ -1,8 +1,37 @@
 {
   "id": "${artifactId}-${version}",
-  "name": "Pet",
-  "requires": [],
+  "name": "quickMARC",
+  "requires": [
+  ],
   "provides": [
+    {
+      "id": "records-editor.records",
+      "version": "1.0",
+      "handlers": [
+        {
+          "methods": [
+            "GET"
+          ],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": [
+            "records-editor.records.item.get"
+          ],
+          "modulePermissions": [
+          ]
+        },
+        {
+          "methods": [
+            "PUT"
+          ],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": [
+            "records-editor.records.item.put"
+          ],
+          "modulePermissions": [
+          ]
+        }
+      ]
+    },
     {
       "id": "_tenant",
       "version": "1.0",
@@ -24,11 +53,26 @@
     }
   ],
   "permissionSets": [
+    {
+      "permissionName": "records-editor.records.item.get",
+      "displayName": "records-editor - get a record",
+      "description": "Get a record"
+    },
+    {
+      "permissionName": "records-editor.records.item.put",
+      "displayName": "records-editor - update a record",
+      "description": "Update a record"
+    },
+    {
+      "permissionName" : "records-editor.all",
+      "displayName" : "All records-editor permissions",
+      "description" : "All permissions for the records-editor",
+      "subPermissions" : [
+        "records-editor.records.item.get",
+        "records-editor.records.item.put"
+      ]
+    }
   ],
-  "metadata": {
-    "containerMemory": "256",
-    "databaseConnection": "true"
-  },
   "launchDescriptor": {
     "dockerImage": "${artifactId}:${version}",
     "dockerPull": false,
@@ -39,17 +83,10 @@
       }
     },
     "env": [
-      { "name": "JAVA_OPTIONS",
+      {
+        "name": "JAVA_OPTIONS",
         "value": "-XX:MaxRAMPercentage=66.0"
-      },
-      { "name": "DB_HOST", "value": "postgres" },
-      { "name": "DB_PORT", "value": "5432" },
-      { "name": "DB_USERNAME", "value": "folio_admin" },
-      { "name": "DB_PASSWORD", "value": "folio_admin" },
-      { "name": "DB_DATABASE", "value": "okapi_modules" },
-      { "name": "DB_QUERYTIMEOUT", "value": "60000" },
-      { "name": "DB_CHARSET", "value": "UTF-8" },
-      { "name": "DB_MAXPOOLSIZE", "value": "5" }
+      }
     ]
   }
 }

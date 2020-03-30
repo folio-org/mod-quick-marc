@@ -1,19 +1,5 @@
 package org.folio.rest.impl;
 
-import org.junit.jupiter.api.Nested;
-
-public class TestSuite {
-  @Nested
-  class ContentTypeTestNested extends ContentTypeTest {}
-  @Nested
-  class Field008SplitterFactoryTestNested extends Field008SplitterFactoryTest {}
-  @Nested
-  class Field008RestoreFactoryTestNested extends Field008RestoreFactoryTest {}
-  @Nested
-  class ParsedRecordToQuickMarcConverterTestNested extends ParsedRecordToQuickMarcConverterTest {}
-  @Nested
-  class QuickMarcToParsedRecordConverterTestNested extends QuickMarcToParsedRecordConverterTest {}
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -79,4 +65,14 @@ public class TestSuite {
   @Nested
   class TestGetRecords extends GetRecordsTest {
   }
+  @Nested
+  class ContentTypeTestNested extends ContentTypeTest {}
+  @Nested
+  class Field008SplitterFactoryTestNested extends Field008SplitterFactoryTest {}
+  @Nested
+  class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTest {}
+  @Nested
+  class ParsedRecordToQuickMarcConverterTestNested extends ParsedRecordToQuickMarcConverterTest {}
+  @Nested
+  class QuickMarcToParsedRecordConverterTestNested extends QuickMarcToParsedRecordConverterTest {}
 }

@@ -12,9 +12,20 @@
           "methods": [
             "GET"
           ],
-          "pathPattern": "/records-editor/records/{id}",
+          "pathPattern": "/records-editor/records",
           "permissionsRequired": [
             "records-editor.records.item.get"
+          ],
+          "modulePermissions": [
+          ]
+        },
+        {
+          "methods": [
+            "PUT"
+          ],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": [
+            "records-editor.records.item.put"
           ],
           "modulePermissions": [
           ]

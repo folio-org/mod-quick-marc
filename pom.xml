@@ -27,6 +27,7 @@
     <jsonschema2pojo_output_dir>${generated_sources_dir}/jsonschema2pojo</jsonschema2pojo_output_dir>
     <folio-di-support.version>1.0.0</folio-di-support.version>
     <marc4j.version>2.9.1</marc4j.version>
+    <wiremock.version>2.26.3</wiremock.version>
   </properties>
 
   <dependencies>
@@ -97,6 +98,12 @@
       <version>${folio-di-support.version}</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8-standalone</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -145,6 +152,31 @@
       </plugin>
 
       <plugin>
+        <groupId>org.jsonschema2pojo</groupId>
+        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+        <version>0.5.1</version>
+        <configuration>
+          <includes>
+            <include>*.json</include>
+          </includes>
+          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
+          <generateBuilders>true</generateBuilders>
+        </configuration>
+        <executions>
+          <execution>
+            <id>dto</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
+              <targetPackage>org.folio.srs.model</targetPackage>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
@@ -158,7 +190,7 @@
             <exclude>org/folio/rest/impl/**Test.class</exclude>
           </excludes>
           <includes>
-            <include>org/folio/rest/impl/TestSuite.class</include>
+            <include>org/folio/TestSuite.class</include>
           </includes>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
@@ -396,7 +428,7 @@
                   </excludes>
                 </filter>
               </filters>
-              <artifactSet />
+              <artifactSet/>
               <outputFile>${project.build.directory}/${project.artifactId}-fat.jar</outputFile>
             </configuration>
           </execution>
@@ -413,29 +445,6 @@
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.jsonschema2pojo</groupId>
-        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-        <version>0.5.1</version>
-        <configuration>
-          <includes><include>*.json</include></includes>
-          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
-          <generateBuilders>true</generateBuilders>
-        </configuration>
-        <executions>
-          <execution>
-            <id>quick-marc</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
-              <targetPackage>org.folio.srs.model</targetPackage>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
     </plugins>

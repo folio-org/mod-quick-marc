@@ -41,8 +41,8 @@
     "indicators" : [ ]
   }, {
     "tag" : "035",
-    "content" : "$a ocn924437963",
-    "indicators" : [ " ", " " ]
+    "content" : "ocn924437963",
+    "indicators" : [ ]
   }, {
     "tag" : "037",
     "content" : "$a 10580766 $b ybp $5 NU",

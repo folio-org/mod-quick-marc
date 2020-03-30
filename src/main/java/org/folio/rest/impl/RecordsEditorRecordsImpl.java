@@ -3,49 +3,53 @@ package org.folio.rest.impl;
 import static io.vertx.core.Future.succeededFuture;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.IOUtils;
 import org.folio.rest.annotations.Validate;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.rest.jaxrs.resource.RecordsEditorRecords;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.folio.service.MarcRecordsService;
+import org.folio.spring.SpringContextUtil;
+import org.folio.util.ErrorUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 
 public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
 
-  private static final Logger logger = LoggerFactory.getLogger(RecordsEditorRecordsImpl.class);
-  private static final String RESPONSE_MOCK = "quick_marc_json.json";
+  @Autowired
+  private MarcRecordsService service;
+
+  public RecordsEditorRecordsImpl() {
+    SpringContextUtil.autowireDependencies(this, Vertx.currentContext());
+  }
 
   @Override
   @Validate
-  public void getRecordsEditorRecordsByInstanceId(String instanceId, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    try {
-      asyncResultHandler.handle(succeededFuture(Response.ok(getMockData(RESPONSE_MOCK), APPLICATION_JSON).build()));
-    } catch (IOException e) {
-      asyncResultHandler.handle(succeededFuture(Response.serverError().build()));
+  public void getRecordsEditorRecords(String instanceId, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    if (Objects.nonNull(instanceId)) {
+      service.getMarcRecordByInstanceId(instanceId, vertxContext, okapiHeaders)
+        .thenAccept(body -> asyncResultHandler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON).build())))
+        .exceptionally(t -> handleErrorResponse(asyncResultHandler, t));
+    } else {
+      asyncResultHandler.handle(succeededFuture(GetRecordsEditorRecordsResponse.respond400WithApplicationJson(ErrorUtils.buildError(400, ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, "instanceId parameter is not presented"))));
     }
   }
 
   @Override
   @Validate
-  public void putRecordsEditorRecordsById(String id, String lang, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithTextPlain("Is not implemented yet")));
+  public void putRecordsEditorRecordsById(String id, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithApplicationJson(ErrorUtils.buildError(500, "Is not implemented yet"))));
   }
 
-  protected static String getMockData(String path) throws IOException {
-    logger.info("Using mock datafile: {}", path);
-    try (InputStream resourceAsStream = RecordsEditorRecordsImpl.class.getClassLoader().getResourceAsStream(path)) {
-      return IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
-    }
+  private Void handleErrorResponse(Handler<AsyncResult<Response>> handler, Throwable t) {
+    handler.handle(succeededFuture(ErrorUtils.getErrorResponse(t)));
+    return null;
   }
 }

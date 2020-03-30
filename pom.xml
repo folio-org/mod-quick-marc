@@ -99,6 +99,12 @@
       <type>jar</type>
     </dependency>
     <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8-standalone</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.marc4j</groupId>
       <artifactId>marc4j</artifactId>
       <version>${marc4j.version}</version>
@@ -173,6 +179,31 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.jsonschema2pojo</groupId>
+        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+        <version>0.5.1</version>
+        <configuration>
+          <includes>
+            <include>*.json</include>
+          </includes>
+          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
+          <generateBuilders>true</generateBuilders>
+        </configuration>
+        <executions>
+          <execution>
+            <id>dto</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
+              <targetPackage>org.folio.srs.model</targetPackage>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -444,6 +475,7 @@
           <localCheckout>true</localCheckout>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 

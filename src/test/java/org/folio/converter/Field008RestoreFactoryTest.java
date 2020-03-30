@@ -1,17 +1,18 @@
 package org.folio.converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.folio.converter.TestUtils.getMockData;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.folio.converter.TestUtils.getMockData;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Field008RestoreFactoryTest {
   private static final Logger logger = LoggerFactory.getLogger(Field008RestoreFactoryTest.class);

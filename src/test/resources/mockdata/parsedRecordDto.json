@@ -1,0 +1,535 @@
+{
+  "id": "85218699-e820-4110-a5fa-f4894de73220",
+  "recordType": "MARC",
+  "parsedRecord": {
+    "id": "74809653-12e3-45b9-832c-630cd981d47d",
+    "content": {
+      "fields": [
+        {
+          "001": "in00000000162"
+        },
+        {
+          "003": "OCoLC"
+        },
+        {
+          "005": "20151016092438.4"
+        },
+        {
+          "008": "150909t20152015enk    e b    001 0deng  "
+        },
+        {
+          "035": "ocn924437963"
+        },
+        {
+          "037": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "10580766"
+              },
+              {
+                "b": "ybp"
+              },
+              {
+                "5": "NU"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "AU@"
+              },
+              {
+                "b": "eng"
+              },
+              {
+                "c": "AU@"
+              },
+              {
+                "e": "rda"
+              },
+              {
+                "d": "OCLCO"
+              },
+              {
+                "d": "NhCcYBP"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "9780752499741"
+              },
+              {
+                "q": "hardback"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "0752499742"
+              },
+              {
+                "q": "hardback"
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "(OCoLC)924437963"
+              }
+            ]
+          }
+        },
+        {
+          "050": {
+            "ind1": " ",
+            "ind2": "4",
+            "subfields": [
+              {
+                "a": "DA591.T47"
+              },
+              {
+                "b": "B56 2015"
+              }
+            ]
+          }
+        },
+        {
+          "082": {
+            "ind1": "0",
+            "ind2": "4",
+            "subfields": [
+              {
+                "a": "942.085092"
+              },
+              {
+                "2": "23"
+              }
+            ]
+          }
+        },
+        {
+          "090": {
+            "ind1": " ",
+            "ind2": "4",
+            "subfields": [
+              {
+                "a": "942.085092"
+              },
+              {
+                "b": "1"
+              }
+            ]
+          }
+        },
+        {
+          "100": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Bloom, Clive,"
+              },
+              {
+                "e": "author."
+              }
+            ]
+          }
+        },
+        {
+          "245": {
+            "ind1": "1",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Thatcher's secret war :"
+              },
+              {
+                "b": "subversion, coercion, secrecy and government, 1974-90 /"
+              },
+              {
+                "c": "Clive Bloom."
+              }
+            ]
+          }
+        },
+        {
+          "264": {
+            "ind1": " ",
+            "ind2": "1",
+            "subfields": [
+              {
+                "a": "Stroud, Gloucestershire :"
+              },
+              {
+                "b": "The History Press,"
+              },
+              {
+                "c": "2015."
+              }
+            ]
+          }
+        },
+        {
+          "264": {
+            "ind1": " ",
+            "ind2": "4",
+            "subfields": [
+              {
+                "c": "Ã2015."
+              }
+            ]
+          }
+        },
+        {
+          "300": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "320 pages ;"
+              },
+              {
+                "c": "25 cm"
+              }
+            ]
+          }
+        },
+        {
+          "336": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "text"
+              },
+              {
+                "b": "txt"
+              },
+              {
+                "2": "rdacontent"
+              }
+            ]
+          }
+        },
+        {
+          "337": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "unmediated"
+              },
+              {
+                "b": "n"
+              },
+              {
+                "2": "rdamedia"
+              }
+            ]
+          }
+        },
+        {
+          "338": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "volume"
+              },
+              {
+                "b": "nc"
+              },
+              {
+                "2": "rdacarrier"
+              }
+            ]
+          }
+        },
+        {
+          "504": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Includes bibliographical references and index."
+              }
+            ]
+          }
+        },
+        {
+          "505": {
+            "ind1": "0",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Machine generated contents note: 1.Monster Time -- 2.The Fat Spider -- 3.Clockwork Orange -- 4.A Colditz Warrior in Whitehall -- 5.Shining Like Spun Gold -- 6.Brian Crozier's Shield -- 7.Knowing You are Right -- 8.Operation Barmaid -- 9.The Show Trials of Old England -- 10.The 20 June Group -- 11.Smells Like Teen Spirits -- 12.Taking Pot-shots at Arthur -- 13.The Great Endeavour -- 14.A Manual of Basic Training -- 15.Over the Rainbow -- 16.White Noise -- 17.The Intelligence of Sleeping Dogs -- 18.Those Heavy People -- 19.The Fat Controller -- 20.Zeus and the Anglian Satanic Church -- 21.Voodoo Histories -- 22.Friends in the North -- 23.The Red Escort Comes to the Highlands -- 24.The Hooded Men -- 25.Zulu Delta 576 -- 26.The Old Iron Woman -- 27.Vicarious Victimhood -- 28.Mummsie Time!."
+              }
+            ]
+          }
+        },
+        {
+          "520": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "This work, which begins with what many believe to be a political killing, is an alternative history of Margaret Thatcher's premiership. It looks at the secret campaign that Mrs Thatcher and her government waged before and after the Falklands War against 'subversives': anti-nuclear, new age and ecology campaigners; poll tax protesters; trade unionists at GCHQ and Wapping; Greenham Common women; Scottish nationalists; Ken Livingstone and the GLC; Derek Hatton and the city councillors of Liverpool; protesters and rioters in Brixton, Toxteth and Broadwater Farm; the far right; the Europe Union; and the Irish Republican Army."
+              }
+            ]
+          }
+        },
+        {
+          "600": {
+            "ind1": "1",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Thatcher, Margaret."
+              }
+            ]
+          }
+        },
+        {
+          "651": {
+            "ind1": " ",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Great Britain"
+              },
+              {
+                "x": "Politics and government"
+              },
+              {
+                "y": "1964-1979."
+              }
+            ]
+          }
+        },
+        {
+          "651": {
+            "ind1": " ",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Great Britain"
+              },
+              {
+                "x": "Politics and government"
+              },
+              {
+                "y": "1979-1997."
+              }
+            ]
+          }
+        },
+        {
+          "945": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "f": "h"
+              },
+              {
+                "g": "1"
+              },
+              {
+                "i": "0000000618391883"
+              },
+              {
+                "l": "fhgen"
+              },
+              {
+                "r": "3"
+              },
+              {
+                "s": "v"
+              },
+              {
+                "t": "1"
+              }
+            ]
+          }
+        },
+        {
+          "960": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "p"
+              },
+              {
+                "d": "a"
+              },
+              {
+                "g": "h"
+              },
+              {
+                "i": "m"
+              },
+              {
+                "j": "n"
+              },
+              {
+                "k": "a"
+              },
+              {
+                "l": "a"
+              },
+              {
+                "m": "o"
+              },
+              {
+                "t": "fhgen"
+              },
+              {
+                "o": "1"
+              },
+              {
+                "s": "16.40"
+              },
+              {
+                "u": "7ART"
+              },
+              {
+                "v": "ukapf"
+              },
+              {
+                "z": "GBP"
+              }
+            ]
+          }
+        },
+        {
+          "961": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "b": "GBP"
+              },
+              {
+                "m": "633761"
+              }
+            ]
+          }
+        },
+        {
+          "980": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "160128"
+              },
+              {
+                "b": "2000"
+              },
+              {
+                "d": "164"
+              },
+              {
+                "e": "1804"
+              },
+              {
+                "f": "654272"
+              },
+              {
+                "g": "1"
+              }
+            ]
+          }
+        },
+        {
+          "981": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "ukapf"
+              },
+              {
+                "b": "7ART"
+              },
+              {
+                "c": "fhgen"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "d": "m"
+              },
+              {
+                "e": "a"
+              },
+              {
+                "f": "x"
+              },
+              {
+                "g": "eng"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "85218699-e820-4110-a5fa-f4894de73220"
+              },
+              {
+                "i": "1d6b0dc4-8be3-444a-8fb9-335d95c96054"
+              }
+            ]
+          }
+        }
+      ],
+      "leader": "02917cam a2200433 i 4500"
+    }
+  },
+  "externalIdsHolder": {
+    "instanceId": "1d6b0dc4-8be3-444a-8fb9-335d95c96054"
+  },
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "metadata": {
+    "createdDate": "2020-03-24T14:45:34.432+0000",
+    "createdByUserId": "82046efd-9158-4081-8cd0-87692fefec78",
+    "updatedDate": "2020-03-24T14:45:38.340+0000",
+    "updatedByUserId": "82046efd-9158-4081-8cd0-87692fefec78"
+  }
+}

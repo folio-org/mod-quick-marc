@@ -1,5 +1,5 @@
 {
-  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "id" : "2f390fa6-a2f8-4027-abaf-ee61952668bc",
   "leader" : "01542ccm a2200361   4500",
   "fields" : [ {
     "tag" : "001",
@@ -15,10 +15,10 @@
       "Content" : "Scores",
       "Type" : "c",
       "BLvl" : "m",
-      "Entered" : "830419",
+      "Entered" : "83041912",
       "DtSt" : "m",
-      "Date1" : "1955",
-      "Date2" : "9999",
+      "Date1" : "195512",
+      "Date2" : "999912",
       "Ctry" : "gw ",
       "Comp" : "mu",
       "FMus" : "a",

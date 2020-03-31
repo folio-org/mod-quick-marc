@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class ContentTypeTest {
   private static final Logger logger = LoggerFactory.getLogger(ContentTypeTest.class);
 

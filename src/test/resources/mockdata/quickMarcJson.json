@@ -1,0 +1,163 @@
+{
+  "id" : "74809653-12e3-45b9-832c-630cd981d47d",
+  "leader" : "02917cam a2200433 i 4500",
+  "fields" : [ {
+    "tag" : "001",
+    "content" : "in00000000162",
+    "indicators" : [ ]
+  }, {
+    "tag" : "003",
+    "content" : "OCoLC",
+    "indicators" : [ ]
+  }, {
+    "tag" : "005",
+    "content" : "20151016092438.4",
+    "indicators" : [ ]
+  }, {
+    "tag" : "008",
+    "content" : {
+      "Content" : "Books",
+      "Type" : "a",
+      "BLvl" : "m",
+      "Entered" : "150909",
+      "DtSt" : "t",
+      "Date1" : "2015",
+      "Date2" : "2015",
+      "Ctry" : "enk",
+      "Ills" : [ " ", " ", " ", " " ],
+      "Audn" : "e",
+      "Form" : " ",
+      "Cont" : [ "b", " ", " ", " " ],
+      "GPub" : " ",
+      "Conf" : "0",
+      "Fest" : "0",
+      "Indx" : "1",
+      "LitF" : "0",
+      "Biog" : "d",
+      "Lang" : "eng",
+      "MRec" : " ",
+      "Srce" : " "
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "035",
+    "content" : "ocn924437963",
+    "indicators" : [ ]
+  }, {
+    "tag" : "037",
+    "content" : "$a 10580766 $b ybp $5 NU",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "040",
+    "content" : "$a AU@ $b eng $c AU@ $e rda $d OCLCO $d NhCcYBP",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "020",
+    "content" : "$a 9780752499741 $q hardback",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "020",
+    "content" : "$a 0752499742 $q hardback",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "035",
+    "content" : "$a (OCoLC)924437963",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "050",
+    "content" : "$a DA591.T47 $b B56 2015",
+    "indicators" : [ " ", "4" ]
+  }, {
+    "tag" : "082",
+    "content" : "$a 942.085092 $2 23",
+    "indicators" : [ "0", "4" ]
+  }, {
+    "tag" : "090",
+    "content" : "$a 942.085092 $b 1",
+    "indicators" : [ " ", "4" ]
+  }, {
+    "tag" : "100",
+    "content" : "$a Bloom, Clive, $e author.",
+    "indicators" : [ "1", " " ]
+  }, {
+    "tag" : "245",
+    "content" : "$a Thatcher's secret war : $b subversion, coercion, secrecy and government, 1974-90 / $c Clive Bloom.",
+    "indicators" : [ "1", "0" ]
+  }, {
+    "tag" : "264",
+    "content" : "$a Stroud, Gloucestershire : $b The History Press, $c 2015.",
+    "indicators" : [ " ", "1" ]
+  }, {
+    "tag" : "264",
+    "content" : "$c Ã2015.",
+    "indicators" : [ " ", "4" ]
+  }, {
+    "tag" : "300",
+    "content" : "$a 320 pages ; $c 25 cm",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "336",
+    "content" : "$a text $b txt $2 rdacontent",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "337",
+    "content" : "$a unmediated $b n $2 rdamedia",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "338",
+    "content" : "$a volume $b nc $2 rdacarrier",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "504",
+    "content" : "$a Includes bibliographical references and index.",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "505",
+    "content" : "$a Machine generated contents note: 1.Monster Time -- 2.The Fat Spider -- 3.Clockwork Orange -- 4.A Colditz Warrior in Whitehall -- 5.Shining Like Spun Gold -- 6.Brian Crozier's Shield -- 7.Knowing You are Right -- 8.Operation Barmaid -- 9.The Show Trials of Old England -- 10.The 20 June Group -- 11.Smells Like Teen Spirits -- 12.Taking Pot-shots at Arthur -- 13.The Great Endeavour -- 14.A Manual of Basic Training -- 15.Over the Rainbow -- 16.White Noise -- 17.The Intelligence of Sleeping Dogs -- 18.Those Heavy People -- 19.The Fat Controller -- 20.Zeus and the Anglian Satanic Church -- 21.Voodoo Histories -- 22.Friends in the North -- 23.The Red Escort Comes to the Highlands -- 24.The Hooded Men -- 25.Zulu Delta 576 -- 26.The Old Iron Woman -- 27.Vicarious Victimhood -- 28.Mummsie Time!.",
+    "indicators" : [ "0", " " ]
+  }, {
+    "tag" : "520",
+    "content" : "$a This work, which begins with what many believe to be a political killing, is an alternative history of Margaret Thatcher's premiership. It looks at the secret campaign that Mrs Thatcher and her government waged before and after the Falklands War against 'subversives': anti-nuclear, new age and ecology campaigners; poll tax protesters; trade unionists at GCHQ and Wapping; Greenham Common women; Scottish nationalists; Ken Livingstone and the GLC; Derek Hatton and the city councillors of Liverpool; protesters and rioters in Brixton, Toxteth and Broadwater Farm; the far right; the Europe Union; and the Irish Republican Army.",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "600",
+    "content" : "$a Thatcher, Margaret.",
+    "indicators" : [ "1", "0" ]
+  }, {
+    "tag" : "651",
+    "content" : "$a Great Britain $x Politics and government $y 1964-1979.",
+    "indicators" : [ " ", "0" ]
+  }, {
+    "tag" : "651",
+    "content" : "$a Great Britain $x Politics and government $y 1979-1997.",
+    "indicators" : [ " ", "0" ]
+  }, {
+    "tag" : "945",
+    "content" : "$f h $g 1 $i 0000000618391883 $l fhgen $r 3 $s v $t 1",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "960",
+    "content" : "$a p $d a $g h $i m $j n $k a $l a $m o $t fhgen $o 1 $s 16.40 $u 7ART $v ukapf $z GBP",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "961",
+    "content" : "$b GBP $m 633761",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "980",
+    "content" : "$a 160128 $b 2000 $d 164 $e 1804 $f 654272 $g 1",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "981",
+    "content" : "$a ukapf $b 7ART $c fhgen",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "999",
+    "content" : "$d m $e a $f x $g eng",
+    "indicators" : [ " ", " " ]
+  }, {
+    "tag" : "999",
+    "content" : "$s 85218699-e820-4110-a5fa-f4894de73220 $i 1d6b0dc4-8be3-444a-8fb9-335d95c96054",
+    "indicators" : [ "f", "f" ]
+  } ]
+}

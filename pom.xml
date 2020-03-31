@@ -150,7 +150,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.jsonschema2pojo</groupId>
         <artifactId>jsonschema2pojo-maven-plugin</artifactId>
@@ -188,6 +187,7 @@
           </systemPropertyVariables>
           <excludes>
             <exclude>org/folio/rest/impl/**Test.class</exclude>
+            <exclude>org/folio/converter/**Test.class</exclude>
           </excludes>
           <includes>
             <include>org/folio/TestSuite.class</include>

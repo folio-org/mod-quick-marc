@@ -104,11 +104,6 @@
       <version>${wiremock.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.marc4j</groupId>
-      <artifactId>marc4j</artifactId>
-      <version>${marc4j.version}</version>
-    </dependency>
   </dependencies>
 
   <build>
@@ -151,30 +146,6 @@
                   <value>${project.baseUri}src/main/resources/log4j2.properties</value>
                 </property>
               </properties>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.jsonschema2pojo</groupId>
-        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-        <version>0.5.1</version>
-        <configuration>
-          <includes>
-            <include>*.json</include>
-          </includes>
-          <outputDirectory>${jsonschema2pojo_output_dir}</outputDirectory>
-          <generateBuilders>true</generateBuilders>
-        </configuration>
-        <executions>
-          <execution>
-            <id>dto</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/ramls/raml-storage/schemas/dto</sourceDirectory>
-              <targetPackage>org.folio.srs.model</targetPackage>
             </configuration>
           </execution>
         </executions>

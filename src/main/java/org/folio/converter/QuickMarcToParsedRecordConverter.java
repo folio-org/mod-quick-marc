@@ -35,7 +35,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     contentMap.put("leader", marcRecord.getLeader().marshal());
 
     return new ParsedRecord()
-      .withId(quickMarcJson.getId())
+      .withId(quickMarcJson.getParsedRecordId())
       .withContent(contentMap);
   }
 

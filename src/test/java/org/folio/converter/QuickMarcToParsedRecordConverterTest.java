@@ -7,7 +7,7 @@ import static org.folio.converter.TestUtils.getMockAsJson;
 import io.vertx.core.json.JsonObject;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
-import org.folio.srs.model.ParsedRecordDto;
+import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +22,10 @@ public class QuickMarcToParsedRecordConverterTest {
     logger.info("Source record and converted/restored one should be equal");
     QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter = new QuickMarcToParsedRecordConverter();
     ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter = new ParsedRecordToQuickMarcConverter();
-    ParsedRecordDto parsedRecordDto = getMockAsJson("mockdata/parsedRecordDto.json").mapTo(ParsedRecordDto.class);
-    QuickMarcJson quickMarcJson = parsedRecordToQuickMarcConverter.convert(parsedRecordDto.getParsedRecord());
+    Record record = getMockAsJson("mockdata/srs-records/record.json").mapTo(Record.class);
+    QuickMarcJson quickMarcJson = parsedRecordToQuickMarcConverter.convert(record.getParsedRecord());
     ParsedRecord restoredParsedRecord = quickMarcToParsedRecordConverter.convert(quickMarcJson);
-    String sourceParsedRecord = new String(JsonObject.mapFrom(parsedRecordDto.getParsedRecord()).encodePrettily().getBytes(
+    String sourceParsedRecord = new String(JsonObject.mapFrom(record.getParsedRecord()).encodePrettily().getBytes(
       StandardCharsets.UTF_8));
     String restoredRecord = JsonObject.mapFrom(restoredParsedRecord).encodePrettily();
     assertEquals(sourceParsedRecord, restoredRecord);
@@ -35,7 +35,7 @@ public class QuickMarcToParsedRecordConverterTest {
   public void exceptionWhen008WrongLength() {
     logger.info("Testing field 008 wrong length after editing - WrongField008LengthException expected");
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
-    QuickMarcJson wrongFile = getMockAsJson("mockdata/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
+    QuickMarcJson wrongFile = getMockAsJson("mockdata/quick-marc-json/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
     assertThrows(IllegalArgumentException.class, () -> converter.convert(wrongFile));
   }
 }

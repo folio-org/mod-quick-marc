@@ -14,11 +14,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import org.folio.HttpStatus;
-import org.folio.converter.RecordToQuickMarcConverter;
+import org.folio.converter.ParsedRecordToQuickMarcConverter;
 import org.folio.exception.HttpException;
 import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Parameter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.Record;
 import org.folio.srs.model.RecordCollection;
 import org.folio.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,7 @@ import io.vertx.core.json.JsonObject;
 
 @Service
 public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements MarcRecordsService {
-
-  @Autowired
-  private RecordToQuickMarcConverter converter;
+  private ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter;
 
   @Override
   public CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers) {
@@ -44,7 +43,13 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
           Error error = buildError(code, ErrorUtils.ErrorType.INTERNAL,"Record with id=" + instanceId + " not found", parameters);
           throw new CompletionException(new HttpException(code, JsonObject.mapFrom(error)));
         }
-        return converter.convert(collection.getRecords().get(0).getParsedRecord());
+        Record record = collection.getRecords().get(0);
+        return parsedRecordToQuickMarcConverter.convert(record.getParsedRecord()).withExternalDtoId(record.getId());
       });
+  }
+
+  @Autowired
+  public void setParsedRecordToQuickMarcConverter(ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter) {
+    this.parsedRecordToQuickMarcConverter = parsedRecordToQuickMarcConverter;
   }
 }

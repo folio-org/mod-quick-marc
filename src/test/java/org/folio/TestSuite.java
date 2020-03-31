@@ -9,8 +9,8 @@ import java.util.concurrent.TimeoutException;
 import org.folio.converter.ContentTypeTest;
 import org.folio.converter.Field008RestoreFactoryTest;
 import org.folio.converter.Field008SplitterFactoryTest;
-import org.folio.converter.QuickMarcToRecordConverterTest;
-import org.folio.converter.RecordToQuickMarcConverterTest;
+import org.folio.converter.ParsedRecordToQuickMarcConverter;
+import org.folio.converter.QuickMarcToParsedRecordConverter;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.impl.QuickMarcApiTest;
 import org.folio.rest.tools.utils.NetworkUtils;
@@ -83,17 +83,17 @@ public class TestSuite {
   class TestQuickMarcApi extends QuickMarcApiTest {}
 
   @Nested
-  class ContentTypeTestsNested extends ContentTypeTest {}
+  class ContentTypeTestNested extends ContentTypeTest {}
 
   @Nested
-  class Field008SplitterFactoryTestsNested extends Field008SplitterFactoryTest {}
+  class Field008SplitterFactoryTestNested extends Field008SplitterFactoryTest {}
 
   @Nested
-  class Field008RestoreFactoryTestsNested extends Field008RestoreFactoryTest {}
+  class Field008RestoreFactoryTestNested extends Field008RestoreFactoryTest {}
 
   @Nested
-  class RecordToQuickMarcConverterTestNested extends RecordToQuickMarcConverterTest {}
+  class ParsedRecordToQuickMarcConverterNested extends ParsedRecordToQuickMarcConverter {}
 
   @Nested
-  class QuickMarcToRecordConverterTestNested extends QuickMarcToRecordConverterTest {}
+  class QuickMarcToParsedRecordConverterNested extends QuickMarcToParsedRecordConverter {}
 }

@@ -32,7 +32,7 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     Record marcRecord = reader.next();
 
     QuickMarcJson quickMarcJson = new QuickMarcJson();
-    quickMarcJson.setId(parsedRecord.getId());
+    quickMarcJson.setParsedRecordId(parsedRecord.getId());
 
     String leader = marcRecord.getLeader().marshal();
     quickMarcJson.setLeader(leader);

@@ -125,10 +125,10 @@ public class QuickMarcApiTest extends ApiTestBase {
 
   @Test
   public void testUpdateQuickMarcRecordInvalidBody() {
-    logger.info("===== Verify PUT record: Invalid UUID =====");
+    logger.info("===== Verify PUT record: Invalid Request Body =====");
 
     QuickMarcJson invalidQuickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
-    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), invalidQuickMarcJson, 422);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), invalidQuickMarcJson, 422);
   }
 
   @Test

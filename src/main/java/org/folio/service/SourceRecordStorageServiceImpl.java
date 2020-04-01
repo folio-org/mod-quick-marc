@@ -4,9 +4,7 @@ import static org.folio.util.Constants.INSTANCE_ID;
 import static org.folio.util.ErrorUtils.buildError;
 import static org.folio.util.ErrorUtils.buildErrorParameter;
 import static org.folio.util.ErrorUtils.buildErrorParameters;
-import static org.folio.util.ResourcePathResolver.CHANGE_MANAGER;
 import static org.folio.util.ResourcePathResolver.SRS_RECORDS;
-import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
 import static org.folio.util.ResourcePathResolver.getResourcesPath;
 import static org.folio.util.ServiceUtils.buildQuery;
 

@@ -38,9 +38,7 @@ public class BaseServiceImpl {
           return validateAndGetResponseBody(response);
         })
         .thenAccept(body -> {
-          if (logger.isInfoEnabled()) {
-            logger.info("The response body for GET {}: {}", endpoint, body.encodePrettily());
-          }
+          logger.info("The response body for GET {}: {}", endpoint, body.encodePrettily());
           future.complete(body);
         })
         .exceptionally(t -> {
@@ -69,9 +67,7 @@ public class BaseServiceImpl {
           return validateAndGetResponseBody(response);
         })
         .thenAccept(body -> {
-          if (logger.isInfoEnabled()) {
-            logger.info("'PUT {}' request successfully processed", endpoint);
-          }
+          logger.info("'PUT {}' request successfully processed", endpoint);
           future.complete(null);
         })
         .exceptionally(throwable -> {

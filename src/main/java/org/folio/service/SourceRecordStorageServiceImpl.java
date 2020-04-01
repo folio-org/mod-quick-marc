@@ -54,7 +54,7 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
   }
 
   @Override
-  public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
+  public CompletableFuture<QuickMarcJson> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
     Map<String, String> headers) {
     Record record = new Record()
       .withRecordType(ParsedRecordDto.RecordType.MARC)

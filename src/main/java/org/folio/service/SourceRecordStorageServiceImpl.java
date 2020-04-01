@@ -60,7 +60,7 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
       .withRecordType(ParsedRecordDto.RecordType.MARC)
       .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
       .withId(quickMarcJson.getExternalDtoId());
-    return handlePutRequest(getResourceByIdPath(CHANGE_MANAGER, id), JsonObject.mapFrom(record), context, headers);
+    return handlePutRequest(JsonObject.mapFrom(record), context);
   }
 
   @Autowired

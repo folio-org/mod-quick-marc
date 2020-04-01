@@ -56,8 +56,7 @@ public class BaseServiceImpl {
     return future;
   }
 
-  CompletableFuture<QuickMarcJson> handlePutRequest(String endpoint, JsonObject jsonObject, Context context,
-    Map<String, String> headers) {
+  CompletableFuture<QuickMarcJson> handlePutRequest(JsonObject jsonObject, Context context) {
     CompletableFuture<QuickMarcJson> future = new VertxCompletableFuture<>(context);
     future.complete(jsonObject.mapTo(QuickMarcJson.class));
     return future;

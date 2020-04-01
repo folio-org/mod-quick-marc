@@ -36,6 +36,7 @@ public class ApiTestBase {
 
   public static final String SRS_RECORDS_COLLECTION_PATH = "mockdata/srs-records/records.json";
   public static final String QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson.json";
+  public static final String INVALID_QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJsonWrong008Items.json";
   public static final String UPDATED_RECORD_PATH = "mockdata/srs-records/recordForPut.json";
   private static final Header X_OKAPI_URL = new Header(OKAPI_URL, "http://localhost:" + mockPort);
   private static final Header X_OKAPI_TENANT = new Header(OKAPI_HEADER_TENANT, "quickmarctest");

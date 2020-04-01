@@ -80,7 +80,7 @@ public class BaseServiceImpl {
           return null;
         });
     } catch (Exception e) {
-      logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.GET, endpoint);
+      logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.PUT, endpoint);
       future.completeExceptionally(e);
     } finally {
       client.closeClient();

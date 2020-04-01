@@ -130,4 +130,12 @@ public class QuickMarcApiTest extends ApiTestBase {
     QuickMarcJson invalidQuickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
     verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), invalidQuickMarcJson, 422);
   }
+
+  @Test
+  public void testUpdateQuickMarcRecordInvalidField008() {
+    logger.info("===== Verify PUT record: Invalid Field 008 Items =====");
+
+    QuickMarcJson invalidQuickMarcJson = getJsonObject(INVALID_QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), invalidQuickMarcJson, 422);
+  }
 }

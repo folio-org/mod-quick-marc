@@ -29,17 +29,6 @@
           ],
           "modulePermissions": [
           ]
-        },
-        {
-          "methods": [
-            "PUT"
-          ],
-          "pathPattern": "/records-editor/records/{id}",
-          "permissionsRequired": [
-            "records-editor.records.item.put"
-          ],
-          "modulePermissions": [
-          ]
         }
       ]
     },

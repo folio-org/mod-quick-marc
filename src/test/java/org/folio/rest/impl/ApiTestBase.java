@@ -1,5 +1,6 @@
 package org.folio.rest.impl;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.folio.TestSuite.isInitialized;
 import static org.folio.TestSuite.mockPort;
 import static org.folio.TestSuite.wireMockServer;
@@ -34,6 +35,8 @@ import io.vertx.core.json.JsonObject;
 public class ApiTestBase {
 
   public static final String SRS_RECORDS_COLLECTION_PATH = "mockdata/srs-records/records.json";
+  public static final String QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson.json";
+  public static final String UPDATED_RECORD_PATH = "mockdata/srs-records/recordForPut.json";
   private static final Header X_OKAPI_URL = new Header(OKAPI_URL, "http://localhost:" + mockPort);
   private static final Header X_OKAPI_TENANT = new Header(OKAPI_HEADER_TENANT, "quickmarctest");
 
@@ -68,6 +71,20 @@ public class ApiTestBase {
             .response();
   }
 
+  public Response verifyPut(String url, Object requestBody, int code) {
+    return RestAssured
+      .with()
+        .header(X_OKAPI_URL)
+        .header(X_OKAPI_TENANT)
+        .body(requestBody)
+        .contentType(APPLICATION_JSON)
+      .put(url)
+        .then()
+          .statusCode(code)
+          .extract()
+            .response();
+  }
+
   JsonObject getSrsRecordsBySearchParameter(String instanceId) {
     List<Record> records;
     try {
@@ -78,6 +95,15 @@ public class ApiTestBase {
     records.removeIf(record -> !Objects.equals(record.getExternalIdsHolder().getInstanceId(), instanceId));
     RecordCollection collection = new RecordCollection().withRecords(records).withTotalRecords(records.size());
     return JsonObject.mapFrom(collection);
+  }
+
+  JsonObject getJsonObject(String path) {
+    try {
+      JsonObject jsonObject = new JsonObject(getMockData(path));
+      return jsonObject;
+    } catch (Exception e) {
+      return new JsonObject();
+    }
   }
 
   private String getMockData(String path) throws IOException {

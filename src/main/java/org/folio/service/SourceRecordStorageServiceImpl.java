@@ -4,7 +4,9 @@ import static org.folio.util.Constants.INSTANCE_ID;
 import static org.folio.util.ErrorUtils.buildError;
 import static org.folio.util.ErrorUtils.buildErrorParameter;
 import static org.folio.util.ErrorUtils.buildErrorParameters;
+import static org.folio.util.ResourcePathResolver.CHANGE_MANAGER;
 import static org.folio.util.ResourcePathResolver.SRS_RECORDS;
+import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
 import static org.folio.util.ResourcePathResolver.getResourcesPath;
 import static org.folio.util.ServiceUtils.buildQuery;
 
@@ -15,10 +17,12 @@ import java.util.concurrent.CompletionException;
 
 import org.folio.HttpStatus;
 import org.folio.converter.ParsedRecordToQuickMarcConverter;
+import org.folio.converter.QuickMarcToParsedRecordConverter;
 import org.folio.exception.HttpException;
 import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Parameter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.ParsedRecordDto;
 import org.folio.srs.model.Record;
 import org.folio.srs.model.RecordCollection;
 import org.folio.util.ErrorUtils;
@@ -31,6 +35,7 @@ import io.vertx.core.json.JsonObject;
 @Service
 public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements MarcRecordsService {
   private ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter;
+  private QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter;
 
   @Override
   public CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers) {
@@ -48,8 +53,29 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
       });
   }
 
+  @Override
+  public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
+    Map<String, String> headers) {
+    try {
+      Record record = new Record()
+        .withRecordType(ParsedRecordDto.RecordType.MARC)
+        .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
+        .withId(quickMarcJson.getExternalDtoId());
+      return handlePutRequest(getResourceByIdPath(CHANGE_MANAGER, id), JsonObject.mapFrom(record), context, headers);
+    } catch (Exception e) {
+      int code = HttpStatus.HTTP_UNPROCESSABLE_ENTITY.toInt();
+      Error error = buildError(code, ErrorUtils.ErrorType.INTERNAL,"Error to update record id=" + id + ": " + e.getMessage());
+      throw new CompletionException(new HttpException(code, JsonObject.mapFrom(error)));
+    }
+  }
+
   @Autowired
   public void setParsedRecordToQuickMarcConverter(ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter) {
     this.parsedRecordToQuickMarcConverter = parsedRecordToQuickMarcConverter;
+  }
+
+  @Autowired
+  public void setQuickMarcToParsedRecordConverter(QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter) {
+    this.quickMarcToParsedRecordConverter = quickMarcToParsedRecordConverter;
   }
 }

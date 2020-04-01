@@ -18,4 +18,15 @@ public interface MarcRecordsService  {
    * @return {@link QuickMarcJson} record
    */
   CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers);
+
+  /**
+   * This method updates QuickMarcJson record
+   *
+   * @param id DTO id
+   * @param quickMarcJson QuickMarcJson object
+   * @param context Vert.X context
+   * @param headers OKAPI headers
+   * @return {@link QuickMarcJson} record
+   */
+  CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context, Map<String, String> headers);
 }

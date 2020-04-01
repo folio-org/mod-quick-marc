@@ -57,6 +57,37 @@ public class BaseServiceImpl {
     return future;
   }
 
+  CompletableFuture<Void> handlePutRequest(String endpoint, JsonObject jsonObject, Context context,
+    Map<String, String> headers) {
+    HttpClientInterface client = getHttpClient(headers);
+    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+    try {
+      logger.info("Calling PUT {} with body: {}", endpoint, jsonObject.encodePrettily());
+      client.request(HttpMethod.PUT, jsonObject.toBuffer(), endpoint, headers)
+        .thenApply(response -> {
+          logger.debug("Validating response for PUT {}", endpoint);
+          return validateAndGetResponseBody(response);
+        })
+        .thenAccept(body -> {
+          if (logger.isInfoEnabled()) {
+            logger.info("'PUT {}' request successfully processed", endpoint);
+          }
+          future.complete(null);
+        })
+        .exceptionally(throwable -> {
+          logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.PUT, endpoint);
+          future.completeExceptionally(throwable);
+          return null;
+        });
+    } catch (Exception e) {
+      logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.GET, endpoint);
+      future.completeExceptionally(e);
+    } finally {
+      client.closeClient();
+    }
+    return future;
+  }
+
   private HttpClientInterface getHttpClient(Map<String, String> okapiHeaders) {
     final String okapiURL = okapiHeaders.getOrDefault(OKAPI_URL, EMPTY_STRING);
     final String tenantId = TenantTool.calculateTenantId(okapiHeaders.get(OKAPI_HEADER_TENANT));

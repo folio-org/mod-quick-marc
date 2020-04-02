@@ -45,19 +45,7 @@
           "indicators": {
             "description": "MARC record tag indicator values",
             "type": "array",
-            "items": [
-              {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1
-              },
-              {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1
-              }
-            ],
-            "minItems": 2,
+            "minItems": 0,
             "maxItems": 2
           }
         },

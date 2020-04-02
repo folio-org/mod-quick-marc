@@ -15,10 +15,12 @@ import java.util.concurrent.CompletionException;
 
 import org.folio.HttpStatus;
 import org.folio.converter.ParsedRecordToQuickMarcConverter;
+import org.folio.converter.QuickMarcToParsedRecordConverter;
 import org.folio.exception.HttpException;
 import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Parameter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.ParsedRecordDto;
 import org.folio.srs.model.Record;
 import org.folio.srs.model.RecordCollection;
 import org.folio.util.ErrorUtils;
@@ -31,6 +33,7 @@ import io.vertx.core.json.JsonObject;
 @Service
 public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements MarcRecordsService {
   private ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter;
+  private QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter;
 
   @Override
   public CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers) {
@@ -48,8 +51,23 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
       });
   }
 
+  @Override
+  public CompletableFuture<QuickMarcJson> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
+    Map<String, String> headers) {
+    Record record = new Record()
+      .withRecordType(ParsedRecordDto.RecordType.MARC)
+      .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
+      .withId(quickMarcJson.getExternalDtoId());
+    return handlePutRequest(JsonObject.mapFrom(record), context);
+  }
+
   @Autowired
   public void setParsedRecordToQuickMarcConverter(ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter) {
     this.parsedRecordToQuickMarcConverter = parsedRecordToQuickMarcConverter;
+  }
+
+  @Autowired
+  public void setQuickMarcToParsedRecordConverter(QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter) {
+    this.quickMarcToParsedRecordConverter = quickMarcToParsedRecordConverter;
   }
 }

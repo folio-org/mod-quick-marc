@@ -45,7 +45,13 @@ public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
   @Override
   @Validate
   public void putRecordsEditorRecordsById(String id, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond500WithApplicationJson(ErrorUtils.buildError(500, "Is not implemented yet"))));
+    if (entity.getExternalDtoId().equals(id)) {
+      service.putMarcRecordById(id, entity, vertxContext, okapiHeaders)
+        .thenAccept(res -> asyncResultHandler.handle(succeededFuture(Response.noContent().build())))
+        .exceptionally(throwable -> handleErrorResponse(asyncResultHandler, throwable));
+    } else {
+      asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond400WithApplicationJson(ErrorUtils.buildError(400, "request id and entity id are not equal"))));
+    }
   }
 
   private Void handleErrorResponse(Handler<AsyncResult<Response>> handler, Throwable t) {

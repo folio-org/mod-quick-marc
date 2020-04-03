@@ -69,6 +69,8 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     return new Field()
       .withTag(dataField.getTag())
       .withIndicators(Arrays.asList(Character.toString(dataField.getIndicator1()), Character.toString(dataField.getIndicator2())))
-      .withContent(dataField.getSubfields().stream().map(Object::toString).collect(Collectors.joining(SPACE)));
+      .withContent(dataField.getSubfields().stream()
+        .map(Object::toString)
+        .collect(Collectors.joining(SPACE)));
   }
 }

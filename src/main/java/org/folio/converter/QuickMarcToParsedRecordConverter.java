@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -69,7 +70,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   }
 
   private char retrieveIndicatorValue(Object object) {
-    return (object == null) ? SPACE_CHARACTER : object.toString().charAt(0);
+    return Objects.isNull(object) ? SPACE_CHARACTER : object.toString().charAt(0);
   }
 
   private String restoreFixedLengthControlField(Map<String, Object> map) {

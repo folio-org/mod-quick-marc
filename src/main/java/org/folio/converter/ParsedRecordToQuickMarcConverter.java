@@ -1,5 +1,6 @@
 package org.folio.converter;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.folio.util.Constants.BLVL;
 import static org.folio.util.Constants.CONTENT;
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
@@ -25,7 +25,6 @@ import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import io.vertx.core.json.JsonObject;
@@ -34,7 +33,7 @@ import io.vertx.core.json.JsonObject;
 public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord, QuickMarcJson> {
 
   @Override
-  public QuickMarcJson convert(@NonNull ParsedRecord parsedRecord) {
+  public QuickMarcJson convert(ParsedRecord parsedRecord) {
     InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8);
     Record marcRecord = new MarcJsonReader(input).next();
 
@@ -64,7 +63,7 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     fieldItems.put(BLVL, leader.getImplDefined1()[0]);
     contentType.getFixedLengthControlFieldItems().forEach(item -> {
       String value = content.substring(item.getPosition(), item.getPosition() + item.getLength());
-      fieldItems.put(item.getName(), item.isArray() ? Arrays.asList(value.split(StringUtils.EMPTY)) : value);
+      fieldItems.put(item.getName(), item.isArray() ? Arrays.asList(value.split(EMPTY)) : value);
 
     });
     return fieldItems;

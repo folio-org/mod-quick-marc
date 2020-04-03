@@ -1,6 +1,7 @@
 package org.folio.converter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.folio.converter.TestUtils.getMockAsJson;
 
@@ -25,9 +26,7 @@ public class QuickMarcToParsedRecordConverterTest {
     QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
     ParsedRecord parsedRecord = converter.convert(quickMarcJson);
-    String actual = JsonObject.mapFrom(parsedRecord).encodePrettily();
-    String expected = getMockAsJson(testEntity.getParsedRecordPath()).encodePrettily();
-    assertEquals(expected, actual);
+    assertThat(JsonObject.mapFrom(parsedRecord), equalTo(getMockAsJson(testEntity.getParsedRecordPath())));
   }
 
   @Test
@@ -38,10 +37,9 @@ public class QuickMarcToParsedRecordConverterTest {
     Record record = getMockAsJson("mockdata/srs-records/record.json").mapTo(Record.class);
     QuickMarcJson quickMarcJson = parsedRecordToQuickMarcConverter.convert(record.getParsedRecord());
     ParsedRecord restoredParsedRecord = quickMarcToParsedRecordConverter.convert(quickMarcJson);
-    String sourceParsedRecord = new String(JsonObject.mapFrom(record.getParsedRecord()).encodePrettily().getBytes(
-      StandardCharsets.UTF_8));
+    String sourceParsedRecord = new String(JsonObject.mapFrom(record.getParsedRecord()).encodePrettily().getBytes(StandardCharsets.UTF_8));
     String restoredRecord = JsonObject.mapFrom(restoredParsedRecord).encodePrettily();
-    assertEquals(sourceParsedRecord, restoredRecord);
+    assertThat(sourceParsedRecord, equalTo(restoredRecord));
   }
 
   @Test

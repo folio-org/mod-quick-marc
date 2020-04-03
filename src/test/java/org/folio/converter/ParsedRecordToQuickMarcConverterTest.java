@@ -1,6 +1,7 @@
 package org.folio.converter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.folio.converter.TestUtils.getMockAsJson;
 
 import io.vertx.core.json.JsonObject;
@@ -25,9 +26,7 @@ public class ParsedRecordToQuickMarcConverterTest {
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
     ParsedRecordToQuickMarcConverter converter = new ParsedRecordToQuickMarcConverter();
     QuickMarcJson quickMarcJson = converter.convert(parsedRecord);
-    String actual = JsonObject.mapFrom(quickMarcJson).encodePrettily();
-    String expected = getMockAsJson(testEntity.getQuickMarcJsonPath()).encodePrettily();
-    assertEquals(expected, actual);
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
   }
 
   @Test
@@ -39,6 +38,6 @@ public class ParsedRecordToQuickMarcConverterTest {
     QuickMarcJson expected = getMockAsJson("mockdata/quick-marc-json/quickMarcJson.json").mapTo(QuickMarcJson.class);
     String expectedString = new String(JsonObject.mapFrom(expected).encodePrettily().getBytes(StandardCharsets.UTF_8));
     String convertedString = JsonObject.mapFrom(quickMarcJson).encodePrettily();
-    assertEquals(expectedString, convertedString);
+    assertThat(expectedString, equalTo(convertedString));
   }
 }

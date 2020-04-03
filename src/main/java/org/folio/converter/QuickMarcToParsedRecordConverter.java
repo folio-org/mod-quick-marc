@@ -24,7 +24,6 @@ import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,7 +41,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   private MarcFactory factory = new MarcFactoryImpl();
 
   @Override
-  public ParsedRecord convert(@NonNull QuickMarcJson quickMarcJson) {
+  public ParsedRecord convert(QuickMarcJson quickMarcJson) {
     Record marcRecord = quickMarcJsonToMarcRecord(quickMarcJson);
 
     Map<String, Object> contentMap = new LinkedHashMap<>();

@@ -35,103 +35,103 @@
     "indicators" : [ ]
   }, {
     "tag" : "010",
-    "content" : "$a    55001156/M ",
+    "content" : "$a   55001156/M ",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "035",
-    "content" : "$a (OCoLC)63611770",
+    "content" : "$a(OCoLC)63611770",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "035",
-    "content" : "$a 393893",
+    "content" : "$a393893",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "040",
-    "content" : "$c UPB $d UPB $d NIC $d NIC",
+    "content" : "$cUPB $dUPB $dNIC $dNIC",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "041",
-    "content" : "$a latitager $g ger",
+    "content" : "$alatitager $gger",
     "indicators" : [ "0", " " ]
   }, {
     "tag" : "045",
-    "content" : "$a v6v9",
+    "content" : "$av6v9",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "047",
-    "content" : "$a cn $a ct $a co $a df $a dv $a ft $a fg $a ms $a mi $a nc $a op $a ov $a rq $a sn $a su $a sy $a vr $a zz",
+    "content" : "$acn $act $aco $adf $adv $aft $afg $ams $ami $anc $aop $aov $arq $asn $asu $asy $avr $azz",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "050",
-    "content" : "$a M3 $b .M896",
+    "content" : "$aM3 $b.M896",
     "indicators" : [ "0", " " ]
   }, {
     "tag" : "100",
-    "content" : "$a Mozart, Wolfgang Amadeus, $d 1756-1791.",
+    "content" : "$aMozart, Wolfgang Amadeus, $d1756-1791.",
     "indicators" : [ "1", " " ]
   }, {
     "tag" : "240",
-    "content" : "$a Works",
+    "content" : "$aWorks",
     "indicators" : [ "1", "0" ]
   }, {
     "tag" : "245",
-    "content" : "$a Neue Ausgabe sämtlicher Werke, $b in Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien. $c Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
+    "content" : "$aNeue Ausgabe sämtlicher Werke, $bin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien. $cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
     "indicators" : [ "1", "0" ]
   }, {
     "tag" : "246",
-    "content" : "$a Neue Mozart-Ausgabe",
+    "content" : "$aNeue Mozart-Ausgabe",
     "indicators" : [ "3", "3" ]
   }, {
     "tag" : "260",
-    "content" : "$a Kassel, $b Bärenreiter, $c c1955-",
+    "content" : "$aKassel, $bBärenreiter, $cc1955-",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "300",
-    "content" : "$a v. $b facsims. $c 33 cm.",
+    "content" : "$av. $bfacsims. $c33 cm.",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "505",
-    "content" : "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+    "content" : "$aSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
     "indicators" : [ "0", " " ]
   }, {
     "tag" : "650",
-    "content" : "$a Vocal music",
+    "content" : "$aVocal music",
     "indicators" : [ " ", "0" ]
   }, {
     "tag" : "650",
-    "content" : "$a Instrumental music",
+    "content" : "$aInstrumental music",
     "indicators" : [ " ", "0" ]
   }, {
     "tag" : "650",
-    "content" : "$a Instrumental music $2 fast $0 (OCoLC)fst00974414",
+    "content" : "$aInstrumental music $2fast $0(OCoLC)fst00974414",
     "indicators" : [ " ", "7" ]
   }, {
     "tag" : "650",
-    "content" : "$a Vocal music $2 fast $0 (OCoLC)fst01168379",
+    "content" : "$aVocal music $2fast $0(OCoLC)fst01168379",
     "indicators" : [ " ", "7" ]
   }, {
     "tag" : "902",
-    "content" : "$a pfnd $b Austin Music",
+    "content" : "$apfnd $bAustin Music",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "905",
-    "content" : "$a 19980728120000.0",
+    "content" : "$a19980728120000.0",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "948",
-    "content" : "$a 20100622 $b s $d lap11 $e lts $x ToAddCatStat",
+    "content" : "$a20100622 $bs $dlap11 $elts $xToAddCatStat",
     "indicators" : [ "1", " " ]
   }, {
     "tag" : "948",
-    "content" : "$a 20110818 $b r $d np55 $e lts",
+    "content" : "$a20110818 $br $dnp55 $elts",
     "indicators" : [ "0", " " ]
   }, {
     "tag" : "948",
-    "content" : "$a 20130128 $b m $d bmt1 $e lts",
+    "content" : "$a20130128 $bm $dbmt1 $elts",
     "indicators" : [ "2", " " ]
   }, {
     "tag" : "948",
-    "content" : "$a 20141106 $b m $d batch $e lts $x addfast",
+    "content" : "$a20141106 $bm $dbatch $elts $xaddfast",
     "indicators" : [ "2", " " ]
   } ]
 }

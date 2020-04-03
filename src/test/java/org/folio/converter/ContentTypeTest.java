@@ -16,9 +16,7 @@ public class ContentTypeTest {
   @EnumSource(TestEntities.class)
   public void testDetectContentType(TestEntities testField){
     logger.info("Test content type detection");
-    testField.getTypes().forEach(t ->
-      testField.getBlvls().forEach(b ->
-        assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(t, b).getName())));
+    testField.getLeaders().forEach(leader -> assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(leader).getName()));
   }
 
   @Test

@@ -9,6 +9,8 @@ import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,17 @@ import java.nio.charset.StandardCharsets;
 
 public class QuickMarcToParsedRecordConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(QuickMarcToParsedRecordConverterTest.class);
+  @ParameterizedTest
+  @EnumSource(TestEntities.class)
+  public void testRestoreField008(TestEntities testEntity) {
+    logger.info("Testing field 008 restoring for {}", testEntity.getContentType().getName());
+    QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
+    QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
+    ParsedRecord parsedRecord = converter.convert(quickMarcJson);
+    String actual = JsonObject.mapFrom(parsedRecord).encodePrettily();
+    String expected = getMockAsJson(testEntity.getParsedRecordPath()).encodePrettily();
+    assertEquals(expected, actual);
+  }
 
   @Test
   public void testRecordsAreEqual(){

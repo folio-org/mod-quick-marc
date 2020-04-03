@@ -1,59 +1,71 @@
 package org.folio.converter;
 
+import org.marc4j.marc.Leader;
+import org.marc4j.marc.impl.LeaderImpl;
+
 import java.util.Arrays;
 import java.util.List;
 
 public enum TestEntities {
-  BOOKS(ContentType.BOOKS, "mockdata/samples008/books.json", "abcdefghijklmnopqrabcdefghijklmn opstuvw", Arrays.asList("a", "t"),
-      Arrays.asList("a")),
-  FILES(ContentType.FILES, "mockdata/samples008/files.json", "abcdefghijklmnopqr    ab  c d      stuvw", Arrays.asList("m"),
-      Arrays.asList("a")),
-  CONTINUING(ContentType.CONTINUING, "mockdata/samples008/continuing.json", "abcdefghijklmnopqrab cdefghijk   lmstuvw",
-      Arrays.asList("a"), Arrays.asList("b", "i", "s")),
-  MAPS(ContentType.MAPS, "mockdata/samples008/maps.json", "abcdefghijklmnopqrabcdef g  hi j klstuvw", Arrays.asList("e", "f"),
-      Arrays.asList("a")),
-  MIXED(ContentType.MIXED, "mockdata/samples008/mixed.json", "abcdefghijklmnopqr     a           stuvw", Arrays.asList("p"),
-      Arrays.asList("c")),
-  SCORES(ContentType.SCORES, "mockdata/samples008/scores.json", "abcdefghijklmnopqrabcdefghijklmn o stuvw", Arrays.asList("c", "d"),
-      Arrays.asList("a")),
-  SOUND(ContentType.SOUND, "mockdata/samples008/sound.json", "abcdefghijklmnopqrabcdefghijklmn o stuvw", Arrays.asList("i", "j"),
-      Arrays.asList("a")),
-  VISUAL(ContentType.VISUAL, "mockdata/samples008/visual.json", "abcdefghijklmnopqrabc d     ef   ghstuvw",
-      Arrays.asList("g", "k", "o", "r"), Arrays.asList("a")),
-  UNKNOWN(ContentType.UNKNOWN, "mockdata/samples008/unknown.json", "abcdefghijklmnopqrabcdefghijklmnopqstuvw",
-      Arrays.asList(" ", "b", "h", "l", "n", "q", "s", "u", "v", "w", "x", "y", "z", "1", "$", "%"), Arrays.asList("a"));
+  BOOKS(ContentType.BOOKS, "mockdata/parsed-records/books.json", "mockdata/quick-marc-json/books.json",
+    Arrays.asList(new LeaderImpl("xxxxxxaaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxtaxxxxxxxxxxxxxxxx"))),
+  FILES(ContentType.FILES, "mockdata/parsed-records/files.json", "mockdata/quick-marc-json/files.json",
+    Arrays.asList(new LeaderImpl("xxxxxxmaxxxxxxxxxxxxxxxx"))),
+  CONTINUING(ContentType.CONTINUING, "mockdata/parsed-records/continuing.json", "mockdata/quick-marc-json/continuing.json",
+    Arrays.asList(new LeaderImpl("xxxxxxabxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxaixxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxasxxxxxxxxxxxxxxxx"))),
+  MAPS(ContentType.MAPS, "mockdata/parsed-records/maps.json", "mockdata/quick-marc-json/maps.json",
+    Arrays.asList(new LeaderImpl("xxxxxxeaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxfaxxxxxxxxxxxxxxxx"))),
+  MIXED(ContentType.MIXED, "mockdata/parsed-records/mixed.json", "mockdata/quick-marc-json/mixed.json",
+    Arrays.asList(new LeaderImpl("xxxxxxpcxxxxxxxxxxxxxxxx"))),
+  SCORES(ContentType.SCORES, "mockdata/parsed-records/scores.json", "mockdata/quick-marc-json/scores.json",
+    Arrays.asList(new LeaderImpl("xxxxxxcaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxdaxxxxxxxxxxxxxxxx"))),
+  SOUND(ContentType.SOUND, "mockdata/parsed-records/sound.json", "mockdata/quick-marc-json/sound.json",
+    Arrays.asList(new LeaderImpl("xxxxxxiaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxjaxxxxxxxxxxxxxxxx"))),
+  VISUAL(ContentType.VISUAL, "mockdata/parsed-records/visual.json", "mockdata/quick-marc-json/visual.json",
+    Arrays.asList(new LeaderImpl("xxxxxxgaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxkaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxoaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxraxxxxxxxxxxxxxxxx"))),
+  UNKNOWN(ContentType.UNKNOWN, "mockdata/parsed-records/unknown.json", "mockdata/quick-marc-json/unknown.json",
+    Arrays.asList(new LeaderImpl("xxxxxx axxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxbaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxhaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxxlaxxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxx1axxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxx$axxxxxxxxxxxxxxxx"),
+                  new LeaderImpl("xxxxxx%axxxxxxxxxxxxxxxx")));
 
   private ContentType contentType;
-  private String samplePath;
-  private String expectedString;
-  private List<String> types;
-  private List<String> blvls;
+  private String parsedRecordPath;
+  private String quickMarcJsonPath;
+  private List<Leader> leaders;
 
-  TestEntities(ContentType contentType, String samplePath, String expectedString, List<String> types, List<String> blvls) {
+  TestEntities(ContentType contentType, String parsedRecordPath, String quickMarcJsonPath, List<Leader> leaders) {
     this.contentType = contentType;
-    this.samplePath = samplePath;
-    this.expectedString = expectedString;
-    this.types = types;
-    this.blvls = blvls;
+    this.parsedRecordPath = parsedRecordPath;
+    this.quickMarcJsonPath = quickMarcJsonPath;
+    this.leaders = leaders;
   }
 
   public ContentType getContentType() {
     return contentType;
   }
 
-  public String getMockDataPath() {
-    return samplePath;
+  public String getParsedRecordPath() {
+    return parsedRecordPath;
   }
 
-  public String getExpectedString() {
-    return expectedString;
+  public String getQuickMarcJsonPath() {
+    return quickMarcJsonPath;
   }
 
-  public List<String> getTypes() {
-    return types;
-  }
-
-  public List<String> getBlvls() {
-    return blvls;
+  public List<Leader> getLeaders() {
+    return leaders;
   }
 }

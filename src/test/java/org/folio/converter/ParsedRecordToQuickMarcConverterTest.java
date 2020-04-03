@@ -5,8 +5,11 @@ import static org.folio.converter.TestUtils.getMockAsJson;
 
 import io.vertx.core.json.JsonObject;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +17,18 @@ import java.nio.charset.StandardCharsets;
 
 public class ParsedRecordToQuickMarcConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(ParsedRecordToQuickMarcConverterTest.class);
+
+  @ParameterizedTest
+  @EnumSource(TestEntities.class)
+  public void testSplitField008(TestEntities testEntity) {
+    logger.info("Testing field 008 splitting for {}", testEntity.getContentType().getName());
+    ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
+    ParsedRecordToQuickMarcConverter converter = new ParsedRecordToQuickMarcConverter();
+    QuickMarcJson quickMarcJson = converter.convert(parsedRecord);
+    String actual = JsonObject.mapFrom(quickMarcJson).encodePrettily();
+    String expected = getMockAsJson(testEntity.getQuickMarcJsonPath()).encodePrettily();
+    assertEquals(expected, actual);
+  }
 
   @Test
   public void testParsedRecordToQuickMarcJsonConversion(){

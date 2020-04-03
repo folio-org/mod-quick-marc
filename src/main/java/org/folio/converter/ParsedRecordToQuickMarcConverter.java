@@ -1,23 +1,10 @@
 package org.folio.converter;
 
-import static org.folio.converter.StringConstants.BLVL;
-import static org.folio.converter.StringConstants.CONTENT;
-import static org.folio.converter.StringConstants.EMPTY_STRING;
-import static org.folio.converter.StringConstants.SPACE;
-import static org.folio.converter.StringConstants.TAG_008;
-import static org.folio.converter.StringConstants.TYPE;
-
-import io.vertx.core.json.JsonObject;
-import org.apache.commons.io.IOUtils;
-import org.folio.rest.jaxrs.model.Field;
-import org.folio.rest.jaxrs.model.QuickMarcJson;
-import org.folio.srs.model.ParsedRecord;
-import org.marc4j.MarcJsonReader;
-import org.marc4j.marc.DataField;
-import org.marc4j.marc.Leader;
-import org.marc4j.marc.Record;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
+import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.folio.util.Constants.BLVL;
+import static org.folio.util.Constants.CONTENT;
+import static org.folio.util.Constants.FIXED_LENGTH_CONTROL_FIELD;
+import static org.folio.util.Constants.TYPE;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,10 +15,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.folio.rest.jaxrs.model.Field;
+import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.ParsedRecord;
+import org.marc4j.MarcJsonReader;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.Leader;
+import org.marc4j.marc.Record;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+
+import io.vertx.core.json.JsonObject;
+
 @Component
 public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord, QuickMarcJson> {
+
   @Override
-  public QuickMarcJson convert(ParsedRecord parsedRecord) {
+  public QuickMarcJson convert(@NonNull ParsedRecord parsedRecord) {
     InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8);
     Record marcRecord = new MarcJsonReader(input).next();
 
@@ -40,7 +43,8 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     marcRecord.getControlFields().forEach(controlField ->
       fields.add(new Field()
         .withTag(controlField.getTag())
-        .withContent((TAG_008.equals(controlField.getTag())) ? splitFixedLengthControlField(controlField.getData(), leader) : controlField.getData())));
+        .withContent((FIXED_LENGTH_CONTROL_FIELD.equals(controlField.getTag())) ? splitFixedLengthControlField(controlField.getData(), leader) : controlField.getData()))
+    );
 
     fields.addAll(marcRecord.getDataFields().stream()
       .map(this::dataFieldToQuickMarcField)
@@ -59,8 +63,9 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     fieldItems.put(TYPE, leader.getTypeOfRecord());
     fieldItems.put(BLVL, leader.getImplDefined1()[0]);
     contentType.getFixedLengthControlFieldItems().forEach(item -> {
-      String val = content.substring(item.getPosition(), item.getPosition() + item.getLength());
-      fieldItems.put(item.getName(), item.isArray() ? Arrays.asList(val.split(EMPTY_STRING)) : val);
+      String value = content.substring(item.getPosition(), item.getPosition() + item.getLength());
+      fieldItems.put(item.getName(), item.isArray() ? Arrays.asList(value.split(StringUtils.EMPTY)) : value);
+
     });
     return fieldItems;
   }

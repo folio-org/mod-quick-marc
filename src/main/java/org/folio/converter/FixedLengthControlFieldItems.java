@@ -1,6 +1,7 @@
 package org.folio.converter;
 
 public enum FixedLengthControlFieldItems {
+
   ENTERED("Entered", 0, 6, false),
   DTST("DtSt", 6, 1, false),
   DATE1("Date1", 7, 4, false),

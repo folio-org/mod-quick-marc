@@ -1,18 +1,8 @@
 package org.folio.converter;
 
-import static org.folio.converter.StringConstants.*;
-
-import org.folio.rest.jaxrs.model.QuickMarcJson;
-import org.folio.srs.model.ParsedRecord;
-import org.marc4j.marc.ControlField;
-import org.marc4j.marc.DataField;
-import org.marc4j.marc.MarcFactory;
-import org.marc4j.marc.Record;
-import org.marc4j.marc.Subfield;
-import org.marc4j.marc.impl.MarcFactoryImpl;
-import org.marc4j.marc.impl.SubfieldImpl;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.folio.util.Constants.CONTENT;
+import static org.folio.util.Constants.FIXED_LENGTH_CONTROL_FIELD;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,14 +13,36 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.ParsedRecord;
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+import org.marc4j.marc.Subfield;
+import org.marc4j.marc.impl.MarcFactoryImpl;
+import org.marc4j.marc.impl.SubfieldImpl;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+
 @Component
 public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson, ParsedRecord> {
+
   private static final int FIXED_LENGTH_CONTROL_FIELD_LENGTH = 40;
+  private static final String FIELDS = "fields";
+  private static final String LEADER = "leader";
+  private static final String INDICATOR1 = "ind1";
+  private static final String INDICATOR2 = "ind2";
+  private static final String SUBFIELDS = "subfields";
+  private static final String SPLIT_PATTERN = " ?[$]";
+  private static final char SPACE_CHARACTER = ' ';
 
   private MarcFactory factory = new MarcFactoryImpl();
 
   @Override
-  public ParsedRecord convert(QuickMarcJson quickMarcJson) {
+  public ParsedRecord convert(@NonNull QuickMarcJson quickMarcJson) {
     Record marcRecord = quickMarcJsonToMarcRecord(quickMarcJson);
 
     Map<String, Object> contentMap = new LinkedHashMap<>();
@@ -47,14 +59,13 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     marcRecord.setLeader(factory.newLeader(quickMarcJson.getLeader()));
     quickMarcJson.getFields().forEach(field -> {
       String tag = field.getTag();
-      String data = field.getContent().toString();
       if (field.getIndicators().isEmpty()) {
         ControlField controlField = factory.newControlField();
         controlField.setTag(tag);
-        if (TAG_008.equals(tag)) {
-          controlField.setData(restoreFixedLengthControlField((LinkedHashMap<String, Object>) field.getContent()));
+        if (FIXED_LENGTH_CONTROL_FIELD.equals(tag)) {
+          controlField.setData(restoreFixedLengthControlField((Map<String, Object>) field.getContent()));
         } else {
-          controlField.setData(data);
+          controlField.setData(field.getContent().toString());
         }
         marcRecord.getControlFields().add(controlField);
       } else {
@@ -75,9 +86,9 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
 
   private String restoreFixedLengthControlField(Map<String, Object> map) {
     ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
-    StringBuilder stringBuilder = new StringBuilder(EMPTY_FIXED_LENGTH_CONTROL_FIELD);
-    contentType.getFixedLengthControlFieldItems().forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition()+item.getLength(),
-      item.isArray() ? String.join(EMPTY_STRING, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString()));
+    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, FIXED_LENGTH_CONTROL_FIELD_LENGTH));
+    contentType.getFixedLengthControlFieldItems().forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(),
+      item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString()));
     String result = stringBuilder.toString();
     if (result.length() != FIXED_LENGTH_CONTROL_FIELD_LENGTH) {
       throw new IllegalArgumentException("Field 008 must be 40 characters in length");

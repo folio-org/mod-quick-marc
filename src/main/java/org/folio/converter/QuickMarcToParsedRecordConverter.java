@@ -80,8 +80,8 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     return marcRecord;
   }
 
-  private char retrieveIndicatorValue(Object object) {
-    return Objects.isNull(object) ? SPACE_CHARACTER : object.toString().charAt(0);
+  private char retrieveIndicatorValue(Object input) {
+    return Objects.isNull(input) ? SPACE_CHARACTER : input.toString().charAt(0);
   }
 
   private String restoreFixedLengthControlField(Map<String, Object> map) {

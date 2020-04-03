@@ -6,7 +6,7 @@ public class StringConstants {
   public static final String TYPE = "Type";
   public static final String SPACE = " ";
   public static final String EMPTY_STRING = "";
-  public static final String EMPTY_STRING_008 = "                                        ";
+  public static final String EMPTY_FIXED_LENGTH_CONTROL_FIELD = "                                        ";
   public static final String FIELDS = "fields";
   public static final String LEADER = "leader";
   public static final String INDICATOR1 = "ind1";

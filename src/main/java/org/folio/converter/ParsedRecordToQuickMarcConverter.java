@@ -12,7 +12,6 @@ import org.apache.commons.io.IOUtils;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
-import org.jetbrains.annotations.NotNull;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 @Component
 public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord, QuickMarcJson> {
   @Override
-  public QuickMarcJson convert(@NotNull ParsedRecord parsedRecord) {
+  public QuickMarcJson convert(ParsedRecord parsedRecord) {
     InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8);
     Record marcRecord = new MarcJsonReader(input).next();
 
@@ -41,7 +40,7 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     marcRecord.getControlFields().forEach(controlField ->
       fields.add(new Field()
         .withTag(controlField.getTag())
-        .withContent((TAG_008.equals(controlField.getTag()))? splitField008(controlField.getData(), leader): controlField.getData())));
+        .withContent((TAG_008.equals(controlField.getTag())) ? splitFixedLengthControlField(controlField.getData(), leader) : controlField.getData())));
 
     fields.addAll(marcRecord.getDataFields().stream()
       .map(this::dataFieldToQuickMarcField)
@@ -53,17 +52,17 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
       .withFields(fields);
   }
 
-  private Map<String, Object> splitField008(String content, Leader leader){
+  private Map<String, Object> splitFixedLengthControlField(String content, Leader leader){
     ContentType contentType = ContentType.resolveContentType(leader);
-    Map<String, Object> map = new LinkedHashMap<>();
-    map.put(CONTENT, contentType.getName());
-    map.put(TYPE, leader.getTypeOfRecord());
-    map.put(BLVL, leader.getImplDefined1()[0]);
-    contentType.getField008Items().forEach(item -> {
+    Map<String, Object> fieldItems = new LinkedHashMap<>();
+    fieldItems.put(CONTENT, contentType.getName());
+    fieldItems.put(TYPE, leader.getTypeOfRecord());
+    fieldItems.put(BLVL, leader.getImplDefined1()[0]);
+    contentType.getFixedLengthControlFieldItems().forEach(item -> {
       String val = content.substring(item.getPosition(), item.getPosition() + item.getLength());
-      map.put(item.getName(), item.isArray()? Arrays.asList(val.split(EMPTY_STRING)): val);
+      fieldItems.put(item.getName(), item.isArray() ? Arrays.asList(val.split(EMPTY_STRING)) : val);
     });
-    return map;
+    return fieldItems;
   }
 
   private Field dataFieldToQuickMarcField(DataField dataField) {

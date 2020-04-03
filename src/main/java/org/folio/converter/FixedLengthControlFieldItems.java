@@ -1,6 +1,6 @@
 package org.folio.converter;
 
-public enum Field008Items {
+public enum FixedLengthControlFieldItems {
   ENTERED("Entered", 0, 6, false),
   DTST("DtSt", 6, 1, false),
   DATE1("Date1", 7, 4, false),
@@ -49,7 +49,7 @@ public enum Field008Items {
   private int length;
   private boolean array;
 
-  Field008Items(String name, int position, int length, boolean array) {
+  FixedLengthControlFieldItems(String name, int position, int length, boolean array) {
     this.name = name;
     this.position = position;
     this.length = length;

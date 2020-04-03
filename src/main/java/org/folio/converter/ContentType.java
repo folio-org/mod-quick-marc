@@ -1,6 +1,6 @@
 package org.folio.converter;
 
-import static org.folio.converter.Field008Items.*;
+import static org.folio.converter.FixedLengthControlFieldItems.*;
 
 import org.marc4j.marc.Leader;
 
@@ -19,24 +19,24 @@ public enum ContentType {
   UNKNOWN("Unknown Type", Arrays.asList(ENTERED, DTST, DATE1, DATE2, CTRY, VALUE, LANG, MREC, SRCE));
 
   private String name;
-  private List<Field008Items> field008Items;
+  private List<FixedLengthControlFieldItems> fixedLengthControlFieldItems;
 
-  ContentType(String name, List<Field008Items> field008Items){
+  ContentType(String name, List<FixedLengthControlFieldItems> fixedLengthControlFieldItems){
     this.name = name;
-    this.field008Items = field008Items;
+    this.fixedLengthControlFieldItems = fixedLengthControlFieldItems;
   }
 
   public String getName(){
     return name;
   }
 
-  public List<Field008Items> getField008Items() {
-    return field008Items;
+  public List<FixedLengthControlFieldItems> getFixedLengthControlFieldItems() {
+    return fixedLengthControlFieldItems;
   }
 
-  public static ContentType getByName(String name) {
+  public static ContentType getByName(String typeName) {
     for(ContentType type: values()) {
-      if (type.name.equals(name)) {
+      if (type.name.equals(typeName)) {
         return type;
       }
     }
@@ -46,7 +46,7 @@ public enum ContentType {
   public static ContentType resolveContentType(Leader leader) {
     switch (leader.getTypeOfRecord()) {
       case 'a':
-        return (Arrays.asList("b", "i", "s").contains(Character.toString(leader.getImplDefined1()[0])))? CONTINUING: BOOKS;
+        return (Arrays.asList("b", "i", "s").contains(Character.toString(leader.getImplDefined1()[0]))) ? CONTINUING : BOOKS;
       case 't':
         return BOOKS;
       case 'm':

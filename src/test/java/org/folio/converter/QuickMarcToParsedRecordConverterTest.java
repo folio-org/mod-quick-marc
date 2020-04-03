@@ -20,8 +20,8 @@ public class QuickMarcToParsedRecordConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(QuickMarcToParsedRecordConverterTest.class);
   @ParameterizedTest
   @EnumSource(TestEntities.class)
-  public void testRestoreField008(TestEntities testEntity) {
-    logger.info("Testing field 008 restoring for {}", testEntity.getContentType().getName());
+  public void testRestoreFixedLengthControlField(TestEntities testEntity) {
+    logger.info("Testing FixedLengthControlField restoring for {}", testEntity.getContentType().getName());
     QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
     ParsedRecord parsedRecord = converter.convert(quickMarcJson);
@@ -45,10 +45,10 @@ public class QuickMarcToParsedRecordConverterTest {
   }
 
   @Test
-  public void exceptionWhen008WrongLength() {
-    logger.info("Testing field 008 wrong length after editing - WrongField008LengthException expected");
+  public void exceptionWhenFixedLengthControlFieldWrongLength() {
+    logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
-    QuickMarcJson wrongFile = getMockAsJson("mockdata/quick-marc-json/quickMarcWrong008Items.json").mapTo(QuickMarcJson.class);
+    QuickMarcJson wrongFile = getMockAsJson("mockdata/quick-marc-json/quickMarcWrongFixedLengthControlFieldItems.json").mapTo(QuickMarcJson.class);
     assertThrows(IllegalArgumentException.class, () -> converter.convert(wrongFile));
   }
 }

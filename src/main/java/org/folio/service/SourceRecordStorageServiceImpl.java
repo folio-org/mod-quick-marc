@@ -56,11 +56,11 @@ public class SourceRecordStorageServiceImpl extends BaseServiceImpl implements M
   @Override
   public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
     Map<String, String> headers) {
-    Record record = new Record()
+    ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
       .withRecordType(ParsedRecordDto.RecordType.MARC)
       .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
       .withId(quickMarcJson.getExternalDtoId());
-    return handlePutRequest(getResourceByIdPath(CHANGE_MANAGER, id), JsonObject.mapFrom(record), context, headers);
+    return handlePutRequest(getResourceByIdPath(CHANGE_MANAGER, id), JsonObject.mapFrom(parsedRecordDto), context, headers);
   }
 
   @Autowired

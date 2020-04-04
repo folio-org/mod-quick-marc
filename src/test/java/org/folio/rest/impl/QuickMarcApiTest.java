@@ -1,12 +1,16 @@
 package org.folio.rest.impl;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.folio.TestSuite.wireMockServer;
+import static org.folio.util.ResourcePathResolver.CHANGE_MANAGER;
 import static org.folio.util.ResourcePathResolver.SRS_RECORDS;
+import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
 import static org.folio.util.ResourcePathResolver.getResourcesPath;
 import static org.folio.util.ServiceUtils.buildQuery;
 import static wiremock.org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +32,8 @@ public class QuickMarcApiTest extends ApiTestBase {
   private static final String VALID_EXTERNAL_DTO_ID = "67dfac11-1caf-4470-9ad1-d533f6360bdd";
   private static final String CONTENT_TYPE = "Content-type";
   private static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
+  private static final String RECORDS_EDITOR_RECORDS_PATH_ID = RECORDS_EDITOR_RECORDS_PATH + "/%s";
+  private static final String INVALID_UUID = "invalid UUID";
 
   @Test
   public void testGetQuickMarcRecord() {
@@ -86,5 +92,50 @@ public class QuickMarcApiTest extends ApiTestBase {
     String id = UUID.randomUUID().toString();
 
     verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("X", id), 400);
+  }
+
+  @Test
+  public void testUpdateQuickMarcRecord() {
+    logger.info("===== Verify PUT record: Successful =====");
+
+    wireMockServer
+      .stubFor(put(urlEqualTo(getResourceByIdPath(CHANGE_MANAGER, VALID_EXTERNAL_DTO_ID)))
+        .withRequestBody(containing(getJsonObject(UPDATED_RECORD_PATH).encode()))
+        .willReturn(aResponse().withStatus(204)));
+
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(VALID_EXTERNAL_DTO_ID);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), quickMarcJson, 204);
+  }
+
+  @Test
+  public void testUpdateQuickMarcRecordIdsNotEqual() {
+    logger.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
+
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(VALID_EXTERNAL_DTO_ID);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 400);
+  }
+
+  @Test
+  public void testUpdateQuickMarcRecordInvalidUuid() {
+    logger.info("===== Verify PUT record: Invalid UUID =====");
+
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(VALID_EXTERNAL_DTO_ID);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), quickMarcJson, 400);
+  }
+
+  @Test
+  public void testUpdateQuickMarcRecordInvalidBody() {
+    logger.info("===== Verify PUT record: Invalid Request Body =====");
+
+    QuickMarcJson invalidQuickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), invalidQuickMarcJson, 422);
+  }
+
+  @Test
+  public void testUpdateQuickMarcRecordInvalidField008() {
+    logger.info("===== Verify PUT record: Invalid Field 008 Items =====");
+
+    QuickMarcJson invalidQuickMarcJson = getJsonObject(INVALID_QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), invalidQuickMarcJson, 422);
   }
 }

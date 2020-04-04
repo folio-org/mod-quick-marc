@@ -1,0 +1,41 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "leader" : "01542cca a2200361   4500",
+  "fields" : [ {
+    "tag" : "001",
+    "content" : "393893",
+    "indicators" : [ ]
+  }, {
+    "tag" : "005",
+    "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "008",
+    "content" : {
+      "Content" : "Scores",
+      "Type" : "c",
+      "BLvl" : "a",
+      "Entered" : "abcdef",
+      "DtSt" : "g",
+      "Date1" : "hijk",
+      "Date2" : "lmno",
+      "Ctry" : "pqr",
+      "Comp" : "ab",
+      "FMus" : "c",
+      "Part" : "d",
+      "Audn" : "e",
+      "Form" : "f",
+      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
+      "LTxt" : [ "m", "n" ],
+      "TrAr" : "o",
+      "Lang" : "stu",
+      "MRec" : "v",
+      "Srce" : "w"
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "010",
+    "content" : "$a   55001156/M ",
+    "indicators" : [ " ", " " ]
+  } ]
+}

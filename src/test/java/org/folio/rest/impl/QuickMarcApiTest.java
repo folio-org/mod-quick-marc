@@ -99,20 +99,20 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Successful =====");
 
     wireMockServer
-      .stubFor(put(urlEqualTo(getResourceByIdPath(CHANGE_MANAGER, VALID_EXTERNAL_DTO_ID)))
+      .stubFor(put(urlEqualTo(getResourceByIdPath(CHANGE_MANAGER, VALID_PARSED_RECORD_ID)))
         .withRequestBody(containing(getJsonObject(UPDATED_RECORD_PATH).encode()))
         .willReturn(aResponse().withStatus(204)));
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(VALID_EXTERNAL_DTO_ID);
-    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), quickMarcJson, 204);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 204);
   }
 
   @Test
   public void testUpdateQuickMarcRecordIdsNotEqual() {
     logger.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
-    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(VALID_EXTERNAL_DTO_ID);
-    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 400);
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), quickMarcJson, 422);
   }
 
   @Test
@@ -128,7 +128,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Invalid Request Body =====");
 
     QuickMarcJson invalidQuickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
-    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), invalidQuickMarcJson, 422);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), invalidQuickMarcJson, 422);
   }
 
   @Test
@@ -136,6 +136,6 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Invalid Field 008 Items =====");
 
     QuickMarcJson invalidQuickMarcJson = getJsonObject(INVALID_QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
-    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), invalidQuickMarcJson, 422);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), invalidQuickMarcJson, 422);
   }
 }

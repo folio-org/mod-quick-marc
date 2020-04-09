@@ -111,8 +111,8 @@ public class QuickMarcApiTest extends ApiTestBase {
   public void testUpdateQuickMarcRecordIdsNotEqual() {
     logger.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
-    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
-    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), quickMarcJson, 422);
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(VALID_EXTERNAL_DTO_ID);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_EXTERNAL_DTO_ID), quickMarcJson, 400);
   }
 
   @Test

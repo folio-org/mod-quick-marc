@@ -1,0 +1,21 @@
+{
+  "id" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "content" : {
+    "fields" : [ {
+      "001" : "393893"
+    }, {
+      "005" : "20141107001016.0"
+    }, {
+      "008" : "abcdefghijklmnopqrabcdefghijklmn opstuvw"
+    }, {
+      "010" : {
+        "ind1" : " ",
+        "ind2" : " ",
+        "subfields" : [ {
+          "a" : "   55001156/M "
+        } ]
+      }
+    } ],
+    "leader" : "01542caa a2200361   4500"
+  }
+}

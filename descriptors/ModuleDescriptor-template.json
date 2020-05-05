@@ -38,21 +38,13 @@
       ]
     },
     {
-      "id": "_tenant",
+      "id": "_jsonSchemas",
       "version": "1.0",
-      "interfaceType": "system",
-      "handlers": [
+      "interfaceType" : "multiple",
+      "handlers" : [
         {
-          "methods": [
-            "POST"
-          ],
-          "pathPattern": "/_/tenant"
-        },
-        {
-          "methods": [
-            "DELETE"
-          ],
-          "pathPattern": "/_/tenant"
+          "methods" : [ "GET" ],
+          "pathPattern" : "/_/jsonSchemas"
         }
       ]
     }

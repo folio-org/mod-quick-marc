@@ -30,7 +30,7 @@
           ],
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": [
-            "records-editor.records.item.put"
+            "change-manager.parsedrecords.put"
           ],
           "modulePermissions": [
           ]

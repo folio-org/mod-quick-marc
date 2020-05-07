@@ -36,15 +36,7 @@ public class ErrorUtils {
       if (cause instanceof HttpException) {
         status = ((HttpException) cause).getCode();
         JsonObject errorJsonObject = ((HttpException) cause).getError();
-        try {
-          error = errorJsonObject.mapTo(Error.class);
-          String type = errorJsonObject.getString("type");
-          if (!Objects.equals(ErrorType.INTERNAL.getTypeCode(), type)) {
-            error.withType(ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode());
-          }
-        } catch(Exception e) {
-          error = new Error().withCode("EXTERNAL_OR_UNDEFINED_ERROR").withMessage("External or undefined error").withType(ErrorType.EXTERNAL_OR_UNDEFINED.getTypeCode());
-        }
+        error = resolveError(errorJsonObject);
       } else {
         status = HTTP_INTERNAL_SERVER_ERROR.toInt();
         error = buildError(status, ErrorType.INTERNAL, "Internal server error");
@@ -54,6 +46,20 @@ public class ErrorUtils {
       error = buildError(status, ErrorType.UNKNOWN, "Internal server error");
     }
     return javax.ws.rs.core.Response.status(status).header(CONTENT_TYPE, APPLICATION_JSON).type(APPLICATION_JSON).entity(error).build();
+  }
+
+  private static Error resolveError(JsonObject errorJsonObject) {
+    Error error;
+    try {
+      error = errorJsonObject.mapTo(Error.class);
+      String type = errorJsonObject.getString("type");
+      if (!Objects.equals(ErrorType.INTERNAL.getTypeCode(), type)) {
+        error.withType(ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode());
+      }
+    } catch(Exception e) {
+      error = new Error().withCode("EXTERNAL_OR_UNDEFINED_ERROR").withMessage("External or undefined error").withType(ErrorType.EXTERNAL_OR_UNDEFINED.getTypeCode());
+    }
+    return error;
   }
 
   public enum ErrorType {

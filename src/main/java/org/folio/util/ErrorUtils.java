@@ -4,13 +4,11 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.folio.HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
 import org.folio.HttpStatus;
 import org.folio.exception.HttpException;
 import org.folio.rest.jaxrs.model.Error;
-import org.folio.rest.jaxrs.model.Parameter;
 
 import io.vertx.core.json.JsonObject;
 
@@ -18,24 +16,12 @@ public class ErrorUtils {
 
   private ErrorUtils() {}
 
-  public static Parameter buildErrorParameter(String key, String value) {
-    return new Parameter().withKey(key).withValue(value);
-  }
-
-  public static List<Parameter> buildErrorParameters(Parameter... parameters) {
-    return Arrays.asList(parameters);
-  }
-
   public static Error buildError(int status, String message) {
     return new Error().withCode(HttpStatus.get(status).name()).withMessage(message);
   }
 
   public static Error buildError(int status, ErrorType type, String message) {
     return new Error().withCode(HttpStatus.get(status).name()).withType(type.getTypeCode()).withMessage(message);
-  }
-
-  public static Error buildError(int status, ErrorType type, String message, List<Parameter> parameters) {
-    return new Error().withCode(HttpStatus.get(status).name()).withType(type.getTypeCode()).withMessage(message).withParameters(parameters);
   }
 
   public static javax.ws.rs.core.Response getErrorResponse(Throwable throwable) {
@@ -50,10 +36,13 @@ public class ErrorUtils {
       if (cause instanceof HttpException) {
         status = ((HttpException) cause).getCode();
         JsonObject errorJsonObject = ((HttpException) cause).getError();
-        String type = errorJsonObject.getString("type");
-        if (ErrorType.INTERNAL.getTypeCode().equals(type)) {
+        try {
           error = errorJsonObject.mapTo(Error.class);
-        } else {
+          String type = errorJsonObject.getString("type");
+          if (!Objects.equals(ErrorType.INTERNAL.getTypeCode(), type)) {
+            error.withType(ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode());
+          }
+        } catch(Exception e) {
           error = new Error().withCode("EXTERNAL_OR_UNDEFINED_ERROR").withMessage("External or undefined error").withType(ErrorType.EXTERNAL_OR_UNDEFINED.getTypeCode());
         }
       } else {
@@ -69,10 +58,11 @@ public class ErrorUtils {
 
   public enum ErrorType {
     INTERNAL("-1"),
-    EXTERNAL_OR_UNDEFINED("-2"),
-    UNKNOWN("-3");
+    FOLIO_EXTERNAL_OR_UNDEFINED("-2"),
+    EXTERNAL_OR_UNDEFINED("-3"),
+    UNKNOWN("-4");
 
-    private String code;
+    private final String code;
 
     ErrorType(String code) {
       this.code = code;

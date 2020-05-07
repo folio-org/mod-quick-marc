@@ -108,6 +108,20 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
+  public void testUpdateQuickMarcRecordWrongUuid() {
+    logger.info("===== Verify PUT record: Not found =====");
+    String wrongUUID = UUID.randomUUID().toString();
+
+    wireMockServer
+      .stubFor(put(urlEqualTo(getResourceByIdPath(CHANGE_MANAGER, wrongUUID)))
+        .withRequestBody(containing(getJsonObject(UPDATED_RECORD_PATH).encode()))
+        .willReturn(aResponse().withStatus(404)));
+
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class).withExternalDtoId(wrongUUID);
+    verifyPut(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, wrongUUID), quickMarcJson, 404);
+  }
+
+  @Test
   public void testUpdateQuickMarcRecordIdsNotEqual() {
     logger.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 

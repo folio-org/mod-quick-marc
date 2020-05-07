@@ -21,12 +21,12 @@ import io.vertx.core.Context;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 
-public class RecordsEditorRecordsImpl implements RecordsEditorRecords {
+public class RecordsEditorRecordsApi implements RecordsEditorRecords {
 
   @Autowired
   private MarcRecordsService service;
 
-  public RecordsEditorRecordsImpl() {
+  public RecordsEditorRecordsApi() {
     SpringContextUtil.autowireDependencies(this, Vertx.currentContext());
   }
 

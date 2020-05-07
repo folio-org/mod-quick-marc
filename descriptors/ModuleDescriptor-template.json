@@ -3,7 +3,7 @@
   "name": "quickMARC",
   "requires": [
     {
-      "id": "source-storage-records",
+      "id": "source-manager-parsed-records",
       "version": "1.0"
     }
   ],
@@ -21,7 +21,7 @@
             "records-editor.records.item.get"
           ],
           "modulePermissions": [
-            "source-storage.records.get"
+            "change-manager.parsedrecords.get"
           ]
         },
         {

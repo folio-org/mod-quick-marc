@@ -101,7 +101,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Successful =====");
 
     wireMockServer
-      .stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, VALID_PARSED_RECORD_ID)))
+      .stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, VALID_EXTERNAL_DTO_ID)))
         .withRequestBody(containing(getJsonObject(UPDATED_RECORD_PATH).encode()))
         .willReturn(aResponse().withStatus(204)));
 

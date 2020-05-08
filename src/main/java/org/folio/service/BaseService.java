@@ -21,7 +21,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
 
-public class BaseServiceImpl {
+public abstract class BaseService {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,19 +38,21 @@ public class BaseServiceImpl {
           return validateAndGetResponseBody(response);
         })
         .thenAccept(body -> {
-          logger.info("The response body for GET {}: {}", endpoint, body.encodePrettily());
+          logger.debug("The response body for GET {}: {}", endpoint, body.encodePrettily());
           future.complete(body);
         })
-        .exceptionally(t -> {
-          logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.GET, endpoint);
-          future.completeExceptionally(t);
+        .handle((obj, thr) -> {
+          client.closeClient();
+          if (thr != null) {
+            logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.GET, endpoint);
+            future.completeExceptionally(thr);
+          }
           return null;
         });
     } catch (Exception e) {
       logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.GET, endpoint);
-      future.completeExceptionally(e);
-    } finally {
       client.closeClient();
+      future.completeExceptionally(e);
     }
     return future;
   }

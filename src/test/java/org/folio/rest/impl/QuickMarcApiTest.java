@@ -8,8 +8,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.folio.TestSuite.wireMockServer;
-import static org.folio.util.ResourcePathResolver.CHANGE_MANAGER;
-import static org.folio.util.ResourcePathResolver.SRS_RECORDS;
+import static org.folio.util.Constants.INSTANCE_ID;
+import static org.folio.util.ResourcePathResolver.CM_RECORDS;
 import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
 import static org.folio.util.ResourcePathResolver.getResourcesPath;
 import static org.folio.util.ServiceUtils.buildQuery;
@@ -19,6 +19,8 @@ import static wiremock.org.hamcrest.Matchers.hasSize;
 
 import java.util.UUID;
 
+import io.vertx.core.json.JsonObject;
+import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -40,12 +42,12 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify GET record: Successful =====");
 
     wireMockServer
-      .stubFor(get(urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + EXISTED_INSTANCE_ID)))
-        .willReturn(aResponse().withBody(getSrsRecordsBySearchParameter(EXISTED_INSTANCE_ID).encode())
+      .stubFor(get(urlEqualTo(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, EXISTED_INSTANCE_ID)))
+        .willReturn(aResponse().withBody(getJsonObject(PARSED_RECORD_DTO_PATH).encode())
           .withHeader(CONTENT_TYPE, APPLICATION_JSON)
           .withStatus(200)));
 
-    QuickMarcJson quickMarcJson = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("instanceId", EXISTED_INSTANCE_ID), 200)
+    QuickMarcJson quickMarcJson = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, EXISTED_INSTANCE_ID), 200)
       .as(QuickMarcJson.class);
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
     assertThat(quickMarcJson.getExternalDtoId(), equalTo(VALID_EXTERNAL_DTO_ID));
@@ -59,13 +61,13 @@ public class QuickMarcApiTest extends ApiTestBase {
     String recordNotFoundId = UUID.randomUUID().toString();
 
     wireMockServer
-      .stubFor(get(urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + recordNotFoundId)))
+      .stubFor(get(urlEqualTo(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, recordNotFoundId)))
         .willReturn(aResponse()
-          .withBody(getSrsRecordsBySearchParameter(recordNotFoundId).encode())
-          .withHeader("Content-type", APPLICATION_JSON)
-          .withStatus(200)));
+          .withBody(JsonObject.mapFrom(new Error()).encode())
+          .withHeader(CONTENT_TYPE, APPLICATION_JSON)
+          .withStatus(404)));
 
-    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("instanceId", recordNotFoundId), 404);
+    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, recordNotFoundId), 404);
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
@@ -76,12 +78,12 @@ public class QuickMarcApiTest extends ApiTestBase {
     String internalServerErrorInstanceId = UUID.randomUUID().toString();
 
     wireMockServer.stubFor(get(
-        urlEqualTo(getResourcesPath(SRS_RECORDS) + buildQuery("query","externalIdsHolder.instanceId==" + internalServerErrorInstanceId)))
+        urlEqualTo(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, internalServerErrorInstanceId)))
           .willReturn(aResponse().withBody("Internal server error")
-            .withHeader("Content-type", TEXT_PLAIN)
+            .withHeader(CONTENT_TYPE, TEXT_PLAIN)
             .withStatus(500)));
 
-    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("instanceId", internalServerErrorInstanceId), 500);
+    verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, internalServerErrorInstanceId), 500);
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
@@ -99,7 +101,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Successful =====");
 
     wireMockServer
-      .stubFor(put(urlEqualTo(getResourceByIdPath(CHANGE_MANAGER, VALID_EXTERNAL_DTO_ID)))
+      .stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, VALID_PARSED_RECORD_ID)))
         .withRequestBody(containing(getJsonObject(UPDATED_RECORD_PATH).encode()))
         .willReturn(aResponse().withStatus(204)));
 
@@ -113,7 +115,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     String wrongUUID = UUID.randomUUID().toString();
 
     wireMockServer
-      .stubFor(put(urlEqualTo(getResourceByIdPath(CHANGE_MANAGER, wrongUUID)))
+      .stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, wrongUUID)))
         .withRequestBody(containing(getJsonObject(UPDATED_RECORD_PATH).encode()))
         .willReturn(aResponse().withStatus(404)));
 

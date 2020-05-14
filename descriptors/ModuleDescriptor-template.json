@@ -33,7 +33,7 @@
             "change-manager.parsedrecords.put"
           ],
           "modulePermissions": [
-            "change-manager.parsedrecords.get"
+            "change-manager.parsedrecords.put"
           ]
         }
       ]

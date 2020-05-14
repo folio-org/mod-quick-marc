@@ -9,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import org.folio.exception.HttpException;
-import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.rest.tools.client.HttpClientFactory;
 import org.folio.rest.tools.client.Response;
 import org.folio.rest.tools.client.interfaces.HttpClientInterface;
@@ -58,9 +57,32 @@ public abstract class BaseService {
     return future;
   }
 
-  CompletableFuture<QuickMarcJson> handlePutRequest(JsonObject jsonObject, Context context) {
-    CompletableFuture<QuickMarcJson> future = new VertxCompletableFuture<>(context);
-    future.complete(jsonObject.mapTo(QuickMarcJson.class));
+  CompletableFuture<Void> handlePutRequest(String endpoint, JsonObject jsonObject, Context context,
+    Map<String, String> headers) {
+    HttpClientInterface client = getHttpClient(headers);
+    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+    try {
+      logger.info("Calling PUT {} with body: {}", endpoint, jsonObject.encodePrettily());
+      client.request(HttpMethod.PUT, jsonObject.toBuffer(), endpoint, headers)
+        .thenApply(response -> {
+          logger.debug("Validating response for PUT {}", endpoint);
+          return validateAndGetResponseBody(response);
+        })
+        .thenAccept(body -> {
+          logger.info("'PUT {}' request successfully processed", endpoint);
+          future.complete(null);
+        })
+        .exceptionally(throwable -> {
+          logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.PUT, endpoint);
+          future.completeExceptionally(throwable);
+          return null;
+        });
+    } catch (Exception e) {
+      logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.PUT, endpoint);
+      future.completeExceptionally(e);
+    } finally {
+      client.closeClient();
+    }
     return future;
   }
 

@@ -1,8 +1,7 @@
 package org.folio.service;
 
 import static org.folio.util.Constants.INSTANCE_ID;
-import static org.folio.util.ResourcePathResolver.CM_RECORDS;
-import static org.folio.util.ResourcePathResolver.getResourcesPath;
+import static org.folio.util.ResourcePathResolver.*;
 import static org.folio.util.ServiceUtils.buildQuery;
 
 import io.vertx.core.Context;
@@ -11,7 +10,6 @@ import org.folio.converter.ParsedRecordToQuickMarcConverter;
 import org.folio.converter.QuickMarcToParsedRecordConverter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecordDto;
-import org.folio.srs.model.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +33,13 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
   }
 
   @Override
-  public CompletableFuture<QuickMarcJson> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context, Map<String, String> headers) {
-    Record record = new Record()
+  public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
+    Map<String, String> headers) {
+    ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
       .withRecordType(ParsedRecordDto.RecordType.MARC)
       .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
       .withId(quickMarcJson.getExternalDtoId());
-    return handlePutRequest(JsonObject.mapFrom(record), context);
+    return handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers);
   }
 
   @Autowired

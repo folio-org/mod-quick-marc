@@ -9,6 +9,8 @@ import io.vertx.core.json.JsonObject;
 import org.folio.converter.ParsedRecordToQuickMarcConverter;
 import org.folio.converter.QuickMarcToParsedRecordConverter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.AdditionalInfo;
+import org.folio.srs.model.ExternalIdsHolder;
 import org.folio.srs.model.ParsedRecordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,10 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
     return handleGetRequest(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, instanceId), context, headers)
       .thenApply(response -> {
         ParsedRecordDto parsedRecordDto = response.mapTo(ParsedRecordDto.class);
-        return parsedRecordToQuickMarcConverter.convert(parsedRecordDto.getParsedRecord()).withExternalDtoId(parsedRecordDto.getId());
+        return parsedRecordToQuickMarcConverter.convert(parsedRecordDto.getParsedRecord())
+          .withExternalDtoId(parsedRecordDto.getId())
+          .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
+          .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery());
       });
   }
 
@@ -38,7 +43,9 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
     ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
       .withRecordType(ParsedRecordDto.RecordType.MARC)
       .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
-      .withId(quickMarcJson.getExternalDtoId());
+      .withId(quickMarcJson.getExternalDtoId())
+      .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
+      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
     return handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers);
   }
 

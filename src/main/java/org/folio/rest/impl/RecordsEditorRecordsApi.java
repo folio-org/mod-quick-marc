@@ -44,9 +44,9 @@ public class RecordsEditorRecordsApi implements RecordsEditorRecords {
 
   @Override
   @Validate
-  public void putRecordsEditorRecordsById(String id, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    if (entity.getExternalDtoId().equals(id)) {
-      service.putMarcRecordById(id, entity, vertxContext, okapiHeaders)
+  public void putRecordsEditorRecordsById(String parsedRecordId, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    if (entity.getParsedRecordId().equals(parsedRecordId)) {
+      service.putMarcRecordById(entity.getParsedRecordDtoId(), entity, vertxContext, okapiHeaders)
         .thenAccept(res -> asyncResultHandler.handle(succeededFuture(Response.noContent().build())))
         .exceptionally(throwable -> handleErrorResponse(asyncResultHandler, throwable));
     } else {

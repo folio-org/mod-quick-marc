@@ -31,7 +31,7 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
       .thenApply(response -> {
         ParsedRecordDto parsedRecordDto = response.mapTo(ParsedRecordDto.class);
         return parsedRecordToQuickMarcConverter.convert(parsedRecordDto.getParsedRecord())
-          .withExternalDtoId(parsedRecordDto.getId())
+          .withParsedRecordDtoId(parsedRecordDto.getId())
           .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
           .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery());
       });
@@ -43,7 +43,7 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
     ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
       .withRecordType(ParsedRecordDto.RecordType.MARC)
       .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
-      .withId(quickMarcJson.getExternalDtoId())
+      .withId(quickMarcJson.getParsedRecordDtoId())
       .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
       .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
     return handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers);

@@ -14,6 +14,16 @@
       "type": "string",
       "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
     },
+    "suppressDiscovery": {
+      "description": "Flag indicates if the record is displayed during a search",
+      "type": "boolean",
+      "default": false
+    },
+    "instanceId": {
+      "description": "Identifier of external instance",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
     "leader": {
       "description": "Leader record",
       "type": "string",
@@ -58,5 +68,5 @@
       "minItems" : 3
     }
   },
-  "required": ["externalDtoId","leader", "fields"]
+  "required": ["externalDtoId", "suppressDiscovery", "instanceId", "leader", "fields"]
 }

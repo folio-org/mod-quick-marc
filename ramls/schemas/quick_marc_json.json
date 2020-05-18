@@ -68,5 +68,5 @@
       "minItems" : 3
     }
   },
-  "required": ["externalDtoId", "suppressDiscovery", "instanceId", "leader", "fields"]
+  "required": ["parsedRecordDtoId", "suppressDiscovery", "instanceId", "leader", "fields"]
 }

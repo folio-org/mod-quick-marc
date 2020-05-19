@@ -16,7 +16,14 @@ public class ContentTypeTest {
   @EnumSource(TestEntities.class)
   public void testDetectContentType(TestEntities testField){
     logger.info("Test content type detection");
-    testField.getLeaders().forEach(leader -> assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(leader).getName()));
+    testField.getLeaders().forEach(leader -> assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(leader.getTypeOfRecord()).getName()));
+  }
+
+  @ParameterizedTest
+  @EnumSource(TypesOfRecords.class)
+  public void testResolveTypeOfRecord(TypesOfRecords typeOfRecord) {
+    logger.info("Test resolve type of record");
+    assertEquals(typeOfRecord.getName(), ContentType.resolveTypeOfRecord(typeOfRecord.getCode()));
   }
 
   @Test

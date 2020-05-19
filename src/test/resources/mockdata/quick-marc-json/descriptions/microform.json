@@ -1,0 +1,21 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "suppressDiscovery" : false,
+  "leader" : "00051caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Resource" : "Microform",
+      "Code" : "h",
+      "SMD" : "a",
+      "Positive/negative aspect" : "b",
+      "Dimensions" : "c",
+      "Reduction ratio range/Reduction ratio" : "defg",
+      "Color" : "h",
+      "Emulsion on film" : "i",
+      "Generation" : "j",
+      "Base of film" : "k"
+    },
+    "indicators" : [ ]
+  } ]
+}

@@ -1,0 +1,21 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "suppressDiscovery" : false,
+  "leader" : "00049caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Resource" : "Remote-Sensing Image",
+      "Code" : "r",
+      "SMD" : "a",
+      "Altitude of sensor" : "b",
+      "Attitude of sensor" : "c",
+      "Cloud cover" : "d",
+      "Platform construction type" : "e",
+      "Platform use category" : "f",
+      "Sensor type" : "g",
+      "Data type" : "hi"
+    },
+    "indicators" : [ ]
+  } ]
+}

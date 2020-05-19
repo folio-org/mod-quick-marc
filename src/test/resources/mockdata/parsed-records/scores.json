@@ -6,6 +6,8 @@
     }, {
       "005" : "20141107001016.0"
     }, {
+      "006" : "cabcdefghijklmn o "
+    }, {
       "008" : "abcdefghijklmnopqrabcdefghijklmn o stuvw"
     }, {
       "010" : {
@@ -16,6 +18,6 @@
         } ]
       }
     } ],
-    "leader" : "01542cca a2200361   4500"
+    "leader" : "00188cca a2200361   4500"
   }
 }

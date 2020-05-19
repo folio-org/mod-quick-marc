@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery":false,
-  "leader" : "01542cga a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "00188cga a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -9,6 +9,19 @@
   }, {
     "tag" : "005",
     "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "006",
+    "content" : {
+      "Type" : "Projected medium",
+      "Code" : "g",
+      "Time" : [ "a", "b", "c" ],
+      "Audn" : "d",
+      "GPub" : "e",
+      "Form" : "f",
+      "TMat" : "g",
+      "Tech" : "h"
+    },
     "indicators" : [ ]
   }, {
     "tag" : "008",
@@ -21,15 +34,15 @@
       "Date1" : "hijk",
       "Date2" : "lmno",
       "Ctry" : "pqr",
+      "Lang" : "stu",
+      "MRec" : "v",
+      "Srce" : "w",
       "Time" : [ "a", "b", "c" ],
       "Audn" : "d",
       "GPub" : "e",
       "Form" : "f",
       "TMat" : "g",
-      "Tech" : "h",
-      "Lang" : "stu",
-      "MRec" : "v",
-      "Srce" : "w"
+      "Tech" : "h"
     },
     "indicators" : [ ]
   }, {

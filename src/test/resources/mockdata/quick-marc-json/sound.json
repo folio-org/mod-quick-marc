@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery":false,
-  "leader" : "01542cia a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "00188cia a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -9,6 +9,21 @@
   }, {
     "tag" : "005",
     "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "006",
+    "content" : {
+      "Type" : "Nonmusical sound recording",
+      "Code" : "i",
+      "Comp" : "ab",
+      "FMus" : "c",
+      "Part" : "d",
+      "Audn" : "e",
+      "Form" : "f",
+      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
+      "LTxt" : [ "m", "n" ],
+      "TrAr" : "o"
+    },
     "indicators" : [ ]
   }, {
     "tag" : "008",
@@ -21,6 +36,9 @@
       "Date1" : "hijk",
       "Date2" : "lmno",
       "Ctry" : "pqr",
+      "Lang" : "stu",
+      "MRec" : "v",
+      "Srce" : "w",
       "Comp" : "ab",
       "FMus" : "c",
       "Part" : "d",
@@ -28,10 +46,7 @@
       "Form" : "f",
       "AccM" : [ "g", "h", "i", "j", "k", "l" ],
       "LTxt" : [ "m", "n" ],
-      "TrAr" : "o",
-      "Lang" : "stu",
-      "MRec" : "v",
-      "Srce" : "w"
+      "TrAr" : "o"
     },
     "indicators" : [ ]
   }, {

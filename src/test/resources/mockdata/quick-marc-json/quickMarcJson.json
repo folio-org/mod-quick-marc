@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery": false,
-  "leader" : "01542ccm a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "01587ccm a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -11,27 +11,61 @@
     "content" : "20141107001016.0",
     "indicators" : [ ]
   }, {
+    "tag" : "006",
+    "content" : {
+      "Type" : "Nonmusical sound recording",
+      "Code" : "i",
+      "Comp" : "ab",
+      "FMus" : "c",
+      "Part" : "d",
+      "Audn" : "e",
+      "Form" : "f",
+      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
+      "LTxt" : [ "m", "n" ],
+      "TrAr" : "o"
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "007",
+    "content" : {
+      "Resource" : "Sound Recording",
+      "Code" : "s",
+      "SMD" : "a",
+      "Speed" : "b",
+      "Configuration of playback channels" : "c",
+      "Groove width/ groove pitch" : "d",
+      "Dimensions" : "e",
+      "Tape width" : "f",
+      "Tape configuration" : "g",
+      "Kind of disc, cylinder, or tape" : "h",
+      "Kind of material" : "i",
+      "Kind of cutting" : "j",
+      "Special playback characteristics" : "k",
+      "Capture and storage technique" : "l"
+    },
+    "indicators" : [ ]
+  }, {
     "tag" : "008",
     "content" : {
       "Content" : "Scores",
       "Type" : "c",
       "BLvl" : "m",
-      "Entered" : "830419",
-      "DtSt" : "m",
-      "Date1" : "1955",
-      "Date2" : "9999",
-      "Ctry" : "gw ",
-      "Comp" : "mu",
-      "FMus" : "a",
-      "Part" : " ",
-      "Audn" : " ",
-      "Form" : " ",
-      "AccM" : [ "h", "i", "z", " ", " ", " " ],
-      "LTxt" : [ "n", " " ],
-      "TrAr" : " ",
-      "Lang" : "lat",
-      "MRec" : " ",
-      "Srce" : " "
+      "Entered" : "abcdef",
+      "DtSt" : "g",
+      "Date1" : "hijk",
+      "Date2" : "lmno",
+      "Ctry" : "pqr",
+      "Lang" : "stu",
+      "MRec" : "v",
+      "Srce" : "w",
+      "Comp" : "ab",
+      "FMus" : "c",
+      "Part" : "d",
+      "Audn" : "e",
+      "Form" : "f",
+      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
+      "LTxt" : [ "m", "n" ],
+      "TrAr" : "o"
     },
     "indicators" : [ ]
   }, {
@@ -76,7 +110,7 @@
     "indicators" : [ "1", "0" ]
   }, {
     "tag" : "245",
-    "content" : "$aNeue Ausgabe sämtlicher Werke, $bin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien. $cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
+    "content" : "$aNeue Ausgabe samtlicher Werke, $bin Verbindung mit den Mozartstadten, Augsburg, Salzburg und Wien. $cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
     "indicators" : [ "1", "0" ]
   }, {
     "tag" : "246",
@@ -84,7 +118,7 @@
     "indicators" : [ "3", "3" ]
   }, {
     "tag" : "260",
-    "content" : "$aKassel, $bBärenreiter, $cc1955-",
+    "content" : "$aKassel, $bBarenreiter, $cc1955-",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "300",
@@ -92,7 +126,7 @@
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "505",
-    "content" : "$aSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+    "content" : "$aSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
     "indicators" : [ "0", " " ]
   }, {
     "tag" : "650",

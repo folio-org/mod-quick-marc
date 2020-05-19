@@ -7,7 +7,6 @@ import static org.folio.converter.TestUtils.getMockAsJson;
 import io.vertx.core.json.JsonObject;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
-import org.folio.srs.model.Record;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -29,12 +28,22 @@ public class ParsedRecordToQuickMarcConverterTest {
     assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
   }
 
+  @ParameterizedTest
+  @EnumSource(PhysicalDescriptionsTestEntities.class)
+  public void testSplitFixedLengthControlField(PhysicalDescriptionsTestEntities testEntity) {
+    logger.info("Testing FixedLengthControlField splitting for {}", testEntity.name());
+    ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
+    ParsedRecordToQuickMarcConverter converter = new ParsedRecordToQuickMarcConverter();
+    QuickMarcJson quickMarcJson = converter.convert(parsedRecord);
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
+  }
+
   @Test
-  public void testParsedRecordToQuickMarcJsonConversion(){
+  public void testParsedRecordToQuickMarcJsonConversion() {
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion");
     ParsedRecordToQuickMarcConverter converter = new ParsedRecordToQuickMarcConverter();
-    Record record = getMockAsJson("mockdata/srs-records/record.json").mapTo(Record.class);
-    QuickMarcJson quickMarcJson = converter.convert(record.getParsedRecord());
+    ParsedRecord record = getMockAsJson("mockdata/parsed-records/parsedRecord.json").mapTo(ParsedRecord.class);
+    QuickMarcJson quickMarcJson = converter.convert(record);
     QuickMarcJson expected = getMockAsJson("mockdata/quick-marc-json/quickMarcJson.json").mapTo(QuickMarcJson.class);
     String expectedString = new String(JsonObject.mapFrom(expected).encodePrettily().getBytes(StandardCharsets.UTF_8));
     String convertedString = JsonObject.mapFrom(quickMarcJson).encodePrettily();

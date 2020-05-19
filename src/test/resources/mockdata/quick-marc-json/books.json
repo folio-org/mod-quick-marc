@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery":false,
-  "leader" : "01542caa a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "00188caa a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -9,6 +9,23 @@
   }, {
     "tag" : "005",
     "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "006",
+    "content" : {
+      "Type" : "Language material",
+      "Code" : "a",
+      "Ills" : [ "a", "b", "c", "d" ],
+      "Audn" : "e",
+      "Form" : "f",
+      "Cont" : [ "g", "h", "i", "j" ],
+      "GPub" : "k",
+      "Conf" : "l",
+      "Fest" : "m",
+      "Indx" : "n",
+      "LitF" : "o",
+      "Biog" : "p"
+    },
     "indicators" : [ ]
   }, {
     "tag" : "008",
@@ -21,6 +38,9 @@
       "Date1" : "hijk",
       "Date2" : "lmno",
       "Ctry" : "pqr",
+      "Lang" : "stu",
+      "MRec" : "v",
+      "Srce" : "w",
       "Ills" : [ "a", "b", "c", "d" ],
       "Audn" : "e",
       "Form" : "f",
@@ -30,10 +50,7 @@
       "Fest" : "m",
       "Indx" : "n",
       "LitF" : "o",
-      "Biog" : "p",
-      "Lang" : "stu",
-      "MRec" : "v",
-      "Srce" : "w"
+      "Biog" : "p"
     },
     "indicators" : [ ]
   }, {

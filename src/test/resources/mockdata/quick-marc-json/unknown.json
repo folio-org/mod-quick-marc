@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery":false,
-  "leader" : "01542cha a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "00188cha a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -9,6 +9,14 @@
   }, {
     "tag" : "005",
     "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "006",
+    "content" : {
+      "Type" : "b",
+      "Code" : "b",
+      "Value" : "abcdefghijklmnopq"
+    },
     "indicators" : [ ]
   }, {
     "tag" : "008",
@@ -21,10 +29,10 @@
       "Date1" : "hijk",
       "Date2" : "lmno",
       "Ctry" : "pqr",
-      "Value" : "abcdefghijklmnopq",
       "Lang" : "stu",
       "MRec" : "v",
-      "Srce" : "w"
+      "Srce" : "w",
+      "Value" : "abcdefghijklmnopq"
     },
     "indicators" : [ ]
   }, {

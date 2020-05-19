@@ -12,7 +12,11 @@
       }, {
         "005" : "20141107001016.0"
       }, {
-        "008" : "830419m19559999gw mua   hiz   n    lat  "
+        "006" : "iabcdefghijklmn o "
+      }, {
+        "007" : "sa bcdefghijkl"
+      }, {
+        "008" : "abcdefghijklmnopqrabcdefghijklmn o stuvw"
       }, {
         "010" : {
           "ind1" : " ",
@@ -144,9 +148,9 @@
           "ind1" : "1",
           "ind2" : "0",
           "subfields" : [ {
-            "a" : "Neue Ausgabe sämtlicher Werke,"
+            "a" : "Neue Ausgabe samtlicher Werke,"
           }, {
-            "b" : "in Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien."
+            "b" : "in Verbindung mit den Mozartstadten, Augsburg, Salzburg und Wien."
           }, {
             "c" : "Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg."
           } ]
@@ -166,7 +170,7 @@
           "subfields" : [ {
             "a" : "Kassel,"
           }, {
-            "b" : "Bärenreiter,"
+            "b" : "Barenreiter,"
           }, {
             "c" : "c1955-"
           } ]
@@ -188,7 +192,7 @@
           "ind1" : "0",
           "ind2" : " ",
           "subfields" : [ {
-            "a" : "Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement."
+            "a" : "Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement."
           } ]
         }
       }, {
@@ -310,7 +314,7 @@
           } ]
         }
       } ],
-      "leader" : "01542ccm a2200361   4500"
+      "leader" : "01587ccm a2200361   4500"
     }
   },
   "additionalInfo": {

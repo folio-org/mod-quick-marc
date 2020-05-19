@@ -49,10 +49,6 @@ public enum PhysicalDescriptions {
     return name;
   }
 
-  public char getCode() {
-    return code;
-  }
-
   public int getLength() {
     return length;
   }

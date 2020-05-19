@@ -20,7 +20,7 @@ public class QuickMarcToParsedRecordConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(QuickMarcToParsedRecordConverterTest.class);
   @ParameterizedTest
   @EnumSource(TestEntities.class)
-  public void testRestoreGeneralAndAdditionalCharacteristicsControlFields(TestEntities testEntity) {
+  void testRestoreGeneralAndAdditionalCharacteristicsControlFields(TestEntities testEntity) {
     logger.info("Testing general and additional characteristics restoring for {}", testEntity.getContentType().getName());
     QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
@@ -30,7 +30,7 @@ public class QuickMarcToParsedRecordConverterTest {
 
   @ParameterizedTest
   @EnumSource(PhysicalDescriptionsTestEntities.class)
-  public void testRestorePhysicalCharacteristicsControlField(PhysicalDescriptionsTestEntities testEntity) {
+  void testRestorePhysicalCharacteristicsControlField(PhysicalDescriptionsTestEntities testEntity) {
     logger.info("Testing Characteristics field restoring for {}", testEntity.name());
     QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
@@ -39,7 +39,7 @@ public class QuickMarcToParsedRecordConverterTest {
   }
 
   @Test
-  public void testRecordsAreEqual(){
+  void testRecordsAreEqual(){
     logger.info("Source record and converted/restored one should be equal");
     QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter = new QuickMarcToParsedRecordConverter();
     ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter = new ParsedRecordToQuickMarcConverter();
@@ -52,7 +52,7 @@ public class QuickMarcToParsedRecordConverterTest {
   }
 
   @Test
-  public void exceptionWhenFixedLengthControlFieldWrongLength() {
+  void exceptionWhenFixedLengthControlFieldWrongLength() {
     logger.info("Testing fixed length field with wrong values - IllegalArgumentException expected");
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
     QuickMarcJson wrongFile = getMockAsJson("mockdata/quick-marc-json/quickMarcJsonWrongLength.json").mapTo(QuickMarcJson.class);

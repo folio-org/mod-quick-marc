@@ -1,5 +1,8 @@
 package org.folio.converter;
 
+import static org.folio.util.Constants.DIMENSIONS_CONST;
+import static org.folio.util.Constants.POSITIVE_NEGATIVE_ASPECT;
+
 public enum FixedLengthControlFieldItems {
 
   ENTERED("Entered", 0, 6, false),
@@ -46,7 +49,7 @@ public enum FixedLengthControlFieldItems {
   SRCE("Srce", 39, 1, false),
   SMD("SMD", 1, 1, false),
   COLOR("Color",3,1, false),
-  DIMENSIONS("Dimensions", 4, 1, false),
+  DIMENSIONS(DIMENSIONS_CONST, 4, 1, false),
   SOUND("Sound", 5, 1, false),
   IMAGE_BIT_DEPTH("Image bit depth", 6, 3, false),
   FILE_FORMATS("File formats", 9, 1, false),
@@ -57,8 +60,8 @@ public enum FixedLengthControlFieldItems {
   PHYSICAL_MEDIUM("Physical medium", 4, 1, false),
   TYPE_OF_REPRODUCTION("Type of reproduction", 5, 1, false),
   PRODUCTION_DETAILS("Production/reproduction details", 6, 1, false),
-  ASPECT_MAP("Positive/negative aspect", 7, 1, false),
-  ASPECT_MICROFORM("Positive/negative aspect", 3, 1, false),
+  ASPECT_MAP(POSITIVE_NEGATIVE_ASPECT, 7, 1, false),
+  ASPECT_MICROFORM(POSITIVE_NEGATIVE_ASPECT, 3, 1, false),
   REDUCTION_RATIO("Reduction ratio range/Reduction ratio", 5, 4, false),
   COLOR_MICROFORM("Color", 9, 1, false),
   EMULSION_ON_FILM("Emulsion on film", 10, 1, false),
@@ -67,10 +70,10 @@ public enum FixedLengthControlFieldItems {
   MOTION_PICTURE_PRESENTATION_FORMAT("Motion picture presentation format", 4, 1, false),
   SOUND_ON_MEDIUM("Sound on medium or separate", 5, 1, false),
   MEDIUM_FOR_SOUND("Medium for sound", 6, 1, false),
-  DIMENSIONS_MOTION("Dimensions", 7, 1, false),
+  DIMENSIONS_MOTION(DIMENSIONS_CONST, 7, 1, false),
   CONFIGURATION_OF_CHANNELS("Configuration of playback channels", 8, 1, false),
   PRODUCTION_ELEMENTS("Production elements", 9, 1, false),
-  ASPECT_MOTION("Positive/negative aspect", 10, 1, false),
+  ASPECT_MOTION(POSITIVE_NEGATIVE_ASPECT, 10, 1, false),
   REFINED_CATEGORIES("Refined categories of color", 13, 1, false),
   KIND_OF_COLOR("Kind of color stock or print", 14, 1, false),
   DETERIORATION_STAGE("Deterioration stage", 15, 1, false),
@@ -90,7 +93,7 @@ public enum FixedLengthControlFieldItems {
   SPEED("Speed", 3, 1, false),
   CONFIGURATION_OF_CHANNELS_SOUND("Configuration of playback channels", 4, 1, false),
   GROOVE("Groove width/ groove pitch", 5, 1, false),
-  DIMENSIONS_SOUND("Dimensions", 6, 1, false),
+  DIMENSIONS_SOUND(DIMENSIONS_CONST, 6, 1, false),
   TAPE_WIDTH("Tape width", 7, 1, false),
   TAPE_CONFIGURATION("Tape configuration", 8, 1, false),
   KIND_OF_DISC("Kind of disc, cylinder, or tape", 9, 1, false),

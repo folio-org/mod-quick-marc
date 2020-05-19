@@ -14,9 +14,9 @@
   </licenses>
 
   <properties>
-    <raml-module-builder.version>29.3.1</raml-module-builder.version>
+    <raml-module-builder.version>30.0.0</raml-module-builder.version>
     <jsonschema_paths>schemas</jsonschema_paths>
-    <vertx.version>3.8.5</vertx.version>
+    <vertx.version>3.9.0</vertx.version>
     <junit.jupiter.version>5.6.0</junit.jupiter.version>
     <rest-assured.version>4.3.0</rest-assured.version>
     <log4j-slf4j-impl.version>2.13.1</log4j-slf4j-impl.version>

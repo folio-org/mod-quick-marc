@@ -1,6 +1,8 @@
 package org.folio.converter;
 
 import static org.folio.converter.TestEntities.BOOKS;
+import static org.folio.converter.TestUtils.getFieldWithIndicators;
+import static org.folio.converter.TestUtils.getQuickMarcJsonWithMinContent;
 import static org.folio.rest.impl.ApiTestBase.PARSED_RECORD_DTO_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class QuickMarcToParsedRecordConverterTest {
@@ -30,6 +33,10 @@ public class QuickMarcToParsedRecordConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(QuickMarcToParsedRecordConverterTest.class);
 
   public static final String TESTED_TAG_NAME = "333";
+  public static final String CONTENT = "content";
+  public static final String FIELDS = "fields";
+  public static final String IND_1 = "ind1";
+  public static final String IND_2 = "ind2";
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)
@@ -67,7 +74,7 @@ public class QuickMarcToParsedRecordConverterTest {
   void testFixedLengthControlFieldWrongLength() {
     logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
     JsonObject json = getMockAsJson(BOOKS.getQuickMarcJsonPath());
-    json.getJsonArray("fields").getJsonObject(3).getJsonObject("content").put("Entered", "abcdefg");
+    json.getJsonArray(FIELDS).getJsonObject(3).getJsonObject(CONTENT).put("Entered", "abcdefg");
     QuickMarcJson quickMarcJson = json.mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
     assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));
@@ -77,26 +84,35 @@ public class QuickMarcToParsedRecordConverterTest {
   void testEmptyIndicatorsList() {
     logger.info("Test empty indicators list");
 
-    Field field = new Field()
-      .withTag(TESTED_TAG_NAME)
-      .withContent("$333 content")
-      .withIndicators(new ArrayList<>());
-
-    QuickMarcJson quickMarcJson = new QuickMarcJson()
-      .withLeader("01542ccm a2200361   4500")
-      .withFields(Collections.singletonList(field));
+    Field field = getFieldWithIndicators(new ArrayList<>());
+    QuickMarcJson quickMarcJson = getQuickMarcJsonWithMinContent(field);
 
     assertThat(quickMarcJson.getFields(), hasSize(1));
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(0));
 
     JsonObject parsedRecord = JsonObject.mapFrom(new QuickMarcToParsedRecordConverter().convert(quickMarcJson));
-    JsonObject fieldJsonObject = parsedRecord.getJsonObject("content").getJsonArray("fields").getJsonObject(0).getJsonObject(TESTED_TAG_NAME);
+    JsonObject fieldJsonObject = parsedRecord.getJsonObject(CONTENT).getJsonArray(FIELDS).getJsonObject(0).getJsonObject(TESTED_TAG_NAME);
 
-    String ind1 = fieldJsonObject.getString("ind1");
-    String ind2 = fieldJsonObject.getString("ind2");
+    assertThat(fieldJsonObject.getString(IND_1), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.getString(IND_2), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.size(), Is.is(3));
+  }
 
-    assertThat(ind1, equalTo(StringUtils.SPACE));
-    assertThat(ind2, equalTo(StringUtils.SPACE));
+  @Test
+  void testListWithEmptyIndicators() {
+    logger.info("Test list with empty indicators");
+
+    Field field = getFieldWithIndicators(Arrays.asList(" ", ""));
+    QuickMarcJson quickMarcJson = getQuickMarcJsonWithMinContent(field);
+
+    assertThat(quickMarcJson.getFields(), hasSize(1));
+    assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(2));
+
+    JsonObject parsedRecord = JsonObject.mapFrom(new QuickMarcToParsedRecordConverter().convert(quickMarcJson));
+    JsonObject fieldJsonObject = parsedRecord.getJsonObject(CONTENT).getJsonArray(FIELDS).getJsonObject(0).getJsonObject(TESTED_TAG_NAME);
+
+    assertThat(fieldJsonObject.getString(IND_1), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.getString(IND_2), equalTo(StringUtils.SPACE));
     assertThat(fieldJsonObject.size(), Is.is(3));
   }
 
@@ -104,14 +120,8 @@ public class QuickMarcToParsedRecordConverterTest {
   void testIllegalNumberOfIndicators() {
     logger.info("Test illegal number of indicators - IllegalArgumentException expected");
 
-    Field field = new Field()
-      .withTag(TESTED_TAG_NAME)
-      .withContent("$333 content")
-      .withIndicators(Collections.singletonList("1"));
-
-    QuickMarcJson quickMarcJson = new QuickMarcJson()
-      .withLeader("01542ccm a2200361   4500")
-      .withFields(Collections.singletonList(field));
+    Field field = getFieldWithIndicators(Collections.singletonList("1"));
+    QuickMarcJson quickMarcJson = getQuickMarcJsonWithMinContent(field);
 
     assertThat(quickMarcJson.getFields(), hasSize(1));
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(1));

@@ -30,10 +30,8 @@ import io.vertx.core.json.JsonObject;
 
 public class ApiTestBase {
 
-  public static final String PARSED_RECORD_DTO_PATH = "mockdata/srs-records/parsedRecordDto.json";
+  public static final String PARSED_RECORD_DTO_PATH = "mockdata/change-manager/parsedRecordDto.json";
   public static final String QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson.json";
-  public static final String INVALID_QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJsonWrong008Items.json";
-  public static final String UPDATED_RECORD_PATH = "mockdata/change-manager/parsedRecordDto.json";
   private static final Header X_OKAPI_URL = new Header(OKAPI_URL, "http://localhost:" + mockPort);
   private static final Header X_OKAPI_TENANT = new Header(OKAPI_HEADER_TENANT, "quickmarctest");
 
@@ -68,7 +66,7 @@ public class ApiTestBase {
             .response();
   }
 
-  public Response verifyPut(String url, Object requestBody, int code) {
+  public Response verifyPutRequest(String url, Object requestBody, int code) {
     return RestAssured
       .with()
         .header(X_OKAPI_URL)

@@ -2,11 +2,24 @@ package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
-import static org.folio.util.Constants.*;
+import static org.folio.util.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
+import static org.folio.util.Constants.BLVL;
+import static org.folio.util.Constants.CODE;
+import static org.folio.util.Constants.CONTENT;
+import static org.folio.util.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
+import static org.folio.util.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
+import static org.folio.util.Constants.RESOURCE;
+import static org.folio.util.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
+import static org.folio.util.Constants.SPECIFIC_ELEMENTS_END_INDEX;
+import static org.folio.util.Constants.TYPE;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;

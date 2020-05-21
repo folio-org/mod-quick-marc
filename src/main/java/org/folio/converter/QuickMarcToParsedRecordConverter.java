@@ -3,6 +3,7 @@ package org.folio.converter;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.folio.converter.FixedLengthControlFieldItems.VALUE;
 import static org.folio.util.Constants.*;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,9 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.marc4j.marc.*;
@@ -38,6 +41,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   private static final int TAG_LENGTH = 4;
   private static final int TERMINATOR_LENGTH = 1;
   private static final int LEADER_LENGTH = 24;
+  private static final Pattern CONTROL_FIELD_PATTER = Pattern.compile("^(00)[1-9]$");
 
   private MarcFactory factory = new MarcFactoryImpl();
 
@@ -59,7 +63,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
 
     quickMarcJson.getFields().forEach(field -> {
       String tag = field.getTag();
-      if (field.getIndicators().isEmpty()) {
+      if (isControlField(field)) {
         ControlField controlField = factory.newControlField();
         controlField.setTag(tag);
         controlField.setData(restoreControlFieldContent(tag, field.getContent()));
@@ -68,8 +72,9 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
         DataField dataField = factory.newDataField();
         dataField.setTag(field.getTag());
         dataField.getSubfields().addAll(convertStringToSubfields(field.getContent().toString()));
-        dataField.setIndicator1(retrieveIndicatorValue(field.getIndicators().get(0)));
-        dataField.setIndicator2(retrieveIndicatorValue(field.getIndicators().get(1)));
+        List<String> indicators = verifyAndGetIndicators(field);
+        dataField.setIndicator1(indicators.get(0).toCharArray()[0]);
+        dataField.setIndicator2(indicators.get(1).toCharArray()[0]);
         marcRecord.getDataFields().add(dataField);
       }
     });
@@ -79,8 +84,8 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     return marcRecord;
   }
 
-  private char retrieveIndicatorValue(Object input) {
-    return Objects.isNull(input) ? SPACE_CHARACTER : input.toString().charAt(0);
+  private String retrieveIndicatorValue(Object input) {
+    return Objects.isNull(input) ? " " : input.toString();
   }
 
   private String restoreControlFieldContent(String tag, Object content) {
@@ -171,5 +176,33 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       .mapToInt(dataField -> dataField.toString().length() - TAG_LENGTH + TERMINATOR_LENGTH)
       .sum();
     return LEADER_LENGTH + addressesLength + controlFieldsLength + dataFieldsLength + TERMINATOR_LENGTH;
+
+  /**
+   * This method determines if field is Control Filed of MARC record based on pattern 00X according to
+   * MARC record Format specification.
+   * @param field {@link QuickMarcJson} field
+   * @return true if field is Control Field, otherwise - false
+   */
+  private boolean isControlField(Field field) {
+    return CONTROL_FIELD_PATTER.matcher(field.getTag()).matches();
+  }
+
+  /**
+   * This method returns indicators list of QuickMarcJson {@link Field}.
+   * @param field field from {@link QuickMarcJson}
+   * @return list of indicators
+   */
+  private List<String> verifyAndGetIndicators(Field field) {
+    List<Object> indicators = field.getIndicators();
+    if (indicators.size() == 2) {
+      List<String> list = new ArrayList<>();
+      list.add(retrieveIndicatorValue(field.getIndicators().get(0)));
+      list.add(retrieveIndicatorValue(field.getIndicators().get(1)));
+      return list;
+    } else if (indicators.isEmpty()) {
+      return Arrays.asList(SPACE, SPACE);
+    } else {
+      throw new IllegalArgumentException("Illegal indicators number for field: " + field.getTag());
+    }
   }
 }

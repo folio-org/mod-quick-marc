@@ -56,10 +56,11 @@ public class QuickMarcToParsedRecordConverterTest {
   @Test
   void testFixedLengthControlFieldWrongLength() {
     logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
-    JsonObject quickMarcJson = getMockAsJson(BOOKS.getQuickMarcJsonPath());
-    quickMarcJson.getJsonArray("fields").getJsonObject(2).getJsonObject("content").put("Entered", "abcdefg");
+    JsonObject json = getMockAsJson(BOOKS.getQuickMarcJsonPath());
+    json.getJsonArray("fields").getJsonObject(2).getJsonObject("content").put("Entered", "abcdefg");
+    QuickMarcJson quickMarcJson = json.mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
-    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson.mapTo(QuickMarcJson.class)));
+    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));
   }
 
   @Test

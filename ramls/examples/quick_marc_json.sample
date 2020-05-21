@@ -9,10 +9,32 @@
     {
       "tag": "005",
       "content": "20141107001016.0"
-    },
-    {
+    }, {
+      "tag": "006",
+      "content": {
+        "Type" : "Notated music",
+        "Code" : "c",
+        "Comp" : "ab",
+        "Comp": "mu",
+        "FMus": "a",
+        "Part": " ",
+        "Audn": " ",
+        "Form": " ",
+        "AccM": ["h", "i", "z", " ", " ", " "],
+        "LTxT": ["n", " "],
+        "TrAr": " "
+      }
+    }, {
+      "tag": "007",
+      "content": {
+        "Resource" : "Notated Music",
+        "Code" : "q",
+        "SMD" : "u"
+      }
+    }, {
       "tag": "008",
       "content": {
+        "Content" : "Scores",
         "Type": "c",
         "BLvl": "m",
         "Entered": "830419",
@@ -26,7 +48,7 @@
         "Audn": " ",
         "Form": " ",
         "AccM": ["h", "i", "z", " ", " ", " "],
-        "LTxT": "n ",
+        "LTxT": ["n", " "],
         "TrAr": " ",
         "Lang": "lat",
         "MRec": " ",

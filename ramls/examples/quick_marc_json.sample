@@ -1,6 +1,6 @@
 {
   "id": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "leader": "01542ccm a2200361   4500",
+  "leader": "01587ccm a2200361   4500",
   "records": [
     {
       "tag": "001",
@@ -9,10 +9,32 @@
     {
       "tag": "005",
       "content": "20141107001016.0"
-    },
-    {
+    }, {
+      "tag": "006",
+      "content": {
+        "Type" : "Notated music",
+        "Code" : "c",
+        "Comp" : "ab",
+        "Comp": "mu",
+        "FMus": "a",
+        "Part": " ",
+        "Audn": " ",
+        "Form": " ",
+        "AccM": ["h", "i", "z", " ", " ", " "],
+        "LTxT": ["n", " "],
+        "TrAr": " "
+      }
+    }, {
+      "tag": "007",
+      "content": {
+        "Resource" : "Notated Music",
+        "Code" : "q",
+        "SMD" : "u"
+      }
+    }, {
       "tag": "008",
       "content": {
+        "Content" : "Scores",
         "Type": "c",
         "BLvl": "m",
         "Entered": "830419",
@@ -26,7 +48,7 @@
         "Audn": " ",
         "Form": " ",
         "AccM": ["h", "i", "z", " ", " ", " "],
-        "LTxT": "n ",
+        "LTxT": ["n", " "],
         "TrAr": " ",
         "Lang": "lat",
         "MRec": " ",

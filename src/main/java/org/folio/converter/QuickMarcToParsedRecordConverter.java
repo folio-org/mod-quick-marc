@@ -1,6 +1,7 @@
 package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.folio.util.Constants.CONTENT;
 import static org.folio.util.Constants.FIXED_LENGTH_CONTROL_FIELD;
 
@@ -11,9 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.marc4j.marc.ControlField;
@@ -36,7 +39,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   private static final String INDICATOR2 = "ind2";
   private static final String SUBFIELDS = "subfields";
   private static final String SPLIT_PATTERN = " ?[$]";
-  private static final char SPACE_CHARACTER = ' ';
+  private static final Pattern CONTROL_FIELD_PATTER = Pattern.compile("^(00)[1-9]$");
 
   private MarcFactory factory = new MarcFactoryImpl();
 
@@ -58,7 +61,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     marcRecord.setLeader(factory.newLeader(quickMarcJson.getLeader()));
     quickMarcJson.getFields().forEach(field -> {
       String tag = field.getTag();
-      if (field.getIndicators().isEmpty()) {
+      if (isControlField(field)) {
         ControlField controlField = factory.newControlField();
         controlField.setTag(tag);
         if (FIXED_LENGTH_CONTROL_FIELD.equals(tag)) {
@@ -71,21 +74,22 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
         DataField dataField = factory.newDataField();
         dataField.setTag(field.getTag());
         dataField.getSubfields().addAll(convertStringToSubfields(field.getContent().toString()));
-        dataField.setIndicator1(retrieveIndicatorValue(field.getIndicators().get(0)));
-        dataField.setIndicator2(retrieveIndicatorValue(field.getIndicators().get(1)));
+        List<String> indicators = verifyAndGetIndicators(field);
+        dataField.setIndicator1(indicators.get(0).toCharArray()[0]);
+        dataField.setIndicator2(indicators.get(1).toCharArray()[0]);
         marcRecord.getDataFields().add(dataField);
       }
     });
     return marcRecord;
   }
 
-  private char retrieveIndicatorValue(Object input) {
-    return Objects.isNull(input) ? SPACE_CHARACTER : input.toString().charAt(0);
+  private String retrieveIndicatorValue(Object input) {
+    return Objects.isNull(input) ? " " : input.toString();
   }
 
   private String restoreFixedLengthControlField(Map<String, Object> map) {
     ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
-    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, FIXED_LENGTH_CONTROL_FIELD_LENGTH));
+    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(" ", FIXED_LENGTH_CONTROL_FIELD_LENGTH));
     contentType.getFixedLengthControlFieldItems().forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(),
       item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString()));
     String result = stringBuilder.toString();
@@ -119,5 +123,34 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       fields.add(Collections.singletonMap(dataField.getTag(), fieldMap));
     });
     return fields;
+  }
+
+  /**
+   * This method determines if field is Control Filed of MARC record based on pattern 00X according to
+   * MARC record Format specification.
+   * @param field {@link QuickMarcJson} field
+   * @return true if field is Control Field, otherwise - false
+   */
+  private boolean isControlField(Field field) {
+    return CONTROL_FIELD_PATTER.matcher(field.getTag()).matches();
+  }
+
+  /**
+   * This method returns indicators list of QuickMarcJson {@link Field}.
+   * @param field field from {@link QuickMarcJson}
+   * @return list of indicators
+   */
+  private List<String> verifyAndGetIndicators(Field field) {
+    List<Object> indicators = field.getIndicators();
+    if (indicators.size() == 2) {
+      List<String> list = new ArrayList<>();
+      list.add(retrieveIndicatorValue(field.getIndicators().get(0)));
+      list.add(retrieveIndicatorValue(field.getIndicators().get(1)));
+      return list;
+    } else if (indicators.size() == 0) {
+      return Arrays.asList(SPACE, SPACE);
+    } else {
+      throw new IllegalArgumentException("Illegal indicators number for field: " + field.getTag());
+    }
   }
 }

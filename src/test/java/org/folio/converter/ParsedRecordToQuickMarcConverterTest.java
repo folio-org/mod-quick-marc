@@ -32,6 +32,16 @@ public class ParsedRecordToQuickMarcConverterTest {
     assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
   }
 
+  @ParameterizedTest
+  @EnumSource(PhysicalDescriptionsTestEntities.class)
+  void testSplitFixedLengthControlField(PhysicalDescriptionsTestEntities testEntity) {
+    logger.info("Testing FixedLengthControlField splitting for {}", testEntity.name());
+    ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
+    ParsedRecordToQuickMarcConverter converter = new ParsedRecordToQuickMarcConverter();
+    QuickMarcJson quickMarcJson = converter.convert(parsedRecord);
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
+  }
+
   @Test
   void testParsedRecordToQuickMarcJsonConversion(){
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion");

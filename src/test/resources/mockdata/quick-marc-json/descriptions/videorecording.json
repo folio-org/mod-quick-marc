@@ -1,0 +1,20 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "suppressDiscovery" : false,
+  "leader" : "00047caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Resource" : "Videorecording",
+      "Code" : "v",
+      "SMD" : "a",
+      "Color" : "b",
+      "Videorecording format" : "c",
+      "Sound on medium or separate" : "d",
+      "Medium for sound" : "e",
+      "Dimensions" : "f",
+      "Configuration of playback channels" : "g"
+    },
+    "indicators" : [ ]
+  } ]
+}

@@ -4,6 +4,7 @@ import org.marc4j.marc.Leader;
 import org.marc4j.marc.impl.LeaderImpl;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public enum TestEntities {
@@ -11,16 +12,14 @@ public enum TestEntities {
     Arrays.asList(new LeaderImpl("xxxxxxaaxxxxxxxxxxxxxxxx"),
                   new LeaderImpl("xxxxxxtaxxxxxxxxxxxxxxxx"))),
   FILES(ContentType.FILES, "mockdata/parsed-records/files.json", "mockdata/quick-marc-json/files.json",
-    Arrays.asList(new LeaderImpl("xxxxxxmaxxxxxxxxxxxxxxxx"))),
+    Collections.singletonList(new LeaderImpl("xxxxxxmaxxxxxxxxxxxxxxxx"))),
   CONTINUING(ContentType.CONTINUING, "mockdata/parsed-records/continuing.json", "mockdata/quick-marc-json/continuing.json",
-    Arrays.asList(new LeaderImpl("xxxxxxabxxxxxxxxxxxxxxxx"),
-                  new LeaderImpl("xxxxxxaixxxxxxxxxxxxxxxx"),
-                  new LeaderImpl("xxxxxxasxxxxxxxxxxxxxxxx"))),
+    Collections.singletonList(new LeaderImpl("xxxxxxssxxxxxxxxxxxxxxxx"))),
   MAPS(ContentType.MAPS, "mockdata/parsed-records/maps.json", "mockdata/quick-marc-json/maps.json",
     Arrays.asList(new LeaderImpl("xxxxxxeaxxxxxxxxxxxxxxxx"),
                   new LeaderImpl("xxxxxxfaxxxxxxxxxxxxxxxx"))),
   MIXED(ContentType.MIXED, "mockdata/parsed-records/mixed.json", "mockdata/quick-marc-json/mixed.json",
-    Arrays.asList(new LeaderImpl("xxxxxxpcxxxxxxxxxxxxxxxx"))),
+    Collections.singletonList(new LeaderImpl("xxxxxxpcxxxxxxxxxxxxxxxx"))),
   SCORES(ContentType.SCORES, "mockdata/parsed-records/scores.json", "mockdata/quick-marc-json/scores.json",
     Arrays.asList(new LeaderImpl("xxxxxxcaxxxxxxxxxxxxxxxx"),
                   new LeaderImpl("xxxxxxdaxxxxxxxxxxxxxxxx"))),

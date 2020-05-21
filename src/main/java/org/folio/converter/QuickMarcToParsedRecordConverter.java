@@ -1,9 +1,9 @@
 package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.folio.converter.FixedLengthControlFieldItems.VALUE;
+import static org.folio.util.Constants.*;
 import static org.apache.commons.lang3.StringUtils.SPACE;
-import static org.folio.util.Constants.CONTENT;
-import static org.folio.util.Constants.FIXED_LENGTH_CONTROL_FIELD;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +21,7 @@ import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
+import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
@@ -32,13 +33,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson, ParsedRecord> {
 
-  private static final int FIXED_LENGTH_CONTROL_FIELD_LENGTH = 40;
+  private static final int GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
+  private static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 17;
   private static final String FIELDS = "fields";
   private static final String LEADER = "leader";
   private static final String INDICATOR1 = "ind1";
   private static final String INDICATOR2 = "ind2";
   private static final String SUBFIELDS = "subfields";
   private static final String SPLIT_PATTERN = " ?[$]";
+  private static final char SPACE_CHARACTER = ' ';
+  private static final int ADDRESS_LENGTH = 12;
+  private static final int TAG_LENGTH = 4;
+  private static final int TERMINATOR_LENGTH = 1;
+  private static final int LEADER_LENGTH = 24;
   private static final Pattern CONTROL_FIELD_PATTER = Pattern.compile("^(00)[1-9]$");
 
   private MarcFactory factory = new MarcFactoryImpl();
@@ -58,17 +65,13 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
 
   private Record quickMarcJsonToMarcRecord(QuickMarcJson quickMarcJson) {
     Record marcRecord = factory.newRecord();
-    marcRecord.setLeader(factory.newLeader(quickMarcJson.getLeader()));
+
     quickMarcJson.getFields().forEach(field -> {
       String tag = field.getTag();
       if (isControlField(field)) {
         ControlField controlField = factory.newControlField();
         controlField.setTag(tag);
-        if (FIXED_LENGTH_CONTROL_FIELD.equals(tag)) {
-          controlField.setData(restoreFixedLengthControlField((Map<String, Object>) field.getContent()));
-        } else {
-          controlField.setData(field.getContent().toString());
-        }
+        controlField.setData(restoreControlFieldContent(tag, field.getContent()));
         marcRecord.getControlFields().add(controlField);
       } else {
         DataField dataField = factory.newDataField();
@@ -80,6 +83,9 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
         marcRecord.getDataFields().add(dataField);
       }
     });
+    Leader leader = factory.newLeader(quickMarcJson.getLeader());
+    leader.setRecordLength(calculateRecordLength(marcRecord));
+    marcRecord.setLeader(leader);
     return marcRecord;
   }
 
@@ -87,14 +93,55 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     return Objects.isNull(input) ? " " : input.toString();
   }
 
-  private String restoreFixedLengthControlField(Map<String, Object> map) {
-    ContentType contentType = ContentType.getByName(map.get(CONTENT).toString());
-    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(" ", FIXED_LENGTH_CONTROL_FIELD_LENGTH));
-    contentType.getFixedLengthControlFieldItems().forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(),
+  private String restoreControlFieldContent(String tag, Object content) {
+    switch (tag) {
+      case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
+        return restoreAdditionalCharacteristicsControlField((Map<String, Object>) content);
+      case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
+        return restorePhysicalDescriptionsControlField((Map<String, Object>) content);
+      case GENERAL_INFORMATION_CONTROL_FIELD:
+        return restoreGeneralInformationControlField((Map<String, Object>) content);
+      default:
+        return content.toString();
+    }
+  }
+
+  private String restoreAdditionalCharacteristicsControlField(Map<String, Object> contentMap) {
+    ContentType contentType = ContentType.resolveContentType(contentMap.get(CODE).toString().charAt(0));
+    if (contentType.equals(ContentType.UNKNOWN)) {
+      return contentMap.get(CODE).toString() + contentMap.get(VALUE.getName());
+    } else {
+      return contentMap.get(CODE).toString() +
+        restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
+    }
+  }
+
+  private String restorePhysicalDescriptionsControlField(Map<String, Object> contentMap) {
+    char code = contentMap.get(CODE).toString().charAt(0);
+    PhysicalDescriptions physicalDescriptions = PhysicalDescriptions.resolveByCode(code);
+    if (physicalDescriptions.equals(PhysicalDescriptions.UNKNOWN)) {
+      return contentMap.get(VALUE.getName()).toString();
+    } else {
+      StringBuilder result = new StringBuilder(restoreFixedLengthField(physicalDescriptions.getLength(), physicalDescriptions.getItems(), contentMap));
+      result.setCharAt(0, code);
+      return result.toString();
+    }
+  }
+
+  private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
+    ContentType contentType = ContentType.getByName(contentMap.get(CONTENT).toString());
+    String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
+    StringBuilder result = new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap));
+    return result.replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
+  }
+
+  private String restoreFixedLengthField(int length, List<FixedLengthControlFieldItems> items, Map<String, Object> map) {
+    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
+    items.forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(),
       item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString()));
     String result = stringBuilder.toString();
-    if (result.length() != FIXED_LENGTH_CONTROL_FIELD_LENGTH) {
-      throw new IllegalArgumentException("Field 008 must be 40 characters in length");
+    if (result.length() != length) {
+      throw new IllegalArgumentException("Invalid field length");
     }
     return result;
   }
@@ -123,6 +170,17 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       fields.add(Collections.singletonMap(dataField.getTag(), fieldMap));
     });
     return fields;
+  }
+
+  private int calculateRecordLength(Record record) {
+    int addressesLength = record.getVariableFields().size() * ADDRESS_LENGTH;
+    int controlFieldsLength = record.getControlFields().stream()
+      .mapToInt(controlField -> controlField.getData().length() + TERMINATOR_LENGTH)
+      .sum();
+    int dataFieldsLength = record.getDataFields().stream()
+      .mapToInt(dataField -> dataField.toString().length() - TAG_LENGTH + TERMINATOR_LENGTH)
+      .sum();
+    return LEADER_LENGTH + addressesLength + controlFieldsLength + dataFieldsLength + TERMINATOR_LENGTH;
   }
 
   /**

@@ -2,9 +2,15 @@ package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.folio.util.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.util.Constants.BLVL;
+import static org.folio.util.Constants.CODE;
 import static org.folio.util.Constants.CONTENT;
-import static org.folio.util.Constants.FIXED_LENGTH_CONTROL_FIELD;
+import static org.folio.util.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
+import static org.folio.util.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
+import static org.folio.util.Constants.RESOURCE;
+import static org.folio.util.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
+import static org.folio.util.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.util.Constants.TYPE;
 
 import java.io.InputStream;
@@ -21,6 +27,7 @@ import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.marc4j.MarcJsonReader;
+import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;
@@ -31,6 +38,7 @@ import io.vertx.core.json.JsonObject;
 
 @Component
 public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord, QuickMarcJson> {
+  private ContentType contentType;
 
   @Override
   public QuickMarcJson convert(ParsedRecord parsedRecord) {
@@ -38,11 +46,12 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     Record marcRecord = new MarcJsonReader(input).next();
 
     Leader leader = marcRecord.getLeader();
+    contentType = ContentType.resolveContentType(leader.getTypeOfRecord());
     List<Field> fields = new ArrayList<>();
     marcRecord.getControlFields().forEach(controlField ->
       fields.add(new Field()
         .withTag(controlField.getTag())
-        .withContent((FIXED_LENGTH_CONTROL_FIELD.equals(controlField.getTag())) ? splitFixedLengthControlField(controlField.getData(), leader) : controlField.getData()))
+        .withContent(processControlField(controlField, leader)))
     );
 
     fields.addAll(marcRecord.getDataFields().stream()
@@ -55,16 +64,54 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
       .withFields(fields);
   }
 
-  private Map<String, Object> splitFixedLengthControlField(String content, Leader leader){
-    ContentType contentType = ContentType.resolveContentType(leader);
+  private Object processControlField(ControlField controlField, Leader leader) {
+    switch (controlField.getTag()) {
+      case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
+        return splitAdditionalCharacteristicsControlField(controlField.getData());
+      case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
+        return splitPhysicalDescriptionsControlField(controlField.getData());
+      case GENERAL_INFORMATION_CONTROL_FIELD:
+        return splitGeneralInformationControlField(controlField.getData(), leader);
+      default:
+        return controlField.getData();
+    }
+  }
+
+  private Object splitAdditionalCharacteristicsControlField(String content) {
+    Map<String, Object> fieldItems = new LinkedHashMap<>();
+    fieldItems.put(TYPE, ContentType.resolveTypeOfRecord(content.charAt(0)));
+    fieldItems.put(CODE, Character.toString(content.charAt(0)));
+    fieldItems.putAll(fillContentMap(contentType.getFixedLengthControlFieldItems(), content.substring(1)));
+    return fieldItems;
+  }
+
+  private Map<String, Object> splitGeneralInformationControlField(String content, Leader leader){
     Map<String, Object> fieldItems = new LinkedHashMap<>();
     fieldItems.put(CONTENT, contentType.getName());
     fieldItems.put(TYPE, leader.getTypeOfRecord());
     fieldItems.put(BLVL, leader.getImplDefined1()[0]);
-    contentType.getFixedLengthControlFieldItems().forEach(item -> {
+    fieldItems.putAll(fillContentMap(ContentType.getCommonItems(), content));
+    fieldItems.putAll(fillContentMap(contentType.getFixedLengthControlFieldItems(), content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX)));
+    return fieldItems;
+  }
+
+  private Map<String, Object> splitPhysicalDescriptionsControlField(String content) {
+    PhysicalDescriptions physicalDescriptions = PhysicalDescriptions.resolveByCode(content.charAt(0));
+    Map<String, Object> fieldItems = new LinkedHashMap<>();
+    fieldItems.put(RESOURCE, physicalDescriptions.getName());
+    fieldItems.put(CODE, Character.toString(content.charAt(0)));
+    physicalDescriptions.getItems().forEach(item -> {
+      String value = (item.getLength() != 0) ? content.substring(item.getPosition(), item.getPosition() + item.getLength()) : content;
+      fieldItems.put(item.getName(), value);
+    });
+    return fieldItems;
+  }
+
+  private Map<String, Object> fillContentMap(List<FixedLengthControlFieldItems> items, String content) {
+    Map<String, Object> fieldItems = new LinkedHashMap<>();
+    items.forEach(item -> {
       String value = content.substring(item.getPosition(), item.getPosition() + item.getLength());
       fieldItems.put(item.getName(), item.isArray() ? Arrays.asList(value.split(EMPTY)) : value);
-
     });
     return fieldItems;
   }

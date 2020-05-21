@@ -1,0 +1,17 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "suppressDiscovery" : false,
+  "leader" : "00044caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Resource" : "Globe",
+      "Code" : "d",
+      "SMD" : "a",
+      "Color" : "b",
+      "Physical medium" : "c",
+      "Type of reproduction" : "d"
+    },
+    "indicators" : [ ]
+  } ]
+}

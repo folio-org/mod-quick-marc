@@ -33,11 +33,21 @@ public class QuickMarcToParsedRecordConverterTest {
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)
-  void testRestoreFixedLengthControlField(TestEntities testEntity) {
-    logger.info("Testing FixedLengthControlField restoring for {}", testEntity.getContentType().getName());
+  void testRestoreGeneralAndAdditionalCharacteristicsControlFields(TestEntities testEntity) {
+    logger.info("Testing general and additional characteristics restoring for {}", testEntity.getContentType().getName());
     QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
     ParsedRecord parsedRecord = new QuickMarcToParsedRecordConverter().convert(quickMarcJson);
     assertThat(JsonObject.mapFrom(parsedRecord), equalTo(getMockAsJson(testEntity.getParsedRecordPath())));
+  }
+
+  @ParameterizedTest
+  @EnumSource(PhysicalDescriptionsTestEntities.class)
+  void testRestorePhysicalCharacteristicsControlField(PhysicalDescriptionsTestEntities testEntity) {
+    logger.info("Testing Characteristics field restoring for {}", testEntity.name());
+    QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
+    QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
+    ParsedRecord parsedRecord = converter.convert(quickMarcJson);
+    assertThat(JsonObject.mapFrom(parsedRecord).encodePrettily(), equalTo(getMockAsJson(testEntity.getParsedRecordPath()).encodePrettily()));
   }
 
   @Test
@@ -45,19 +55,19 @@ public class QuickMarcToParsedRecordConverterTest {
     logger.info("Source record and converted/restored one should be equal");
     QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter = new QuickMarcToParsedRecordConverter();
     ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter = new ParsedRecordToQuickMarcConverter();
-    ParsedRecordDto record = getMockAsJson(PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class);
-    QuickMarcJson quickMarcJson = parsedRecordToQuickMarcConverter.convert(record.getParsedRecord());
+    ParsedRecord parsedRecord = getMockAsJson(PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class).getParsedRecord();
+    QuickMarcJson quickMarcJson = parsedRecordToQuickMarcConverter.convert(parsedRecord);
     ParsedRecord restoredParsedRecord = quickMarcToParsedRecordConverter.convert(quickMarcJson);
-    String sourceParsedRecord = new String(JsonObject.mapFrom(record.getParsedRecord()).encodePrettily().getBytes(StandardCharsets.UTF_8));
-    String restoredRecord = JsonObject.mapFrom(restoredParsedRecord).encodePrettily();
-    assertThat(sourceParsedRecord, equalTo(restoredRecord));
+    String sourceParsedRecordString = new String(JsonObject.mapFrom(parsedRecord).encodePrettily().getBytes(StandardCharsets.UTF_8));
+    String restoredParsedRecordString = JsonObject.mapFrom(restoredParsedRecord).encodePrettily();
+    assertThat(sourceParsedRecordString, equalTo(restoredParsedRecordString));
   }
 
   @Test
   void testFixedLengthControlFieldWrongLength() {
     logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
     JsonObject json = getMockAsJson(BOOKS.getQuickMarcJsonPath());
-    json.getJsonArray("fields").getJsonObject(2).getJsonObject("content").put("Entered", "abcdefg");
+    json.getJsonArray("fields").getJsonObject(3).getJsonObject("content").put("Entered", "abcdefg");
     QuickMarcJson quickMarcJson = json.mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
     assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));

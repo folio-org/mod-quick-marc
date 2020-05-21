@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery":false,
-  "leader" : "01542cea a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "00188cea a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -9,6 +9,20 @@
   }, {
     "tag" : "005",
     "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "006",
+    "content" : {
+      "Type" : "Cartographic material",
+      "Code" : "e",
+      "Relf" : [ "a", "b", "c", "d" ],
+      "Proj" : "ef",
+      "CrTp" : "g",
+      "GPub" : "h",
+      "Form" : "i",
+      "Indx" : "j",
+      "SpFm" : "kl"
+    },
     "indicators" : [ ]
   }, {
     "tag" : "008",
@@ -21,16 +35,16 @@
       "Date1" : "hijk",
       "Date2" : "lmno",
       "Ctry" : "pqr",
+      "Lang" : "stu",
+      "MRec" : "v",
+      "Srce" : "w",
       "Relf" : [ "a", "b", "c", "d" ],
       "Proj" : "ef",
       "CrTp" : "g",
       "GPub" : "h",
       "Form" : "i",
       "Indx" : "j",
-      "SpFm" : "kl",
-      "Lang" : "stu",
-      "MRec" : "v",
-      "Srce" : "w"
+      "SpFm" : "kl"
     },
     "indicators" : [ ]
   }, {

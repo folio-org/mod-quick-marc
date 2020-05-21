@@ -1,7 +1,7 @@
 {
   "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "suppressDiscovery":false,
-  "leader" : "01542cab a2200361   4500",
+  "suppressDiscovery" : false,
+  "leader" : "00188csb a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -11,16 +11,10 @@
     "content" : "20141107001016.0",
     "indicators" : [ ]
   }, {
-    "tag" : "008",
+    "tag" : "006",
     "content" : {
-      "Content" : "Continuing Resources",
-      "Type" : "a",
-      "BLvl" : "b",
-      "Entered" : "abcdef",
-      "DtSt" : "g",
-      "Date1" : "hijk",
-      "Date2" : "lmno",
-      "Ctry" : "pqr",
+      "Type" : "Serial/integrating resource",
+      "Code" : "s",
       "Freq" : "a",
       "Regl" : "b",
       "SrTp" : "c",
@@ -31,10 +25,34 @@
       "GPub" : "j",
       "Conf" : "k",
       "Alph" : "l",
-      "S/L" : "m",
+      "S/L" : "m"
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "008",
+    "content" : {
+      "Content" : "Continuing Resources",
+      "Type" : "s",
+      "BLvl" : "b",
+      "Entered" : "abcdef",
+      "DtSt" : "g",
+      "Date1" : "hijk",
+      "Date2" : "lmno",
+      "Ctry" : "pqr",
       "Lang" : "stu",
       "MRec" : "v",
-      "Srce" : "w"
+      "Srce" : "w",
+      "Freq" : "a",
+      "Regl" : "b",
+      "SrTp" : "c",
+      "Orig" : "d",
+      "Form" : "e",
+      "EntW" : "f",
+      "Cont" : [ "g", "h", "i" ],
+      "GPub" : "j",
+      "Conf" : "k",
+      "Alph" : "l",
+      "S/L" : "m"
     },
     "indicators" : [ ]
   }, {

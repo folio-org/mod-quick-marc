@@ -1,0 +1,25 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "suppressDiscovery" : false,
+  "leader" : "00052caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Resource" : "Sound Recording",
+      "Code" : "s",
+      "SMD" : "a",
+      "Speed" : "b",
+      "Configuration of playback channels" : "c",
+      "Groove width/ groove pitch" : "d",
+      "Dimensions" : "e",
+      "Tape width" : "f",
+      "Tape configuration" : "g",
+      "Kind of disc, cylinder, or tape" : "h",
+      "Kind of material" : "i",
+      "Kind of cutting" : "j",
+      "Special playback characteristics" : "k",
+      "Capture and storage technique" : "l"
+    },
+    "indicators" : [ ]
+  } ]
+}

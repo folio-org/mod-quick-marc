@@ -33,7 +33,7 @@ public class QuickMarcToParsedRecordConverterTest {
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)
-  public void testRestoreFixedLengthControlField(TestEntities testEntity) {
+  void testRestoreFixedLengthControlField(TestEntities testEntity) {
     logger.info("Testing FixedLengthControlField restoring for {}", testEntity.getContentType().getName());
     QuickMarcJson quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class);
     ParsedRecord parsedRecord = new QuickMarcToParsedRecordConverter().convert(quickMarcJson);
@@ -41,7 +41,7 @@ public class QuickMarcToParsedRecordConverterTest {
   }
 
   @Test
-  public void testRecordsAreEqual(){
+  void testRecordsAreEqual(){
     logger.info("Source record and converted/restored one should be equal");
     QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter = new QuickMarcToParsedRecordConverter();
     ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter = new ParsedRecordToQuickMarcConverter();
@@ -54,15 +54,16 @@ public class QuickMarcToParsedRecordConverterTest {
   }
 
   @Test
-  public void testFixedLengthControlFieldWrongLength() {
+  void testFixedLengthControlFieldWrongLength() {
     logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
     JsonObject quickMarcJson = getMockAsJson(BOOKS.getQuickMarcJsonPath());
     quickMarcJson.getJsonArray("fields").getJsonObject(2).getJsonObject("content").put("Entered", "abcdefg");
-    assertThrows(IllegalArgumentException.class, () -> new QuickMarcToParsedRecordConverter().convert(quickMarcJson.mapTo(QuickMarcJson.class)));
+    QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
+    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson.mapTo(QuickMarcJson.class)));
   }
 
   @Test
-  public void testEmptyIndicatorsList() {
+  void testEmptyIndicatorsList() {
     logger.info("Test empty indicators list");
 
     Field field = new Field()
@@ -89,7 +90,7 @@ public class QuickMarcToParsedRecordConverterTest {
   }
 
   @Test
-  public void testIllegalNumberOfIndicators() {
+  void testIllegalNumberOfIndicators() {
     logger.info("Test illegal number of indicators - IllegalArgumentException expected");
 
     Field field = new Field()
@@ -104,6 +105,7 @@ public class QuickMarcToParsedRecordConverterTest {
     assertThat(quickMarcJson.getFields(), hasSize(1));
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(1));
 
-    assertThrows(IllegalArgumentException.class, () -> new QuickMarcToParsedRecordConverter().convert(quickMarcJson));
+    QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
+    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));
   }
 }

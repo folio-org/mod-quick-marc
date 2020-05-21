@@ -14,13 +14,13 @@ public class ContentTypeTest {
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)
-  public void testDetectContentType(TestEntities testField){
+  void testDetectContentType(TestEntities testField){
     logger.info("Test content type detection");
     testField.getLeaders().forEach(leader -> assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(leader).getName()));
   }
 
   @Test
-  public void testGetContentTypeByUndefinedName(){
+  void testGetContentTypeByUndefinedName(){
     logger.info("Test get ContentType by undefined name");
     assertEquals(ContentType.UNKNOWN, ContentType.getByName("Undefined"));
   }

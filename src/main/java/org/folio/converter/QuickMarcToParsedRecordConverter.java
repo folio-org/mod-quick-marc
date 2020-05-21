@@ -147,7 +147,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       list.add(retrieveIndicatorValue(field.getIndicators().get(0)));
       list.add(retrieveIndicatorValue(field.getIndicators().get(1)));
       return list;
-    } else if (indicators.size() == 0) {
+    } else if (indicators.isEmpty()) {
       return Arrays.asList(SPACE, SPACE);
     } else {
       throw new IllegalArgumentException("Illegal indicators number for field: " + field.getTag());

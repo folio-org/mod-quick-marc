@@ -39,7 +39,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   private static final String INVALID_UUID = "invalid UUID";
 
   @Test
-  public void testGetQuickMarcRecord() {
+  void testGetQuickMarcRecord() {
     logger.info("===== Verify GET record: Successful =====");
 
     wireMockServer
@@ -58,7 +58,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testGetQuickMarcRecordNotFound() {
+  void testGetQuickMarcRecordNotFound() {
     logger.info("===== Verify GET record: Record Not Found =====");
 
     String recordNotFoundId = UUID.randomUUID().toString();
@@ -75,7 +75,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testGetQuickMarcRecordInternalServerError() {
+  void testGetQuickMarcRecordInternalServerError() {
     logger.info("===== Verify GET record: Internal Server Error =====");
 
     String internalServerErrorInstanceId = UUID.randomUUID().toString();
@@ -91,7 +91,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testGetQuickMarcRecordWithoutInstanceIdParameter() {
+  void testGetQuickMarcRecordWithoutInstanceIdParameter() {
     logger.info("===== Verify GET record: Request without instanceId =====");
 
     String id = UUID.randomUUID().toString();
@@ -100,7 +100,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testUpdateQuickMarcRecord() {
+  void testUpdateQuickMarcRecord() {
     logger.info("===== Verify PUT record: Successful =====");
 
     wireMockServer
@@ -115,7 +115,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testUpdateQuickMarcRecordWrongUuid() {
+  void testUpdateQuickMarcRecordWrongUuid() {
     logger.info("===== Verify PUT record: Not found =====");
     String wrongUUID = UUID.randomUUID().toString();
 
@@ -131,7 +131,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testUpdateQuickMarcRecordIdsNotEqual() {
+  void testUpdateQuickMarcRecordIdsNotEqual() {
     logger.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class)
@@ -141,7 +141,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testUpdateQuickMarcRecordInvalidUuid() {
+  void testUpdateQuickMarcRecordInvalidUuid() {
     logger.info("===== Verify PUT record: Invalid UUID =====");
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class)
@@ -151,7 +151,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testUpdateQuickMarcRecordInvalidBody() {
+  void testUpdateQuickMarcRecordInvalidBody() {
     logger.info("===== Verify PUT record: Invalid Request Body =====");
 
     QuickMarcJson quickMarcJson = new QuickMarcJson();
@@ -159,7 +159,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   }
 
   @Test
-  public void testUpdateQuickMarcRecordInvalidField008() {
+  void testUpdateQuickMarcRecordInvalidField008() {
     logger.info("===== Verify PUT record: Invalid Field 008 Items =====");
 
     QuickMarcJson quickMarcJson = new QuickMarcJson();

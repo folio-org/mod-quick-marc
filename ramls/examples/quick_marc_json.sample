@@ -30,6 +30,7 @@
     }, {
       "tag": "008",
       "content": {
+        "Content" : "Scores",
         "Type": "c",
         "BLvl": "m",
         "Entered": "830419",

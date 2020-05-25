@@ -5,8 +5,7 @@
   "fields" : [ {
     "tag" : "007",
     "content" : {
-      "Resource" : "Projected Graphic",
-      "Code" : "g",
+      "Category" : "g",
       "SMD" : "a",
       "Color" : "b",
       "Base of emulsion" : "c",

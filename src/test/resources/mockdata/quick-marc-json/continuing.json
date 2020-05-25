@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Serial/integrating resource",
-      "Code" : "s",
       "Freq" : "a",
       "Regl" : "b",
       "SrTp" : "c",
@@ -31,7 +29,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Continuing Resources",
       "Type" : "s",
       "BLvl" : "b",
       "Entered" : "abcdef",

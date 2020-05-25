@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Projected medium",
-      "Code" : "g",
       "Time" : [ "a", "b", "c" ],
       "Audn" : "d",
       "GPub" : "e",
@@ -26,7 +24,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Visual Materials",
       "Type" : "g",
       "BLvl" : "a",
       "Entered" : "abcdef",

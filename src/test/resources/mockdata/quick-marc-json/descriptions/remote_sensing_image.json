@@ -5,8 +5,7 @@
   "fields" : [ {
     "tag" : "007",
     "content" : {
-      "Resource" : "Remote-Sensing Image",
-      "Code" : "r",
+      "Category" : "r",
       "SMD" : "a",
       "Altitude of sensor" : "b",
       "Attitude of sensor" : "c",

@@ -5,8 +5,7 @@
   "fields" : [ {
     "tag" : "007",
     "content" : {
-      "Resource" : "Map",
-      "Code" : "a",
+      "Category" : "a",
       "SMD" : "a",
       "Color" : "b",
       "Physical medium" : "c",

@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Nonmusical sound recording",
-      "Code" : "i",
       "Comp" : "ab",
       "FMus" : "c",
       "Part" : "d",
@@ -28,8 +26,7 @@
   }, {
     "tag" : "007",
     "content" : {
-      "Resource" : "Sound Recording",
-      "Code" : "s",
+      "Category": "s",
       "SMD" : "a",
       "Speed" : "b",
       "Configuration of playback channels" : "c",
@@ -47,7 +44,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Scores",
       "Type" : "c",
       "BLvl" : "m",
       "Entered" : "abcdef",

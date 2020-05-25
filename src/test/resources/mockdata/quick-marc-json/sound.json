@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Nonmusical sound recording",
-      "Code" : "i",
       "Comp" : "ab",
       "FMus" : "c",
       "Part" : "d",
@@ -28,7 +26,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Sound Recordings",
       "Type" : "i",
       "BLvl" : "a",
       "Entered" : "abcdef",

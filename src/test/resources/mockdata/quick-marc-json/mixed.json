@@ -13,15 +13,12 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Mixed materials",
-      "Code" : "p",
       "Form" : "a"
     },
     "indicators" : [ ]
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Mixed Materials",
       "Type" : "p",
       "BLvl" : "c",
       "Entered" : "abcdef",

@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Cartographic material",
-      "Code" : "e",
       "Relf" : [ "a", "b", "c", "d" ],
       "Proj" : "ef",
       "CrTp" : "g",
@@ -27,7 +25,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Maps",
       "Type" : "e",
       "BLvl" : "a",
       "Entered" : "abcdef",

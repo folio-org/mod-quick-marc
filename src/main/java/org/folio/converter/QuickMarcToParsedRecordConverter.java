@@ -97,7 +97,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   }
 
   private String retrieveIndicatorValue(Object input) {
-    return Objects.isNull(input) ? " " : input.toString();
+    return Objects.isNull(input) || StringUtils.isEmpty(input.toString()) ? SPACE : input.toString();
   }
 
   private String restoreControlFieldContent(String tag, Object content) {

@@ -51,7 +51,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   private static final Pattern CONTROL_FIELD_PATTER = Pattern.compile("^(00)[1-9]$");
 
   private MarcFactory factory = new MarcFactoryImpl();
-  private Leader leader;
+  private Leader leaderField;
   private ContentType contentType;
 
   @Override
@@ -70,8 +70,8 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   private Record quickMarcJsonToMarcRecord(QuickMarcJson quickMarcJson) {
     Record marcRecord = factory.newRecord();
 
-    leader = factory.newLeader(quickMarcJson.getLeader());
-    contentType = ContentType.resolveContentType(leader.getTypeOfRecord());
+    leaderField = factory.newLeader(quickMarcJson.getLeader());
+    contentType = ContentType.resolveContentType(leaderField.getTypeOfRecord());
 
     quickMarcJson.getFields().forEach(field -> {
       String tag = field.getTag();
@@ -91,8 +91,8 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       }
     });
 
-    leader.setRecordLength(calculateRecordLength(marcRecord));
-    marcRecord.setLeader(leader);
+    leaderField.setRecordLength(calculateRecordLength(marcRecord));
+    marcRecord.setLeader(leaderField);
     return marcRecord;
   }
 
@@ -117,7 +117,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     if (contentType.equals(UNKNOWN)) {
       return contentMap.get(VALUE.getName()).toString();
     } else {
-      return leader.getTypeOfRecord() +
+      return leaderField.getTypeOfRecord() +
         restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
     }
   }

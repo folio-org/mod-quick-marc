@@ -75,25 +75,4 @@ public enum ContentType {
         return UNKNOWN;
     }
   }
-
-  public static String resolveTypeOfRecord(char code) {
-    switch (code) {
-      case 'a': return "Language material";
-      case 'c': return "Notated music";
-      case 'd': return "Manuscript notated music";
-      case 'e': return "Cartographic material";
-      case 'f': return "Manuscript cartographic material";
-      case 'g': return "Projected medium";
-      case 'i': return "Nonmusical sound recording";
-      case 'j': return "Musical sound recording";
-      case 'k': return "Two-dimensional nonprojectable graphic";
-      case 'm': return "Computer file";
-      case 'o': return "Kit";
-      case 'p': return "Mixed materials";
-      case 'r': return "Three-dimensional artifact or naturally occurring object";
-      case 's': return "Serial/integrating resource";
-      case 't': return "Manuscript language material";
-      default: return Character.toString(code);
-    }
-  }
 }

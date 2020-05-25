@@ -2,13 +2,12 @@ package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.folio.converter.ContentType.UNKNOWN;
+import static org.folio.converter.FixedLengthControlFieldItems.VALUE;
 import static org.folio.util.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.util.Constants.BLVL;
-import static org.folio.util.Constants.CODE;
-import static org.folio.util.Constants.CONTENT;
 import static org.folio.util.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
 import static org.folio.util.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
-import static org.folio.util.Constants.RESOURCE;
 import static org.folio.util.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.util.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.util.Constants.TYPE;
@@ -17,6 +16,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,16 +78,14 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
   }
 
   private Object splitAdditionalCharacteristicsControlField(String content) {
-    Map<String, Object> fieldItems = new LinkedHashMap<>();
-    fieldItems.put(TYPE, ContentType.resolveTypeOfRecord(content.charAt(0)));
-    fieldItems.put(CODE, Character.toString(content.charAt(0)));
-    fieldItems.putAll(fillContentMap(contentType.getFixedLengthControlFieldItems(), content.substring(1)));
-    return fieldItems;
+    if (contentType.equals(UNKNOWN)) {
+      return Collections.singletonMap(VALUE.getName(), content);
+    }
+    return fillContentMap(contentType.getFixedLengthControlFieldItems(), content.substring(1));
   }
 
   private Map<String, Object> splitGeneralInformationControlField(String content, Leader leader){
     Map<String, Object> fieldItems = new LinkedHashMap<>();
-    fieldItems.put(CONTENT, contentType.getName());
     fieldItems.put(TYPE, leader.getTypeOfRecord());
     fieldItems.put(BLVL, leader.getImplDefined1()[0]);
     fieldItems.putAll(fillContentMap(ContentType.getCommonItems(), content));
@@ -98,8 +96,6 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
   private Map<String, Object> splitPhysicalDescriptionsControlField(String content) {
     PhysicalDescriptions physicalDescriptions = PhysicalDescriptions.resolveByCode(content.charAt(0));
     Map<String, Object> fieldItems = new LinkedHashMap<>();
-    fieldItems.put(RESOURCE, physicalDescriptions.getName());
-    fieldItems.put(CODE, Character.toString(content.charAt(0)));
     physicalDescriptions.getItems().forEach(item -> {
       String value = (item.getLength() != 0) ? content.substring(item.getPosition(), item.getPosition() + item.getLength()) : content;
       fieldItems.put(item.getName(), value);

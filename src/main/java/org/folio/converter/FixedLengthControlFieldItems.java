@@ -47,6 +47,7 @@ public enum FixedLengthControlFieldItems {
   LANG("Lang", 35, 3, false),
   MREC("MRec", 38, 1, false),
   SRCE("Srce", 39, 1, false),
+  CATEGORY("Category", 0, 1, false),
   SMD("SMD", 1, 1, false),
   COLOR("Color",3,1, false),
   DIMENSIONS(DIMENSIONS_CONST, 4, 1, false),

@@ -19,13 +19,6 @@ public class ContentTypeTest {
     testField.getLeaders().forEach(leader -> assertEquals(testField.getContentType().getName(), ContentType.resolveContentType(leader.getTypeOfRecord()).getName()));
   }
 
-  @ParameterizedTest
-  @EnumSource(TypesOfRecords.class)
-  void testResolveTypeOfRecord(TypesOfRecords typeOfRecord) {
-    logger.info("Test resolve type of record");
-    assertEquals(typeOfRecord.getName(), ContentType.resolveTypeOfRecord(typeOfRecord.getCode()));
-  }
-
   @Test
   void testGetContentTypeByUndefinedName(){
     logger.info("Test get ContentType by undefined name");

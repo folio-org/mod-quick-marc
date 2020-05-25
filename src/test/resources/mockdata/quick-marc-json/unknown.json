@@ -13,15 +13,12 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "b",
-      "Code" : "b",
-      "Value" : "abcdefghijklmnopq"
+      "Value" : "babcdefghijklmnopq"
     },
     "indicators" : [ ]
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Unknown Type",
       "Type" : "h",
       "BLvl" : "a",
       "Entered" : "abcdef",

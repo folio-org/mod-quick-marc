@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Language material",
-      "Code" : "a",
       "Ills" : [ "a", "b", "c", "d" ],
       "Audn" : "e",
       "Form" : "f",
@@ -30,7 +28,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Books",
       "Type" : "a",
       "BLvl" : "a",
       "Entered" : "abcdef",

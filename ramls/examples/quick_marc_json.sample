@@ -12,9 +12,6 @@
     }, {
       "tag": "006",
       "content": {
-        "Type" : "Notated music",
-        "Code" : "c",
-        "Comp" : "ab",
         "Comp": "mu",
         "FMus": "a",
         "Part": " ",
@@ -27,8 +24,7 @@
     }, {
       "tag": "007",
       "content": {
-        "Resource" : "Notated Music",
-        "Code" : "q",
+        "Category" : "q",
         "SMD" : "u"
       }
     }, {

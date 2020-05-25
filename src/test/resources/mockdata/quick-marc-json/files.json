@@ -13,8 +13,6 @@
   }, {
     "tag" : "006",
     "content" : {
-      "Type" : "Computer file",
-      "Code" : "m",
       "Audn" : "a",
       "Form" : "b",
       "File" : "c",
@@ -24,7 +22,6 @@
   }, {
     "tag" : "008",
     "content" : {
-      "Content" : "Computer Files",
       "Type" : "m",
       "BLvl" : "a",
       "Entered" : "abcdef",

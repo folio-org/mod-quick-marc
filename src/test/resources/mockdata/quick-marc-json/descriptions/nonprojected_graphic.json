@@ -5,8 +5,7 @@
   "fields" : [ {
     "tag" : "007",
     "content" : {
-      "Resource" : "Nonprojected Graphic",
-      "Code" : "k",
+      "Category" : "k",
       "SMD" : "a",
       "Color" : "b",
       "Primary support material" : "c",

@@ -19,7 +19,7 @@
       "GPub" : "h",
       "Form" : "i",
       "Indx" : "j",
-      "SpFm" : "kl"
+      "SpFm" : [ "k", "l" ]
     },
     "indicators" : [ ]
   }, {
@@ -41,7 +41,7 @@
       "GPub" : "h",
       "Form" : "i",
       "Indx" : "j",
-      "SpFm" : "kl"
+      "SpFm" : [ "k", "l" ]
     },
     "indicators" : [ ]
   }, {

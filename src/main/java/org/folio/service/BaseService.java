@@ -1,18 +1,13 @@
 package org.folio.service;
 
-import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
-import static org.folio.util.Constants.EMPTY_STRING;
-import static org.folio.util.Constants.OKAPI_URL;
-
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import org.folio.client.HttpClient;
 import org.folio.exception.HttpException;
-import org.folio.rest.tools.client.HttpClientFactory;
 import org.folio.rest.tools.client.Response;
-import org.folio.rest.tools.client.interfaces.HttpClientInterface;
-import org.folio.rest.tools.utils.TenantTool;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import io.vertx.core.Context;
 import io.vertx.core.http.HttpMethod;
@@ -23,73 +18,51 @@ import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
 
 public abstract class BaseService {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   private static final String EXCEPTION_CALLING_ENDPOINT_MSG = "Exception calling {} {}";
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  @Autowired
+  private HttpClient httpClient;
 
   CompletableFuture<JsonObject> handleGetRequest(String endpoint, Context context, Map<String, String> headers) {
-    HttpClientInterface client = getHttpClient(headers);
     CompletableFuture<JsonObject> future = new VertxCompletableFuture<>(context);
-    try {
-      logger.info("Calling GET {}", endpoint);
-      client.request(HttpMethod.GET, endpoint, headers)
-        .thenApply(response -> {
-          logger.debug("Validating response for GET {}", endpoint);
-          return validateAndGetResponseBody(response);
-        })
-        .thenAccept(body -> {
-          logger.debug("The response body for GET {}: {}", endpoint, body.encodePrettily());
-          future.complete(body);
-        })
-        .handle((obj, thr) -> {
-          client.closeClient();
-          if (thr != null) {
-            logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.GET, endpoint);
-            future.completeExceptionally(thr);
-          }
-          return null;
-        });
-    } catch (Exception e) {
-      logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.GET, endpoint);
-      client.closeClient();
-      future.completeExceptionally(e);
-    }
+    logger.info("Calling GET {}", endpoint);
+    httpClient.request(HttpMethod.GET, endpoint, headers)
+      .thenApply(response -> {
+        logger.debug("Validating response for GET {}", endpoint);
+        return validateAndGetResponseBody(response);
+      })
+      .thenAccept(body -> {
+        logger.debug("The response body for GET {}: {}", endpoint, body.encode());
+        future.complete(body);
+      })
+      .handle((obj, thr) -> {
+        if (thr != null) {
+          logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.GET, endpoint);
+          future.completeExceptionally(thr);
+        }
+        return null;
+      });
     return future;
   }
 
-  CompletableFuture<Void> handlePutRequest(String endpoint, JsonObject jsonObject, Context context,
-    Map<String, String> headers) {
-    HttpClientInterface client = getHttpClient(headers);
+  CompletableFuture<Void> handlePutRequest(String endpoint, JsonObject jsonObject, Context context, Map<String, String> headers) {
     CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
-    try {
-      logger.info("Calling PUT {} with body: {}", endpoint, jsonObject.encodePrettily());
-      client.request(HttpMethod.PUT, jsonObject.toBuffer(), endpoint, headers)
-        .thenApply(response -> {
-          logger.debug("Validating response for PUT {}", endpoint);
-          return validateAndGetResponseBody(response);
-        })
-        .thenAccept(body -> {
-          logger.info("'PUT {}' request successfully processed", endpoint);
-          future.complete(null);
-        })
-        .exceptionally(throwable -> {
-          logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.PUT, endpoint);
-          future.completeExceptionally(throwable);
-          return null;
-        });
-    } catch (Exception e) {
-      logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, e, HttpMethod.PUT, endpoint);
-      future.completeExceptionally(e);
-    } finally {
-      client.closeClient();
-    }
+    logger.info("Calling PUT {} with body: {}", endpoint, jsonObject.encode());
+    httpClient.request(HttpMethod.PUT, jsonObject.toBuffer(), endpoint, headers)
+      .thenApply(response -> {
+        logger.debug("Validating response for PUT {}", endpoint);
+        return validateAndGetResponseBody(response);
+      })
+      .thenAccept(body -> {
+        logger.info("'PUT {}' request successfully processed", endpoint);
+        future.complete(null);
+      })
+      .exceptionally(throwable -> {
+        logger.error(EXCEPTION_CALLING_ENDPOINT_MSG, HttpMethod.PUT, endpoint);
+        future.completeExceptionally(throwable);
+        return null;
+      });
     return future;
-  }
-
-  private HttpClientInterface getHttpClient(Map<String, String> okapiHeaders) {
-    final String okapiURL = okapiHeaders.getOrDefault(OKAPI_URL, EMPTY_STRING);
-    final String tenantId = TenantTool.calculateTenantId(okapiHeaders.get(OKAPI_HEADER_TENANT));
-    return HttpClientFactory.getHttpClient(okapiURL, tenantId);
   }
 
   private JsonObject validateAndGetResponseBody(Response response) {

@@ -10,9 +10,10 @@ import io.vertx.core.logging.LoggerFactory;
 
 public class ServiceUtils {
 
-  private ServiceUtils() {}
-
   private static final Logger logger = LoggerFactory.getLogger(ServiceUtils.class);
+
+  private ServiceUtils() {
+  }
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));

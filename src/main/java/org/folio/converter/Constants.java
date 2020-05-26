@@ -1,14 +1,6 @@
-package org.folio.util;
+package org.folio.converter;
 
 public class Constants {
-
-  private Constants() {}
-
-  public static final String OKAPI_URL = "x-okapi-url";
-  public static final String EMPTY_STRING = "";
-  public static final String ID = "id";
-  public static final String INSTANCE_ID = "instanceId";
-
   public static final String BLVL = "BLvl";
   public static final String TYPE = "Type";
   public static final String ELVL = "ELvl";
@@ -18,7 +10,8 @@ public class Constants {
   public static final String ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD = "006";
   public static final String PHYSICAL_DESCRIPTIONS_CONTROL_FIELD = "007";
   public static final String GENERAL_INFORMATION_CONTROL_FIELD = "008";
-
   public static final int SPECIFIC_ELEMENTS_BEGIN_INDEX = 18;
   public static final int SPECIFIC_ELEMENTS_END_INDEX = 35;
+  private Constants() {
+  }
 }

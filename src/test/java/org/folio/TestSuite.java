@@ -6,9 +6,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.folio.converter.ContentTypeTest;
-import org.folio.converter.ParsedRecordToQuickMarcConverterTest;
-import org.folio.converter.QuickMarcToParsedRecordConverterTest;
+import org.folio.converter.ParsedRecordDtoToQuickMarcConverterTest;
+import org.folio.converter.QuickMarcToParsedRecordDtoConverterTest;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.impl.QuickMarcApiTest;
 import org.folio.rest.tools.utils.NetworkUtils;
@@ -28,11 +27,11 @@ import io.vertx.junit5.VertxExtension;
 @ExtendWith(VertxExtension.class)
 public class TestSuite {
 
-  private static final int okapiPort = NetworkUtils.nextFreePort();
   public static final int mockPort = NetworkUtils.nextFreePort();
-  private static Vertx vertx;
+  private static final int okapiPort = NetworkUtils.nextFreePort();
   public static WireMockServer wireMockServer;
   public static boolean isInitialized = false;
+  private static Vertx vertx;
 
   @BeforeAll
   public static void globalSetUp() throws InterruptedException, ExecutionException, TimeoutException {
@@ -78,14 +77,14 @@ public class TestSuite {
   }
 
   @Nested
-  class TestQuickMarcApi extends QuickMarcApiTest {}
+  class TestQuickMarcApi extends QuickMarcApiTest {
+  }
 
   @Nested
-  class ContentTypeTestNested extends ContentTypeTest {}
+  class ParsedRecordDtoToQuickMarcConverterTestNested extends ParsedRecordDtoToQuickMarcConverterTest {
+  }
 
   @Nested
-  class ParsedRecordToQuickMarcConverterTestNested extends ParsedRecordToQuickMarcConverterTest {}
-
-  @Nested
-  class QuickMarcToParsedRecordConverterTestNested extends QuickMarcToParsedRecordConverterTest {}
+  class QuickMarcToParsedRecordDtoConverterTestNested extends QuickMarcToParsedRecordDtoConverterTest {
+  }
 }

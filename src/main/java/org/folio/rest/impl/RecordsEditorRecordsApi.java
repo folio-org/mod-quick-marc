@@ -2,6 +2,7 @@ package org.folio.rest.impl;
 
 import static io.vertx.core.Future.succeededFuture;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.folio.util.ErrorUtils.buildError;
 
 import java.util.Map;
 import java.util.Objects;
@@ -38,19 +39,20 @@ public class RecordsEditorRecordsApi implements RecordsEditorRecords {
         .thenAccept(body -> asyncResultHandler.handle(succeededFuture(Response.ok(body, APPLICATION_JSON).build())))
         .exceptionally(t -> handleErrorResponse(asyncResultHandler, t));
     } else {
-      asyncResultHandler.handle(succeededFuture(GetRecordsEditorRecordsResponse.respond400WithApplicationJson(ErrorUtils.buildError(400, ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, "instanceId parameter is not presented"))));
+      asyncResultHandler.handle(succeededFuture(GetRecordsEditorRecordsResponse
+        .respond400WithApplicationJson(buildError(400, ErrorUtils.ErrorType.INTERNAL, "instanceId parameter is not presented"))));
     }
   }
 
   @Override
   @Validate
   public void putRecordsEditorRecordsById(String parsedRecordId, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    if (entity.getParsedRecordId().equals(parsedRecordId)) {
+    if (parsedRecordId.equals(entity.getParsedRecordId())) {
       service.putMarcRecordById(entity.getParsedRecordDtoId(), entity, vertxContext, okapiHeaders)
-        .thenAccept(res -> asyncResultHandler.handle(succeededFuture(Response.noContent().build())))
+        .thenAccept(vVoid -> asyncResultHandler.handle(succeededFuture(Response.noContent().build())))
         .exceptionally(throwable -> handleErrorResponse(asyncResultHandler, throwable));
     } else {
-      asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond400WithApplicationJson(ErrorUtils.buildError(400, "request id and entity id are not equal"))));
+      asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond400WithApplicationJson(buildError(400, ErrorUtils.ErrorType.INTERNAL, "request id and entity id are not equal"))));
     }
   }
 

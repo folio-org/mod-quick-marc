@@ -140,8 +140,11 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
 
   private String restoreFixedLengthField(int length, List<FixedLengthControlFieldItems> items, Map<String, Object> map) {
     StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
-    items.forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(),
-      item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString()));
+    items.forEach(item -> {
+      String value = Objects.isNull(map.get(item.getName())) ? StringUtils.repeat(SPACE_CHARACTER, item.getLength()) :
+        item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString();
+      stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
+    });
     String result = stringBuilder.toString();
     if (result.length() != length) {
       throw new IllegalArgumentException("Invalid field length");

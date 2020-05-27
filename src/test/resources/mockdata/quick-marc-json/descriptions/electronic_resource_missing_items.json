@@ -1,0 +1,20 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "suppressDiscovery" : false,
+  "leader" : "00052caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Category" : "c",
+      "SMD" : "a",
+      "Color" : "b",
+      "Sound" : "d",
+      "Image bit depth" : "efg",
+      "File formats" : "h",
+      "Antecedent/ Source" : "j",
+      "Level of compression" : "k",
+      "Reformatting quality" : "l"
+    },
+    "indicators" : [ ]
+  } ]
+}

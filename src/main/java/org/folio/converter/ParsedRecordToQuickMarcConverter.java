@@ -121,7 +121,7 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
       .withTag(dataField.getTag())
       .withIndicators(Arrays.asList(Character.toString(dataField.getIndicator1()), Character.toString(dataField.getIndicator2())))
       .withContent(dataField.getSubfields().stream()
-        .map(subfield -> new StringBuilder("$").append(subfield.getCode()).append(" ").append(subfield.getData()))
+        .map(subfield -> new StringBuilder("$").append(subfield.getCode()).append(SPACE).append(subfield.getData()))
         .collect(Collectors.joining(SPACE)));
   }
 }

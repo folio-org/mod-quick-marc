@@ -153,7 +153,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     List<Subfield> subfields = new ArrayList<>();
     Arrays.asList(subfieldsString.split(SPLIT_PATTERN)).forEach(token -> {
       if (!token.isEmpty()){
-        subfields.add(new SubfieldImpl(token.charAt(0), token.substring(1)));
+        subfields.add(new SubfieldImpl(token.charAt(0), token.charAt(1) == SPACE_CHARACTER ? token.substring(2) : token.substring(1)));
       }
     });
     return subfields;

@@ -50,6 +50,8 @@
       "Content" : "Scores",
       "Type" : "c",
       "BLvl" : "m",
+      "ELvl" : " ",
+      "Desc" : " ",
       "Entered" : "abcdef",
       "DtSt" : "g",
       "Date1" : "12345",

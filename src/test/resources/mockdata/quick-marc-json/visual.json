@@ -26,6 +26,8 @@
     "content" : {
       "Type" : "g",
       "BLvl" : "a",
+      "ELvl" : " ",
+      "Desc" : " ",
       "Entered" : "abcdef",
       "DtSt" : "g",
       "Date1" : "hijk",
@@ -44,7 +46,7 @@
     "indicators" : [ ]
   }, {
     "tag" : "010",
-    "content" : "$a   55001156/M ",
+    "content" : "$a    55001156/M ",
     "indicators" : [ " ", " " ]
   } ]
 }

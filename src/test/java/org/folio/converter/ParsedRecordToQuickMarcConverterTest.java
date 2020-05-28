@@ -5,6 +5,7 @@ import static org.folio.rest.impl.ApiTestBase.QUICK_MARC_RECORD_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.folio.converter.TestUtils.getMockAsJson;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
 import io.vertx.core.json.JsonObject;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -23,7 +24,7 @@ public class ParsedRecordToQuickMarcConverterTest {
   private static final Logger logger = LoggerFactory.getLogger(ParsedRecordToQuickMarcConverterTest.class);
 
   @ParameterizedTest
-  @EnumSource(TestEntities.class)
+  @EnumSource(value = TestEntities.class, mode = EXCLUDE, names = {"BOOKS_MISSING_ITEMS"})
   void testSplitFixedLengthControlField(TestEntities testEntity) {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.getContentType().getName());
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
@@ -33,7 +34,7 @@ public class ParsedRecordToQuickMarcConverterTest {
   }
 
   @ParameterizedTest
-  @EnumSource(PhysicalDescriptionsTestEntities.class)
+  @EnumSource(value = PhysicalDescriptionsTestEntities.class, mode = EXCLUDE, names = {"ELECTRONIC_RESOURCE_MISSING_ITEMS"})
   void testSplitFixedLengthControlField(PhysicalDescriptionsTestEntities testEntity) {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.name());
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);

@@ -38,7 +38,7 @@ public enum FixedLengthControlFieldItems {
   INDX("Indx", 13, 1, false),
   LITF("LitF", 15, 1 ,false),
   ALPH("Alph", 15, 1, false),
-  SPFM("SpFm", 15, 2, false),
+  SPFM("SpFm", 15, 2, true),
   TRAR("TrAr", 15, 1, false),
   TMAT("TMat", 15, 1, false),
   BIOG("Biog", 16, 1, false),

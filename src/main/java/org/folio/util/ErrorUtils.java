@@ -3,11 +3,13 @@ package org.folio.util;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.folio.HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
+import static org.folio.HttpStatus.HTTP_UNPROCESSABLE_ENTITY;
 
 import java.util.Objects;
 
 import org.folio.HttpStatus;
 import org.folio.exception.HttpException;
+import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Error;
 
 import io.vertx.core.json.JsonObject;
@@ -37,6 +39,9 @@ public class ErrorUtils {
         status = ((HttpException) cause).getCode();
         JsonObject errorJsonObject = ((HttpException) cause).getError();
         error = resolveError(errorJsonObject);
+      } else if (cause instanceof ConverterException) {
+        status = HTTP_UNPROCESSABLE_ENTITY.toInt();
+        error = buildError(status, cause.getMessage());
       } else {
         status = HTTP_INTERNAL_SERVER_ERROR.toInt();
         error = buildError(status, ErrorType.INTERNAL, "Internal server error");

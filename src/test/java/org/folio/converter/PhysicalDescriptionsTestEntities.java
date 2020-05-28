@@ -1,6 +1,7 @@
 package org.folio.converter;
 
 public enum PhysicalDescriptionsTestEntities {
+  ELECTRONIC_RESOURCE_MISSING_ITEMS,
   ELECTRONIC_RESOURCE,
   GLOBE,
   KIT,

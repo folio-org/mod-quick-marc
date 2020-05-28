@@ -15,8 +15,6 @@
     "content" : {
       "Ills" : [ "a", "b", "c", "d" ],
       "Audn" : "e",
-      "Form" : "f",
-      "Cont" : [ "g", "h", "i", "j" ],
       "GPub" : "k",
       "Conf" : "l",
       "Fest" : "m",
@@ -42,8 +40,6 @@
       "Srce" : "w",
       "Ills" : [ "a", "b", "c", "d" ],
       "Audn" : "e",
-      "Form" : "f",
-      "Cont" : [ "g", "h", "i", "j" ],
       "GPub" : "k",
       "Conf" : "l",
       "Fest" : "m",

@@ -128,11 +128,15 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     if (physicalDescriptions.equals(PhysicalDescriptions.UNKNOWN)) {
       return contentMap.get(VALUE.getName()).toString();
     } else {
-        return restoreFixedLengthField(physicalDescriptions.getLength(), physicalDescriptions.getItems(), contentMap);
+      return restoreFixedLengthField(physicalDescriptions.getLength(), physicalDescriptions.getItems(), contentMap);
     }
   }
 
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
+    if (!contentMap.get(ELVL).toString().equals(Character.toString(leaderField.getImplDefined2()[0])) ||
+      !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
+      throw new IllegalArgumentException("The Leader and 008 do not match");
+    }
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
     StringBuilder result = new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap));
     return result.replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
@@ -146,13 +150,13 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
         value = StringUtils.repeat(SPACE_CHARACTER, item.getLength());
       } else {
         value = item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString();
+        if (value.length() != item.getLength()) {
+          throw new IllegalArgumentException(String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength()));
+        }
       }
       stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
     });
     String result = stringBuilder.toString();
-    if (result.length() != length) {
-      throw new IllegalArgumentException("Invalid field length");
-    }
     return result;
   }
 

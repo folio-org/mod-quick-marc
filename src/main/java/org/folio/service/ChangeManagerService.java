@@ -6,6 +6,7 @@ import static org.folio.util.ServiceUtils.buildQuery;
 
 import io.vertx.core.Context;
 import io.vertx.core.json.JsonObject;
+import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
 import org.folio.converter.ParsedRecordToQuickMarcConverter;
 import org.folio.converter.QuickMarcToParsedRecordConverter;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -40,13 +41,24 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
   @Override
   public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
     Map<String, String> headers) {
-    ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
-      .withRecordType(ParsedRecordDto.RecordType.MARC)
-      .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
-      .withId(quickMarcJson.getParsedRecordDtoId())
-      .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
-      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
-    return handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers);
+    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+    try {
+      ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
+        .withRecordType(ParsedRecordDto.RecordType.MARC)
+        .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
+        .withId(quickMarcJson.getParsedRecordDtoId())
+        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
+        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
+      handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers)
+        .thenAccept(future::complete)
+        .exceptionally(e -> {
+          future.completeExceptionally(e);
+          return null;
+        });
+    } catch (Exception e) {
+      future.completeExceptionally(e);
+    }
+    return future;
   }
 
   @Autowired

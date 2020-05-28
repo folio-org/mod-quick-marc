@@ -121,8 +121,11 @@ public class QuickMarcApiTest extends ApiTestBase {
 
     wireMockServer
       .stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, wrongUUID)))
-        .withRequestBody(containing(getJsonObject(PARSED_RECORD_DTO_PATH).encode()))
-        .willReturn(aResponse().withStatus(404)));
+//        .withRequestBody(containing(getJsonObject(PARSED_RECORD_DTO_PATH).encode()))
+        .willReturn(aResponse()
+          .withBody(JsonObject.mapFrom(new Error()).encode())
+          .withHeader(CONTENT_TYPE, APPLICATION_JSON)
+          .withStatus(404)));
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class)
       .withParsedRecordDtoId(wrongUUID)
@@ -155,14 +158,26 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Invalid Request Body =====");
 
     QuickMarcJson quickMarcJson = new QuickMarcJson();
-    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_DTO_ID), quickMarcJson, 422);
+    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
   }
 
   @Test
-  void testUpdateQuickMarcRecordInvalidField008() {
-    logger.info("===== Verify PUT record: Invalid Field 008 Items =====");
+  void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() {
+    logger.info("===== Verify PUT record: Invalid fixed length field items =====");
 
-    QuickMarcJson quickMarcJson = new QuickMarcJson();
-    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, INVALID_UUID), quickMarcJson, 422);
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_WRONG_ITEM_LENGTH).mapTo(QuickMarcJson.class)
+      .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .withInstanceId(VALID_INSTANCE_ID);
+    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
+  }
+
+  @Test
+  void testUpdateQuickMarcRecordLeaderMismatch() {
+    logger.info("===== Verify PUT record: Leader and 008 mismatch =====");
+
+    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_LEADER_MISMATCH).mapTo(QuickMarcJson.class)
+      .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .withInstanceId(VALID_INSTANCE_ID);
+    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
   }
 }

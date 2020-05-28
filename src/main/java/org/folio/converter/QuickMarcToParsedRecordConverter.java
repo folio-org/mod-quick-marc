@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
@@ -128,32 +129,42 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     if (physicalDescriptions.equals(PhysicalDescriptions.UNKNOWN)) {
       return contentMap.get(VALUE.getName()).toString();
     } else {
-        return restoreFixedLengthField(physicalDescriptions.getLength(), physicalDescriptions.getItems(), contentMap);
+      return restoreFixedLengthField(physicalDescriptions.getLength(), physicalDescriptions.getItems(), contentMap);
     }
   }
 
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
+    if (!contentMap.get(ELVL).toString().equals(Character.toString(leaderField.getImplDefined2()[0])) ||
+      !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
+      throw new ConverterException("The Leader and 008 do not match");
+    }
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
-    StringBuilder result = new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap));
-    return result.replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
+    return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap))
+      .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
   }
 
   private String restoreFixedLengthField(int length, List<FixedLengthControlFieldItems> items, Map<String, Object> map) {
     StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
-    items.forEach(item -> stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(),
-      item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString()));
-    String result = stringBuilder.toString();
-    if (result.length() != length) {
-      throw new IllegalArgumentException("Invalid field length");
-    }
-    return result;
+    items.forEach(item -> {
+      String value;
+      if (Objects.isNull(map.get(item.getName()))) {
+        value = StringUtils.repeat(SPACE_CHARACTER, item.getLength());
+      } else {
+        value = item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString();
+        if (value.length() != item.getLength()) {
+          throw new ConverterException(String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength()));
+        }
+      }
+      stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
+    });
+    return stringBuilder.toString();
   }
 
   private List<Subfield> convertStringToSubfields(String subfieldsString) {
     List<Subfield> subfields = new ArrayList<>();
     Arrays.asList(subfieldsString.split(SPLIT_PATTERN)).forEach(token -> {
       if (!token.isEmpty()){
-        subfields.add(new SubfieldImpl(token.charAt(0), token.substring(1)));
+        subfields.add(new SubfieldImpl(token.charAt(0), token.charAt(1) == SPACE_CHARACTER ? token.substring(2) : token.substring(1)));
       }
     });
     return subfields;
@@ -211,7 +222,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     } else if (indicators.isEmpty()) {
       return Arrays.asList(SPACE, SPACE);
     } else {
-      throw new IllegalArgumentException("Illegal indicators number for field: " + field.getTag());
+      throw new ConverterException("Illegal indicators number for field: " + field.getTag());
     }
   }
 }

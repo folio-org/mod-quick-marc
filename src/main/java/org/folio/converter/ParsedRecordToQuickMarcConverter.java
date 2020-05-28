@@ -6,6 +6,8 @@ import static org.folio.converter.ContentType.UNKNOWN;
 import static org.folio.converter.FixedLengthControlFieldItems.VALUE;
 import static org.folio.util.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.util.Constants.BLVL;
+import static org.folio.util.Constants.DESC;
+import static org.folio.util.Constants.ELVL;
 import static org.folio.util.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
 import static org.folio.util.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.util.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
@@ -88,6 +90,8 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
     Map<String, Object> fieldItems = new LinkedHashMap<>();
     fieldItems.put(TYPE, leader.getTypeOfRecord());
     fieldItems.put(BLVL, leader.getImplDefined1()[0]);
+    fieldItems.put(ELVL, leader.getImplDefined2()[0]);
+    fieldItems.put(DESC, leader.getImplDefined2()[1]);
     fieldItems.putAll(fillContentMap(ContentType.getCommonItems(), content));
     fieldItems.putAll(fillContentMap(contentType.getFixedLengthControlFieldItems(), content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX)));
     return fieldItems;
@@ -117,7 +121,7 @@ public class ParsedRecordToQuickMarcConverter implements Converter<ParsedRecord,
       .withTag(dataField.getTag())
       .withIndicators(Arrays.asList(Character.toString(dataField.getIndicator1()), Character.toString(dataField.getIndicator2())))
       .withContent(dataField.getSubfields().stream()
-        .map(Object::toString)
+        .map(subfield -> new StringBuilder("$").append(subfield.getCode()).append(SPACE).append(subfield.getData()))
         .collect(Collectors.joining(SPACE)));
   }
 }

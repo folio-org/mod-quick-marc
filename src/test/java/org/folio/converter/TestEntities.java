@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 public enum TestEntities {
+  BOOKS_MISSING_ITEMS(ContentType.BOOKS, "mockdata/parsed-records/books_missing_items.json", "mockdata/quick-marc-json/books_missing_items.json",
+    Collections.singletonList(new LeaderImpl("xxxxxxaaxxxxxxxxxxxxxxxx"))),
   BOOKS(ContentType.BOOKS, "mockdata/parsed-records/books.json", "mockdata/quick-marc-json/books.json",
     Arrays.asList(new LeaderImpl("xxxxxxaaxxxxxxxxxxxxxxxx"),
                   new LeaderImpl("xxxxxxtaxxxxxxxxxxxxxxxx"))),

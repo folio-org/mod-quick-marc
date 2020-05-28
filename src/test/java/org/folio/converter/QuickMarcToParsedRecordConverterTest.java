@@ -12,6 +12,7 @@ import static org.folio.converter.TestUtils.getMockAsJson;
 
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
@@ -72,12 +73,12 @@ public class QuickMarcToParsedRecordConverterTest {
 
   @Test
   void testFixedLengthControlFieldWrongLength() {
-    logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
+    logger.info("Testing FixedLengthControlField wrong length after editing - ConverterException expected");
     JsonObject json = getMockAsJson(BOOKS.getQuickMarcJsonPath());
     json.getJsonArray(FIELDS).getJsonObject(3).getJsonObject(CONTENT).put("Entered", "abcdefg");
     QuickMarcJson quickMarcJson = json.mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
-    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));
+    assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
   }
 
   @Test
@@ -118,7 +119,7 @@ public class QuickMarcToParsedRecordConverterTest {
 
   @Test
   void testIllegalNumberOfIndicators() {
-    logger.info("Test illegal number of indicators - IllegalArgumentException expected");
+    logger.info("Test illegal number of indicators - ConverterException expected");
 
     Field field = getFieldWithIndicators(Collections.singletonList("1"));
     QuickMarcJson quickMarcJson = getQuickMarcJsonWithMinContent(field);
@@ -127,6 +128,6 @@ public class QuickMarcToParsedRecordConverterTest {
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(1));
 
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
-    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));
+    assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
   }
 }

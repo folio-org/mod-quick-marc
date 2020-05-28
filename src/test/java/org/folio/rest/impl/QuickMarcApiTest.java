@@ -121,7 +121,6 @@ public class QuickMarcApiTest extends ApiTestBase {
 
     wireMockServer
       .stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, wrongUUID)))
-//        .withRequestBody(containing(getJsonObject(PARSED_RECORD_DTO_PATH).encode()))
         .willReturn(aResponse()
           .withBody(JsonObject.mapFrom(new Error()).encode())
           .withHeader(CONTENT_TYPE, APPLICATION_JSON)

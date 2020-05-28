@@ -138,8 +138,8 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       throw new IllegalArgumentException("The Leader and 008 do not match");
     }
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
-    StringBuilder result = new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap));
-    return result.replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
+    return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap))
+      .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
   }
 
   private String restoreFixedLengthField(int length, List<FixedLengthControlFieldItems> items, Map<String, Object> map) {

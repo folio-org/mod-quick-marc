@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import org.folio.HttpStatus;
 import org.folio.exception.HttpException;
-import org.folio.exception.MarcConversionException;
+import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Error;
 
 import io.vertx.core.json.JsonObject;
@@ -39,7 +39,7 @@ public class ErrorUtils {
         status = ((HttpException) cause).getCode();
         JsonObject errorJsonObject = ((HttpException) cause).getError();
         error = resolveError(errorJsonObject);
-      } else if (cause instanceof MarcConversionException) {
+      } else if (cause instanceof ConverterException) {
         status = HTTP_UNPROCESSABLE_ENTITY.toInt();
         error = buildError(status, cause.getMessage());
       } else {

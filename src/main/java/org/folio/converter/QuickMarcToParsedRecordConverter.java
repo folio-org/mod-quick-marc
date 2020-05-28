@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.folio.exception.MarcConversionException;
+import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
@@ -136,7 +136,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
     if (!contentMap.get(ELVL).toString().equals(Character.toString(leaderField.getImplDefined2()[0])) ||
       !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
-      throw new MarcConversionException("The Leader and 008 do not match");
+      throw new ConverterException("The Leader and 008 do not match");
     }
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
     return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap))
@@ -152,7 +152,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       } else {
         value = item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString();
         if (value.length() != item.getLength()) {
-          throw new MarcConversionException(String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength()));
+          throw new ConverterException(String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength()));
         }
       }
       stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
@@ -222,7 +222,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
     } else if (indicators.isEmpty()) {
       return Arrays.asList(SPACE, SPACE);
     } else {
-      throw new IllegalArgumentException("Illegal indicators number for field: " + field.getTag());
+      throw new ConverterException("Illegal indicators number for field: " + field.getTag());
     }
   }
 }

@@ -12,6 +12,7 @@ import static org.folio.converter.TestUtils.getMockAsJson;
 
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.exception.MarcConversionException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
@@ -72,12 +73,12 @@ public class QuickMarcToParsedRecordConverterTest {
 
   @Test
   void testFixedLengthControlFieldWrongLength() {
-    logger.info("Testing FixedLengthControlField wrong length after editing - IllegalArgumentException expected");
+    logger.info("Testing FixedLengthControlField wrong length after editing - MarcConversionException expected");
     JsonObject json = getMockAsJson(BOOKS.getQuickMarcJsonPath());
     json.getJsonArray(FIELDS).getJsonObject(3).getJsonObject(CONTENT).put("Entered", "abcdefg");
     QuickMarcJson quickMarcJson = json.mapTo(QuickMarcJson.class);
     QuickMarcToParsedRecordConverter converter = new QuickMarcToParsedRecordConverter();
-    assertThrows(IllegalArgumentException.class, () -> converter.convert(quickMarcJson));
+    assertThrows(MarcConversionException.class, () -> converter.convert(quickMarcJson));
   }
 
   @Test

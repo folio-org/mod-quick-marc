@@ -156,8 +156,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       }
       stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
     });
-    String result = stringBuilder.toString();
-    return result;
+    return stringBuilder.toString();
   }
 
   private List<Subfield> convertStringToSubfields(String subfieldsString) {

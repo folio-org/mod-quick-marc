@@ -26,8 +26,6 @@ See project [MODQM](https://issues.folio.org/browse/MODQM)
 at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker).
 
 
-
-
 ### Other documentation
 Other [modules](https://dev.folio.org/source-code/#server-side) are described,
 with further FOLIO Developer documentation at

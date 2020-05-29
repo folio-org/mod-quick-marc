@@ -138,6 +138,7 @@ public class QuickMarcToParsedRecordConverter implements Converter<QuickMarcJson
       !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
       throw new ConverterException("The Leader and 008 do not match");
     }
+    leaderField.setImplDefined2(new char[]{contentMap.get(ELVL).toString().charAt(0), contentMap.get(DESC).toString().charAt(0)});
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, contentType.getFixedLengthControlFieldItems(), contentMap);
     return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, ContentType.getCommonItems(), contentMap))
       .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();

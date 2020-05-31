@@ -1,9 +1,11 @@
 {
-  "id" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "content" : {
-    "fields" : [ {
-      "007" : "ca b defgh jkl"
-    } ],
-    "leader" : "00052caa a2200361   4500"
+  "id": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "content": {
+    "fields": [
+      {
+        "007": "ca b defgh jkl"
+      }
+    ],
+    "leader": "00052caa a2200361   4500"
   }
 }

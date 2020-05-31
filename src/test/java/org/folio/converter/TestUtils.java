@@ -1,5 +1,7 @@
 package org.folio.converter;
 
+import static org.folio.converter.QuickMarcToParsedRecordDtoConverterTest.TESTED_TAG_NAME;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -12,14 +14,20 @@ import java.util.stream.Stream;
 import org.apache.commons.io.IOUtils;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.AdditionalInfo;
+import org.folio.srs.model.ExternalIdsHolder;
+import org.folio.srs.model.ParsedRecord;
+import org.folio.srs.model.ParsedRecordDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.vertx.core.json.JsonObject;
 
-import static org.folio.converter.QuickMarcToParsedRecordConverterTest.TESTED_TAG_NAME;
-
 public class TestUtils {
+
+  public static final String VALID_PARSED_RECORD_DTO_ID = "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c";
+  public static final String EXISTED_INSTANCE_ID = "b9a5f035-de63-4e2c-92c2-07240c89b817";
+  public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
   private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
   public static JsonObject getMockAsJson(String fullPath) {
@@ -48,15 +56,21 @@ public class TestUtils {
   }
 
   public static Field getFieldWithIndicators(List<Object> indicators) {
-    return new Field()
-      .withTag(TESTED_TAG_NAME)
+    return new Field().withTag(TESTED_TAG_NAME)
       .withContent("$333 content")
       .withIndicators(indicators);
   }
 
   public static QuickMarcJson getQuickMarcJsonWithMinContent(Field... fields) {
-    return new QuickMarcJson()
-      .withLeader("01542ccm a2200361   4500")
+    return new QuickMarcJson().withLeader("01542ccm a2200361   4500")
       .withFields(Arrays.asList(fields));
+  }
+
+  public static ParsedRecordDto getParsedRecordDtoWithMinContent(ParsedRecord parsedRecord) {
+    return new ParsedRecordDto().withId(VALID_PARSED_RECORD_DTO_ID)
+      .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_INSTANCE_ID))
+      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false))
+      .withRecordType(ParsedRecordDto.RecordType.MARC)
+      .withParsedRecord(parsedRecord);
   }
 }

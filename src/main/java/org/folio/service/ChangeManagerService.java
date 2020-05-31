@@ -1,55 +1,40 @@
 package org.folio.service;
 
-import static org.folio.util.Constants.INSTANCE_ID;
-import static org.folio.util.ResourcePathResolver.*;
+import static org.folio.util.ResourcePathResolver.CM_RECORDS;
+import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
+import static org.folio.util.ResourcePathResolver.getResourcesPath;
 import static org.folio.util.ServiceUtils.buildQuery;
-
-import io.vertx.core.Context;
-import io.vertx.core.json.JsonObject;
-import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
-import org.folio.converter.ParsedRecordToQuickMarcConverter;
-import org.folio.converter.QuickMarcToParsedRecordConverter;
-import org.folio.rest.jaxrs.model.QuickMarcJson;
-import org.folio.srs.model.AdditionalInfo;
-import org.folio.srs.model.ExternalIdsHolder;
-import org.folio.srs.model.ParsedRecordDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.srs.model.ParsedRecordDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Service;
+
+import io.vertx.core.Context;
+import io.vertx.core.json.JsonObject;
+import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
 
 @Service
 public class ChangeManagerService extends BaseService implements MarcRecordsService {
 
-  private ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter;
-  private QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter;
+  public static final String INSTANCE_ID = "instanceId";
+
+  @Autowired
+  private Converter<ParsedRecordDto, QuickMarcJson> parsedRecordToQuickMarcConverter;
+  @Autowired
+  private Converter<QuickMarcJson, ParsedRecordDto> quickMarcToParsedRecordConverter;
 
   @Override
   public CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers) {
-    return handleGetRequest(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, instanceId), context, headers)
-      .thenApply(response -> {
-        ParsedRecordDto parsedRecordDto = response.mapTo(ParsedRecordDto.class);
-        return parsedRecordToQuickMarcConverter.convert(parsedRecordDto.getParsedRecord())
-          .withParsedRecordDtoId(parsedRecordDto.getId())
-          .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
-          .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery());
-      });
-  }
-
-  @Override
-  public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context,
-    Map<String, String> headers) {
-    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+    CompletableFuture<QuickMarcJson> future = new VertxCompletableFuture<>(context);
     try {
-      ParsedRecordDto parsedRecordDto = new ParsedRecordDto()
-        .withRecordType(ParsedRecordDto.RecordType.MARC)
-        .withParsedRecord(quickMarcToParsedRecordConverter.convert(quickMarcJson))
-        .withId(quickMarcJson.getParsedRecordDtoId())
-        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
-        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
-      handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers)
+      handleGetRequest(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, instanceId), context, headers)
+        .thenApply(
+            parsedRecordDtoJson -> parsedRecordToQuickMarcConverter.convert(parsedRecordDtoJson.mapTo(ParsedRecordDto.class)))
         .thenAccept(future::complete)
         .exceptionally(e -> {
           future.completeExceptionally(e);
@@ -61,13 +46,20 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
     return future;
   }
 
-  @Autowired
-  public void setParsedRecordToQuickMarcConverter(ParsedRecordToQuickMarcConverter parsedRecordToQuickMarcConverter) {
-    this.parsedRecordToQuickMarcConverter = parsedRecordToQuickMarcConverter;
-  }
-
-  @Autowired
-  public void setQuickMarcToParsedRecordConverter(QuickMarcToParsedRecordConverter quickMarcToParsedRecordConverter) {
-    this.quickMarcToParsedRecordConverter = quickMarcToParsedRecordConverter;
+  @Override
+  public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context, Map<String, String> headers) {
+    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+    try {
+      ParsedRecordDto parsedRecordDto = quickMarcToParsedRecordConverter.convert(quickMarcJson);
+      handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers)
+        .thenAccept(future::complete)
+        .exceptionally(e -> {
+          future.completeExceptionally(e);
+          return null;
+        });
+    } catch (Exception e) {
+      future.completeExceptionally(e);
+    }
+    return future;
   }
 }

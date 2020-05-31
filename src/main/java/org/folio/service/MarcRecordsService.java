@@ -7,14 +7,14 @@ import org.folio.rest.jaxrs.model.QuickMarcJson;
 
 import io.vertx.core.Context;
 
-public interface MarcRecordsService  {
+public interface MarcRecordsService {
 
   /**
    * This method returns QuickMarcJson record from SRS by corresponding instance's id
    *
    * @param instanceId instance's id
-   * @param context Vert.X context
-   * @param headers OKAPI headers
+   * @param context    Vert.X context
+   * @param headers    OKAPI headers
    * @return {@link QuickMarcJson} record
    */
   CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers);
@@ -22,10 +22,10 @@ public interface MarcRecordsService  {
   /**
    * This method updates QuickMarcJson record
    *
-   * @param id DTO id
+   * @param id            DTO id
    * @param quickMarcJson QuickMarcJson object
-   * @param context Vert.X context
-   * @param headers OKAPI headers
+   * @param context       Vert.X context
+   * @param headers       OKAPI headers
    * @return {@link QuickMarcJson} record
    */
   CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context, Map<String, String> headers);

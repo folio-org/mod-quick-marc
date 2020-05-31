@@ -4,8 +4,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.folio.TestSuite.isInitialized;
 import static org.folio.TestSuite.mockPort;
 import static org.folio.TestSuite.wireMockServer;
-import static org.folio.rest.RestVerticle.*;
-import static org.folio.util.Constants.OKAPI_URL;
+import static org.folio.client.OkapiHttpClient.OKAPI_URL;
+import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +27,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.vertx.core.json.JsonObject;
+import wiremock.org.apache.commons.lang3.StringUtils;
 
 public class ApiTestBase {
 
@@ -44,11 +45,6 @@ public class ApiTestBase {
     }
   }
 
-  @BeforeEach
-  public void setUp() {
-    wireMockServer.resetAll();
-  }
-
   @AfterAll
   public static void globalTearDown() {
     if (isInitialized) {
@@ -56,29 +52,34 @@ public class ApiTestBase {
     }
   }
 
+  @BeforeEach
+  public void setUp() {
+    wireMockServer.resetAll();
+  }
+
   public Response verifyGetRequest(String url, int code) {
-    return RestAssured
-      .with()
-        .header(X_OKAPI_URL)
-        .header(X_OKAPI_TENANT)
-      .get(url)
-        .then()
-          .statusCode(code)
-          .extract()
+    return RestAssured.with()
+      .header(X_OKAPI_URL)
+      .header(X_OKAPI_TENANT)
+        .get(url)
+          .then()
+            .statusCode(code)
+            .contentType(APPLICATION_JSON)
+            .extract()
             .response();
   }
 
   public Response verifyPutRequest(String url, Object requestBody, int code) {
-    return RestAssured
-      .with()
-        .header(X_OKAPI_URL)
-        .header(X_OKAPI_TENANT)
-        .body(requestBody)
-        .contentType(APPLICATION_JSON)
-      .put(url)
-        .then()
-          .statusCode(code)
-          .extract()
+    return RestAssured.with()
+      .header(X_OKAPI_URL)
+      .header(X_OKAPI_TENANT)
+      .body(requestBody)
+      .contentType(APPLICATION_JSON)
+        .put(url)
+          .then()
+            .statusCode(code)
+            .contentType(StringUtils.EMPTY)
+            .extract()
             .response();
   }
 

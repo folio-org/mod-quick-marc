@@ -1,11 +1,11 @@
-package org.folio.converter;
+package org.folio.converter.elements;
 
-import static org.folio.converter.FixedLengthControlFieldItems.*;
+import static org.folio.converter.elements.FixedLengthDataElements.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-public enum PhysicalDescriptions {
+public enum PhysicalDescriptionFixedFieldElements {
   ELECTRONIC_RESOURCE("Electronic resource", 'c', 14, Arrays.asList(CATEGORY, SMD, COLOR, DIMENSIONS, SOUND, IMAGE_BIT_DEPTH, FILE_FORMATS, QUALITY_ASSURANCE_TARGET, ANTECEDENT, LEVEL_OF_COMPRESSION, REFORMATTING_QUALITY)),
   GLOBE("Globe", 'd', 6, Arrays.asList(CATEGORY, SMD, COLOR, PHYSICAL_MEDIUM, TYPE_OF_REPRODUCTION)),
   KIT("Kit", 'o', 2, Arrays.asList(CATEGORY, SMD)),
@@ -18,27 +18,26 @@ public enum PhysicalDescriptions {
   REMOTE_SENSING_IMAGE("Remote-Sensing Image", 'r', 11, Arrays.asList(CATEGORY, SMD, ALTITUDE, ATTITUDE, CLOUD_COVER, PLATFORM_CONSTRUCTION_TYPE, PLATFORM_USE_CATEGORY, SENSOR_TYPE, DATA_TYPE)),
   SOUND_RECORDING("Sound Recording", 's', 14, Arrays.asList(CATEGORY, SMD, SPEED, CONFIGURATION_OF_CHANNELS_SOUND, GROOVE, DIMENSIONS_SOUND, TAPE_WIDTH, TAPE_CONFIGURATION, KIND_OF_DISC, KIND_OF_MATERIAL, KIND_OF_CUTTING, SPECIAL_PLAYBACK_CHARACTERISTICS, CAPTURE_TECHNIQUE)),
   TACTILE_MATERIAL("Tactile Material", 'f', 10, Arrays.asList(CATEGORY, SMD, CLASS_OF_BRAILLE, LEVEL_OF_CONTRACTION, BRAILLE_MUSIC_FORMAT, SPECIAL_PHYSICAL_CHARACTERISTICS)),
-  TEXT("Text", 't', 2, Arrays.asList(CATEGORY, SMD)),
-  UNSPECIFIED("Unspecified", 'z', 2, Arrays.asList(CATEGORY, SMD)),
+  TEXT("Text", 't', 2, Arrays.asList(CATEGORY, SMD)), UNSPECIFIED("Unspecified", 'z', 2, Arrays.asList(CATEGORY, SMD)),
   VIDEORECORDING("Videorecording", 'v', 9, Arrays.asList(CATEGORY, SMD, COLOR, VIDEORECORDING_FORMAT, SOUND_ON_MEDIUM, MEDIUM_FOR_SOUND, DIMENSIONS_MOTION, CONFIGURATION_OF_CHANNELS)),
   UNKNOWN("Unknown", 'b', 1, Arrays.asList(CATEGORY, VAL));
 
-  private String name;
-  private char code;
-  private int length;
-  private List<FixedLengthControlFieldItems> items;
+  private final String name;
+  private final char code;
+  private final int length;
+  private final List<FixedLengthDataElements> items;
 
-  PhysicalDescriptions(String name, char code, int length, List<FixedLengthControlFieldItems> items) {
+  PhysicalDescriptionFixedFieldElements(String name, char code, int length, List<FixedLengthDataElements> items) {
     this.name = name;
     this.code = code;
     this.length = length;
     this.items = items;
   }
 
-  public static PhysicalDescriptions resolveByCode(char code) {
-    for(PhysicalDescriptions physicalDescriptions : values()) {
-      if (physicalDescriptions.code == code) {
-        return physicalDescriptions;
+  public static PhysicalDescriptionFixedFieldElements resolveByCode(char code) {
+    for (PhysicalDescriptionFixedFieldElements physicalDescriptionFixedFieldElements : values()) {
+      if (physicalDescriptionFixedFieldElements.code == code) {
+        return physicalDescriptionFixedFieldElements;
       }
     }
     return UNKNOWN;
@@ -52,7 +51,7 @@ public enum PhysicalDescriptions {
     return length;
   }
 
-  public List<FixedLengthControlFieldItems> getItems() {
+  public List<FixedLengthDataElements> getItems() {
     return items;
   }
 }

@@ -7,10 +7,7 @@ import java.util.stream.Collectors;
 
 public class ResourcePathResolver {
 
-  private ResourcePathResolver() {}
-
   public static final String CM_RECORDS = "change-manager.records";
-
   private static final Map<String, String> APIS;
   private static final Map<String, String> ITEM_APIS;
 
@@ -18,9 +15,10 @@ public class ResourcePathResolver {
     Map<String, String> apis = new HashMap<>();
     apis.put(CM_RECORDS, "/change-manager/parsedRecords");
     APIS = Collections.unmodifiableMap(apis);
-    ITEM_APIS = Collections.unmodifiableMap(APIS.entrySet()
-      .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, v -> v.getValue() + "/%s")));
+    ITEM_APIS = Collections.unmodifiableMap(APIS.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, v -> v.getValue() + "/%s")));
+  }
+
+  private ResourcePathResolver() {
   }
 
   public static String getResourcesPath(String field) {

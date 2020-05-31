@@ -17,6 +17,10 @@ quickMARC API provides the following URLs:
 | PUT | /records-editor/records/{recordId}  |records-editor.records.item.get   | Updates SRS record |
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).
+
+It should be noted that quickMARC never returns error 404 (NOT FOUND) for SRS record updating even though record doesn't exist 
+due to specific of [Change Manager](https://s3.amazonaws.com/foliodocs/api/mod-source-record-manager/p/change-manager.html#change_manager_parsedrecords__id__put).
+
 ### Required Permissions
 Institutional users should be granted the following permissions in order to use this quickMARC API:
 - `records-editor.all`

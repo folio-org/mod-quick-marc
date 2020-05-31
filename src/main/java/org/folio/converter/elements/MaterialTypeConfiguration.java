@@ -33,31 +33,32 @@ public enum MaterialTypeConfiguration {
 
   public static MaterialTypeConfiguration resolveContentType(Leader leader) {
     switch (leader.getTypeOfRecord()) {
-    case 'a':
-    case 't':
-      return Arrays.asList('b', 'i', 's').contains(leader.getImplDefined1()[0]) ? CONTINUING : BOOKS;
-    case 's':
-      return CONTINUING;
-    case 'm':
-      return FILES;
-    case 'e':
-    case 'f':
-      return MAPS;
-    case 'p':
-      return MIXED;
-    case 'i':
-    case 'j':
-      return SOUND;
-    case 'c':
-    case 'd':
-      return SCORES;
-    case 'g':
-    case 'k':
-    case 'o':
-    case 'r':
-      return VISUAL;
-    default:
-      return UNKNOWN;
+      case 'a':
+        return Arrays.asList('b', 'i', 's').contains(leader.getImplDefined1()[0]) ? CONTINUING : BOOKS;
+      case 't':
+        return BOOKS;
+      case 's':
+        return CONTINUING;
+      case 'm':
+        return FILES;
+      case 'e':
+      case 'f':
+        return MAPS;
+      case 'p':
+        return MIXED;
+      case 'i':
+      case 'j':
+        return SOUND;
+      case 'c':
+      case 'd':
+        return SCORES;
+      case 'g':
+      case 'k':
+      case 'o':
+      case 'r':
+        return VISUAL;
+      default:
+        return UNKNOWN;
     }
   }
 

@@ -49,7 +49,7 @@ public class RecordsEditorRecordsApi implements RecordsEditorRecords {
   public void putRecordsEditorRecordsById(String parsedRecordId, QuickMarcJson entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     if (parsedRecordId.equals(entity.getParsedRecordId())) {
       service.putMarcRecordById(entity.getParsedRecordDtoId(), entity, vertxContext, okapiHeaders)
-        .thenAccept(vVoid -> asyncResultHandler.handle(succeededFuture(Response.noContent().build())))
+        .thenAccept(vVoid -> asyncResultHandler.handle(succeededFuture(Response.accepted().build())))
         .exceptionally(throwable -> handleErrorResponse(asyncResultHandler, throwable));
     } else {
       asyncResultHandler.handle(succeededFuture(PutRecordsEditorRecordsByIdResponse.respond400WithApplicationJson(buildError(400, ErrorUtils.ErrorType.INTERNAL, "request id and entity id are not equal"))));

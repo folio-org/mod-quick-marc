@@ -129,13 +129,13 @@ public class QuickMarcApiTest extends ApiTestBase {
 
     wireMockServer.stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, VALID_PARSED_RECORD_DTO_ID)))
       .withRequestBody(containing(getJsonObject(PARSED_RECORD_DTO_PATH).encode()))
-      .willReturn(aResponse().withStatus(204)));
+      .willReturn(aResponse().withStatus(202)));
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class)
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
 
-    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 204);
+    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 202);
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
     ParsedRecordDto changeManagerRequest = new JsonObject(wireMockServer.getAllServeEvents()

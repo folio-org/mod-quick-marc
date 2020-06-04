@@ -152,7 +152,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
       !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
       throw new ConverterException(buildError(ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
     }
-    leaderField.setImplDefined2(new char[]{contentMap.get(ELVL).toString().charAt(0), contentMap.get(DESC).toString().charAt(0), SPACE_CHARACTER});
+    leaderField.setImplDefined2(new char[]{contentMap.get(ELVL).toString().charAt(0), contentMap.get(DESC).toString().charAt(0), leaderField.getImplDefined2()[2]});
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
     return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(), contentMap))
       .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();

@@ -14,9 +14,7 @@ import static org.folio.converter.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.converter.Constants.TYPE;
-import static org.folio.util.ErrorUtils.buildError;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -35,7 +33,6 @@ import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.ParsedRecordDto;
-import org.folio.util.ErrorUtils;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
@@ -75,8 +72,8 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
         .withParsedRecordDtoId(parsedRecordDto.getId())
         .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
         .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery());
-    } catch (IOException e) {
-      throw new ConverterException(buildError(ErrorUtils.ErrorType.INTERNAL,"Generic converter error"));
+    } catch (Exception e) {
+      throw new ConverterException(e, this.getClass());
     }
   }
 

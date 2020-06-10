@@ -71,19 +71,24 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
 
   @Override
   public ParsedRecordDto convert(QuickMarcJson quickMarcJson) {
-    Record marcRecord = quickMarcJsonToMarcRecord(quickMarcJson);
+    try {
+      Record marcRecord = quickMarcJsonToMarcRecord(quickMarcJson);
 
-    Map<String, Object> contentMap = new LinkedHashMap<>();
-    contentMap.put(FIELDS, convertMarcFieldsToObjects(marcRecord));
-    contentMap.put(LEADER, marcRecord.getLeader()
-      .marshal());
+      Map<String, Object> contentMap = new LinkedHashMap<>();
+      contentMap.put(FIELDS, convertMarcFieldsToObjects(marcRecord));
+      contentMap.put(LEADER, marcRecord.getLeader()
+        .marshal());
 
-    return new ParsedRecordDto().withParsedRecord(new ParsedRecord().withId(quickMarcJson.getParsedRecordId())
-      .withContent(contentMap))
-      .withRecordType(ParsedRecordDto.RecordType.MARC)
-      .withId(quickMarcJson.getParsedRecordDtoId())
-      .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
-      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
+      return new ParsedRecordDto().withParsedRecord(new ParsedRecord().withId(quickMarcJson.getParsedRecordId())
+        .withContent(contentMap))
+        .withRecordType(ParsedRecordDto.RecordType.MARC)
+        .withId(quickMarcJson.getParsedRecordDtoId())
+        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarcJson.getInstanceId()))
+        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarcJson.getSuppressDiscovery()));
+
+    } catch (Exception e) {
+      throw new ConverterException(e, this.getClass());
+    }
   }
 
   private Record quickMarcJsonToMarcRecord(QuickMarcJson quickMarcJson) {

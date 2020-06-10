@@ -53,8 +53,7 @@ public class QuickMarcApiTest extends ApiTestBase {
         .withHeader(CONTENT_TYPE, APPLICATION_JSON)
         .withStatus(200)));
 
-    QuickMarcJson quickMarcJson = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, EXISTED_INSTANCE_ID), 200)
-      .as(QuickMarcJson.class);
+    QuickMarcJson quickMarcJson = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, EXISTED_INSTANCE_ID), 200).as(QuickMarcJson.class);
 
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
     assertThat(quickMarcJson.getInstanceId(), equalTo(EXISTED_INSTANCE_ID));
@@ -74,26 +73,23 @@ public class QuickMarcApiTest extends ApiTestBase {
   void testGetQuickMarcRecordNotFound() {
     logger.info("===== Verify GET record: Record Not Found =====");
 
-    String recordNotFoundId = UUID.randomUUID()
-      .toString();
+    String recordNotFoundId = UUID.randomUUID().toString();
 
     wireMockServer
       .stubFor(get(urlEqualTo(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, recordNotFoundId))).willReturn(aResponse()
-        .withBody(JsonObject.mapFrom(new Error())
-          .encode())
+        .withBody(JsonObject.mapFrom(new Error()).encode())
         .withHeader(CONTENT_TYPE, APPLICATION_JSON)
         .withStatus(HttpStatus.HTTP_NOT_FOUND.toInt())));
 
-    Error error = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, recordNotFoundId),
-        HttpStatus.HTTP_NOT_FOUND.toInt()).as(Error.class);
-    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
+    Error error = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, recordNotFoundId), HttpStatus.HTTP_NOT_FOUND.toInt()).as(Error.class);
 
+    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
   @Test
-  void testGetQuickMarcRecordInternalServerError() {
-    logger.info("===== Verify GET record: Internal Server Error (quickMARC internal exception) =====");
+  void testGetQuickMarcRecordConverterError() {
+    logger.info("===== Verify GET record: Converter (quickMARC internal exception) =====");
 
     String internalServerErrorInstanceId = UUID.randomUUID()
       .toString();
@@ -103,8 +99,7 @@ public class QuickMarcApiTest extends ApiTestBase {
         .withHeader(CONTENT_TYPE, APPLICATION_JSON)
         .withStatus(200)));
 
-    Error error = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, internalServerErrorInstanceId), 500)
-      .as(Error.class);
+    Error error = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery(INSTANCE_ID, internalServerErrorInstanceId), 422).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
@@ -114,8 +109,7 @@ public class QuickMarcApiTest extends ApiTestBase {
   void testGetQuickMarcRecordWithoutInstanceIdParameter() {
     logger.info("===== Verify GET record: Request without instanceId =====");
 
-    String id = UUID.randomUUID()
-      .toString();
+    String id = UUID.randomUUID().toString();
 
     Error error = verifyGetRequest(RECORDS_EDITOR_RECORDS_PATH + buildQuery("X", id), 400).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
@@ -148,12 +142,10 @@ public class QuickMarcApiTest extends ApiTestBase {
   @Test
   void testUpdateQuickMarcRecordWrongUuid() {
     logger.info("===== Verify PUT record: Not found =====");
-    String wrongUUID = UUID.randomUUID()
-      .toString();
+    String wrongUUID = UUID.randomUUID().toString();
 
     wireMockServer.stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, wrongUUID))).willReturn(aResponse()
-      .withBody(JsonObject.mapFrom(new Error())
-        .encode())
+      .withBody(JsonObject.mapFrom(new Error()).encode())
       .withHeader(CONTENT_TYPE, APPLICATION_JSON)
       .withStatus(404)));
 
@@ -172,8 +164,7 @@ public class QuickMarcApiTest extends ApiTestBase {
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
 
-    Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_DTO_ID), quickMarcJson, 400)
-      .as(Error.class);
+    Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_DTO_ID), quickMarcJson, 400).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
@@ -190,8 +181,7 @@ public class QuickMarcApiTest extends ApiTestBase {
       .withInstanceId(UUID.randomUUID()
         .toString());
 
-    Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson,
-        HttpStatus.HTTP_UNPROCESSABLE_ENTITY.toInt()).as(Error.class);
+    Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, HttpStatus.HTTP_UNPROCESSABLE_ENTITY.toInt()).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
@@ -204,6 +194,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_WRONG_ITEM_LENGTH).mapTo(QuickMarcJson.class)
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
+
     verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
   }
 
@@ -214,6 +205,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_LEADER_MISMATCH).mapTo(QuickMarcJson.class)
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
+
     verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
   }
 }

@@ -3,8 +3,9 @@ package org.folio.exception;
 import io.vertx.core.json.JsonObject;
 import org.folio.HttpStatus;
 import org.folio.rest.jaxrs.model.Error;
+import org.folio.util.ErrorUtils;
 
-import static org.apache.commons.lang3.math.NumberUtils.toInt;
+import static org.folio.util.ErrorUtils.buildError;
 
 /**
  * Custom exception for QuickMarcJson <-> ParsedRecordDto converting errors
@@ -19,6 +20,17 @@ public class ConverterException extends RuntimeException {
   public ConverterException(Error error) {
     code = HttpStatus.HTTP_UNPROCESSABLE_ENTITY.toInt();
     errorJson = JsonObject.mapFrom(error);
+  }
+
+  public ConverterException(Exception ex, Class<?> clazz) {
+    if (ex instanceof ConverterException) {
+      ConverterException cex = (ConverterException) ex;
+      errorJson = cex.getError();
+      code = cex.getCode();
+    } else {
+      errorJson = JsonObject.mapFrom(buildError(ErrorUtils.ErrorType.INTERNAL,clazz.getSimpleName() + ": Generic Error"));
+      code = HttpStatus.HTTP_UNPROCESSABLE_ENTITY.toInt();
+    }
   }
 
   public JsonObject getError() {

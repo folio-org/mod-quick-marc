@@ -1,5 +1,14 @@
 ## 1.1.0 - Unreleased
 
+## 1.0.1 - Released
+
+The only focus of this bug fix release was to fix bug in ParsedRecordDto to QuickMarcJson conversion 
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.0.0...v1.0.1)
+
+### Bug Fixes
+ * [MODQM-21](https://issues.folio.org/browse/MODQM-21) - Changing any field in Instance via quickMARC creates error for request to "records-editor/records/{id}"
+
 ## 1.0.0 - Released
 
 The primary focus of this release was to implement backend logic for quickMARC - Simple MARC Records Editor

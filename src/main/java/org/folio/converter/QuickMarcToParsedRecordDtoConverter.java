@@ -190,12 +190,14 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
 
     if (field.getTag().equals(CHARACTER_SETS_TAG)) {
       List<Subfield> subfields = new ArrayList<>();
-      for (int i = 0; i < tokens.size(); i++) {
+      int i = 0;
+      while (i < tokens.size()) {
         if (tokens.get(i).length() < 3) {
           subfields.add(new SubfieldImpl(tokens.get(i).charAt(1), tokens.get(++i)));
         } else {
           subfields.add(subfieldFromString(tokens.get(i)));
         }
+        i++;
       }
       return subfields;
     } else {

@@ -2,6 +2,8 @@ package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.folio.converter.Constants.CHARACTER_SETS_TAG;
+import static org.folio.converter.Constants.LCCN_TAG;
 import static org.folio.converter.elements.FixedLengthDataElements.CATEGORY;
 import static org.folio.converter.elements.FixedLengthDataElements.VALUE;
 import static org.folio.converter.elements.MaterialTypeConfiguration.UNKNOWN;
@@ -52,12 +54,13 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
 
   private static final int GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
   private static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 17;
+  private static final int TOKEN_MIN_LENGTH = 4;
   private static final String FIELDS = "fields";
   private static final String LEADER = "leader";
   private static final String INDICATOR1 = "ind1";
   private static final String INDICATOR2 = "ind2";
   private static final String SUBFIELDS = "subfields";
-  private static final String SPLIT_PATTERN = " ?[$]";
+  private static final String SPLIT_PATTERN = "(?=(\\s[$][a-z0-9]\\s))";
   private static final char SPACE_CHARACTER = ' ';
   private static final int ADDRESS_LENGTH = 12;
   private static final int TAG_LENGTH = 4;
@@ -108,7 +111,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
         } else {
           DataField dataField = factory.newDataField();
           dataField.setTag(field.getTag());
-          dataField.getSubfields().addAll(convertStringToSubfields(field.getContent().toString()));
+          dataField.getSubfields().addAll(convertFieldToSubfields(field));
           List<String> indicators = verifyAndGetIndicators(field);
           dataField.setIndicator1(indicators.get(0).toCharArray()[0]);
           dataField.setIndicator2(indicators.get(1).toCharArray()[0]);
@@ -180,11 +183,30 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
     return stringBuilder.toString();
   }
 
-  private List<Subfield> convertStringToSubfields(String subfieldsString) {
-    return Arrays.stream(subfieldsString.split(SPLIT_PATTERN))
-      .filter(token -> !token.isEmpty())
-      .map(token -> new SubfieldImpl(token.charAt(0), token.charAt(1) == SPACE_CHARACTER ? token.substring(2) : token.substring(1)))
+  private List<Subfield> convertFieldToSubfields(Field field) {
+    List<String> tokens = Arrays.stream(field.getContent().toString().split(SPLIT_PATTERN))
+      .map(token -> field.getTag().equals(LCCN_TAG) ? token : token.trim())
       .collect(Collectors.toList());
+
+    if (field.getTag().equals(CHARACTER_SETS_TAG)) {
+      List<Subfield> subfields = new ArrayList<>();
+      for (int i = 0; i < tokens.size(); i++) {
+        if (tokens.get(i).length() < 3) {
+          subfields.add(new SubfieldImpl(tokens.get(i).charAt(1), tokens.get(++i)));
+        } else {
+          subfields.add(subfieldFromString(tokens.get(i)));
+        }
+      }
+      return subfields;
+    } else {
+      return tokens.stream()
+        .map(this::subfieldFromString)
+        .collect(Collectors.toList());
+    }
+  }
+
+  private Subfield subfieldFromString(String string) {
+    return new SubfieldImpl(string.charAt(1), string.length() < TOKEN_MIN_LENGTH ? EMPTY : string.substring(3));
   }
 
   private List<Object> convertMarcFieldsToObjects(Record marcRecord) {

@@ -185,10 +185,10 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
 
   private List<Subfield> convertFieldToSubfields(Field field) {
     List<String> tokens = Arrays.stream(field.getContent().toString().split(SPLIT_PATTERN))
-      .map(token -> field.getTag().equals(LCCN_TAG) ? token : token.trim())
+      .map(token -> LCCN_TAG.equals(field.getTag()) ? token : token.trim())
       .collect(Collectors.toList());
 
-    if (field.getTag().equals(CHARACTER_SETS_TAG)) {
+    if (CHARACTER_SETS_TAG.equals(field.getTag())) {
       List<Subfield> subfields = new ArrayList<>();
       int i = 0;
       while (i < tokens.size()) {

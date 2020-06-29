@@ -459,7 +459,7 @@
     <url>https://github.com/folio-org/mod-quick-marc</url>
     <connection>scm:git:git://github.com/folio-org/mod-quick-marc</connection>
     <developerConnection>scm:git:git@github.com:folio-org/mod-quick-marc.git</developerConnection>
-    <tag>v1.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <repositories>

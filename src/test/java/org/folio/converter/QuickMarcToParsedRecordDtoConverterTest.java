@@ -7,6 +7,7 @@ import static org.folio.converter.TestUtils.getParsedRecordDtoWithMinContent;
 import static org.folio.converter.TestUtils.getQuickMarcJsonWithMinContent;
 import static org.folio.rest.impl.ApiTestBase.PARSED_RECORD_DTO_PATH;
 import static org.folio.rest.impl.ApiTestBase.QUICK_MARC_RECORD_PATH;
+import static org.folio.rest.impl.ApiTestBase.RESTORED_PARSED_RECORD_DTO_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -65,7 +66,7 @@ public class QuickMarcToParsedRecordDtoConverterTest {
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
     QuickMarcJson quickMarcJson = getMockAsJson(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    ParsedRecordDto expected = getMockAsJson(PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class);
+    ParsedRecordDto expected = getMockAsJson(RESTORED_PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class);
     assertThat(JsonObject.mapFrom(parsedRecordDto), equalTo(JsonObject.mapFrom(expected)));
   }
 
@@ -77,7 +78,7 @@ public class QuickMarcToParsedRecordDtoConverterTest {
     ParsedRecord parsedRecord = getMockAsJson(PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class).getParsedRecord();
     QuickMarcJson quickMarcJson = parsedRecordDtoToQuickMarcConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord));
     ParsedRecordDto restoredParsedRecordDto = quickMarcToParsedRecordDtoConverter.convert(quickMarcJson);
-    assertThat(JsonObject.mapFrom(getParsedRecordDtoWithMinContent(parsedRecord)), equalTo(JsonObject.mapFrom(restoredParsedRecordDto)));
+    assertThat(getMockAsJson(RESTORED_PARSED_RECORD_DTO_PATH), equalTo(JsonObject.mapFrom(restoredParsedRecordDto)));
   }
 
   @Test

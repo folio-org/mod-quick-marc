@@ -66,7 +66,28 @@
         "additionalProperties": false
       },
       "minItems" : 3
+    },
+    "updateInfo": {
+      "description": "Information related to record update",
+      "type": "object",
+      "properties": {
+        "recordState": {
+          "description": "State of source record in QM workflow",
+          "type": "string"
+        },
+        "updatedDate": {
+          "description": "Date and time of last successful update of the record",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
     }
   },
-  "required": ["parsedRecordDtoId", "suppressDiscovery", "instanceId", "leader", "fields"]
+  "required": [
+    "parsedRecordDtoId",
+    "suppressDiscovery",
+    "instanceId",
+    "leader",
+    "fields"
+  ]
 }

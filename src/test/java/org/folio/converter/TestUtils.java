@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -16,6 +17,7 @@ import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.AdditionalInfo;
 import org.folio.srs.model.ExternalIdsHolder;
+import org.folio.srs.model.Metadata;
 import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.ParsedRecordDto;
 import org.slf4j.Logger;
@@ -71,6 +73,8 @@ public class TestUtils {
       .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_INSTANCE_ID))
       .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false))
       .withRecordType(ParsedRecordDto.RecordType.MARC)
+      .withRecordState(ParsedRecordDto.RecordState.ACTUAL)
+      .withMetadata(new Metadata().withUpdatedDate(new Date(1594901616879L)))
       .withParsedRecord(parsedRecord);
   }
 }

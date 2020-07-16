@@ -487,11 +487,8 @@
       "leader": "01706ccm a2200361   4500"
     }
   },
+  "recordState":"ACTUAL",
   "additionalInfo": {
     "suppressDiscovery": false
-  },
-  "recordState":"ACTUAL",
-  "metadata": {
-    "updatedDate":"2020-07-16T15:13:36.000"
   }
 }

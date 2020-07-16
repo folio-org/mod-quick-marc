@@ -1,32 +1,34 @@
 {
-  "parsedRecordId": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
-  "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
-  "suppressDiscovery": false,
-  "leader": "00061caa a2200361   4500",
-  "fields": [
-    {
-      "tag": "007",
-      "content": {
-        "Category": "m",
-        "SMD": "a",
-        "Color": "b",
-        "Motion picture presentation format": "c",
-        "Sound on medium or separate": "d",
-        "Medium for sound": "e",
-        "Dimensions": "f",
-        "Configuration of playback channels": "g",
-        "Production elements": "h",
-        "Positive/negative aspect": "i",
-        "Generation": "j",
-        "Base of film": "k",
-        "Refined categories of color": "l",
-        "Kind of color stock or print": "m",
-        "Deterioration stage": "n",
-        "Completeness": "o",
-        "Film inspection date": "pqrstu"
-      },
-      "indicators": []
-    }
-  ]
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "parsedRecordDtoId" : "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
+  "suppressDiscovery" : false,
+  "instanceId" : "b9a5f035-de63-4e2c-92c2-07240c89b817",
+  "leader" : "00061caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Deterioration stage" : "n",
+      "Category" : "m",
+      "Color" : "b",
+      "Film inspection date" : "pqrstu",
+      "Motion picture presentation format" : "c",
+      "Dimensions" : "f",
+      "Sound on medium or separate" : "d",
+      "Kind of color stock or print" : "m",
+      "SMD" : "a",
+      "Medium for sound" : "e",
+      "Base of film" : "k",
+      "Generation" : "j",
+      "Completeness" : "o",
+      "Refined categories of color" : "l",
+      "Production elements" : "h",
+      "Configuration of playback channels" : "g",
+      "Positive/negative aspect" : "i"
+    },
+    "indicators" : [ ]
+  } ],
+  "updateInfo" : {
+    "recordState" : "ACTUAL",
+    "updatedDate" : 1594901616879
+  }
 }

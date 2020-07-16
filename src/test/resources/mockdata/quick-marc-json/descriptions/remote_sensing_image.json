@@ -1,24 +1,26 @@
 {
-  "parsedRecordId": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
-  "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
-  "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
-  "suppressDiscovery": false,
-  "leader": "00049caa a2200361   4500",
-  "fields": [
-    {
-      "tag": "007",
-      "content": {
-        "Category": "r",
-        "SMD": "a",
-        "Altitude of sensor": "b",
-        "Attitude of sensor": "c",
-        "Cloud cover": "d",
-        "Platform construction type": "e",
-        "Platform use category": "f",
-        "Sensor type": "g",
-        "Data type": "hi"
-      },
-      "indicators": []
-    }
-  ]
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "parsedRecordDtoId" : "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
+  "suppressDiscovery" : false,
+  "instanceId" : "b9a5f035-de63-4e2c-92c2-07240c89b817",
+  "leader" : "00049caa a2200361   4500",
+  "fields" : [ {
+    "tag" : "007",
+    "content" : {
+      "Altitude of sensor" : "b",
+      "Data type" : "hi",
+      "Cloud cover" : "d",
+      "Platform use category" : "f",
+      "Platform construction type" : "e",
+      "Category" : "r",
+      "Sensor type" : "g",
+      "Attitude of sensor" : "c",
+      "SMD" : "a"
+    },
+    "indicators" : [ ]
+  } ],
+  "updateInfo" : {
+    "recordState" : "ACTUAL",
+    "updatedDate" : 1594901616879
+  }
 }

@@ -19,9 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import io.vertx.core.json.JsonObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 public class ParsedRecordDtoToQuickMarcConverterTest {
 
   private static final Logger logger = LoggerFactory.getLogger(ParsedRecordDtoToQuickMarcConverterTest.class);
@@ -53,10 +50,6 @@ public class ParsedRecordDtoToQuickMarcConverterTest {
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();
     ParsedRecordDto parsedRecordDto = getMockAsJson(PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class);
     QuickMarcJson quickMarcJson = converter.convert(parsedRecordDto);
-//    File file = new File("quickMarcJson.json");
-//    FileOutputStream fileOutputStream = new FileOutputStream(file);
-//    fileOutputStream.write(JsonObject.mapFrom(quickMarcJson).encodePrettily().getBytes());
-//    fileOutputStream.close();
     QuickMarcJson expected = getMockAsJson(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
     assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(JsonObject.mapFrom(expected)));
   }

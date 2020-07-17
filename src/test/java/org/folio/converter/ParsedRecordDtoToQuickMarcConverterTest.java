@@ -31,7 +31,7 @@ public class ParsedRecordDtoToQuickMarcConverterTest {
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();
     QuickMarcJson quickMarcJson = converter.convert(getParsedRecordDtoWithMinContent(parsedRecord));
-    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(JsonObject.mapFrom(getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class))));
   }
 
   @ParameterizedTest
@@ -41,7 +41,7 @@ public class ParsedRecordDtoToQuickMarcConverterTest {
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();
     QuickMarcJson quickMarcJson = converter.convert(getParsedRecordDtoWithMinContent(parsedRecord));
-    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(JsonObject.mapFrom(getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class))));
   }
 
   @Test

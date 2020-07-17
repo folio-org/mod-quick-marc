@@ -75,7 +75,7 @@
           "description": "State of source record in QM workflow",
           "type": "string"
         },
-        "updatedDate": {
+        "updateDate": {
           "description": "Date and time of last successful update of the record",
           "type": "string",
           "format": "date-time"

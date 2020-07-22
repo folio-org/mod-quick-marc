@@ -73,7 +73,13 @@
       "properties": {
         "recordState": {
           "description": "State of source record in QM workflow",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "ACTUAL",
+            "IN_PROGRESS",
+            "ERROR"
+          ],
+          "default": "ACTUAL"
         },
         "updateDate": {
           "description": "Date and time of last successful update of the record",

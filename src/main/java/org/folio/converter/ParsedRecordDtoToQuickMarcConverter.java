@@ -74,7 +74,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
         .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
         .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery())
         .withUpdateInfo(new UpdateInfo()
-          .withRecordState(parsedRecordDto.getRecordState().value())
+          .withRecordState(UpdateInfo.RecordState.fromValue(parsedRecordDto.getRecordState().value()))
           .withUpdateDate(parsedRecordDto.getMetadata().getUpdatedDate()));
     } catch (Exception e) {
       throw new ConverterException(e, this.getClass());

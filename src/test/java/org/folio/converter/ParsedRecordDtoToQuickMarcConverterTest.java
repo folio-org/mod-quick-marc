@@ -25,12 +25,13 @@ public class ParsedRecordDtoToQuickMarcConverterTest {
 
   @ParameterizedTest
   @EnumSource(value = TestEntities.class, mode = EXCLUDE, names = { "BOOKS_MISSING_ITEMS" })
-  void testSplitFixedLengthControlField(TestEntities testEntity) {
+  void testSplitFixedLengthControlField(TestEntities testEntity)
+  {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.getMaterialTypeConfiguration().getName());
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();
     QuickMarcJson quickMarcJson = converter.convert(getParsedRecordDtoWithMinContent(parsedRecord));
-    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(JsonObject.mapFrom(getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class))));
   }
 
   @ParameterizedTest
@@ -40,7 +41,7 @@ public class ParsedRecordDtoToQuickMarcConverterTest {
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();
     QuickMarcJson quickMarcJson = converter.convert(getParsedRecordDtoWithMinContent(parsedRecord));
-    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(getMockAsJson(testEntity.getQuickMarcJsonPath())));
+    assertThat(JsonObject.mapFrom(quickMarcJson), equalTo(JsonObject.mapFrom(getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarcJson.class))));
   }
 
   @Test

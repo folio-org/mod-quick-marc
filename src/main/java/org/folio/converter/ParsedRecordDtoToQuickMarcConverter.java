@@ -31,6 +31,7 @@ import org.folio.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
+import org.folio.rest.jaxrs.model.UpdateInfo;
 import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.ParsedRecordDto;
 import org.marc4j.MarcJsonReader;
@@ -71,7 +72,10 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
         .withFields(fields)
         .withParsedRecordDtoId(parsedRecordDto.getId())
         .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
-        .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery());
+        .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery())
+        .withUpdateInfo(new UpdateInfo()
+          .withRecordState(UpdateInfo.RecordState.fromValue(parsedRecordDto.getRecordState().value()))
+          .withUpdateDate(parsedRecordDto.getMetadata().getUpdatedDate()));
     } catch (Exception e) {
       throw new ConverterException(e, this.getClass());
     }

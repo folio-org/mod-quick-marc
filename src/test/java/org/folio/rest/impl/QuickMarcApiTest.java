@@ -122,7 +122,7 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Successful =====");
 
     wireMockServer.stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, VALID_PARSED_RECORD_DTO_ID)))
-      .withRequestBody(containing(getJsonObject(PARSED_RECORD_DTO_PATH).encode()))
+      .withRequestBody(containing(getJsonObject(RESTORED_PARSED_RECORD_DTO_PATH).encode()))
       .willReturn(aResponse().withStatus(202)));
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class)

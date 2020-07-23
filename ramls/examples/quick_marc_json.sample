@@ -1,14 +1,19 @@
 {
-  "id": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "parsedRecordId": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
+  "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
+  "suppressDiscovery": false,
   "leader": "01587ccm a2200361   4500",
-  "records": [
+  "fields": [
     {
       "tag": "001",
-      "content": "393893"
+      "content": "393893",
+      "indicators": []
     },
     {
       "tag": "005",
-      "content": "20141107001016.0"
+      "content": "20141107001016.0",
+      "indicators": []
     }, {
       "tag": "006",
       "content": {
@@ -20,13 +25,15 @@
         "AccM": ["h", "i", "z", " ", " ", " "],
         "LTxT": ["n", " "],
         "TrAr": " "
-      }
+      },
+      "indicators": []
     }, {
       "tag": "007",
       "content": {
         "Category" : "q",
         "SMD" : "u"
-      }
+      },
+      "indicators": []
     }, {
       "tag": "008",
       "content": {
@@ -49,7 +56,8 @@
         "Lang": "lat",
         "MRec": " ",
         "Srce": " "
-      }
+      },
+      "indicators": []
     },
     {
       "tag": "010",
@@ -176,5 +184,9 @@
       "content": "$a 20141106 $b m $d batch $e lts",
       "indicators": ["2", " "]
     }
-  ]
+  ],
+  "updateInfo": {
+    "recordState": "ACTUAL",
+    "updateDate": "2020-07-14T12:20:10.000"
+  }
 }

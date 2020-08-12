@@ -1,4 +1,13 @@
-## 1.1.0 - Unreleased
+## 1.2.0 - Unreleased
+
+## 1.1.0 - Released
+
+The only focus of this hotfix release was to update quickMARC record's edit status
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.0.0...v1.1.0)
+
+### Stories
+ * [MODQM-27](https://issues.folio.org/browse/MODQM-27) - quickMARC record's edit status
 
 ## 1.0.1 - Released
 

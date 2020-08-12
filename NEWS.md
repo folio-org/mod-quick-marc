@@ -1,6 +1,6 @@
-## 1.1.0 - Unreleased
+## 1.2.0 - Unreleased
 
-## 1.0.2 - Released
+## 1.1.0 - Released
 
 The only focus of this hotfix release was to update quickMARC record's edit status
 

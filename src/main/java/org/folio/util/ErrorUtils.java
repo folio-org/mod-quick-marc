@@ -34,6 +34,10 @@ public class ErrorUtils {
     return new Error().withCode(HttpStatus.get(status).name()).withType(type.getTypeCode()).withMessage(message);
   }
 
+  public static Error buildError(ErrorCodes code, ErrorType type, String message) {
+    return new Error().withCode(code.name()).withType(type.getTypeCode()).withMessage(message);
+  }
+
   public static Error buildGenericError() {
     return new Error()
       .withCode(String.valueOf(HTTP_INTERNAL_SERVER_ERROR.toInt()))

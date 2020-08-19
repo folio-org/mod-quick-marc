@@ -16,8 +16,8 @@ import io.vertx.core.json.JsonObject;
 
 public class ErrorUtils {
 
-  public static final String EXTERNAL_OR_UNDEFINED_ERROR_MSG = "External or undefined error";
-  public static final String INTERNAL_SERVER_ERROR_MSG = "Internal server error";
+  public static final String EXTERNAL_OR_UNDEFINED_ERROR = "External or undefined error";
+  public static final String INTERNAL_SERVER_ERROR = "Internal server error";
 
   private ErrorUtils() {
   }
@@ -42,7 +42,7 @@ public class ErrorUtils {
     return new Error()
       .withCode(String.valueOf(HTTP_INTERNAL_SERVER_ERROR.toInt()))
       .withType(ErrorType.INTERNAL.getTypeCode())
-      .withMessage(INTERNAL_SERVER_ERROR_MSG);
+      .withMessage(INTERNAL_SERVER_ERROR);
   }
 
   public static javax.ws.rs.core.Response getErrorResponse(Throwable throwable) {
@@ -64,11 +64,11 @@ public class ErrorUtils {
         status = e.getCode();
       } else {
         status = HTTP_INTERNAL_SERVER_ERROR.toInt();
-        error = buildError(status, ErrorType.INTERNAL, INTERNAL_SERVER_ERROR_MSG);
+        error = buildError(status, ErrorType.INTERNAL, INTERNAL_SERVER_ERROR);
       }
     } catch (Exception e) {
       status = HTTP_INTERNAL_SERVER_ERROR.toInt();
-      error = buildError(status, ErrorType.UNKNOWN, INTERNAL_SERVER_ERROR_MSG);
+      error = buildError(status, ErrorType.UNKNOWN, INTERNAL_SERVER_ERROR);
     }
     return javax.ws.rs.core.Response.status(status)
       .header(CONTENT_TYPE, APPLICATION_JSON)
@@ -87,7 +87,7 @@ public class ErrorUtils {
       }
     } catch (Exception e) {
       error = new Error().withCode(ErrorType.EXTERNAL_OR_UNDEFINED.name())
-        .withMessage(EXTERNAL_OR_UNDEFINED_ERROR_MSG)
+        .withMessage(EXTERNAL_OR_UNDEFINED_ERROR)
         .withType(ErrorType.EXTERNAL_OR_UNDEFINED.getTypeCode());
     }
     return error;

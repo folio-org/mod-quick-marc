@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.converter.elements.FixedLengthDataElements;
 import org.folio.converter.elements.MaterialTypeConfiguration;
 import org.folio.converter.elements.PhysicalDescriptionFixedFieldElements;
@@ -126,7 +127,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
   }
 
   private String extractElementFromContent(String content, FixedLengthDataElements element) {
-    return content.substring(element.getPosition(), element.getPosition() + element.getLength());
+    return StringUtils.substring(content, element.getPosition(), element.getPosition() + element.getLength());
   }
 
   private Field dataFieldToQuickMarcField(DataField dataField) {

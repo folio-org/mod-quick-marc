@@ -1,0 +1,129 @@
+{
+  "parsedRecordId":"a5f283d6-665b-4482-8b29-07140495a7f0",
+  "parsedRecordDtoId":"a5f283d6-665b-4482-8b29-07140495a7f0",
+  "suppressDiscovery":false,
+  "instanceId":"02df6658-c639-41f2-8587-1ec44dd43d8e",
+  "leader":"03522nam a22004331i 4500",
+  "fields":[
+    {
+      "tag":"001",
+      "content":"ak00005012492",
+      "indicators":[
+
+      ]
+    },
+    {
+      "tag":"003",
+      "content":"NhCcYBP",
+      "indicators":[
+
+      ]
+    },
+    {
+      "tag":"005",
+      "content":"20130220102526.4",
+      "indicators":[
+
+      ]
+    },
+    {
+      "tag":"006",
+      "content":{
+        "Biog":"",
+        "Fest":"|",
+        "Audn":"|",
+        "Cont":[
+          "|",
+          "|",
+          "d",
+          "|"
+        ],
+        "Conf":"|",
+        "Form":"|",
+        "GPub":"|",
+        "Ills":[
+          "|",
+          "|",
+          "|",
+          "|"
+        ],
+        "LitF":"|",
+        "Indx":"|"
+      },
+      "indicators":[
+
+      ]
+    },
+    {
+      "tag":"007",
+      "content":{
+        "Level of compression":"",
+        "Category":"c",
+        "Color":"|",
+        "Antecedent/ Source":"",
+        "File formats":"",
+        "Quality assurance target(s)":"",
+        "Dimensions":"n",
+        "Sound":"|",
+        "SMD":"r",
+        "Reformatting quality":"",
+        "Image bit depth":""
+      },
+      "indicators":[
+
+      ]
+    },
+    {
+      "tag":"008",
+      "content":{
+        "Type":"a",
+        "BLvl":"m",
+        "ELvl":"1",
+        "Desc":"i",
+        "DtSt":"s",
+        "Entered":"130220",
+        "Srce":"d",
+        "MRec":" ",
+        "Ctry":"ncu",
+        "Date2":"    ",
+        "Lang":"eng",
+        "Date1":"2013",
+        "Biog":" ",
+        "Fest":"0",
+        "Audn":" ",
+        "Cont":[
+          "b",
+          " ",
+          " ",
+          " "
+        ],
+        "Conf":"0",
+        "Form":"o",
+        "GPub":" ",
+        "Ills":[
+          " ",
+          " ",
+          " ",
+          " "
+        ],
+        "LitF":"0",
+        "Indx":"1"
+      },
+      "indicators":[
+
+      ]
+    },
+    {
+      "tag":"999",
+      "content":"$s a5f283d6-665b-4482-8b29-07140495a7f0 $i 02df6658-c639-41f2-8587-1ec44dd43d8e",
+      "indicators":[
+        "f",
+        "f"
+      ]
+    }
+  ],
+  "updateInfo":{
+    "recordState":"ACTUAL",
+    "updateDate":1593679161483
+  }
+}

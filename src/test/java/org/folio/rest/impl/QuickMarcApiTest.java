@@ -7,6 +7,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.folio.HttpStatus.HTTP_BAD_REQUEST;
 import static org.folio.TestSuite.wireMockServer;
 import static org.folio.converter.TestUtils.EXISTED_INSTANCE_ID;
 import static org.folio.converter.TestUtils.VALID_PARSED_RECORD_DTO_ID;
@@ -30,6 +31,7 @@ import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecordDto;
+import org.folio.util.ErrorCodes;
 import org.folio.util.ErrorUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -166,7 +168,7 @@ public class QuickMarcApiTest extends ApiTestBase {
 
     Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_DTO_ID), quickMarcJson, 400).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
-
+    assertThat(error.getCode(), equalTo(HTTP_BAD_REQUEST.name()));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 
@@ -183,7 +185,7 @@ public class QuickMarcApiTest extends ApiTestBase {
 
     Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, HttpStatus.HTTP_UNPROCESSABLE_ENTITY.toInt()).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
-
+    assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_INDICATORS_NUMBER.name()));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 
@@ -195,7 +197,8 @@ public class QuickMarcApiTest extends ApiTestBase {
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
 
-    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
+    Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422).as(Error.class);
+    assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FILED.name()));
   }
 
   @Test
@@ -206,6 +209,7 @@ public class QuickMarcApiTest extends ApiTestBase {
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
 
-    verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422);
+    Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422).as(Error.class);
+    assertThat(error.getCode(), equalTo(ErrorCodes.LEADER_AND_008_MISMATCHING.name()));
   }
 }

@@ -14,6 +14,10 @@ import static org.folio.converter.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
 import static org.folio.converter.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
+import static org.folio.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FILED;
+import static org.folio.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
+import static org.folio.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
+import static org.folio.util.ErrorCodes.LEADER_AND_008_MISMATCHING;
 import static org.folio.util.ErrorUtils.buildError;
 
 import java.util.ArrayList;
@@ -158,7 +162,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
     if (!contentMap.get(ELVL).toString().equals(Character.toString(leaderField.getImplDefined2()[0])) ||
       !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
-      throw new ConverterException(buildError(ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
+      throw new ConverterException(buildError(LEADER_AND_008_MISMATCHING, ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
     }
     leaderField.setImplDefined2(new char[]{contentMap.get(ELVL).toString().charAt(0), contentMap.get(DESC).toString().charAt(0), leaderField.getImplDefined2()[2]});
     String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
@@ -175,7 +179,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
       } else {
         value = item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString();
         if (value.length() != item.getLength()) {
-          throw new ConverterException(buildError(ErrorUtils.ErrorType.INTERNAL, String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));
+          throw new ConverterException(buildError(ILLEGAL_FIXED_LENGTH_CONTROL_FILED, ErrorUtils.ErrorType.INTERNAL, String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));
         }
       }
       stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
@@ -277,7 +281,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
     } else if (indicators.isEmpty()) {
       return Arrays.asList(SPACE, SPACE);
     } else {
-      throw new ConverterException(buildError(ErrorUtils.ErrorType.INTERNAL,"Illegal indicators number for field: " + field.getTag()));
+      throw new ConverterException(buildError(ILLEGAL_INDICATORS_NUMBER, ErrorUtils.ErrorType.INTERNAL,"Illegal indicators number for field: " + field.getTag()));
     }
   }
 
@@ -287,7 +291,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
     } else {
       String indicator = input.toString();
       if (indicator.length() > 1) {
-        throw new ConverterException(buildError(ErrorUtils.ErrorType.INTERNAL,"Illegal size of indicator: " + indicator));
+        throw new ConverterException(buildError(ILLEGAL_SIZE_OF_INDICATOR, ErrorUtils.ErrorType.INTERNAL,"Illegal size of indicator: " + indicator));
       }
       return indicator;
     }

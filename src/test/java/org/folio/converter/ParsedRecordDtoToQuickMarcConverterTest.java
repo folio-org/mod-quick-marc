@@ -27,8 +27,7 @@ public class ParsedRecordDtoToQuickMarcConverterTest {
 
   @ParameterizedTest
   @EnumSource(value = TestEntities.class, mode = EXCLUDE, names = { "BOOKS_MISSING_ITEMS" })
-  void testSplitFixedLengthControlField(TestEntities testEntity)
-  {
+  void testSplitFixedLengthControlField(TestEntities testEntity) {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.getMaterialTypeConfiguration().getName());
     ParsedRecord parsedRecord = getMockAsJson(testEntity.getParsedRecordPath()).mapTo(ParsedRecord.class);
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();

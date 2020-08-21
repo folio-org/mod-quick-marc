@@ -1,5 +1,14 @@
 ## 1.2.0 - Unreleased
 
+## 1.1.1 - Released
+
+The only focus of this patch release was to improve fixed-length CFs 006/007 processing
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.1.0...v1.1.1)
+
+### Bug Fixes
+ * [MODQM-35](https://issues.folio.org/browse/MODQM-35) - GET /records-editor/records returns 422 when record has 006 field
+
 ## 1.1.0 - Released
 
 The only focus of this hotfix release was to update quickMARC record's edit status

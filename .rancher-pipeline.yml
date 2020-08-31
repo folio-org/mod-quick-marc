@@ -20,6 +20,7 @@ stages:
       answers:
         image.repository: docker.dev.folio.org/mod-quick-marc
         image.tag: firebird-latest
+        postJob.enabled: true
       targetNamespace: firebird
       name: mod-quick-marc
 timeout: 60

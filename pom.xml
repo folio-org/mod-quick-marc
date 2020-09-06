@@ -14,7 +14,7 @@
   </licenses>
 
   <properties>
-    <raml-module-builder.version>30.0.0</raml-module-builder.version>
+    <raml-module-builder.version>30.2.7</raml-module-builder.version>
     <jsonschema_paths>schemas</jsonschema_paths>
     <vertx.version>3.9.0</vertx.version>
     <junit.jupiter.version>5.6.0</junit.jupiter.version>

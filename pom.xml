@@ -29,6 +29,7 @@
     <folio-di-support.version>1.0.0</folio-di-support.version>
     <marc4j.version>2.9.1</marc4j.version>
     <wiremock.version>2.26.3</wiremock.version>
+    <maven.compiler.release>8</maven.compiler.release>
   </properties>
 
   <dependencies>

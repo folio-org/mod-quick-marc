@@ -2,7 +2,7 @@ stages:
 - name: Build
   steps:
   - runScriptConfig:
-      image: maven:3-openjdk-8
+      image: maven:3-openjdk-11
       shellScript: mvn package -DskipTests
 - name: Build Docker with DIND
   steps:
@@ -16,7 +16,7 @@ stages:
   steps:
   - applyAppConfig:
       catalogTemplate: p-ngvqv:firebird-helmcharts-mod-quick-marc
-      version: 0.1.22
+      version: 0.1.26
       answers:
         image.repository: docker.dev.folio.org/mod-quick-marc
         image.tag: firebird-latest

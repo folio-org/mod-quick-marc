@@ -16,7 +16,7 @@ stages:
   steps:
   - applyAppConfig:
       catalogTemplate: p-ngvqv:firebird-helmcharts-mod-quick-marc
-      version: 0.1.22
+      version: 0.1.26
       answers:
         image.repository: docker.dev.folio.org/mod-quick-marc
         image.tag: firebird-latest

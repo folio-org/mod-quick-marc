@@ -1,4 +1,14 @@
-## 1.2.0 - Unreleased
+## 1.3.0 - Unreleased
+
+## 1.2.0 - Released
+
+The only focus of this release was to migrate on JDK11 and to update RMB
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.1.1...v1.2.0)
+
+### Stories
+ * [MODQM-31](https://issues.folio.org/browse/MODQM-31) - mod-quick-marc: RMB Update
+ * [MODQM-26](https://issues.folio.org/browse/MODQM-26) - Migrate mod-quick-marc to JDK 11
 
 ## 1.1.1 - Released
 

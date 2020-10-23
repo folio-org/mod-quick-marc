@@ -1,5 +1,14 @@
 ## 1.3.0 - Unreleased
 
+## 1.2.1 - Released
+
+The only focus of this patch release was to update schemas reference
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.2.0...v1.2.1)
+
+### Bug Fixes
+ * [MODQM-48](https://issues.folio.org/browse/MODQM-48) - Some Source=MARC records are not accessible via quickMARC
+
 ## 1.2.0 - Released
 
 The only focus of this release was to migrate on JDK11 and to update RMB

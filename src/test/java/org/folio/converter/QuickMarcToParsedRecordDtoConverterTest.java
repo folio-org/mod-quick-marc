@@ -1,17 +1,21 @@
 package org.folio.converter;
 
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.folio.converter.TestEntities.BOOKS;
 import static org.folio.converter.TestUtils.getFieldWithIndicators;
 import static org.folio.converter.TestUtils.getMockAsJson;
 import static org.folio.converter.TestUtils.getParsedRecordDtoWithMinContent;
 import static org.folio.converter.TestUtils.getQuickMarcJsonWithMinContent;
 import static org.folio.rest.impl.ApiTestBase.PARSED_RECORD_DTO_PATH;
-import static org.folio.rest.impl.ApiTestBase.QUICK_MARC_RECORD_PATH;
+import static org.folio.rest.impl.ApiTestBase.QUICK_MARC_EDITED_RECORD_PATH;
 import static org.folio.rest.impl.ApiTestBase.RESTORED_PARSED_RECORD_DTO_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +68,7 @@ public class QuickMarcToParsedRecordDtoConverterTest {
   void testQuickMarcJsonToParsedRecordDtoConversion() {
     logger.info("Testing QuickMarcJson -> ParsedRecordDto conversion");
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
-    QuickMarcJson quickMarcJson = getMockAsJson(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class);
+    QuickMarcJson quickMarcJson = getMockAsJson(QUICK_MARC_EDITED_RECORD_PATH).mapTo(QuickMarcJson.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     ParsedRecordDto expected = getMockAsJson(RESTORED_PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class);
     assertThat(JsonObject.mapFrom(parsedRecordDto), equalTo(JsonObject.mapFrom(expected)));
@@ -163,6 +167,27 @@ public class QuickMarcToParsedRecordDtoConverterTest {
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(2));
 
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
+    assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = LccnFields.class, mode = EXCLUDE, names = { "WRONG_LENGTH" })
+  void testRestoreLccn(LccnFields lccnField) {
+    logger.info("Field 010 (LCCN) should match expected format");
+    QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
+    QuickMarcJson quickMarcJson = getMockAsJson(lccnField.getFilename()).mapTo(QuickMarcJson.class);
+    ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    assertThat(JsonObject.mapFrom(parsedRecordDto.getParsedRecord()).encode(),
+      hasJsonPath("$.content.fields[0].010.subfields[0].a",
+        matchesPattern("[a-z\\s]{2}\\d{10}|[a-z\\s]{3}\\d{8}\\s(/.*$)?")));
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = LccnFields.class, mode = INCLUDE, names = { "WRONG_LENGTH" })
+  void testLccnWrongLegth(LccnFields lccnField) {
+    logger.info("ConverterException should be thrown if field 010 has wrong length");
+    QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
+    QuickMarcJson quickMarcJson = getMockAsJson(lccnField.getFilename()).mapTo(QuickMarcJson.class);
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
   }
 }

@@ -13,19 +13,8 @@
       },
       {
         "008": "abcdefghijklmnopqrab cdefghijk   lmstuvw"
-      },
-      {
-        "010": {
-          "ind1": " ",
-          "ind2": " ",
-          "subfields": [
-            {
-              "a": "   55001156/M "
-            }
-          ]
-        }
       }
     ],
-    "leader": "00188csb a2200361   4500"
+    "leader": "00157csb a2200361   4500"
   }
 }

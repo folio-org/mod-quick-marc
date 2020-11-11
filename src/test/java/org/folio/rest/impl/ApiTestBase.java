@@ -35,6 +35,7 @@ public class ApiTestBase {
   public static final String PARSED_RECORD_EDGE_CASES_PATH = "mockdata/change-manager/parsedRecordDtoMissingWhitespaces.json";
   public static final String RESTORED_PARSED_RECORD_DTO_PATH = "mockdata/change-manager/parsedRecordDtoRestored.json";
   public static final String QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson.json";
+  public static final String QUICK_MARC_EDITED_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson_edited.json";
   public static final String QUICK_MARC_RECORD_EDGE_CASES_PATH = "mockdata/quick-marc-json/quickMarcJsonMissingWhitespaces.json";
   public static final String QUICK_MARC_LEADER_MISMATCH = "mockdata/quick-marc-json/quickMarcJsonLeaderMismatch.json";
   public static final String QUICK_MARC_WRONG_ITEM_LENGTH = "mockdata/quick-marc-json/quickMarcJsonWrongItemLength.json";

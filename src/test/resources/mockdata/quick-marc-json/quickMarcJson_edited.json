@@ -78,11 +78,11 @@
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "035",
-    "content" : "$a 393893",
+    "content" : "$a393893",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "040",
-    "content" : "$c UPB $d UPB $d NIC $d NIC",
+    "content" : "$cUPB$d UPB $d NIC$d NIC",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "041",
@@ -94,7 +94,7 @@
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "047",
-    "content" : "$a cn $a ct $a co $a df $a dv $a ft $a fg $a ms $a mi $a nc $a op $a ov $a rq $a sn $a su $a sy $a vr $a zz",
+    "content" : "$acn$act$a co $a df $a dv$aft$a fg$a ms$a mi $a nc$a op $a ov$a rq$a sn$asu$a sy $a vr $a zz",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "050",
@@ -122,7 +122,7 @@
     "indicators" : [ "3", "3" ]
   }, {
     "tag" : "260",
-    "content" : "$a Kassel, $b Barenreiter, $c c1955-",
+    "content" : "$aKassel,$bBarenreiter,$cc1955-",
     "indicators" : [ " ", " " ]
   }, {
     "tag" : "300",

@@ -3,6 +3,11 @@ package org.folio.converter;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.folio.converter.Constants.BLANK_REPLACEMENT;
+import static org.folio.converter.Constants.BLVL_LEADER_POS;
+import static org.folio.converter.Constants.DESC_LEADER_POS;
+import static org.folio.converter.Constants.ELVL_LEADER_POS;
+import static org.folio.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
 import static org.folio.converter.elements.FixedLengthDataElements.VALUE;
 import static org.folio.converter.elements.MaterialTypeConfiguration.UNKNOWN;
 import static org.folio.converter.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
@@ -38,7 +43,6 @@ import org.folio.srs.model.ParsedRecordDto;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
-import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -55,7 +59,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
 
     try (InputStream input = IOUtils.toInputStream(JsonObject.mapFrom(parsedRecord).encode(), StandardCharsets.UTF_8)) {
       Record marcRecord = new MarcJsonReader(input).next();
-      Leader leader = marcRecord.getLeader();
+      String leader = masqueradeBlanks(marcRecord.getLeader().marshal());
       materialTypeConfiguration = MaterialTypeConfiguration.resolveContentType(leader);
 
       List<Field> fields = marcRecord.getControlFields()
@@ -69,7 +73,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
         .collect(Collectors.toList()));
 
       return new QuickMarcJson().withParsedRecordId(parsedRecord.getId())
-        .withLeader(leader.marshal())
+        .withLeader(leader)
         .withFields(fields)
         .withParsedRecordDtoId(parsedRecordDto.getId())
         .withInstanceId(parsedRecordDto.getExternalIdsHolder().getInstanceId())
@@ -82,14 +86,14 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
     }
   }
 
-  private Object processControlField(ControlField controlField, Leader leader) {
+  private Object processControlField(ControlField controlField, String leader) {
     switch (controlField.getTag()) {
     case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
-      return splitAdditionalCharacteristicsControlField(controlField.getData());
+      return splitAdditionalCharacteristicsControlField(masqueradeBlanks(controlField.getData()));
     case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
-      return splitPhysicalDescriptionsControlField(controlField.getData());
+      return splitPhysicalDescriptionsControlField(masqueradeBlanks(controlField.getData()));
     case GENERAL_INFORMATION_CONTROL_FIELD:
-      return splitGeneralInformationControlField(controlField.getData(), leader);
+      return splitGeneralInformationControlField(masqueradeBlanks(controlField.getData()), leader);
     default:
       return controlField.getData();
     }
@@ -102,12 +106,12 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
     return fillContentMap(materialTypeConfiguration.getFixedLengthControlFieldItems(), content.substring(1));
   }
 
-  private Map<String, Object> splitGeneralInformationControlField(String content, Leader leader) {
+  private Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
     Map<String, Object> fieldItems = new LinkedHashMap<>();
-    fieldItems.put(TYPE, leader.getTypeOfRecord());
-    fieldItems.put(BLVL, leader.getImplDefined1()[0]);
-    fieldItems.put(ELVL, leader.getImplDefined2()[0]);
-    fieldItems.put(DESC, leader.getImplDefined2()[1]);
+    fieldItems.put(TYPE, leader.charAt(TYPE_OF_RECORD_LEADER_POS));
+    fieldItems.put(BLVL, leader.charAt(BLVL_LEADER_POS));
+    fieldItems.put(ELVL, leader.charAt(ELVL_LEADER_POS));
+    fieldItems.put(DESC, leader.charAt(DESC_LEADER_POS));
     fieldItems.putAll(fillContentMap(MaterialTypeConfiguration.getCommonItems(), content));
     fieldItems.putAll(fillContentMap(materialTypeConfiguration.getFixedLengthControlFieldItems(), content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX)));
     return fieldItems;
@@ -132,12 +136,17 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
 
   private Field dataFieldToQuickMarcField(DataField dataField) {
     return new Field().withTag(dataField.getTag())
-      .withIndicators(Arrays.asList(Character.toString(dataField.getIndicator1()), Character.toString(dataField.getIndicator2())))
+      .withIndicators(Arrays.asList(masqueradeBlanks(Character.toString(dataField.getIndicator1())),
+        masqueradeBlanks(Character.toString(dataField.getIndicator2()))))
       .withContent(dataField.getSubfields()
         .stream()
         .map(subfield -> new StringBuilder("$").append(subfield.getCode())
           .append(SPACE)
           .append(subfield.getData()))
         .collect(Collectors.joining(SPACE)));
+  }
+
+  private String masqueradeBlanks(String sourceString) {
+    return sourceString.replace(SPACE, BLANK_REPLACEMENT);
   }
 }

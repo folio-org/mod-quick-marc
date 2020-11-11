@@ -3,7 +3,7 @@
   "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
   "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
   "suppressDiscovery": false,
-  "leader": "01587ccm\\a2200361\\\\\\4500",
+  "leader": "01587ccm a2200361   4500",
   "fields": [
     {
       "tag": "001",
@@ -63,12 +63,11 @@
       "content": {
         "Type": "c",
         "BLvl": "m",
-        "ELvl": "\\",
-        "Desc": "\\",
+        "ELvl": "a",
         "Entered": "abcdef",
         "DtSt": "g",
-        "Date1": "12345",
-        "Date2": "12345",
+        "Date1": "hijk",
+        "Date2": "lmno",
         "Ctry": "pqr",
         "Lang": "stu",
         "MRec": "v",
@@ -96,79 +95,79 @@
     },
     {
       "tag": "010",
-      "content": "$a   55001156/M ",
+      "content": "$a    55001156/M ",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "035",
-      "content": "$a(OCoLC)63611770",
+      "content": "$a (OCoLC)63611770",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "035",
-      "content": "$a393893",
+      "content": "$a 393893",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "040",
-      "content": "$cUPB $dUPB $dNIC $dNIC",
+      "content": "$c UPB $d UPB $d NIC $d NIC",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "041",
-      "content": "$alatitager $gger",
+      "content": "$a latitager $g ger",
       "indicators": [
         "0",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "045",
-      "content": "$av6v9",
+      "content": "$a v6v9",
       "indicators": [
-        "'\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "047",
-      "content": "$acn $act $aco $adf $adv $aft $afg $ams $ami $anc $aop $aov $arq $asn $asu $asy $avr $azz",
+      "content": "$a cn $a ct $a co $a df $a dv $a ft $a fg $a ms $a mi $a nc $a op $a ov $a rq $a sn $a su $a sy $a vr $a zz",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "050",
-      "content": "$aM3 $b.M896",
+      "content": "$a M3 $b .M896",
       "indicators": [
         "0",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "100",
-      "content": "$aMozart, Wolfgang Amadeus, $d1756-1791.",
+      "content": "$a Mozart, Wolfgang Amadeus, $d 1756-1791.",
       "indicators": [
         "1",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "240",
-      "content": "$aWorks",
+      "content": "$a Works",
       "indicators": [
         "1",
         "0"
@@ -176,7 +175,7 @@
     },
     {
       "tag": "245",
-      "content": "$aNeue Ausgabe sämtlicher Werke, $bin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien. $cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
+      "content": "$a Neue Ausgabe samtlicher Werke, $b in Verbindung mit den Mozartstadten, Augsburg, Salzburg und Wien. $c Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
       "indicators": [
         "1",
         "0"
@@ -184,7 +183,7 @@
     },
     {
       "tag": "246",
-      "content": "$aNeue Mozart-Ausgabe",
+      "content": "$a Neue Mozart-Ausgabe",
       "indicators": [
         "3",
         "3"
@@ -192,106 +191,106 @@
     },
     {
       "tag": "260",
-      "content": "$aKassel, $bBärenreiter, $cc1955-",
+      "content": "$a Kassel, $b Barenreiter, $c c1955-",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "300",
-      "content": "$av. $bfacsims. $c33 cm.",
+      "content": "$a v. $b facsims. $c 33 cm.",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "505",
-      "content": "$aSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+      "content": "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
       "indicators": [
         "0",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "650",
-      "content": "$aVocal music",
+      "content": "$a Vocal music",
       "indicators": [
-        "\\",
+        " ",
         "0"
       ]
     },
     {
       "tag": "650",
-      "content": "$aInstrumental music",
+      "content": "$a Instrumental music",
       "indicators": [
-        "\\",
+        " ",
         "0"
       ]
     },
     {
       "tag": "650",
-      "content": "$aInstrumental music $2fast $0(OCoLC)fst00974414",
+      "content": "$a Instrumental music $2 fast $0 (OCoLC)fst00974414",
       "indicators": [
-        "\\",
+        " ",
         "7"
       ]
     },
     {
       "tag": "650",
-      "content": "$aVocal music $2fast $0(OCoLC)fst01168379",
+      "content": "$a Vocal music $2 fast $0 (OCoLC)fst01168379",
       "indicators": [
-        "\\",
+        " ",
         "7"
       ]
     },
     {
       "tag": "902",
-      "content": "$apfnd $bAustin Music",
+      "content": "$a pfnd $b Austin Music",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "905",
-      "content": "$a19980728120000.0",
+      "content": "$a 19980728120000.0",
       "indicators": [
-        "\\",
-        "\\"
+        " ",
+        " "
       ]
     },
     {
       "tag": "948",
-      "content": "$a20100622 $bs $dlap11 $elts $xToAddCatStat",
+      "content": "$a 20100622 $b s $d lap11 $e lts $x ToAddCatStat",
       "indicators": [
         "1",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "948",
-      "content": "$a20110818 $br $dnp55 $elts",
+      "content": "$a 20110818 $b r $d np55 $e lts",
       "indicators": [
         "0",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "948",
-      "content": "$a20130128 $bm $dbmt1 $elts",
+      "content": "$a 20130128 $b m $d bmt1 $e lts",
       "indicators": [
         "2",
-        "\\"
+        " "
       ]
     },
     {
       "tag": "948",
-      "content": "$a20141106 $bm $dbatch $elts $xaddfast",
+      "content": "$a 20141106 $b m $d batch $e lts $x addfast",
       "indicators": [
         "2",
-        "\\"
+        " "
       ]
     }
   ]

@@ -2,7 +2,6 @@ package org.folio.converter;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
-import static org.folio.converter.Constants.CHARACTER_SETS_TAG;
 import static org.folio.converter.Constants.LCCN_TAG;
 import static org.folio.converter.elements.FixedLengthDataElements.CATEGORY;
 import static org.folio.converter.elements.FixedLengthDataElements.VALUE;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,13 +58,16 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
 
   private static final int GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
   private static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 17;
-  private static final int TOKEN_MIN_LENGTH = 4;
+  private static final int LCCN_OLD_PREFIX_LENGTH = 3;
+  private static final int LCCN_NEW_PREFIX_LENGTH = 2;
+  private static final int TOKEN_MIN_LENGTH = 3;
   private static final String FIELDS = "fields";
   private static final String LEADER = "leader";
   private static final String INDICATOR1 = "ind1";
   private static final String INDICATOR2 = "ind2";
   private static final String SUBFIELDS = "subfields";
-  private static final String SPLIT_PATTERN = "(?=(\\s[$][a-z0-9]\\s))";
+  private static final String SPLIT_PATTERN = "(?=[$][a-z0-9])";
+  private static final String CONCAT_CONDITION_PATTERN = "[$][1]\\s*?|[$]\\d+(?:[.,])[^\\\\]*$";
   private static final char SPACE_CHARACTER = ' ';
   private static final int ADDRESS_LENGTH = 12;
   private static final int TAG_LENGTH = 4;
@@ -188,31 +191,44 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
   }
 
   private List<Subfield> convertFieldToSubfields(Field field) {
-    List<String> tokens = Arrays.stream(field.getContent().toString().split(SPLIT_PATTERN))
-      .map(token -> LCCN_TAG.equals(field.getTag()) ? token : token.trim())
-      .collect(Collectors.toList());
+    LinkedList<String> tokens = Arrays.stream(field.getContent().toString().split(SPLIT_PATTERN))
+      .collect(Collectors.toCollection(LinkedList::new));
 
-    if (CHARACTER_SETS_TAG.equals(field.getTag())) {
-      List<Subfield> subfields = new ArrayList<>();
-      int i = 0;
-      while (i < tokens.size()) {
-        if (tokens.get(i).length() < 3) {
-          subfields.add(new SubfieldImpl(tokens.get(i).charAt(1), tokens.get(++i)));
-        } else {
-          subfields.add(subfieldFromString(tokens.get(i)));
-        }
-        i++;
-      }
-      return subfields;
-    } else {
-      return tokens.stream()
-        .map(this::subfieldFromString)
-        .collect(Collectors.toList());
+    List<Subfield> subfields = new ArrayList<>();
+    while (!tokens.isEmpty()) {
+      String subfieldString = tokens.pop();
+      subfieldString = subfieldString.concat(checkNextToken(tokens));
+      subfields.add(LCCN_TAG.equals(field.getTag()) ? lccnSubfieldFromString(subfieldString) : subfieldFromString(subfieldString));
     }
+
+    return subfields;
+  }
+
+  private String checkNextToken(LinkedList<String> tokens) {
+    return (!tokens.isEmpty() && tokens.peek().matches(CONCAT_CONDITION_PATTERN)) ? tokens.poll().concat(checkNextToken(tokens)) : EMPTY;
   }
 
   private Subfield subfieldFromString(String string) {
-    return new SubfieldImpl(string.charAt(1), string.length() < TOKEN_MIN_LENGTH ? EMPTY : string.substring(3));
+    return new SubfieldImpl(string.charAt(1), string.length() < TOKEN_MIN_LENGTH ? EMPTY : string.substring(2).trim());
+  }
+
+  private Subfield lccnSubfieldFromString(String string) {
+    if (string.length() >= TOKEN_MIN_LENGTH) {
+      String lccnString = string.substring(2).trim();
+      if (string.matches("[$][abz].*$")) {
+        if (lccnString.matches("\\d{10}")) {
+          lccnString = StringUtils.repeat(SPACE_CHARACTER, LCCN_NEW_PREFIX_LENGTH).concat(lccnString);
+        } else if (lccnString.matches("\\d{8}")) {
+          lccnString = StringUtils.repeat(SPACE_CHARACTER, LCCN_OLD_PREFIX_LENGTH).concat(lccnString).concat(SPACE);
+        } else if (lccnString.matches("\\d{8}\\s/.*$")) {
+          lccnString = StringUtils.repeat(SPACE_CHARACTER, LCCN_OLD_PREFIX_LENGTH).concat(lccnString);
+        } else if (lccnString.matches("[a-z\\s]{3}\\d{8}")) {
+          lccnString = lccnString.concat(SPACE);
+        }
+      }
+      return new SubfieldImpl(string.charAt(1), lccnString);
+    }
+    throw new ConverterException(buildError(ILLEGAL_FIXED_LENGTH_CONTROL_FILED, ErrorUtils.ErrorType.INTERNAL, "Illegal 010 (LCCN) subfield length"));
   }
 
   private List<Object> convertMarcFieldsToObjects(Record marcRecord) {

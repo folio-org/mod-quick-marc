@@ -13,19 +13,8 @@
       },
       {
         "008": "abcdefghijklmnopqr     a           stuvw"
-      },
-      {
-        "010": {
-          "ind1": " ",
-          "ind2": " ",
-          "subfields": [
-            {
-              "a": "   55001156/M "
-            }
-          ]
-        }
       }
     ],
-    "leader": "00188cpc a2200361   4500"
+    "leader": "00157cpc a2200361   4500"
   }
 }

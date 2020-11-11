@@ -3,7 +3,7 @@
   "parsedRecordDtoId" : "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
   "suppressDiscovery" : false,
   "instanceId" : "b9a5f035-de63-4e2c-92c2-07240c89b817",
-  "leader" : "00188cca a2200361   4500",
+  "leader" : "00157cca a2200361   4500",
   "fields" : [ {
     "tag" : "001",
     "content" : "393893",
@@ -50,10 +50,6 @@
       "Comp" : "ab"
     },
     "indicators" : [ ]
-  }, {
-    "tag" : "010",
-    "content" : "$a    55001156/M ",
-    "indicators" : [ " ", " " ]
   } ],
   "updateInfo" : {
     "recordState" : "ACTUAL",

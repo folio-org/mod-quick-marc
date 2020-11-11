@@ -34,6 +34,8 @@ import org.folio.srs.model.ParsedRecordDto;
 import org.folio.util.ErrorCodes;
 import org.folio.util.ErrorUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,11 +203,12 @@ public class QuickMarcApiTest extends ApiTestBase {
     assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FILED.name()));
   }
 
-  @Test
-  void testUpdateQuickMarcRecordLeaderMismatch() {
+  @ParameterizedTest
+  @ValueSource(strings = { QUICK_MARC_LEADER_MISMATCH1, QUICK_MARC_LEADER_MISMATCH2 })
+  void testUpdateQuickMarcRecordLeaderMismatch(String filename) {
     logger.info("===== Verify PUT record: Leader and 008 mismatch =====");
 
-    QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_LEADER_MISMATCH).mapTo(QuickMarcJson.class)
+    QuickMarcJson quickMarcJson = getJsonObject(filename).mapTo(QuickMarcJson.class)
       .withParsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .withInstanceId(EXISTED_INSTANCE_ID);
 

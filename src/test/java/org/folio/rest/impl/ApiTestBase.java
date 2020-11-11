@@ -37,7 +37,8 @@ public class ApiTestBase {
   public static final String QUICK_MARC_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson.json";
   public static final String QUICK_MARC_EDITED_RECORD_PATH = "mockdata/quick-marc-json/quickMarcJson_edited.json";
   public static final String QUICK_MARC_RECORD_EDGE_CASES_PATH = "mockdata/quick-marc-json/quickMarcJsonMissingWhitespaces.json";
-  public static final String QUICK_MARC_LEADER_MISMATCH = "mockdata/quick-marc-json/quickMarcJsonLeaderMismatch.json";
+  public static final String QUICK_MARC_LEADER_MISMATCH1 = "mockdata/quick-marc-json/quickMarcJsonLeaderMismatchValueMismatch.json";
+  public static final String QUICK_MARC_LEADER_MISMATCH2 = "mockdata/quick-marc-json/quickMarcJsonLeaderMismatchMissing008Value.json";
   public static final String QUICK_MARC_WRONG_ITEM_LENGTH = "mockdata/quick-marc-json/quickMarcJsonWrongItemLength.json";
   private static final Header X_OKAPI_URL = new Header(OKAPI_URL, "http://localhost:" + mockPort);
   private static final Header X_OKAPI_TENANT = new Header(OKAPI_HEADER_TENANT, "quickmarctest");

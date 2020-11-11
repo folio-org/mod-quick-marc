@@ -1,5 +1,6 @@
 package org.folio.converter;
 
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.folio.converter.Constants.BLANK_REPLACEMENT;
@@ -168,13 +169,19 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
   }
 
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
-    if (!contentMap.get(ELVL).toString().equals(Character.toString(leaderString.charAt(ELVL_LEADER_POS))) ||
-      !contentMap.get(DESC).toString().equals(Character.toString(leaderString.charAt(DESC_LEADER_POS)))) {
-      throw new ConverterException(buildError(LEADER_AND_008_MISMATCHING, ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
+    if (isLeaderMatches(contentMap)) {
+      String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
+      return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(), contentMap))
+        .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
     }
-    String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
-    return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(), contentMap))
-      .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
+    throw new ConverterException(buildError(LEADER_AND_008_MISMATCHING, ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
+  }
+
+  private boolean isLeaderMatches(Map<String, Object> contentMap) {
+    return nonNull(contentMap) &&
+      nonNull(contentMap.get(ELVL)) && nonNull(contentMap.get(DESC)) &&
+      contentMap.get(ELVL).toString().equals(Character.toString(leaderString.charAt(ELVL_LEADER_POS))) &&
+      contentMap.get(DESC).toString().equals(Character.toString(leaderString.charAt(DESC_LEADER_POS)));
   }
 
   private String restoreFixedLengthField(int length, List<FixedLengthDataElements> items, Map<String, Object> map) {

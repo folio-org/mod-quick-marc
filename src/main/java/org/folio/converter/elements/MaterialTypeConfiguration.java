@@ -1,7 +1,7 @@
 package org.folio.converter.elements;
 
-import org.marc4j.marc.Leader;
-
+import static org.folio.converter.Constants.BLVL_LEADER_POS;
+import static org.folio.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
 import static org.folio.converter.elements.FixedLengthDataElements.*;
 
 import java.util.Arrays;
@@ -31,10 +31,10 @@ public enum MaterialTypeConfiguration {
     return Arrays.asList(ENTERED, DTST, DATE1, DATE2, CTRY, LANG, MREC, SRCE);
   }
 
-  public static MaterialTypeConfiguration resolveContentType(Leader leader) {
-    switch (leader.getTypeOfRecord()) {
+  public static MaterialTypeConfiguration resolveContentType(String leader) {
+    switch (leader.charAt(TYPE_OF_RECORD_LEADER_POS)) {
       case 'a':
-        return Arrays.asList('b', 'i', 's').contains(leader.getImplDefined1()[0]) ? CONTINUING : BOOKS;
+        return Arrays.asList('b', 'i', 's').contains(leader.charAt(BLVL_LEADER_POS)) ? CONTINUING : BOOKS;
       case 't':
         return BOOKS;
       case 's':

@@ -11,9 +11,13 @@ public class Constants {
   public static final String PHYSICAL_DESCRIPTIONS_CONTROL_FIELD = "007";
   public static final String GENERAL_INFORMATION_CONTROL_FIELD = "008";
   public static final String LCCN_TAG = "010";
-  public static final String CHARACTER_SETS_TAG = "066";
   public static final int SPECIFIC_ELEMENTS_BEGIN_INDEX = 18;
   public static final int SPECIFIC_ELEMENTS_END_INDEX = 35;
+  public static final String BLANK_REPLACEMENT = "\\";
+  public static final int TYPE_OF_RECORD_LEADER_POS = 6;
+  public static final int BLVL_LEADER_POS = 7;
+  public static final int ELVL_LEADER_POS = 17;
+  public static final int DESC_LEADER_POS = 18;
   private Constants() {
   }
 }

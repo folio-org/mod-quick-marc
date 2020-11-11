@@ -1,8 +1,13 @@
 package org.folio.converter;
 
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.folio.converter.Constants.BLANK_REPLACEMENT;
 import static org.folio.converter.Constants.LCCN_TAG;
+import static org.folio.converter.Constants.DESC_LEADER_POS;
+import static org.folio.converter.Constants.ELVL_LEADER_POS;
+import static org.folio.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
 import static org.folio.converter.elements.FixedLengthDataElements.CATEGORY;
 import static org.folio.converter.elements.FixedLengthDataElements.VALUE;
 import static org.folio.converter.elements.MaterialTypeConfiguration.UNKNOWN;
@@ -73,10 +78,10 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
   private static final int TAG_LENGTH = 4;
   private static final int TERMINATOR_LENGTH = 1;
   private static final int LEADER_LENGTH = 24;
-  private static final Pattern CONTROL_FIELD_PATTER = Pattern.compile("^(00)[1-9]$");
+  private static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
 
   private final MarcFactory factory = new MarcFactoryImpl();
-  private Leader leaderField;
+  private String leaderString;
   private MaterialTypeConfiguration materialTypeConfiguration;
 
   @Override
@@ -104,8 +109,8 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
   private Record quickMarcJsonToMarcRecord(QuickMarcJson quickMarcJson) {
     Record marcRecord = factory.newRecord();
 
-    leaderField = factory.newLeader(quickMarcJson.getLeader());
-    materialTypeConfiguration = MaterialTypeConfiguration.resolveContentType(leaderField);
+    leaderString = quickMarcJson.getLeader();
+    materialTypeConfiguration = MaterialTypeConfiguration.resolveContentType(leaderString);
 
     quickMarcJson.getFields()
       .forEach(field -> {
@@ -126,19 +131,20 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
         }
       });
 
-    leaderField.setRecordLength(calculateRecordLength(marcRecord));
-    marcRecord.setLeader(leaderField);
+    Leader leader = factory.newLeader(restoreBlanks(leaderString));
+    leader.setRecordLength(calculateRecordLength(marcRecord));
+    marcRecord.setLeader(leader);
     return marcRecord;
   }
 
   private String restoreControlFieldContent(String tag, Object content) {
     switch (tag) {
     case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
-      return restoreAdditionalCharacteristicsControlField((Map<String, Object>) content);
+      return restoreBlanks(restoreAdditionalCharacteristicsControlField((Map<String, Object>) content));
     case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
-      return restorePhysicalDescriptionsControlField((Map<String, Object>) content);
+      return restoreBlanks(restorePhysicalDescriptionsControlField((Map<String, Object>) content));
     case GENERAL_INFORMATION_CONTROL_FIELD:
-      return restoreGeneralInformationControlField((Map<String, Object>) content);
+      return restoreBlanks(restoreGeneralInformationControlField((Map<String, Object>) content));
     default:
       return content.toString();
     }
@@ -148,7 +154,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
     if (materialTypeConfiguration.equals(UNKNOWN)) {
       return contentMap.get(VALUE.getName()).toString();
     } else {
-      return leaderField.getTypeOfRecord() + restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
+      return leaderString.charAt(TYPE_OF_RECORD_LEADER_POS) + restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
     }
   }
 
@@ -163,14 +169,19 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
   }
 
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
-    if (!contentMap.get(ELVL).toString().equals(Character.toString(leaderField.getImplDefined2()[0])) ||
-      !contentMap.get(DESC).toString().equals(Character.toString(leaderField.getImplDefined2()[1]))) {
-      throw new ConverterException(buildError(LEADER_AND_008_MISMATCHING, ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
+    if (isLeaderMatches(contentMap)) {
+      String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
+      return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(), contentMap))
+        .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
     }
-    leaderField.setImplDefined2(new char[]{contentMap.get(ELVL).toString().charAt(0), contentMap.get(DESC).toString().charAt(0), leaderField.getImplDefined2()[2]});
-    String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
-    return new StringBuilder(restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(), contentMap))
-      .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
+    throw new ConverterException(buildError(LEADER_AND_008_MISMATCHING, ErrorUtils.ErrorType.INTERNAL,"The Leader and 008 do not match"));
+  }
+
+  private boolean isLeaderMatches(Map<String, Object> contentMap) {
+    return nonNull(contentMap) &&
+      nonNull(contentMap.get(ELVL)) && nonNull(contentMap.get(DESC)) &&
+      contentMap.get(ELVL).toString().equals(Character.toString(leaderString.charAt(ELVL_LEADER_POS))) &&
+      contentMap.get(DESC).toString().equals(Character.toString(leaderString.charAt(DESC_LEADER_POS)));
   }
 
   private String restoreFixedLengthField(int length, List<FixedLengthDataElements> items, Map<String, Object> map) {
@@ -278,7 +289,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
    * @return true if field is Control Field, otherwise - false
    */
   private boolean isControlField(Field field) {
-    return CONTROL_FIELD_PATTER.matcher(field.getTag()).matches();
+    return CONTROL_FIELD_PATTERN.matcher(field.getTag()).matches();
   }
 
   /**
@@ -305,11 +316,15 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarcJ
     if (Objects.isNull(input) || StringUtils.isEmpty(input.toString())) {
       return SPACE;
     } else {
-      String indicator = input.toString();
+      String indicator = restoreBlanks(input.toString());
       if (indicator.length() > 1) {
         throw new ConverterException(buildError(ILLEGAL_SIZE_OF_INDICATOR, ErrorUtils.ErrorType.INTERNAL,"Illegal size of indicator: " + indicator));
       }
       return indicator;
     }
+  }
+
+  private String restoreBlanks(String sourceString) {
+    return sourceString.replace(BLANK_REPLACEMENT, SPACE);
   }
 }

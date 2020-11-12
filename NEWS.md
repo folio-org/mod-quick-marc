@@ -1,5 +1,15 @@
 ## 1.3.0 - Unreleased
 
+## 1.2.2 - Released
+
+The only focus of this patch release was to update schemas reference
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.2.1...v1.2.2)
+
+### Bug Fixes
+ * [MODQM-47](https://issues.folio.org/browse/MODQM-47) - Bug with subfield and spaces when editing in quickMARC
+ * [MODQM-46](https://issues.folio.org/browse/MODQM-46) - Adjust the quickMARC edit UI to show a fill character for blank positions in 00X fields and indicators
+
 ## 1.2.1 - Released
 
 The only focus of this patch release was to update schemas reference

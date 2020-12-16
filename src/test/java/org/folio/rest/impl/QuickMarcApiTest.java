@@ -1,7 +1,6 @@
 package org.folio.rest.impl;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -9,6 +8,7 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.folio.HttpStatus.HTTP_BAD_REQUEST;
 import static org.folio.TestSuite.wireMockServer;
+import static org.folio.converter.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
 import static org.folio.converter.TestUtils.EXISTED_INSTANCE_ID;
 import static org.folio.converter.TestUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.converter.TestUtils.VALID_PARSED_RECORD_ID;
@@ -19,11 +19,18 @@ import static org.folio.util.ResourcePathResolver.CM_RECORDS;
 import static org.folio.util.ResourcePathResolver.getResourceByIdPath;
 import static org.folio.util.ResourcePathResolver.getResourcesPath;
 import static org.folio.util.ServiceUtils.buildQuery;
+import static org.folio.util.ServiceUtils.decodeFromMarcDateTime;
+import static org.junit.Assert.assertEquals;
 import static wiremock.org.hamcrest.MatcherAssert.assertThat;
 import static wiremock.org.hamcrest.Matchers.equalTo;
 import static wiremock.org.hamcrest.Matchers.hasSize;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.folio.HttpStatus;
@@ -126,7 +133,6 @@ public class QuickMarcApiTest extends ApiTestBase {
     logger.info("===== Verify PUT record: Successful =====");
 
     wireMockServer.stubFor(put(urlEqualTo(getResourceByIdPath(CM_RECORDS, VALID_PARSED_RECORD_DTO_ID)))
-      .withRequestBody(containing(getJsonObject(RESTORED_PARSED_RECORD_DTO_PATH).encode()))
       .willReturn(aResponse().withStatus(202)));
 
     QuickMarcJson quickMarcJson = getJsonObject(QUICK_MARC_RECORD_PATH).mapTo(QuickMarcJson.class)
@@ -140,6 +146,9 @@ public class QuickMarcApiTest extends ApiTestBase {
       .get(0)
       .getRequest()
       .getBodyAsString()).mapTo(ParsedRecordDto.class);
+
+    verifyDateTimeUpdating(changeManagerRequest);
+
     assertThat(changeManagerRequest.getId(), equalTo(quickMarcJson.getParsedRecordDtoId()));
   }
 
@@ -214,5 +223,27 @@ public class QuickMarcApiTest extends ApiTestBase {
 
     Error error = verifyPutRequest(String.format(RECORDS_EDITOR_RECORDS_PATH_ID, VALID_PARSED_RECORD_ID), quickMarcJson, 422).as(Error.class);
     assertThat(error.getCode(), equalTo(ErrorCodes.LEADER_AND_008_MISMATCHING.name()));
+  }
+
+  private void verifyDateTimeUpdating(ParsedRecordDto changeManagerRequest) {
+    List<LinkedHashMap<String, String>> fields
+      = (List<LinkedHashMap<String, String>>) JsonObject.mapFrom(changeManagerRequest.getParsedRecord().getContent()).getJsonArray("fields").getList();
+
+    String value = getUpdatingDateTime(fields);
+
+    LocalDateTime actual = decodeFromMarcDateTime(value);
+
+    // Compare the values of up to a minutes to prevent test failure in case of any execution delays
+    assertEquals(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), actual.truncatedTo(ChronoUnit.MINUTES));
+  }
+
+  private String getUpdatingDateTime(List<LinkedHashMap<String, String>> fields) {
+    for (LinkedHashMap<String, String> field : fields) {
+      String extractedFieldValue = field.get(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD);
+      if (Objects.nonNull(extractedFieldValue)) {
+        return extractedFieldValue;
+      }
+    }
+    return null;
   }
 }

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import io.vertx.core.Context;
 import io.vertx.core.json.JsonObject;
-import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
 
 @Service
 public class ChangeManagerService extends BaseService implements MarcRecordsService {
@@ -30,9 +29,9 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
 
   @Override
   public CompletableFuture<QuickMarcJson> getMarcRecordByInstanceId(String instanceId, Context context, Map<String, String> headers) {
-    CompletableFuture<QuickMarcJson> future = new VertxCompletableFuture<>(context);
+    CompletableFuture<QuickMarcJson> future = new CompletableFuture<>();
     try {
-      handleGetRequest(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, instanceId), context, headers)
+      handleGetRequest(getResourcesPath(CM_RECORDS) + buildQuery(INSTANCE_ID, instanceId), headers)
         .thenApply(
             parsedRecordDtoJson -> parsedRecordToQuickMarcConverter.convert(parsedRecordDtoJson.mapTo(ParsedRecordDto.class)))
         .thenAccept(future::complete)
@@ -48,10 +47,10 @@ public class ChangeManagerService extends BaseService implements MarcRecordsServ
 
   @Override
   public CompletableFuture<Void> putMarcRecordById(String id, QuickMarcJson quickMarcJson, Context context, Map<String, String> headers) {
-    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+    CompletableFuture<Void> future = new CompletableFuture<>();
     try {
       ParsedRecordDto parsedRecordDto = quickMarcToParsedRecordConverter.convert(quickMarcJson);
-      handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), context, headers)
+      handlePutRequest(getResourceByIdPath(CM_RECORDS, id), JsonObject.mapFrom(parsedRecordDto), headers)
         .thenAccept(future::complete)
         .exceptionally(e -> {
           future.completeExceptionally(e);

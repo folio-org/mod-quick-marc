@@ -5,6 +5,7 @@ import static org.folio.util.ErrorUtils.buildGenericError;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import io.vertx.ext.web.client.WebClientOptions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.folio.exception.HttpException;
@@ -19,7 +20,6 @@ public class OkapiHttpClient implements HttpClient {
 
   public static final String OKAPI_URL = "x-okapi-url";
   private static final String OPTIONS = "options";
-  private static final String DEFAULT_HOST = "defaultHost";
   private final HttpClientInterface client;
 
   private OkapiHttpClient() {
@@ -52,7 +52,8 @@ public class OkapiHttpClient implements HttpClient {
 
   private void setOkapiUrl(HttpClientInterface client, Map<String, String> okapiHeaders) throws IllegalAccessException {
     final String okapiURL = okapiHeaders.getOrDefault(OKAPI_URL, StringUtils.EMPTY);
-    FieldUtils.writeDeclaredField(FieldUtils.readDeclaredField(client, OPTIONS, true), DEFAULT_HOST, okapiURL, true);
+    WebClientOptions options = (WebClientOptions) FieldUtils.readDeclaredField(client, OPTIONS, true);
+    options.setDefaultHost(okapiURL);
   }
 
   private static class Holder {

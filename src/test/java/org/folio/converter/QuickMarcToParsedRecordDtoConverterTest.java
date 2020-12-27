@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.exception.ConverterException;
 import org.folio.rest.jaxrs.model.Field;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
@@ -31,8 +33,6 @@ import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.vertx.core.json.JsonObject;
 
@@ -43,7 +43,7 @@ public class QuickMarcToParsedRecordDtoConverterTest {
   public static final String FIELDS = "fields";
   public static final String IND_1 = "ind1";
   public static final String IND_2 = "ind2";
-  private static final Logger logger = LoggerFactory.getLogger(QuickMarcToParsedRecordDtoConverterTest.class);
+  private static final Logger logger = LogManager.getLogger(QuickMarcToParsedRecordDtoConverterTest.class);
 
   @ParameterizedTest
   @EnumSource(TestEntities.class)

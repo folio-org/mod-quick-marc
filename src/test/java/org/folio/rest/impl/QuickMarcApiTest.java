@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.HttpStatus;
 import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Field;
@@ -43,14 +45,12 @@ import org.folio.util.ErrorUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.vertx.core.json.JsonObject;
 
 public class QuickMarcApiTest extends ApiTestBase {
 
-  private static final Logger logger = LoggerFactory.getLogger(QuickMarcApiTest.class);
+  private static final Logger logger = LogManager.getLogger(QuickMarcApiTest.class);
 
   private static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
   private static final String RECORDS_EDITOR_RECORDS_PATH_ID = RECORDS_EDITOR_RECORDS_PATH + "/%s";

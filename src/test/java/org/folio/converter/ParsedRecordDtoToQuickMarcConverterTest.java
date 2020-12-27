@@ -10,20 +10,21 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.jaxrs.model.QuickMarcJson;
 import org.folio.srs.model.ParsedRecord;
 import org.folio.srs.model.ParsedRecordDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import io.vertx.core.json.JsonObject;
 
 public class ParsedRecordDtoToQuickMarcConverterTest {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParsedRecordDtoToQuickMarcConverterTest.class);
+  private static final Logger logger = LogManager.getLogger(ParsedRecordDtoToQuickMarcConverterTest.class);
 
   @ParameterizedTest
   @EnumSource(value = TestEntities.class, mode = EXCLUDE, names = { "BOOKS_MISSING_ITEMS" })

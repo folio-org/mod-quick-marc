@@ -14,16 +14,16 @@
   </licenses>
 
   <properties>
-    <raml-module-builder.version>31.0.2</raml-module-builder.version>
+    <raml-module-builder.version>32.0.1</raml-module-builder.version>
     <jsonschema_paths>schemas</jsonschema_paths>
-    <vertx.version>3.9.2</vertx.version>
+    <vertx.version>4.0.0</vertx.version>
     <junit.jupiter.version>5.6.0</junit.jupiter.version>
     <rest-assured.version>4.3.0</rest-assured.version>
     <log4j-slf4j-impl.version>2.13.1</log4j-slf4j-impl.version>
-    <vertx-completable-future.version>0.1.2</vertx-completable-future.version>
     <awaitility.version>4.0.2</awaitility.version>
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <generated_sources_dir>${project.build.directory}/generated-sources</generated_sources_dir>
     <jsonschema2pojo_output_dir>${generated_sources_dir}/jsonschema2pojo</jsonschema2pojo_output_dir>
     <folio-di-support.version>1.0.0</folio-di-support.version>
@@ -72,11 +72,6 @@
       <artifactId>log4j-slf4j-impl</artifactId>
       <version>${log4j-slf4j-impl.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>me.escoffier.vertx</groupId>
-      <artifactId>vertx-completable-future</artifactId>
-      <version>${vertx-completable-future.version}</version>
     </dependency>
     <dependency>
       <groupId>org.awaitility</groupId>
@@ -279,7 +274,7 @@
         <version>1.12.6</version>
         <configuration>
           <verbose>true</verbose>
-          <complianceLevel>1.8</complianceLevel>
+          <complianceLevel>11</complianceLevel>
           <includes>
             <include>**/impl/*.java</include>
             <include>**/*.aj</include>
@@ -305,12 +300,12 @@
           <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.9.5</version>
+            <version>1.9.6</version>
           </dependency>
           <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjtools</artifactId>
-            <version>1.9.5</version>
+            <version>1.9.6</version>
           </dependency>
         </dependencies>
       </plugin>

@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionException;
 
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.jaxrs.model.Field;
 
 public class ServiceUtils {
 
-  private static final Logger logger = LoggerFactory.getLogger(ServiceUtils.class);
+  private static final Logger logger = LogManager.getLogger(ServiceUtils.class);
 
   private static final DateTimeFormatter DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss.S");
 
@@ -63,7 +63,7 @@ public class ServiceUtils {
     try {
       return URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
     } catch (UnsupportedEncodingException e) {
-      logger.error("Error happened while attempting to encode query: '{}'", e, query);
+      logger.error("Error happened while attempting to encode query: '{}'", query);
       throw new CompletionException(e);
     }
   }

@@ -4,27 +4,26 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import org.apache.logging.log4j.LogManager;
 import org.folio.client.HttpClient;
 import org.folio.exception.HttpException;
 import org.folio.rest.tools.client.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import io.vertx.core.Context;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import me.escoffier.vertx.completablefuture.VertxCompletableFuture;
+import org.apache.logging.log4j.Logger;
 
 public abstract class BaseService {
 
   private static final String EXCEPTION_CALLING_ENDPOINT_MSG = "Exception calling {} {}";
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LogManager.getLogger(this.getClass());
+
   @Autowired
   private HttpClient httpClient;
 
-  CompletableFuture<JsonObject> handleGetRequest(String endpoint, Context context, Map<String, String> headers) {
-    CompletableFuture<JsonObject> future = new VertxCompletableFuture<>(context);
+  CompletableFuture<JsonObject> handleGetRequest(String endpoint, Map<String, String> headers) {
+    CompletableFuture<JsonObject> future = new CompletableFuture<>();
     logger.info("Calling GET {}", endpoint);
     httpClient.request(HttpMethod.GET, endpoint, headers)
       .thenApply(response -> {
@@ -45,8 +44,8 @@ public abstract class BaseService {
     return future;
   }
 
-  CompletableFuture<Void> handlePutRequest(String endpoint, JsonObject jsonObject, Context context, Map<String, String> headers) {
-    CompletableFuture<Void> future = new VertxCompletableFuture<>(context);
+  CompletableFuture<Void> handlePutRequest(String endpoint, JsonObject jsonObject, Map<String, String> headers) {
+    CompletableFuture<Void> future = new CompletableFuture<>();
     logger.info("Calling PUT {} with body: {}", endpoint, jsonObject.encode());
     httpClient.request(HttpMethod.PUT, jsonObject.toBuffer(), endpoint, headers)
       .thenApply(response -> {

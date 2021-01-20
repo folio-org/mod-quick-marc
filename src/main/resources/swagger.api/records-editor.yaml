@@ -14,7 +14,7 @@ paths:
             application/json:
               example: sample
               schema:
-                $ref: "#/components/schemas/quickMarcJson"
+                $ref: "#/components/schemas/quickMarc"
         '400':
           description: Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
@@ -55,6 +55,7 @@ paths:
           required: false
           description: Requested language. Optional. [lang=en]
           schema:
+            type: string
             pattern: "[a-zA-Z]{2}"
             default: "en"
   /records/{id}:
@@ -87,7 +88,7 @@ paths:
           application/json:
             example: sample
             schema:
-              $ref: "#/components/schemas/quickMarcJson"
+              $ref: "#/components/schemas/quickMarc"
         required: true
     parameters:
       - name: id
@@ -98,7 +99,7 @@ paths:
         description: The UUID of a record
 components:
   schemas:
-    quickMarcJson:
+    quickMarc:
       $ref: schemas/quickMarcJson.json
     error:
       $ref: schemas/error.json

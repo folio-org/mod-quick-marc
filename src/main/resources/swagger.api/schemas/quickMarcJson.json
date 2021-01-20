@@ -43,18 +43,14 @@
           },
           "content": {
             "description": "MARC record tag content",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "object"
-              }
-            ]
+            "type": "object"
           },
           "indicators": {
             "description": "MARC record tag indicator values",
             "type": "array",
+            "items": {
+              "type": "string"
+            },
             "minItems": 0,
             "maxItems": 2
           }

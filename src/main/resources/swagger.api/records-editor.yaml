@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  title: quickMARC Record Editor
+  version: 1.1.0
+servers:
+  - url: /records-editor/
+paths:
+  /records:
+    get:
+      responses:
+        '200':
+          description: MARC record successfully retrieved
+          content:
+            application/json:
+              example: sample
+              schema:
+                $ref: "#/components/schemas/quickMarc"
+        '400':
+          description: Bad request, e.g. malformed request body or query parameter.
+            Details of the error (e.g. name of the parameter or line/character number
+            with malformed data) provided in the response.
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+        '404':
+          description: MARC record with a given ID not found
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+        '500':
+          description: Internal server error, e.g. due to misconfiguration
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+      description: Get MARC record by instanceId
+      operationId: getRecordByInstanceId
+      parameters:
+        - name: instanceId
+          in: query
+          required: true
+          description: UUID of the instance that is related to the MARC record
+          schema:
+            $ref: "#/components/schemas/UUID"
+        - name: lang
+          in: query
+          required: false
+          description: Requested language. Optional. [lang=en]
+          schema:
+            type: string
+            pattern: "[a-zA-Z]{2}"
+            default: "en"
+  /records/{id}:
+    put:
+      responses:
+        '202':
+          description: MARC record accepted for updating
+        '400':
+          description: Bad request, e.g. malformed request body or query parameter.
+            Details of the error (e.g. name of the parameter or line/character number
+            with malformed data) provided in the response.
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+        '500':
+          description: Internal server error, e.g. due to misconfiguration
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+      description: Edit MARC record
+      operationId: putRecord
+      requestBody:
+        content:
+          application/json:
+            example: sample
+            schema:
+              $ref: "#/components/schemas/quickMarc"
+        required: true
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/UUID"
+        description: The UUID of a record
+components:
+  schemas:
+    quickMarc:
+      $ref: schemas/quickMarcJson.json
+    error:
+      $ref: schemas/error.json
+    UUID:
+      pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+      type: string
+  examples:
+    quickMarcJson:
+      $ref: examples/quickMarcJson.sample
+    error:
+      $ref: examples/error.sample

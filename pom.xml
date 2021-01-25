@@ -322,8 +322,8 @@
               <inputSpec>${records-editor.yaml.file}</inputSpec>
               <output>${project.build.directory}/generated-sources</output>
               <generatorName>spring</generatorName>
-              <modelPackage>${project.groupId}.domain.dto</modelPackage>
-              <apiPackage>${project.groupId}.rest.resource</apiPackage>
+              <modelPackage>${project.groupId}.qm.domain.dto</modelPackage>
+              <apiPackage>${project.groupId}.qm.rest.resource</apiPackage>
               <generateApis>true</generateApis>
               <generateApiTests>true</generateApiTests>
               <generateApiDocumentation>true</generateApiDocumentation>

@@ -1,6 +1,6 @@
-package org.folio.converter.elements;
+package org.folio.qm.converter.elements;
 
-import static org.folio.converter.elements.FixedLengthDataElements.*;
+import static org.folio.qm.converter.elements.FixedLengthDataElements.*;
 
 import java.util.Arrays;
 import java.util.List;

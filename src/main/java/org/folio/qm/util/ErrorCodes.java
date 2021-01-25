@@ -1,4 +1,4 @@
-package org.folio.util;
+package org.folio.qm.util;
 
 public enum ErrorCodes {
   ILLEGAL_FIXED_LENGTH_CONTROL_FILED,

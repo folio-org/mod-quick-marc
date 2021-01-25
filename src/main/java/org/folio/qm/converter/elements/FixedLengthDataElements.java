@@ -1,7 +1,7 @@
-package org.folio.converter.elements;
+package org.folio.qm.converter.elements;
 
-import static org.folio.converter.Constants.DIMENSIONS_CONST;
-import static org.folio.converter.Constants.POSITIVE_NEGATIVE_ASPECT;
+import static org.folio.qm.converter.Constants.DIMENSIONS_CONST;
+import static org.folio.qm.converter.Constants.POSITIVE_NEGATIVE_ASPECT;
 
 public enum FixedLengthDataElements {
 

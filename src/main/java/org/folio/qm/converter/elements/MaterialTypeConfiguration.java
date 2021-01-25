@@ -1,8 +1,8 @@
-package org.folio.converter.elements;
+package org.folio.qm.converter.elements;
 
-import static org.folio.converter.Constants.BLVL_LEADER_POS;
-import static org.folio.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
-import static org.folio.converter.elements.FixedLengthDataElements.*;
+import static org.folio.qm.converter.Constants.BLVL_LEADER_POS;
+import static org.folio.qm.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
+import static org.folio.qm.converter.elements.FixedLengthDataElements.*;
 
 import java.util.Arrays;
 import java.util.Collections;

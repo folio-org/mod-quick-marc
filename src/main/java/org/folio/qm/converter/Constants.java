@@ -1,4 +1,4 @@
-package org.folio.converter;
+package org.folio.qm.converter;
 
 public class Constants {
   public static final String BLVL = "BLvl";

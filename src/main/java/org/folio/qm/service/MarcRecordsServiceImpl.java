@@ -20,6 +20,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Autowired
   private SRMChangeManagerClient srmClient;
+  @Autowired
+  private ValidationService validationService;
 
   @Autowired
   private Converter<ParsedRecordDto, QuickMarc> parsedRecordToQuickMarcConverter;
@@ -33,8 +35,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public void updateById(UUID instanceId, QuickMarc quickMarc) {
+    validationService.validateIds(quickMarc, instanceId);
     ParsedRecordDto parsedRecordDto = quickMarcToParsedRecordConverter.convert(updateRecordTimestamp(quickMarc));
-    srmClient.putParsedRecordByInstanceId(instanceId.toString(), parsedRecordDto);
+    srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
   }
 
   private QuickMarc updateRecordTimestamp(QuickMarc quickMarc) {

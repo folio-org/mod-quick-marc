@@ -1,6 +1,7 @@
-package org.folio.converter;
+package org.folio.qm.utils;
 
-public enum LccnFields {
+public enum LccnFieldsTestEntities {
+
   POST_2000_NO_PREFIX("mockdata/quick-marc-json/lccn_fields/post2000_no_prefix.json"),
   POST_2000_PREFIX1("mockdata/quick-marc-json/lccn_fields/post2000_prefix1.json"),
   POST_2000_PREFIX2("mockdata/quick-marc-json/lccn_fields/post2000_prefix2.json"),
@@ -12,9 +13,9 @@ public enum LccnFields {
   PRE_2001_PREFIX3_SUFFIX("mockdata/quick-marc-json/lccn_fields/pre2001_prefix3_suffix.json"),
   WRONG_LENGTH("mockdata/quick-marc-json/lccn_fields/lccn_wrong_length.json");
 
-  private String filename;
+  private final String filename;
 
-  LccnFields(String filename) {
+  LccnFieldsTestEntities(String filename) {
     this.filename = filename;
   }
 

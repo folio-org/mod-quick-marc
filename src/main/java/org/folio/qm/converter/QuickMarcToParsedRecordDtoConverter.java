@@ -47,7 +47,6 @@ import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.elements.FixedLengthDataElements;
@@ -106,7 +105,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarc.getSuppressDiscovery()));
 
     } catch (Exception e) {
-      throw new ConverterException(e, this.getClass());
+      throw new ConverterException(e);
     }
   }
 

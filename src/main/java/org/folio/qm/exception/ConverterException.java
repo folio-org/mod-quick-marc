@@ -1,43 +1,25 @@
 package org.folio.qm.exception;
 
-import static org.folio.qm.util.ErrorUtils.buildError;
 
 import org.springframework.http.HttpStatus;
 
 import org.folio.qm.domain.dto.Error;
-import org.folio.qm.util.ErrorUtils;
 
 /**
  * Custom exception for QuickMarc <-> ParsedRecordDto converting errors
  */
-public class ConverterException extends RuntimeException {
-
-  private static final long serialVersionUID = 3199267948434461515L;
-
-  private final transient Error error;
-  private final int status;
+public class ConverterException extends QuickMarkException {
 
   public ConverterException(Error error) {
-    this.status = HttpStatus.UNPROCESSABLE_ENTITY.value();
-    this.error = error;
+    super(error);
   }
 
-  public ConverterException(Exception ex, Class<?> clazz) {
-    if (ex instanceof ConverterException) {
-      ConverterException cex = (ConverterException) ex;
-      this.error = cex.getError();
-      status = cex.getStatus();
-    } else {
-      error = buildError(ErrorUtils.ErrorType.INTERNAL, clazz.getSimpleName() + ": Generic Error");
-      status = HttpStatus.UNPROCESSABLE_ENTITY.value();
-    }
+  public ConverterException(Exception ex) {
+    super(ex);
   }
 
-  public Error getError() {
-    return error;
-  }
-
+  @Override
   public int getStatus() {
-    return status;
+    return HttpStatus.UNPROCESSABLE_ENTITY.value();
   }
 }

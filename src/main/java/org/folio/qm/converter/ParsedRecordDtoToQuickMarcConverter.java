@@ -67,7 +67,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
 
       List<QuickMarcFields> fields = marcRecord.getControlFields()
         .stream()
-        .map(cf -> new QuickMarcFields().tag(cf.getTag()).content(processControlField(cf, leader)))
+        .map(cf -> controlFieldToQuickMarcField(cf, leader))
         .collect(Collectors.toList());
 
       fields.addAll(marcRecord.getDataFields()
@@ -85,7 +85,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
           .recordState(QuickMarcUpdateInfo.RecordStateEnum.fromValue(parsedRecordDto.getRecordState().value()))
           .updateDate(parsedRecordDto.getMetadata().getUpdatedDate()));
     } catch (Exception e) {
-      throw new ConverterException(e, this.getClass());
+      throw new ConverterException(e);
     }
   }
 
@@ -151,6 +151,10 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
           .append(SPACE)
           .append(subfield.getData()))
         .collect(Collectors.joining(SPACE)));
+  }
+
+  private QuickMarcFields controlFieldToQuickMarcField(ControlField cf, String leader) {
+    return new QuickMarcFields().tag(cf.getTag()).content(processControlField(cf, leader)).indicators(Collections.emptyList());
   }
 
   private String masqueradeBlanks(String sourceString) {

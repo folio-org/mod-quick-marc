@@ -144,14 +144,6 @@
   </dependencies>
 
   <build>
-
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
     <plugins>
 
       <plugin>
@@ -163,7 +155,6 @@
           </layers>
         </configuration>
       </plugin>
-
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -183,7 +174,6 @@
           </execution>
         </executions>
       </plugin>
-
 
       <plugin>
         <groupId>org.openapitools</groupId>

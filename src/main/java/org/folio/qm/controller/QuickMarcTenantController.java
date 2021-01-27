@@ -16,7 +16,7 @@ import org.folio.tenant.rest.resource.TenantApi;
 
 @RestController("folioTenantController")
 @RequestMapping(value = "/_/")
-public class MyTenantController implements TenantApi {
+public class QuickMarcTenantController implements TenantApi {
 
   @Override
   public ResponseEntity<String> postTenant(@Valid TenantAttributes tenantAttributes) {

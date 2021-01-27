@@ -12,7 +12,8 @@ paths:
           description: MARC record successfully retrieved
           content:
             application/json:
-              example: sample
+              example:
+                $ref: "#/components/examples/quickMarc"
               schema:
                 $ref: "#/components/schemas/quickMarc"
         '400':
@@ -86,7 +87,8 @@ paths:
       requestBody:
         content:
           application/json:
-            example: sample
+            example:
+              $ref: "#/components/examples/quickMarc"
             schema:
               $ref: "#/components/schemas/quickMarc"
         required: true
@@ -104,10 +106,10 @@ components:
     error:
       $ref: schemas/error.json
     UUID:
-      pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
       type: string
+      format: uuid
   examples:
-    quickMarcJson:
+    quickMarc:
       $ref: examples/quickMarcJson.sample
     error:
       $ref: examples/error.sample

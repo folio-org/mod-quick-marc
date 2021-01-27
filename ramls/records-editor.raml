@@ -12,14 +12,13 @@ documentation:
 types:
   quickMarcJson: !include schemas/quick_marc_json.json
   sample: !include examples/quick_marc_json.sample
-  error: !include raml-storage/raml-util/schemas/error.schema
-  errors: !include raml-storage/raml-util/schemas/errors.schema
+  error: !include schemas/error.json
   UUID:
     type: string
     pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
 
 traits:
-  language: !include raml-storage/raml-util/traits/language.raml
+  language: !include traits/language.raml
 
 /records-editor/records:
   displayName: quickMARC API
@@ -48,7 +47,7 @@ traits:
               type: error
               example:
                 strict: false
-                value: !include raml-storage/raml-util/examples/error.sample
+                value: !include examples/error.sample
         404:
           description: "MARC record with a given ID not found"
           body:
@@ -56,7 +55,7 @@ traits:
               type: error
               example:
                 strict: false
-                value: !include raml-storage/raml-util/examples/error.sample
+                value: !include examples/error.sample
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
@@ -64,7 +63,7 @@ traits:
               type: error
               example:
                 strict: false
-                value: !include raml-storage/raml-util/examples/error.sample
+                value: !include examples/error.sample
   /{id}:
     uriParameters:
       id:
@@ -88,7 +87,7 @@ traits:
               type: error
               example:
                 strict: false
-                value: !include raml-storage/raml-util/examples/error.sample
+                value: !include examples/error.sample
         500:
           description: "Internal server error, e.g. due to misconfiguration"
           body:
@@ -96,4 +95,4 @@ traits:
               type: error
               example:
                 strict: false
-                value: !include raml-storage/raml-util/examples/error.sample
+                value: !include examples/error.sample

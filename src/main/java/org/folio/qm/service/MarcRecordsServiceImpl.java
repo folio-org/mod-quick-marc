@@ -7,7 +7,7 @@ import static org.folio.qm.util.MarcUtils.getFieldByTag;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +16,14 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 @Service
+@RequiredArgsConstructor
 public class MarcRecordsServiceImpl implements MarcRecordsService {
 
-  @Autowired
-  private SRMChangeManagerClient srmClient;
-  @Autowired
-  private ValidationService validationService;
+  private final SRMChangeManagerClient srmClient;
+  private final ValidationService validationService;
 
-  @Autowired
-  private Converter<ParsedRecordDto, QuickMarc> parsedRecordToQuickMarcConverter;
-  @Autowired
-  private Converter<QuickMarc, ParsedRecordDto> quickMarcToParsedRecordConverter;
+  private final Converter<ParsedRecordDto, QuickMarc> parsedRecordToQuickMarcConverter;
+  private final Converter<QuickMarc, ParsedRecordDto> quickMarcToParsedRecordConverter;
 
   @Override
   public QuickMarc findByInstanceId(UUID instanceId) {

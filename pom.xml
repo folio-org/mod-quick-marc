@@ -65,11 +65,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-core</artifactId>
-      <version>${vertx.version}</version>
-    </dependency>
-    <dependency>
       <!-- to import data model -->
       <groupId>org.folio</groupId>
       <artifactId>mod-source-record-manager-client</artifactId>
@@ -100,8 +95,6 @@
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
     </dependency>
-
-    <!-- Test dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -117,6 +110,8 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <!-- Test dependencies -->
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
@@ -139,6 +134,19 @@
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path-assert</artifactId>
       <version>${jsonpath.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- io.vertx.core.json.JsonObject is used for check equality of QuickMarc objects.
+         Field 'content' could be a list and for equality order of entries is not important.
+         'equals' method of QuickMarc object doesn't consider this instead of JsonObject.
+
+         This check should be changed in future and dependency removed
+       -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+      <version>${vertx.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

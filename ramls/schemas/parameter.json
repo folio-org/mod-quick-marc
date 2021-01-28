@@ -4,10 +4,14 @@
   "type": "object",
   "properties": {
     "key": {
-      "type": "string"
+      "type": "string",
+      "description": "Parameter name",
+      "example": "moduleTo"
     },
     "value": {
-      "type": "string"
+      "type": "string",
+      "description": "Parameter value",
+      "example": "null"
     }
   },
   "required": [

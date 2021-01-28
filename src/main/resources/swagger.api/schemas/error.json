@@ -5,15 +5,18 @@
   "properties": {
     "message": {
       "type": "string",
-      "description": "Error message text"
+      "description": "Error message text",
+      "example": "may not be null"
     },
     "type": {
       "type": "string",
-      "description": "Error message type"
+      "description": "Error message type",
+      "example": "1"
     },
     "code": {
       "type": "string",
-      "description": "Error message code"
+      "description": "Error message code",
+      "example": "-1"
     },
     "parameters": {
       "type": "object",

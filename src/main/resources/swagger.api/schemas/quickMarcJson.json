@@ -1,0 +1,104 @@
+{
+  "$id": "https://example.com/arrays.schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "A representation of MARC record for QuickMARC",
+  "type": "object",
+  "properties": {
+    "parsedRecordId": {
+      "description": "MARC record Id",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "example": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1"
+    },
+    "parsedRecordDtoId": {
+      "description": "ParsedRecordDto identifier",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "example": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c"
+    },
+    "suppressDiscovery": {
+      "description": "Flag indicates if the record is displayed during a search",
+      "type": "boolean",
+      "default": false,
+      "example": true
+    },
+    "instanceId": {
+      "description": "Identifier of external instance",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "example": "b9a5f035-de63-4e2c-92c2-07240c89b817"
+    },
+    "leader": {
+      "description": "Leader record",
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "example": "01587ccm a2200361   4500"
+    },
+    "fields": {
+      "description": "MARC record fields",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "description": "MARC record tag name",
+            "type": "string",
+            "pattern": "^[0-9]{3}$",
+            "example": "001"
+          },
+          "content": {
+            "description": "MARC record tag content",
+            "type": "object",
+            "example": "393893"
+          },
+          "indicators": {
+            "description": "MARC record tag indicator values",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "maxItems": 2
+          }
+        },
+        "required": [
+          "tag",
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "minItems" : 3
+    },
+    "updateInfo": {
+      "description": "Information related to record update",
+      "type": "object",
+      "properties": {
+        "recordState": {
+          "description": "State of source record in QM workflow",
+          "type": "string",
+          "enum": [
+            "ACTUAL",
+            "IN_PROGRESS",
+            "ERROR"
+          ],
+          "default": "ACTUAL",
+          "example": "ERROR"
+        },
+        "updateDate": {
+          "description": "Date and time of last successful update of the record",
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-07-14T12:20:10.000"
+        }
+      }
+    }
+  },
+  "required": [
+    "parsedRecordDtoId",
+    "suppressDiscovery",
+    "instanceId",
+    "leader",
+    "fields"
+  ]
+}

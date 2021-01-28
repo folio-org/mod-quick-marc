@@ -11,24 +11,21 @@ import static org.folio.qm.utils.TestUtils.QM_RECORD_PATH;
 import static org.folio.qm.utils.TestUtils.getMockAsJson;
 import static org.folio.qm.utils.TestUtils.getParsedRecordDtoWithMinContent;
 
+import io.vertx.core.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.folio.qm.utils.PhysicalDescriptionsTestEntities;
-import org.folio.qm.utils.GeneralTestEntities;
-import org.folio.qm.converter.ParsedRecordDtoToQuickMarcConverter;
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import org.folio.qm.converter.ParsedRecordDtoToQuickMarcConverter;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.utils.GeneralTestEntities;
+import org.folio.qm.utils.PhysicalDescriptionsTestEntities;
+import org.folio.rest.jaxrs.model.ParsedRecord;
+import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
-import io.vertx.core.json.JsonObject;
-
-public class ParsedRecordDtoToQuickMarcConverterTest {
+class ParsedRecordDtoToQuickMarcConverterTest {
 
   private static final Logger logger = LogManager.getLogger(ParsedRecordDtoToQuickMarcConverterTest.class);
 

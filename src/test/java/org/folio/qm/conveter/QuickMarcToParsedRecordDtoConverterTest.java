@@ -1,14 +1,6 @@
 package org.folio.qm.conveter;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
-import static org.folio.qm.utils.GeneralTestEntities.BOOKS;
-import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
-import static org.folio.qm.utils.TestUtils.QM_EDITED_RECORD_PATH;
-import static org.folio.qm.utils.TestUtils.RESTORED_PARSED_RECORD_DTO_PATH;
-import static org.folio.qm.utils.TestUtils.getFieldWithIndicators;
-import static org.folio.qm.utils.TestUtils.getMockAsJson;
-import static org.folio.qm.utils.TestUtils.getParsedRecordDtoWithMinContent;
-import static org.folio.qm.utils.TestUtils.getQuickMarcJsonWithMinContent;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -17,35 +9,42 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
+import static org.folio.qm.utils.GeneralTestEntities.BOOKS;
+import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.TestUtils.QM_EDITED_RECORD_PATH;
+import static org.folio.qm.utils.TestUtils.RESTORED_PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.TestUtils.TESTED_TAG_NAME;
+import static org.folio.qm.utils.TestUtils.getFieldWithIndicators;
+import static org.folio.qm.utils.TestUtils.getMockAsJson;
+import static org.folio.qm.utils.TestUtils.getParsedRecordDtoWithMinContent;
+import static org.folio.qm.utils.TestUtils.getQuickMarcJsonWithMinContent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.folio.qm.utils.LccnFieldsTestEntities;
-import org.folio.qm.utils.PhysicalDescriptionsTestEntities;
-import org.folio.qm.utils.GeneralTestEntities;
-import org.folio.qm.converter.ParsedRecordDtoToQuickMarcConverter;
-import org.folio.qm.converter.QuickMarcToParsedRecordDtoConverter;
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.QuickMarcFields;
-import org.folio.qm.exception.ConverterException;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
-
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import io.vertx.core.json.JsonObject;
+import org.folio.qm.converter.ParsedRecordDtoToQuickMarcConverter;
+import org.folio.qm.converter.QuickMarcToParsedRecordDtoConverter;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcFields;
+import org.folio.qm.exception.ConverterException;
+import org.folio.qm.utils.GeneralTestEntities;
+import org.folio.qm.utils.LccnFieldsTestEntities;
+import org.folio.qm.utils.PhysicalDescriptionsTestEntities;
+import org.folio.rest.jaxrs.model.ParsedRecord;
+import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
-public class QuickMarcToParsedRecordDtoConverterTest {
+class QuickMarcToParsedRecordDtoConverterTest {
 
-  public static final String TESTED_TAG_NAME = "333";
   public static final String CONTENT = "content";
   public static final String FIELDS = "fields";
   public static final String IND_1 = "ind1";

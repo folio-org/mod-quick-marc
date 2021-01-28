@@ -75,7 +75,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   private static final String INDICATOR2 = "ind2";
   private static final String SUBFIELDS = "subfields";
   private static final String SPLIT_PATTERN = "(?=[$][a-z0-9])";
-  private static final String CONCAT_CONDITION_PATTERN = "[$][1]\\s*?|[$]\\d+(?:[.,])[^\\\\]*$";
+  private static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
   private static final char SPACE_CHARACTER = ' ';
   private static final int ADDRESS_LENGTH = 12;
   private static final int TAG_LENGTH = 4;
@@ -140,6 +140,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     return marcRecord;
   }
 
+  @SuppressWarnings("unchecked")
   private String restoreControlFieldContent(String tag, Object content) {
     switch (tag) {
       case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
@@ -195,6 +196,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       contentMap.get(DESC).toString().equals(Character.toString(leaderString.charAt(DESC_LEADER_POS)));
   }
 
+  @SuppressWarnings("unchecked")
   private String restoreFixedLengthField(int length, List<FixedLengthDataElements> items, Map<String, Object> map) {
     StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
     items.forEach(item -> {
@@ -202,8 +204,9 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       if (Objects.isNull(map.get(item.getName()))) {
         value = StringUtils.repeat(SPACE_CHARACTER, item.getLength());
       } else {
-        value =
-          item.isArray() ? String.join(EMPTY, ((List<String>) map.get(item.getName()))) : map.get(item.getName()).toString();
+        value = item.isArray()
+          ? String.join(EMPTY, ((List<String>) map.get(item.getName())))
+          : map.get(item.getName()).toString();
         if (value.length() != item.getLength()) {
           throw new ConverterException(buildError(ILLEGAL_FIXED_LENGTH_CONTROL_FILED, ErrorUtils.ErrorType.INTERNAL,
             String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));

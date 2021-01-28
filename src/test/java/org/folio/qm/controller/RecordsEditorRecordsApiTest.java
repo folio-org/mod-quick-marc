@@ -59,6 +59,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     QuickMarc quickMarcJson =
       verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_INSTANCE_ID), SC_OK).as(QuickMarc.class);
 
+
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
     assertThat(quickMarcJson.getInstanceId(), equalTo(EXISTED_INSTANCE_ID));
     assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));

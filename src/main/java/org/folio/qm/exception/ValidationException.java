@@ -13,7 +13,7 @@ public class ValidationException extends QuickMarkException {
     super(error);
   }
 
-  public ValidationException(Exception ex, Class<?> clazz) {
+  public ValidationException(Exception ex) {
     super(ex);
   }
 

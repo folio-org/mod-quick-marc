@@ -7,7 +7,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.folio.qm.converter.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
-import static org.folio.qm.conveter.QuickMarcToParsedRecordDtoConverterTest.TESTED_TAG_NAME;
 import static org.folio.qm.util.MarcUtils.decodeFromMarcDateTime;
 
 import java.io.IOException;
@@ -60,10 +59,9 @@ public class TestUtils {
   public static final String VALID_PARSED_RECORD_DTO_ID = "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c";
   public static final String EXISTED_INSTANCE_ID = "b9a5f035-de63-4e2c-92c2-07240c89b817";
   public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
-
+  public static final String TESTED_TAG_NAME = "333";
 
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
-  public static final String RECORDS_EDITOR_RECORDS_PATH_ID = RECORDS_EDITOR_RECORDS_PATH + "/%s";
   public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";
   public static final String INSTANCE_ID = "instanceId";
 

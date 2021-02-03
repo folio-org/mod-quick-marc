@@ -96,6 +96,12 @@
       <version>2.6</version>
     </dependency>
     <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -110,8 +116,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
-    <!-- Test dependencies -->
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
@@ -138,11 +142,11 @@
     </dependency>
 
     <!-- io.vertx.core.json.JsonObject is used for check equality of QuickMarc objects.
-         Field 'content' could be a list and for equality order of entries is not important.
-         'equals' method of QuickMarc object doesn't consider this instead of JsonObject.
+  Field 'content' could be a list and for equality order of entries is not important.
+  'equals' method of QuickMarc object doesn't consider this instead of JsonObject.
 
-         This check should be changed in future and dependency removed
-       -->
+  This check should be changed in future and dependency removed
+  -->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
@@ -150,6 +154,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
 
   <build>
     <plugins>

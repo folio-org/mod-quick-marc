@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="MODQM-78@@create-status-enum" author="psmahin">
+        <sql>
+            CREATE TYPE Status as ENUM ('NEW', 'IN_PROGRESS', 'CREATED', 'ERROR');
+        </sql>
+    </changeSet>
+
+    <changeSet id="MODQM-78@@create-record-creation-status-table" author="psmahin">
+        <createTable tableName="record_creation_status">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" primaryKeyName="pk_record_creation_status" nullable="false"/>
+            </column>
+            <column name="job_execution_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="Status" defaultValue="NEW">
+                <constraints nullable="false"/>
+            </column>
+            <column name="instance_id" type="uuid"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="MODQM-78@@create-set-status-updated-at-function" author="psmahin">
+        <createProcedure>
+            CREATE OR REPLACE FUNCTION trigger_set_status_updated_at() RETURNS TRIGGER AS $$
+            BEGIN
+            NEW.updated_at = NOW();
+            RETURN NEW;
+            END;
+            $$
+            LANGUAGE 'plpgsql';
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="MODQM-78@@create-set-status-updated-at-trigger" author="psmahin">
+        <sql>
+            CREATE TRIGGER set_status_updated_at
+            BEFORE UPDATE ON record_creation_status
+            FOR EACH ROW
+            EXECUTE PROCEDURE trigger_set_status_updated_at();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

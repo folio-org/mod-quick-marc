@@ -14,7 +14,7 @@ quickMARC API provides the following URLs:
 |  Method | URL| Permissions  | Description  | 
 |---|---|---|---|
 | GET | /records-editor/records?instanceId={instanceId}  |records-editor.records.item.get   | Retrieves QuickMarcJson by instance's id  |
-| POST| /records-editor/records|records-editor.records.item.post| Duplicate existing MARK and Instance records|
+| POST| /records-editor/records|records-editor.records.item.post| Create a new MARK and Instance records|
 | PUT | /records-editor/records/{recordId}  |records-editor.records.item.get   | Updates SRS record |
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).

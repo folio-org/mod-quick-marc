@@ -59,6 +59,26 @@ paths:
             type: string
             pattern: "[a-zA-Z]{2}"
             default: "en"
+    post:
+      responses:
+        '202':
+          description: "Request is accepted"
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: "#/components/examples/quickMarc"
+            schema:
+              $ref: "#/components/schemas/quickMarc"
+        required: true
   /records/{id}:
     put:
       responses:

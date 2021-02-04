@@ -13,28 +13,25 @@
       "version": "1.2",
       "handlers": [
         {
-          "methods": [
-            "GET"
-          ],
+          "methods": ["GET"],
           "pathPattern": "/records-editor/records",
-          "permissionsRequired": [
-            "records-editor.records.item.get"
-          ],
+          "permissionsRequired": ["records-editor.records.item.get"],
+          "modulePermissions": ["change-manager.parsedrecords.get"]
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/records-editor/records",
+          "permissionsRequired": ["records-editor.records.item.post"],
           "modulePermissions": [
-            "change-manager.parsedrecords.get"
+            "change-manager.jobexecutions.post",
+            "change-manager.records.post"
           ]
         },
         {
-          "methods": [
-            "PUT"
-          ],
+          "methods": ["PUT"],
           "pathPattern": "/records-editor/records/{id}",
-          "permissionsRequired": [
-            "records-editor.records.item.put"
-          ],
-          "modulePermissions": [
-            "change-manager.parsedrecords.put"
-          ]
+          "permissionsRequired": ["records-editor.records.item.put"],
+          "modulePermissions": ["change-manager.parsedrecords.put"]
         }
       ]
     },
@@ -58,6 +55,11 @@
       "description": "Get a record"
     },
     {
+      "permissionName": "records-editor.records.item.post",
+      "displayName": "records-editor - create a new record",
+      "description": "Create a new record"
+    },
+    {
       "permissionName": "records-editor.records.item.put",
       "displayName": "records-editor - update a record",
       "description": "Update a record"
@@ -68,6 +70,7 @@
       "description" : "All permissions for the records-editor",
       "subPermissions" : [
         "records-editor.records.item.get",
+        "records-editor.records.item.post",
         "records-editor.records.item.put"
       ]
     }

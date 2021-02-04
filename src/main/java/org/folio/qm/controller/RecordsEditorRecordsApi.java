@@ -1,15 +1,17 @@
 package org.folio.qm.controller;
 
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.rest.resource.RecordsApi;
-import org.folio.qm.service.MarcRecordsService;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.UUID;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.rest.resource.RecordsApi;
+import org.folio.qm.service.MarcRecordsService;
 
 @RestController
 @RequestMapping(value = "/records-editor")

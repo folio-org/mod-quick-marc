@@ -13,37 +13,30 @@
       "version": "1.3",
       "handlers": [
         {
-          "methods": [
-            "GET"
-          ],
+          "methods": ["GET"],
           "pathPattern": "/records-editor/records",
-          "permissionsRequired": [
-            "records-editor.records.item.get"
-          ],
+          "permissionsRequired": ["records-editor.records.item.get"],
+          "modulePermissions": ["change-manager.parsedrecords.get"]
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/records-editor/records",
+          "permissionsRequired": ["records-editor.records.item.post"],
           "modulePermissions": [
-            "change-manager.parsedrecords.get"
+            "change-manager.jobexecutions.post",
+            "change-manager.records.post"
           ]
         },
         {
-          "methods": [
-            "PUT"
-          ],
+          "methods": ["PUT"],
           "pathPattern": "/records-editor/records/{id}",
-          "permissionsRequired": [
-            "records-editor.records.item.put"
-          ],
-          "modulePermissions": [
-            "change-manager.parsedrecords.put"
-          ]
+          "permissionsRequired": ["records-editor.records.item.put"],
+          "modulePermissions": ["change-manager.parsedrecords.put"]
         },
         {
-          "methods": [
-            "GET"
-          ],
+          "methods": ["GET"],
           "pathPattern": "/records-editor/records/status",
-          "permissionsRequired": [
-            "records-editor.records.status.item.get"
-          ]
+          "permissionsRequired": ["records-editor.records.status.item.get"]
         }
       ]
     },
@@ -53,16 +46,14 @@
       "interfaceType": "system",
       "handlers": [
         {
-          "methods": [
-            "POST"
-          ],
-          "pathPattern": "/_/tenant"
+          "methods": ["POST"],
+          "pathPattern": "/_/tenant",
+          "permissionsRequired": []
         },
         {
-          "methods": [
-            "DELETE"
-          ],
-          "pathPattern": "/_/tenant"
+          "methods": ["DELETE"],
+          "pathPattern": "/_/tenant",
+          "permissionsRequired": []
         }
       ]
     },
@@ -72,9 +63,7 @@
       "interfaceType": "multiple",
       "handlers": [
         {
-          "methods": [
-            "GET"
-          ],
+          "methods": ["GET"],
           "pathPattern": "/_/jsonSchemas",
           "permissionsRequired": []
         }
@@ -86,6 +75,11 @@
       "permissionName": "records-editor.records.item.get",
       "displayName": "records-editor - get a record",
       "description": "Get a record"
+    },
+    {
+      "permissionName": "records-editor.records.item.post",
+      "displayName": "records-editor - create a new record",
+      "description": "Create a new record"
     },
     {
       "permissionName": "records-editor.records.item.put",
@@ -103,6 +97,7 @@
       "description": "All permissions for the records-editor",
       "subPermissions": [
         "records-editor.records.item.get",
+        "records-editor.records.item.post",
         "records-editor.records.item.put",
         "records-editor.records.status.item.get"
       ]

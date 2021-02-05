@@ -22,7 +22,7 @@
 
   <properties>
     <java.version>11</java.version>
-    <folio-spring-base.version>1.0.1-SNAPSHOT</folio-spring-base.version>
+    <folio-spring-base.version>1.0.1</folio-spring-base.version>
     <openapi-generator.version>4.3.1</openapi-generator.version>
     <json.version>20200518</json.version>
     <junit-extensions.version>2.4.0</junit-extensions.version>

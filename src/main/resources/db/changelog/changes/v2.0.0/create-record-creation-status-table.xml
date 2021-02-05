@@ -4,6 +4,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <changeSet id="MODQM-78@@create-pgcrypto-extension" author="psmahin">
+        <sql dbms="postgresql">
+            CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
+        </sql>
+    </changeSet>
+
     <changeSet id="MODQM-78@@create-status-enum" author="psmahin">
         <sql>
             CREATE TYPE Status as ENUM ('NEW', 'IN_PROGRESS', 'CREATED', 'ERROR');

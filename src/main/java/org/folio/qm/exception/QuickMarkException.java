@@ -2,7 +2,7 @@ package org.folio.qm.exception;
 
 import static org.folio.qm.util.ErrorUtils.buildError;
 
-import org.folio.qm.domain.dto.Error;
+import org.folio.tenant.domain.dto.Error;
 import org.folio.qm.util.ErrorUtils;
 
 public abstract class QuickMarkException extends RuntimeException {

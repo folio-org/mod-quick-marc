@@ -62,8 +62,10 @@ public class TestUtils {
   public static final String TESTED_TAG_NAME = "333";
 
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
+  public static final String RECORDS_EDITOR_RECORDS_STATUS_PATH = "/records-editor/records/status";
   public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";
   public static final String INSTANCE_ID = "instanceId";
+  public static final String QM_RECORD_ID = "qmRecordId";
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));
@@ -85,6 +87,13 @@ public class TestUtils {
     return recordsEditorPath() + buildQuery(parameter, value);
   }
 
+  public static String recordsEditorStatusPath() {
+    return RECORDS_EDITOR_RECORDS_STATUS_PATH;
+  }
+
+  public static String recordsEditorStatusPath(String parameter, String value) {
+    return recordsEditorStatusPath() + buildQuery(parameter, value);
+  }
 
   public static String recordsEditorResourceByIdPath(String id) {
     return recordsEditorPath() + "/" + id;

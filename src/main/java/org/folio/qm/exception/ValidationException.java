@@ -2,7 +2,7 @@ package org.folio.qm.exception;
 
 import org.springframework.http.HttpStatus;
 
-import org.folio.qm.domain.dto.Error;
+import org.folio.tenant.domain.dto.Error;
 
 /**
  * Custom exception for validation errors

@@ -13,8 +13,9 @@ quickMARC API provides the following URLs:
 
 |  Method | URL| Permissions  | Description  | 
 |---|---|---|---|
-| GET | /records-editor/records?instanceId={instanceId}  |records-editor.records.item.get   | Retrieves QuickMarcJson by instance's id  |
+| GET | /records-editor/records?instanceId={instanceId}  |records-editor.records.item.get   | Retrieves QuickMarc by instance's id  |
 | PUT | /records-editor/records/{recordId}  |records-editor.records.item.get   | Updates SRS record |
+| GET | /records-editor/records/status?qmRecordId={qmRecordId}  |records-editor.records.status.item.get   | Retrieves status of MARC bibliographic record creation  |
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).
 

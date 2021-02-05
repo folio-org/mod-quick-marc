@@ -91,6 +91,12 @@
       <version>${mapstruct.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${mapstruct.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
@@ -98,6 +104,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- Test dependencies -->
@@ -140,13 +147,31 @@
       <version>${jsonpath.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.github.glytching</groupId>
+      <artifactId>junit-extensions</artifactId>
+      <version>2.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.15.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.15.1</version>
+      <scope>test</scope>
+    </dependency>
 
     <!-- io.vertx.core.json.JsonObject is used for check equality of QuickMarc objects.
-  Field 'content' could be a list and for equality order of entries is not important.
-  'equals' method of QuickMarc object doesn't consider this instead of JsonObject.
+    Field 'content' could be a list and for equality order of entries is not important.
+    'equals' method of QuickMarc object doesn't consider this instead of JsonObject.
 
-  This check should be changed in future and dependency removed
-  -->
+    This check should be changed in future and dependency removed
+    -->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
@@ -208,11 +233,14 @@
               <generateApiTests>true</generateApiTests>
               <generateApiDocumentation>true</generateApiDocumentation>
               <generateModels>true</generateModels>
-              <modelsToGenerate>error,errors,parameter,quickMarc,quickMarc_fields,quickMarc_updateInfo</modelsToGenerate>
+              <modelsToGenerate>creationStatus,creationStatus_metadata,quickMarc,quickMarc_fields,quickMarc_updateInfo</modelsToGenerate>
               <generateModelTests>false</generateModelTests>
               <generateSupportingFiles>true</generateSupportingFiles>
               <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
               <generateModelDocumentation>true</generateModelDocumentation>
+              <importMappings>
+                <importMapping>error=org.folio.tenant.domain.dto.Error</importMapping>
+              </importMappings>
               <configOptions>
                 <java8>true</java8>
                 <dateLibrary>java</dateLibrary>

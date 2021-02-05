@@ -3,7 +3,7 @@ package org.folio.qm.util;
 
 import org.springframework.http.HttpStatus;
 
-import org.folio.qm.domain.dto.Error;
+import org.folio.tenant.domain.dto.Error;
 
 public final class ErrorUtils {
 
@@ -11,7 +11,7 @@ public final class ErrorUtils {
   }
 
   public static Error buildError(ErrorType type, String message) {
-    return new Error().code(HttpStatus.UNPROCESSABLE_ENTITY.name()).type(type.getTypeCode()).message(message);
+    return new Error().code(HttpStatus.INTERNAL_SERVER_ERROR.name()).type(type.getTypeCode()).message(message);
   }
 
   public static Error buildError(int status, String message) {

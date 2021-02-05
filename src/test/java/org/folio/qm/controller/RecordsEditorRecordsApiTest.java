@@ -6,14 +6,19 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 
 import static org.folio.qm.utils.TestUtils.EXISTED_INSTANCE_ID;
 import static org.folio.qm.utils.TestUtils.INSTANCE_ID;
 import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
 import static org.folio.qm.utils.TestUtils.QM_LEADER_MISMATCH1;
 import static org.folio.qm.utils.TestUtils.QM_LEADER_MISMATCH2;
+import static org.folio.qm.utils.TestUtils.QM_RECORD_ID;
 import static org.folio.qm.utils.TestUtils.QM_RECORD_PATH;
 import static org.folio.qm.utils.TestUtils.QM_WRONG_ITEM_LENGTH;
 import static org.folio.qm.utils.TestUtils.VALID_PARSED_RECORD_DTO_ID;
@@ -28,6 +33,7 @@ import static org.folio.qm.utils.TestUtils.mockPut;
 import static org.folio.qm.utils.TestUtils.readQuickMark;
 import static org.folio.qm.utils.TestUtils.recordsEditorPath;
 import static org.folio.qm.utils.TestUtils.recordsEditorResourceByIdPath;
+import static org.folio.qm.utils.TestUtils.recordsEditorStatusPath;
 import static org.folio.qm.utils.TestUtils.verifyDateTimeUpdating;
 
 import java.util.Collections;
@@ -39,12 +45,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import org.folio.qm.domain.dto.Error;
+import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.QuickMarcFields;
 import org.folio.qm.util.ErrorCodes;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.tenant.domain.dto.Error;
 
 @Log4j2
 class RecordsEditorRecordsApiTest extends BaseApiTest {
@@ -211,5 +218,33 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
       verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_UNPROCESSABLE_ENTITY)
         .as(Error.class);
     assertThat(error.getCode(), equalTo(ErrorCodes.LEADER_AND_008_MISMATCHING.name()));
+  }
+
+  @Test
+  void testGetCreationStatus() {
+    log.info("===== Verify GET record status: Successful =====");
+
+    var id = UUID.randomUUID();
+    saveCreationStatus(id, id);
+    var status = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, id.toString()), SC_OK).as(CreationStatus.class);
+
+    assertThat(status, allOf(
+      hasProperty(QM_RECORD_ID, equalTo(id.toString())),
+      hasProperty("status", equalTo(CreationStatus.StatusEnum.NEW))
+    ));
+    assertThat(status.getMetadata(), allOf(
+      notNullValue(),
+      hasProperty("createdAt", notNullValue())
+    ));
+  }
+
+  @Test
+  void testReturnErrorIfRecordNotFound() {
+    log.info("===== Verify GET record status: Not found =====");
+
+    var notExistedId = UUID.randomUUID().toString();
+    var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, notExistedId), SC_NOT_FOUND).as(Error.class);
+
+    assertThat(error.getMessage(), containsString("not found"));
   }
 }

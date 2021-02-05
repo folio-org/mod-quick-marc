@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: mod-quick-marc
+#  datasource:
+#    password: folio_admin
+#    url: jdbc:postgresql://localhost:54321/okapi_modules
+#    username: folio_admin
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  liquibase:
+    changeLog: classpath:db/changelog/changelog-master.xml
+    enabled: true
+  jackson:
+    default-property-inclusion: NON_EMPTY
+feign:
+  client:
+    config:
+      change-manager:
+        logger-level: full
+folio:
+  tenant:
+    validation:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,env,httptrace
+server:
+  port: 8081

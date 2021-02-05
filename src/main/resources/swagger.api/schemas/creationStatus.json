@@ -1,0 +1,54 @@
+{
+  "$id": "https://example.com/arrays.schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Status of MARC bibliographic record creation",
+  "type": "object",
+  "properties": {
+    "qmRecordId": {
+      "description": "ID of ParsedRecord to be created",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "example": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1"
+    },
+    "instanceId": {
+      "description": "ID of created Instance",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "example": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c"
+    },
+    "jobExecutionId": {
+      "description": "ID of job",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "example": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c"
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of creation",
+      "example": "CREATED",
+      "enum": [
+        "NEW",
+        "IN_PROGRESS",
+        "CREATED",
+        "ERROR"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "description": "Date and time of creation of the status",
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-07-14T12:20:10.000"
+        },
+        "updatedAt": {
+          "description": "Date and time of last successful update of the status",
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-07-14T12:20:10.000"
+        }
+      }
+    }
+  }
+}

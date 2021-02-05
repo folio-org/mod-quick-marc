@@ -22,31 +22,26 @@
 
   <properties>
     <java.version>11</java.version>
-    <folio-spring-base.version>1.0.2-SNAPSHOT</folio-spring-base.version>
-    <openapi-generator.version>4.3.1</openapi-generator.version>
-    <json.version>20200518</json.version>
-    <junit-extensions.version>2.4.0</junit-extensions.version>
-    <mockito.version>3.6.28</mockito.version>
-    <wiremock.version>2.27.2</wiremock.version>
-    <mapstruct.version>1.3.1.Final</mapstruct.version>
-    <groovy.version>3.0.7</groovy.version>
-    <!-- -->
-    <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
-
-    <jsonschema_paths>schemas</jsonschema_paths>
-    <vertx.version>4.0.0</vertx.version>
-
-    <rest-assured.version>4.3.0</rest-assured.version>
-
-    <awaitility.version>4.0.2</awaitility.version>
-    <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <generated_sources_dir>${project.build.directory}/generated-sources</generated_sources_dir>
-    <jsonschema2pojo_output_dir>${generated_sources_dir}/jsonschema2pojo</jsonschema2pojo_output_dir>
+    <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
+
+    <folio-spring-base.version>1.0.2-SNAPSHOT</folio-spring-base.version>
+    <mod-srm-client.version>2.4.3</mod-srm-client.version>
+    <openapi-generator.version>4.3.1</openapi-generator.version>
+    <mockito.version>3.6.28</mockito.version>
+    <mapstruct.version>1.3.1.Final</mapstruct.version>
+    <commons-lang.version>2.6</commons-lang.version>
+    <groovy.version>3.0.7</groovy.version>
+
+    <!-- Test properties-->
+    <rest-assured.version>4.3.0</rest-assured.version>
+    <wiremock.version>2.27.2</wiremock.version>
     <marc4j.version>2.9.1</marc4j.version>
     <jsonpath.version>2.4.0</jsonpath.version>
-    <mod-srm-client.version>2.4.3</mod-srm-client.version>
+    <embedded-postgresql.version>1.6.2</embedded-postgresql.version>
+    <junit-extensions.version>2.4.0</junit-extensions.version>
+    <vertx.version>4.0.0</vertx.version>
   </properties>
 
   <dependencies>
@@ -99,7 +94,7 @@
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
+      <version>${commons-lang.version}</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -150,22 +145,15 @@
     <dependency>
       <groupId>io.github.glytching</groupId>
       <artifactId>junit-extensions</artifactId>
-      <version>2.4.0</version>
+      <version>${junit-extensions.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>1.15.1</version>
+      <groupId>io.zonky.test</groupId>
+      <artifactId>embedded-database-spring-test</artifactId>
+      <version>${embedded-postgresql.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>1.15.1</version>
-      <scope>test</scope>
-    </dependency>
-
     <!-- io.vertx.core.json.JsonObject is used for check equality of QuickMarc objects.
     Field 'content' could be a list and for equality order of entries is not important.
     'equals' method of QuickMarc object doesn't consider this instead of JsonObject.

@@ -29,16 +29,16 @@
     <folio-spring-base.version>1.0.2-SNAPSHOT</folio-spring-base.version>
     <mod-srm-client.version>2.4.3</mod-srm-client.version>
     <openapi-generator.version>4.3.1</openapi-generator.version>
-    <mockito.version>3.6.28</mockito.version>
-    <mapstruct.version>1.3.1.Final</mapstruct.version>
+    <mockito.version>3.7.7</mockito.version>
+    <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
     <groovy.version>3.0.7</groovy.version>
 
     <!-- Test properties-->
-    <rest-assured.version>4.3.0</rest-assured.version>
+    <rest-assured.version>4.3.3</rest-assured.version>
     <wiremock.version>2.27.2</wiremock.version>
     <marc4j.version>2.9.1</marc4j.version>
-    <jsonpath.version>2.4.0</jsonpath.version>
+    <jsonpath.version>2.5.0</jsonpath.version>
     <embedded-postgresql.version>1.6.2</embedded-postgresql.version>
     <junit-extensions.version>2.4.0</junit-extensions.version>
     <vertx.version>4.0.0</vertx.version>
@@ -179,6 +179,14 @@
           <layers>
             <enabled>true</enabled>
           </layers>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <configuration>
+          <generateBackupPoms>false</generateBackupPoms>
         </configuration>
       </plugin>
 

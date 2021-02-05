@@ -1,17 +1,31 @@
 package org.folio.qm.controller;
 
+import io.restassured.response.Response;
+import io.vertx.core.json.JsonObject;
+import lombok.extern.log4j.Log4j2;
+import org.folio.qm.domain.dto.Error;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcFields;
+import org.folio.qm.util.ErrorCodes;
+import org.folio.qm.util.ErrorUtils;
+import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Collections;
+import java.util.UUID;
+
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NOT_IMPLEMENTED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-
 import static org.folio.qm.utils.TestUtils.EXISTED_INSTANCE_ID;
 import static org.folio.qm.utils.TestUtils.INSTANCE_ID;
 import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.TestUtils.QM_EDITED_RECORD_PATH;
 import static org.folio.qm.utils.TestUtils.QM_LEADER_MISMATCH1;
 import static org.folio.qm.utils.TestUtils.QM_LEADER_MISMATCH2;
 import static org.folio.qm.utils.TestUtils.QM_RECORD_PATH;
@@ -29,22 +43,9 @@ import static org.folio.qm.utils.TestUtils.readQuickMark;
 import static org.folio.qm.utils.TestUtils.recordsEditorPath;
 import static org.folio.qm.utils.TestUtils.recordsEditorResourceByIdPath;
 import static org.folio.qm.utils.TestUtils.verifyDateTimeUpdating;
-
-import java.util.Collections;
-import java.util.UUID;
-
-import io.vertx.core.json.JsonObject;
-import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import org.folio.qm.domain.dto.Error;
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.QuickMarcFields;
-import org.folio.qm.util.ErrorCodes;
-import org.folio.qm.util.ErrorUtils;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 @Log4j2
 class RecordsEditorRecordsApiTest extends BaseApiTest {
@@ -211,5 +212,16 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
       verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_UNPROCESSABLE_ENTITY)
         .as(Error.class);
     assertThat(error.getCode(), equalTo(ErrorCodes.LEADER_AND_008_MISMATCHING.name()));
+  }
+
+  @Test
+  void testPostQuickMarkValidRecordAccepted(){
+    log.info("===== Verify POST record: Successful =====");
+    QuickMarc quickMarcJson = readQuickMark(QM_EDITED_RECORD_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .instanceId(EXISTED_INSTANCE_ID);
+
+    Response response = verifyPost(recordsEditorPath(), quickMarcJson, SC_NOT_IMPLEMENTED);
+    assertThat(response.getStatusCode(), equalTo(SC_NOT_IMPLEMENTED));
   }
 }

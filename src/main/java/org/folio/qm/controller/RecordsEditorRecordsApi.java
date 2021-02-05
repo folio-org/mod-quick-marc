@@ -2,6 +2,9 @@ package org.folio.qm.controller;
 
 import java.util.UUID;
 
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,11 @@ public class RecordsEditorRecordsApi implements RecordsApi {
   public ResponseEntity<QuickMarc> getRecordByInstanceId(UUID instanceId, String lang) {
     var quickMarc = marcRecordsService.findByInstanceId(instanceId);
     return ResponseEntity.ok(quickMarc);
+  }
+
+  @Override
+  public ResponseEntity<Void> recordsPost(@Valid QuickMarc quickMarc) {
+    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
   }
 
   @Override

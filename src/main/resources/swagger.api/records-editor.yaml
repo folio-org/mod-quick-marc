@@ -8,7 +8,7 @@ paths:
   /records:
     get:
       responses:
-        '200':
+        "200":
           description: MARC record successfully retrieved
           content:
             application/json:
@@ -16,8 +16,9 @@ paths:
                 $ref: "#/components/examples/quickMarc"
               schema:
                 $ref: "#/components/schemas/quickMarc"
-        '400':
-          description: Bad request, e.g. malformed request body or query parameter.
+        "400":
+          description:
+            Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
             with malformed data) provided in the response.
           content:
@@ -26,7 +27,7 @@ paths:
                 $ref: "#/components/examples/error"
               schema:
                 $ref: "#/components/schemas/error"
-        '404':
+        "404":
           description: MARC record with a given ID not found
           content:
             application/json:
@@ -34,7 +35,7 @@ paths:
                 $ref: "#/components/examples/error"
               schema:
                 $ref: "#/components/schemas/error"
-        '500':
+        "500":
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
@@ -59,13 +60,34 @@ paths:
             type: string
             pattern: "[a-zA-Z]{2}"
             default: "en"
+    post:
+      responses:
+        "202":
+          description: Request is accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: "#/components/examples/quickMarc"
+            schema:
+              $ref: "#/components/schemas/quickMarc"
+        required: true
   /records/{id}:
     put:
       responses:
-        '202':
+        "202":
           description: MARC record accepted for updating
-        '400':
-          description: Bad request, e.g. malformed request body or query parameter.
+        "400":
+          description:
+            Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
             with malformed data) provided in the response.
           content:
@@ -74,7 +96,7 @@ paths:
                 $ref: "#/components/examples/error"
               schema:
                 $ref: "#/components/schemas/error"
-        '500':
+        "500":
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
@@ -110,6 +132,8 @@ components:
       format: uuid
   examples:
     quickMarc:
-      $ref: examples/quickMarcJson.sample
+      value:
+        $ref: examples/quickMarcJson.sample
     error:
-      $ref: examples/error.sample
+      value:
+        $ref: examples/error.sample

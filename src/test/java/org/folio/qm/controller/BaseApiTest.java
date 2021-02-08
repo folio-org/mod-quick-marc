@@ -1,6 +1,6 @@
 package org.folio.qm.controller;
 
-import java.util.UUID;
+import static org.folio.qm.utils.TestUtils.TENANT_ID;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.RestAssured;
@@ -11,6 +11,7 @@ import wiremock.org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +19,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.jdbc.JdbcTestUtils;
 
+import org.folio.qm.extension.DatabaseExtension;
 import org.folio.qm.extension.WireMockInitializer;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
@@ -29,22 +30,22 @@ import org.folio.tenant.domain.dto.TenantAttributes;
   properties = "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration"
 )
 @ContextConfiguration(initializers = {WireMockInitializer.class})
+@ExtendWith(DatabaseExtension.class)
 @AutoConfigureEmbeddedDatabase
 class BaseApiTest {
 
-  private static final String TENANT_ID = "test";
   private static boolean dbInitialized = false;
 
   @Autowired
   protected WireMockServer wireMockServer;
+  @Autowired
+  protected FolioModuleMetadata metadata;
   @Autowired
   protected JdbcTemplate jdbcTemplate;
   @Value("${x-okapi-url}")
   private String okapiUrl;
   @LocalServerPort
   private Integer port;
-  @Autowired
-  private FolioModuleMetadata metadata;
 
   @BeforeEach
   void before() {
@@ -55,9 +56,8 @@ class BaseApiTest {
   }
 
   @AfterEach
-  public void afterEach() {
+  void afterEach() {
     this.wireMockServer.resetAll();
-    JdbcTestUtils.deleteFromTables(jdbcTemplate, creationStatusTable());
   }
 
   protected Response verifyGet(String path, int code) {
@@ -104,14 +104,4 @@ class BaseApiTest {
     return "http://localhost:" + port + path;
   }
 
-
-  private String creationStatusTable() {
-    return metadata.getDBSchemaName(TENANT_ID) + ".record_creation_status";
-  }
-
-  protected void saveCreationStatus(UUID id, UUID jobExecutionId) {
-    jdbcTemplate.update(
-      "INSERT INTO " + creationStatusTable() + " (id, job_execution_id) VALUES (?, ?)", id, jobExecutionId
-    );
-  }
 }

@@ -14,6 +14,8 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 
+import static org.folio.qm.utils.TestDBUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.utils.TestDBUtils.saveCreationStatus;
 import static org.folio.qm.utils.TestUtils.EXISTED_INSTANCE_ID;
 import static org.folio.qm.utils.TestUtils.INSTANCE_ID;
 import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
@@ -51,6 +53,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.QuickMarcFields;
+import org.folio.qm.extension.ClearTable;
 import org.folio.qm.util.ErrorCodes;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
@@ -224,11 +227,12 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   }
 
   @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
   void testGetCreationStatus() {
     log.info("===== Verify GET record status: Successful =====");
 
     var id = UUID.randomUUID();
-    saveCreationStatus(id, id);
+    saveCreationStatus(id, id, metadata, jdbcTemplate);
     var status = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, id.toString()), SC_OK).as(CreationStatus.class);
 
     assertThat(status, allOf(
@@ -242,7 +246,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   }
 
   @Test
-  void testReturnErrorIfRecordNotFound() {
+  void testReturnErrorIfStatusNotFound() {
     log.info("===== Verify GET record status: Not found =====");
 
     var notExistedId = UUID.randomUUID().toString();

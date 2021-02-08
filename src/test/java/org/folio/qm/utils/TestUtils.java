@@ -61,6 +61,7 @@ public class TestUtils {
   public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
   public static final String TESTED_TAG_NAME = "333";
 
+  public static final String TENANT_ID = "test";
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
   public static final String RECORDS_EDITOR_RECORDS_STATUS_PATH = "/records-editor/records/status";
   public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";

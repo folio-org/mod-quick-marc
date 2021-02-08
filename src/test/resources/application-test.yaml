@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: mod-quick-marc
+  liquibase:
+    changeLog: classpath:db/changelog/changelog-master.xml
+    enabled: true
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true

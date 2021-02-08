@@ -1,4 +1,4 @@
-package org.folio.qm.service;
+package org.folio.qm.service.impl;
 
 import static org.folio.qm.util.ErrorUtils.buildError;
 
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ValidationException;
+import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
 
 @Service

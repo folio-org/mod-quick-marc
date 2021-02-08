@@ -10,7 +10,7 @@
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "1.2",
+      "version": "1.3",
       "handlers": [
         {
           "methods": ["GET"],
@@ -32,18 +32,40 @@
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["records-editor.records.item.put"],
           "modulePermissions": ["change-manager.parsedrecords.put"]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/records-editor/records/status",
+          "permissionsRequired": ["records-editor.records.status.item.get"]
+        }
+      ]
+    },
+    {
+      "id": "_tenant",
+      "version": "1.2",
+      "interfaceType": "system",
+      "handlers": [
+        {
+          "methods": ["POST"],
+          "pathPattern": "/_/tenant",
+          "permissionsRequired": []
+        },
+        {
+          "methods": ["DELETE"],
+          "pathPattern": "/_/tenant",
+          "permissionsRequired": []
         }
       ]
     },
     {
       "id": "_jsonSchemas",
       "version": "1.0",
-      "interfaceType" : "multiple",
-      "handlers" : [
+      "interfaceType": "multiple",
+      "handlers": [
         {
-          "methods" : [ "GET" ],
-          "pathPattern" : "/_/jsonSchemas",
-          "permissionsRequired" : [ ]
+          "methods": ["GET"],
+          "pathPattern": "/_/jsonSchemas",
+          "permissionsRequired": []
         }
       ]
     }
@@ -65,13 +87,19 @@
       "description": "Update a record"
     },
     {
-      "permissionName" : "records-editor.all",
-      "displayName" : "All records-editor permissions",
-      "description" : "All permissions for the records-editor",
-      "subPermissions" : [
+      "permissionName": "records-editor.records.status.item.get",
+      "displayName": "records-editor - get record creation status",
+      "description": "Get record creation status"
+    },
+    {
+      "permissionName": "records-editor.all",
+      "displayName": "All records-editor permissions",
+      "description": "All permissions for the records-editor",
+      "subPermissions": [
         "records-editor.records.item.get",
         "records-editor.records.item.post",
-        "records-editor.records.item.put"
+        "records-editor.records.item.put",
+        "records-editor.records.status.item.get"
       ]
     }
   ],
@@ -81,7 +109,13 @@
     "dockerArgs": {
       "HostConfig": {
         "Memory": 357913941,
-        "PortBindings": { "8081/tcp": [ { "HostPort": "%p" } ] }
+        "PortBindings": {
+          "8081/tcp": [
+            {
+              "HostPort": "%p"
+            }
+          ]
+        }
       }
     },
     "env": [

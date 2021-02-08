@@ -61,9 +61,12 @@ public class TestUtils {
   public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
   public static final String TESTED_TAG_NAME = "333";
 
+  public static final String TENANT_ID = "test";
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
+  public static final String RECORDS_EDITOR_RECORDS_STATUS_PATH = "/records-editor/records/status";
   public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";
   public static final String INSTANCE_ID = "instanceId";
+  public static final String QM_RECORD_ID = "qmRecordId";
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));
@@ -85,6 +88,13 @@ public class TestUtils {
     return recordsEditorPath() + buildQuery(parameter, value);
   }
 
+  public static String recordsEditorStatusPath() {
+    return RECORDS_EDITOR_RECORDS_STATUS_PATH;
+  }
+
+  public static String recordsEditorStatusPath(String parameter, String value) {
+    return recordsEditorStatusPath() + buildQuery(parameter, value);
+  }
 
   public static String recordsEditorResourceByIdPath(String id) {
     return recordsEditorPath() + "/" + id;

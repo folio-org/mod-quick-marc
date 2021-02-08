@@ -313,7 +313,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   }
 
   /**
-   * This method returns indicators list of QuickMarcJson {@link QuickMarcFields}.
+   * This method returns indicators list of QuickMarc {@link QuickMarcFields}.
    *
    * @param field field from {@link QuickMarc}
    * @return list of indicators

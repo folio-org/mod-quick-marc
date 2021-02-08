@@ -33,6 +33,11 @@
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
     <groovy.version>3.0.7</groovy.version>
+    <sonar.exclusions>
+	src/main/java/org/folio/qm/domain/entity/**,
+	src/main/java/org/folio/qm/client/**,
+	src/main/java/org/folio/qm/repository/**
+    </sonar.exclusions>
 
     <!-- Test properties-->
     <rest-assured.version>4.3.3</rest-assured.version>

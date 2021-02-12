@@ -18,6 +18,10 @@ public final class ErrorUtils {
     return new Error().code(HttpStatus.valueOf(status).name()).message(message);
   }
 
+  public static Error buildError(HttpStatus status, ErrorType type, String message) {
+    return new Error().code(status.name()).type(type.getTypeCode()).message(message);
+  }
+
   public static Error buildError(int status, ErrorType type, String message) {
     return new Error().code(HttpStatus.valueOf(status).name()).type(type.getTypeCode()).message(message);
   }

@@ -246,13 +246,41 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   }
 
   @Test
-  void testReturnErrorIfStatusNotFound() {
+  void testReturn404IfStatusNotFound() {
     log.info("===== Verify GET record status: Not found =====");
 
     var notExistedId = UUID.randomUUID().toString();
     var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, notExistedId), SC_NOT_FOUND).as(Error.class);
 
     assertThat(error.getMessage(), containsString("not found"));
+  }
+
+  @Test
+  void testReturn400IfQmRecordIdIsInvalid() {
+    log.info("===== Verify GET record status: Parameter invalid =====");
+
+    var invalidId = "invalid";
+    var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, invalidId), SC_BAD_REQUEST).as(Error.class);
+
+    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' is invalid"));
+  }
+
+  @Test
+  void testReturn400IfQmRecordIdIsMissing() {
+    log.info("===== Verify GET record status: Parameter missing =====");
+
+    var error = verifyGet(recordsEditorStatusPath(), SC_BAD_REQUEST).as(Error.class);
+
+    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' is required"));
+  }
+
+  @Test
+  void testReturn400IfQmRecordIdIsEmpty() {
+    log.info("===== Verify GET record status: Parameter empty =====");
+
+    var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, ""), SC_BAD_REQUEST).as(Error.class);
+
+    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' should be not null"));
   }
 
   @Test

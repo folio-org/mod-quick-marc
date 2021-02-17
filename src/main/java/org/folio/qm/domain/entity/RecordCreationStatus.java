@@ -11,16 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
-import org.hibernate.annotations.TypeDef;
-
-import org.folio.spring.domain.PostgreEnumTypeSql;
 
 @Data
 @Entity
-@TypeDef(
-  name = "pgsql_enum",
-  typeClass = PostgreEnumTypeSql.class
-)
 public class RecordCreationStatus {
 
   @Id

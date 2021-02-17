@@ -16,6 +16,12 @@
         </sql>
     </changeSet>
 
+    <changeSet id="MODQM-79@@create-status-enum-cast" author="psmahin">
+        <sql>
+            CREATE CAST (character varying as Status) WITH INOUT AS IMPLICIT;
+        </sql>
+    </changeSet>
+
     <changeSet id="MODQM-78@@create-record-creation-status-table" author="psmahin">
         <createTable tableName="record_creation_status">
             <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
@@ -54,6 +60,12 @@
             FOR EACH ROW
             EXECUTE PROCEDURE trigger_set_status_updated_at();
         </sql>
+    </changeSet>
+
+    <changeSet id="MODQM-79@@create-status-job-execution-id-index" author="psmahin">
+        <createIndex tableName="record_creation_status" indexName="idx_job_execution_id">
+            <column name="job_execution_id"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

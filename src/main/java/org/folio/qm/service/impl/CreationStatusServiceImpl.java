@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import org.folio.qm.domain.entity.RecordCreationStatus;
-import org.folio.qm.repository.RecordCreationStatusRepository;
+import org.folio.qm.domain.repository.RecordCreationStatusRepository;
 import org.folio.qm.service.CreationStatusService;
 
 @Service
@@ -21,4 +21,8 @@ public class CreationStatusServiceImpl implements CreationStatusService {
     return statusRepository.findById(id);
   }
 
+  @Override
+  public Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId) {
+    return statusRepository.findByJobExecutionId(jobExecutionId);
+  }
 }

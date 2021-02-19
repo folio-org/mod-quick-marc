@@ -15,10 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import org.folio.tenant.domain.dto.Error;
 import org.folio.qm.exception.QuickMarkException;
 import org.folio.spring.exception.NotFoundException;
+import org.folio.tenant.domain.dto.Error;
 
 @RestControllerAdvice
 public class ErrorHandling {
@@ -49,7 +50,17 @@ public class ErrorHandling {
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
   public Error handleMissingParameterException(MissingServletRequestParameterException e, HttpServletResponse response) {
-    var message = e.getParameterName() + " is required";
+    var message = "Parameter '" + e.getParameterName() + "' is required";
+    return buildBadRequestResponse(response, message);
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public Error handleGlobalException(MethodArgumentTypeMismatchException e, HttpServletResponse response) {
+    var message = "Parameter '" + e.getParameter().getParameterName() + "' is invalid";
+    return buildBadRequestResponse(response, message);
+  }
+
+  private Error buildBadRequestResponse(HttpServletResponse response, String message) {
     var status = HttpStatus.BAD_REQUEST.value();
     response.setStatus(status);
     return buildError(status, INTERNAL, message);

@@ -6,5 +6,7 @@ import org.folio.qm.domain.dto.QuickMarc;
 
 public interface ValidationService {
 
-  void validateIds(QuickMarc quickMarc, UUID instanceId);
+  void validateIdsMatch(QuickMarc quickMarc, UUID instanceId);
+
+  void validateQmRecordId(UUID qmRecordId);
 }

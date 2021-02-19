@@ -131,7 +131,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/creationStatus"
         '400':
-          description: Bad request, e.g. malformed request body or query parameter.
+          description:
+            Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
             with malformed data) provided in the response.
           content:

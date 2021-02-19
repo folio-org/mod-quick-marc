@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.extension.ClearTable;
 
-public class KafkaListenerApiTest extends BaseApiTest {
+class KafkaListenerApiTest extends BaseApiTest {
 
   private static final UUID JOB_EXECUTION_ID = UUID.fromString("a7fb1c32-1ffb-4a22-a76a-4067284fe68d");
 

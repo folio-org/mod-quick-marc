@@ -33,6 +33,11 @@
         "ERROR"
       ]
     },
+    "errorMessage": {
+      "type": "string",
+      "description": "Error message for 'ERROR' status",
+      "example": "Failed to create instance"
+    },
     "metadata": {
       "type": "object",
       "properties": {

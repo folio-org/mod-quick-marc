@@ -33,6 +33,7 @@
             <column name="status" type="Status" defaultValue="NEW">
                 <constraints nullable="false"/>
             </column>
+            <column name="error_message" type="text"/>
             <column name="instance_id" type="uuid"/>
             <column name="created_at" type="timestamp" defaultValueComputed="now()">
                 <constraints nullable="false"/>

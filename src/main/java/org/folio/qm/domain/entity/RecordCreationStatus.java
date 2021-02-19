@@ -11,9 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Data
 @Entity
+@DynamicUpdate
 public class RecordCreationStatus {
 
   @Id
@@ -26,6 +28,8 @@ public class RecordCreationStatus {
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private RecordCreationStatusEnum status;
+
+  private String errorMessage;
 
   private UUID instanceId;
 

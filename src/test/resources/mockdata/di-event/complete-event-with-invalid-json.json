@@ -1,5 +1,5 @@
 {
-  "eventType": "DI_ERROR",
+  "eventType": "DI_COMPLETED",
   "profileSnapshot": {
     "id": "5595ddd0-c0ce-435e-8113-6cd693cff915",
     "profileId": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
@@ -605,6 +605,6 @@
   "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWt1X2FkbWluIiwidXNlcl9pZCI6IjVkMTdhMDM3LWE1ZjYtNTQ3NS1iNGY4LWNiY2Q2ODQyOWIyYSIsIm1vZHVsZSI6Im1vZC1kYXRhLWltcG9ydC0xLjEyLjAtU05BUFNIT1QuMTY3IiwiZXh0cmFfcGVybWlzc2lvbnMiOlsiU1lTI21vZC1kYXRhLWltcG9ydC0xLjEyLjAtU05BUFNIT1QuMTY3I1wvZGF0YS1pbXBvcnRcL3VwbG9hZERlZmluaXRpb25zXC97dXBsb2FkRGVmaW5pdGlvbklkfVwvcHJvY2Vzc0ZpbGVzI1tQT1NUXSJdLCJ0ZW5hbnQiOiJkaWt1In0.DH-FwUrCygNkgVPRJcFkkAEkKUav1qmhESPwMKb3L1I",
   "okapiUrl": "http://okapi:9130",
   "context": {
-    "ERROR": "Instance was not created"
+    "INSTANCE": "id:55a76b7b-841d-45b9-9e64-d0827b9e2480"
   }
 }

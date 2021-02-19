@@ -18,11 +18,16 @@ public class DIEventUtils {
     return Optional.ofNullable(data.getContext().get("INSTANCE"))
       .map(instancePayload -> {
         try {
-          return UUID.fromString(objectMapper.readTree(instancePayload).get("id").asText());
+          var idNode = objectMapper.readTree(instancePayload).get("id");
+          return idNode != null ? UUID.fromString(idNode.asText()) : null;
         } catch (JsonProcessingException e) {
-          log.debug("Failed to extract instanceId", e);
-          return null;
+          log.info("Failed to process json", e);
+          throw new IllegalStateException("Failed to process json with message: " + e.getMessage());
         }
       });
+  }
+
+  public static Optional<String> extractErrorMessage(DataImportEventPayload data) {
+    return Optional.ofNullable(data.getContext().get("ERROR"));
   }
 }

@@ -33,6 +33,7 @@ public class TestDBUtils {
       var instanceId = rs.getString("instance_id");
       recordCreationStatus.setInstanceId(instanceId == null ? null : UUID.fromString(instanceId));
       recordCreationStatus.setStatus(RecordCreationStatusEnum.valueOf(rs.getString("status")));
+      recordCreationStatus.setErrorMessage(rs.getString("error_message"));
       recordCreationStatus.setCreatedAt(rs.getTimestamp("created_at"));
       recordCreationStatus.setUpdatedAt(rs.getTimestamp("updated_at"));
       return recordCreationStatus;

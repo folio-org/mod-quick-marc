@@ -33,7 +33,7 @@ public class KafkaListenerApiTest extends BaseApiTest {
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrProperties()
+      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
@@ -55,15 +55,16 @@ public class KafkaListenerApiTest extends BaseApiTest {
       .hasNoNullFieldsOrPropertiesExcept("instanceId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
+      .hasFieldOrPropertyWithValue("errorMessage", "Instance ID is missed in event payload")
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID);
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() throws IOException {
+  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInvalidJson() throws IOException {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendKafkaRecord("mockdata/di-event/complete-event-without-instance.json", ERROR_TOPIC_NAME);
+    sendKafkaRecord("mockdata/di-event/complete-event-with-invalid-json.json", COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.ERROR)
@@ -73,6 +74,26 @@ public class KafkaListenerApiTest extends BaseApiTest {
       .hasNoNullFieldsOrPropertiesExcept("instanceId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
+      .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
+      .extracting("errorMessage").asString().contains("Failed to process json with message");
+  }
+
+  @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() throws IOException {
+    var statusId = UUID.randomUUID();
+    saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
+    sendKafkaRecord("mockdata/di-event/error-event.json", ERROR_TOPIC_NAME);
+    await().atMost(5, SECONDS)
+      .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
+        .isEqualTo(RecordCreationStatusEnum.ERROR)
+      );
+    var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
+    assertThat(creationStatus)
+      .hasNoNullFieldsOrPropertiesExcept("instanceId")
+      .hasFieldOrPropertyWithValue("id", statusId)
+      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
+      .hasFieldOrPropertyWithValue("errorMessage", "Instance was not created")
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID);
   }
 }

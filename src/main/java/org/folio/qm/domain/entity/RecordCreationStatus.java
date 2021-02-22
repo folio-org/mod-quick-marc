@@ -11,11 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Data
 @Entity
-@DynamicUpdate
 public class RecordCreationStatus {
 
   @Id
@@ -32,6 +30,8 @@ public class RecordCreationStatus {
   private String errorMessage;
 
   private UUID instanceId;
+
+  private UUID marcBibId;
 
   @Column(nullable = false)
   private Timestamp createdAt;

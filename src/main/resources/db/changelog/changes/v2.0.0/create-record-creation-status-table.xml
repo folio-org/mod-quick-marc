@@ -35,6 +35,7 @@
             </column>
             <column name="error_message" type="text"/>
             <column name="instance_id" type="uuid"/>
+            <column name="marc_bib_id" type="uuid"/>
             <column name="created_at" type="timestamp" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>

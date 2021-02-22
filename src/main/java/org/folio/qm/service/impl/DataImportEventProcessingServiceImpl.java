@@ -2,6 +2,7 @@ package org.folio.qm.service.impl;
 
 import static org.folio.qm.util.DIEventUtils.extractErrorMessage;
 import static org.folio.qm.util.DIEventUtils.extractInstanceId;
+import static org.folio.qm.util.DIEventUtils.extractMarcBibId;
 
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class DataImportEventProcessingServiceImpl implements DataImportEventProc
   public void processDICompleted(DataImportEventPayload data) {
     var updateBuilder = RecordCreationStatusUpdate.builder();
     try {
+      extractMarcBibId(data, objectMapper).ifPresent(updateBuilder::marcBibId);
       extractInstanceId(data, objectMapper)
         .ifPresentOrElse(instanceId -> updateBuilder.status(RecordCreationStatusEnum.CREATED).instanceId(instanceId),
           () -> {

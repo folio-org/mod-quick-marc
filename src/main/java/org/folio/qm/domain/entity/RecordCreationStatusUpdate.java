@@ -16,4 +16,6 @@ public class RecordCreationStatusUpdate {
   String errorMessage;
 
   UUID instanceId;
+
+  UUID marcBibId;
 }

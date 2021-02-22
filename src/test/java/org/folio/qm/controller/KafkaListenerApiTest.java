@@ -25,6 +25,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDICompletedEvent() throws IOException {
     var statusId = UUID.randomUUID();
     var expectedInstanceId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
+    var expectedMarcBibId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
     sendKafkaRecord("mockdata/di-event/complete-event.json", COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
@@ -37,7 +38,8 @@ class KafkaListenerApiTest extends BaseApiTest {
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
-      .hasFieldOrPropertyWithValue("instanceId", expectedInstanceId);
+      .hasFieldOrPropertyWithValue("instanceId", expectedInstanceId)
+      .hasFieldOrPropertyWithValue("marcBibId", expectedMarcBibId);
   }
 
   @Test
@@ -52,7 +54,7 @@ class KafkaListenerApiTest extends BaseApiTest {
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("instanceId")
+      .hasNoNullFieldsOrPropertiesExcept("instanceId", "marcBibId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("errorMessage", "Instance ID is missed in event payload")
@@ -71,7 +73,7 @@ class KafkaListenerApiTest extends BaseApiTest {
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("instanceId")
+      .hasNoNullFieldsOrPropertiesExcept("instanceId", "marcBibId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
@@ -90,7 +92,7 @@ class KafkaListenerApiTest extends BaseApiTest {
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("instanceId")
+      .hasNoNullFieldsOrPropertiesExcept("instanceId", "marcBibId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("errorMessage", "Instance was not created")

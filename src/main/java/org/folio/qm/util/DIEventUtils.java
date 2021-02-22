@@ -15,7 +15,19 @@ import org.folio.rest.jaxrs.model.DataImportEventPayload;
 public class DIEventUtils {
 
   public static Optional<UUID> extractInstanceId(DataImportEventPayload data, ObjectMapper objectMapper) {
-    return Optional.ofNullable(data.getContext().get("INSTANCE"))
+    return extractRecordId(data, "INSTANCE", objectMapper);
+  }
+
+  public static Optional<UUID> extractMarcBibId(DataImportEventPayload data, ObjectMapper objectMapper) {
+    return extractRecordId(data, "MARC_BIBLIOGRAPHIC", objectMapper);
+  }
+
+  public static Optional<String> extractErrorMessage(DataImportEventPayload data) {
+    return Optional.ofNullable(data.getContext().get("ERROR"));
+  }
+
+  public static Optional<UUID> extractRecordId(DataImportEventPayload data, String recordName, ObjectMapper objectMapper) {
+    return Optional.ofNullable(data.getContext().get(recordName))
       .map(instancePayload -> {
         try {
           var idNode = objectMapper.readTree(instancePayload).get("id");
@@ -25,9 +37,5 @@ public class DIEventUtils {
           throw new IllegalStateException("Failed to process json with message: " + e.getMessage());
         }
       });
-  }
-
-  public static Optional<String> extractErrorMessage(DataImportEventPayload data) {
-    return Optional.ofNullable(data.getContext().get("ERROR"));
   }
 }

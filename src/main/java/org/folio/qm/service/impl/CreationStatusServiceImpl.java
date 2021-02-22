@@ -35,6 +35,7 @@ public class CreationStatusServiceImpl implements CreationStatusService {
       .map(recordCreationStatus -> {
         recordCreationStatus.setStatus(statusUpdate.getStatus());
         recordCreationStatus.setInstanceId(statusUpdate.getInstanceId());
+        recordCreationStatus.setMarcBibId(statusUpdate.getMarcBibId());
         recordCreationStatus.setErrorMessage(statusUpdate.getErrorMessage());
         return true;
       }).orElse(false);

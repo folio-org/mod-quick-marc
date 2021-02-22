@@ -1,6 +1,12 @@
 package org.folio.qm.controller;
 
 import static org.folio.qm.utils.TestUtils.TENANT_ID;
+import static org.folio.qm.utils.TestUtils.getMockData;
+import static org.folio.spring.integration.XOkapiHeaders.TENANT;
+import static org.folio.spring.integration.XOkapiHeaders.URL;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.RestAssured;
@@ -9,6 +15,8 @@ import io.restassured.response.Response;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import wiremock.org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,23 +26,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import org.folio.qm.extension.DatabaseExtension;
 import org.folio.qm.extension.WireMockInitializer;
+import org.folio.qm.util.ZIPArchiver;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties = "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration"
-)
-@ContextConfiguration(initializers = {WireMockInitializer.class})
-@ExtendWith(DatabaseExtension.class)
+
+@ActiveProfiles("test")
 @AutoConfigureEmbeddedDatabase
+@ExtendWith(DatabaseExtension.class)
+@ContextConfiguration(initializers = {WireMockInitializer.class})
+@EmbeddedKafka(partitions = 1, topics = {KafkaListenerApiTest.COMPLETE_TOPIC_NAME, KafkaListenerApiTest.ERROR_TOPIC_NAME})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BaseApiTest {
 
+  protected static final String COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
+  protected static final String ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
+
   private static boolean dbInitialized = false;
+  private static boolean kafkaInitialized = false;
 
   @Autowired
   protected WireMockServer wireMockServer;
@@ -42,6 +63,13 @@ class BaseApiTest {
   protected FolioModuleMetadata metadata;
   @Autowired
   protected JdbcTemplate jdbcTemplate;
+  @Autowired
+  protected KafkaTemplate<String, String> kafkaTemplate;
+
+  @Autowired
+  private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+  @Autowired
+  private EmbeddedKafkaBroker broker;
   @Value("${x-okapi-url}")
   private String okapiUrl;
   @LocalServerPort
@@ -52,6 +80,12 @@ class BaseApiTest {
     if (!dbInitialized) {
       verifyPost("/_/tenant", new TenantAttributes(), HttpStatus.SC_OK);
       dbInitialized = true;
+    }
+    if (!kafkaInitialized) {
+      for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry.getListenerContainers()) {
+        ContainerTestUtils.waitForAssignment(messageListenerContainer, broker.getPartitionsPerTopic());
+      }
+      kafkaInitialized = true;
     }
   }
 
@@ -104,4 +138,19 @@ class BaseApiTest {
     return "http://localhost:" + port + path;
   }
 
+  protected void sendKafkaRecord(String eventPayload, String topicName) throws IOException {
+    String message = String.format("{"
+      + "\"eventPayload\": \"%s\""
+      + "}", ZIPArchiver.zip(getMockData(eventPayload)));
+    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, message);
+    record.headers()
+      .add(createKafkaHeader(TENANT, TENANT_ID))
+      .add(createKafkaHeader(URL, okapiUrl));
+    kafkaTemplate.send(record);
+    kafkaTemplate.flush();
+  }
+
+  private RecordHeader createKafkaHeader(String headerName, String headerValue) {
+    return new RecordHeader(headerName, headerValue.getBytes(StandardCharsets.UTF_8));
+  }
 }

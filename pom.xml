@@ -60,6 +60,10 @@
       <artifactId>jackson-module-jaxb-annotations</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
@@ -159,6 +163,17 @@
       <version>${embedded-postgresql.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <!-- io.vertx.core.json.JsonObject is used for check equality of QuickMarc objects.
     Field 'content' could be a list and for equality order of entries is not important.
     'equals' method of QuickMarc object doesn't consider this instead of JsonObject.

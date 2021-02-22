@@ -50,7 +50,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus getCreationStatusByQmRecordId(UUID qmRecordId) {
     validationService.validateQmRecordId(qmRecordId);
-    return statusService.getCreationStatusById(qmRecordId).map(statusMapper::fromEntity)
+    return statusService.findById(qmRecordId).map(statusMapper::fromEntity)
       .orElseThrow(() -> new NotFoundException(String.format(RECORD_NOT_FOUND_MESSAGE, qmRecordId)));
   }
 

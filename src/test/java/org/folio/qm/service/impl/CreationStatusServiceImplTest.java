@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.domain.entity.RecordCreationStatus;
-import org.folio.qm.repository.RecordCreationStatusRepository;
+import org.folio.qm.domain.repository.RecordCreationStatusRepository;
 
 @ExtendWith({
   MockitoExtension.class,
@@ -34,7 +34,7 @@ class CreationStatusServiceImplTest {
   void shouldReturnStatusById(@Random UUID id, @Random RecordCreationStatus statusDto) {
     when(statusRepository.findById(any(UUID.class))).thenReturn(Optional.of(statusDto));
 
-    var actual = service.getCreationStatusById(id);
+    var actual = service.findById(id);
 
     assertThat(actual).contains(statusDto);
   }
@@ -43,7 +43,7 @@ class CreationStatusServiceImplTest {
   void shouldEmptyOptionalWhenNoRecordInDb(@Random UUID notExistedId) {
     when(statusRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
-    var actual = service.getCreationStatusById(notExistedId);
+    var actual = service.findById(notExistedId);
 
     assertThat(actual).isEmpty();
   }

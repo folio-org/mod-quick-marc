@@ -1,0 +1,612 @@
+{
+  "eventType": "DI_COMPLETED",
+  "profileSnapshot": {
+    "id": "5595ddd0-c0ce-435e-8113-6cd693cff915",
+    "profileId": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
+    "contentType": "JOB_PROFILE",
+    "content": {
+      "id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
+      "name": "Default - Create instance and SRS MARC Bib",
+      "deleted": false,
+      "dataType": "MARC",
+      "metadata": {
+        "createdDate": "2021-01-14T14:00:00.000+00:00",
+        "updatedDate": "2021-01-14T15:00:00.462+00:00",
+        "createdByUserId": "00000000-0000-0000-0000-000000000000",
+        "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+      },
+      "userInfo": {
+        "lastName": "System",
+        "userName": "System",
+        "firstName": "System"
+      },
+      "description": "This job profile creates SRS MARC Bib records and corresponding Inventory Instances using the library's default MARC-to-Instance mapping. It can be edited, duplicated, or deleted.",
+      "childProfiles": [],
+      "parentProfiles": []
+    },
+    "order": 0,
+    "childSnapshotWrappers": [
+      {
+        "id": "388022e2-217f-4c2c-9cc5-766c62be2cb7",
+        "profileId": "f8e58651-f651-485d-aead-d2fa8700e2d1",
+        "contentType": "ACTION_PROFILE",
+        "content": {
+          "id": "f8e58651-f651-485d-aead-d2fa8700e2d1",
+          "name": "Default - Create instance",
+          "action": "CREATE",
+          "deleted": false,
+          "metadata": {
+            "createdDate": "2021-01-14T14:00:00.000+00:00",
+            "updatedDate": "2021-01-14T15:00:00.462+00:00",
+            "createdByUserId": "00000000-0000-0000-0000-000000000000",
+            "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+          },
+          "userInfo": {
+            "lastName": "System",
+            "userName": "System",
+            "firstName": "System"
+          },
+          "description": "This action profile is used with FOLIO's default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, or deleted.",
+          "folioRecord": "INSTANCE",
+          "childProfiles": [],
+          "parentProfiles": []
+        },
+        "order": 0,
+        "childSnapshotWrappers": [
+          {
+            "id": "ca8ed254-81be-4d64-a83c-483e066e33e0",
+            "profileId": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
+            "contentType": "MAPPING_PROFILE",
+            "content": {
+              "id": "991c0300-44a6-47e3-8ea2-b01bb56a3  8cc",
+              "name": "Default - Create instance",
+              "deleted": false,
+              "metadata": {
+                "createdDate": "2021-01-14T14:00:00.000+00:00",
+                "updatedDate": "2021-01-14T15:00:00.462+00:00",
+                "createdByUserId": "00000000-0000-0000-0000-000000000000",
+                "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+              },
+              "userInfo": {
+                "lastName": "System",
+                "userName": "System",
+                "firstName": "System"
+              },
+              "description": "This field mapping profile is used with FOLIO's default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, deleted, or linked to additional action profiles.",
+              "childProfiles": [],
+              "mappingDetails": {
+                "name": "instance",
+                "recordType": "INSTANCE",
+                "mappingFields": [
+                  {
+                    "name": "discoverySuppress",
+                    "path": "instance.discoverySuppress",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "staffSuppress",
+                    "path": "instance.staffSuppress",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "previouslyHeld",
+                    "path": "instance.previouslyHeld",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "hrid",
+                    "path": "instance.hrid",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "source",
+                    "path": "instance.source",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "catalogedDate",
+                    "path": "instance.catalogedDate",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "statusId",
+                    "path": "instance.statusId",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": [],
+                    "acceptedValues": {
+                      "26f5208e-110a-4394-be29-1569a8c84a65": "Uncataloged",
+                      "2a340d34-6b70-443a-bb1b-1b8d1c65d862": "Other",
+                      "52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
+                      "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged",
+                      "daf2681c-25af-4202-a3fa-e58fdf806183": "Temporary",
+                      "f5cc2ab6-bb92-4cab-b83f-5a3d09261a41": "Not yet assigned"
+                    }
+                  },
+                  {
+                    "name": "modeOfIssuanceId",
+                    "path": "instance.modeOfIssuanceId",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "statisticalCodeIds",
+                    "path": "instance.statisticalCodeIds[]",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "title",
+                    "path": "instance.title",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "alternativeTitles",
+                    "path": "instance.alternativeTitles[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "indexTitle",
+                    "path": "instance.indexTitle",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "series",
+                    "path": "instance.series[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "precedingTitles",
+                    "path": "instance.precedingTitles[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "succeedingTitles",
+                    "path": "instance.succeedingTitles[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "identifiers",
+                    "path": "instance.identifiers[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "contributors",
+                    "path": "instance.contributors[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "publication",
+                    "path": "instance.publication[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "editions",
+                    "path": "instance.editions[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "physicalDescriptions",
+                    "path": "instance.physicalDescriptions[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "instanceTypeId",
+                    "path": "instance.instanceTypeId",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "natureOfContentTermIds",
+                    "path": "instance.natureOfContentTermIds[]",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "instanceFormatIds",
+                    "path": "instance.instanceFormatIds[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "languages",
+                    "path": "instance.languages[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "publicationFrequency",
+                    "path": "instance.publicationFrequency[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "publicationRange",
+                    "path": "instance.publicationRange[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "notes",
+                    "path": "instance.notes[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "electronicAccess",
+                    "path": "instance.electronicAccess[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "subjects",
+                    "path": "instance.subjects[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "classifications",
+                    "path": "instance.classifications[]",
+                    "value": "",
+                    "enabled": "false",
+                    "subfields": []
+                  },
+                  {
+                    "name": "parentInstances",
+                    "path": "instan  ce.parentInstances[]",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  },
+                  {
+                    "name": "childInstances",
+                    "path": "instance.childInstances[]",
+                    "value": "",
+                    "enabled": "true",
+                    "subfields": []
+                  }
+                ],
+                "marcMappingDetails": []
+              },
+              "parentProfiles": [],
+              "existingRecordType": "INSTANCE",
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "marcFieldProtectionSettings": []
+            },
+            "order": 0,
+            "childSnapshotWrappers": []
+          }
+        ]
+      }
+    ]
+  },
+  "currentNode": {
+    "id": "ca8ed254-81be-4d64-a83c-483e066e33e0",
+    "profileId": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
+    "contentType": "MAPPING_PROFILE",
+    "content": {
+      "id": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
+      "name": "Default - Create instance",
+      "deleted": false,
+      "metadata": {
+        "createdDate": "2021-01-14T14:00:00.000+00:00",
+        "updatedDate": "2021-01-14T15:00:00.462+00:00",
+        "createdByUserId": "00000000-0000-0000-0000-000000000000",
+        "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+      },
+      "userInfo": {
+        "lastName": "System",
+        "userName": "System",
+        "firstName": "System"
+      },
+      "description": "This field mapping profile is used with FOLIO's default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, deleted, or linked to additional action profiles.",
+      "childProfiles": [],
+      "mappingDetails": {
+        "name": "instance",
+        "recordType": "INSTANCE",
+        "mappingFields": [
+          {
+            "name": "discoverySuppress",
+            "path": "instance.discoverySuppress",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "staffSuppress",
+            "path": "instance.staffSuppress",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "previouslyHeld",
+            "path": "instance.previouslyHeld",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "hrid",
+            "path": "instance.hrid",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "source",
+            "path": "instance.source",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "catalogedDate",
+            "path": "instance.catalogedDate",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "statusId",
+            "path": "instance.statusId",
+            "value": "",
+            "enabled": "true",
+            "subfields": [],
+            "acceptedValues": {
+              "26f5208e-110a-4394-be29-1569a8c84a65": "Uncataloged",
+              "2a340d34-6b70-443a-bb1b-1b8d1c65d862": "Other",
+              "52a2ff34-2a12-420d-8539-  21aa8d3cf5d8": "Batch Loaded",
+              "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged",
+              "daf2681c-25af-4202-a3fa-e58fdf806183": "Temporary",
+              "f5cc2ab6-bb92-4cab-b83f-5a3d09261a41": "Not yet assigned"
+            }
+          },
+          {
+            "name": "modeOfIssuanceId",
+            "path": "instance.modeOfIssuanceId",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "statisticalCodeIds",
+            "path": "instance.statisticalCodeIds[]",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "title",
+            "path": "instance.title",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "alternativeTitles",
+            "path": "instance.alternativeTitles[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "indexTitle",
+            "path": "instance.indexTitle",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "series",
+            "path": "instance.series[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "precedingTitles",
+            "path": "instance.precedingTitles[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "succeedingTitles",
+            "path": "instance.succeedingTitles[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "identifiers",
+            "path": "instance.identifiers[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "contributors",
+            "path": "instance.contributors[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "publication",
+            "path": "instance.publication[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "editions",
+            "path": "instance.editions[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "physicalDescriptions",
+            "path": "instance.physicalDescriptions[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "instanceTypeId",
+            "path": "instance.instanceTypeId",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "natureOfContentTermIds",
+            "path": "instance.natureOfContentTermIds[]",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "instanceFormatIds",
+            "path": "instance.instanceFormatIds[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "languages",
+            "path": "instance.languages[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "publicationFrequency",
+            "path": "instance.publicationFrequency[]",
+            "value": "",
+            "enabled": "false",
+            "su  bfields": []
+          },
+          {
+            "name": "publicationRange",
+            "path": "instance.publicationRange[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "notes",
+            "path": "instance.notes[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "electronicAccess",
+            "path": "instance.electronicAccess[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "subjects",
+            "path": "instance.subjects[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "classifications",
+            "path": "instance.classifications[]",
+            "value": "",
+            "enabled": "false",
+            "subfields": []
+          },
+          {
+            "name": "parentInstances",
+            "path": "instance.parentInstances[]",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          },
+          {
+            "name": "childInstances",
+            "path": "instance.childInstances[]",
+            "value": "",
+            "enabled": "true",
+            "subfields": []
+          }
+        ],
+        "marcMappingDetails": []
+      },
+      "parentProfiles": [],
+      "existingRecordType": "INSTANCE",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+      "marcFieldProtectionSettings": []
+    },
+    "order": 0,
+    "childSnapshotWrappers": []
+  },
+  "currentNodePath": [
+    "ca8ed254-81be-4d64-a83c-483e066e33e0"
+  ],
+  "eventsChain": [
+    "DI_SRS_MARC_BIB_RECORD_CREATED",
+    "DI_INVENTORY_INSTANCE_CREATED"
+  ],
+  "jobExecutionId": "a7fb1c32-1ffb-4a22-a76a-4067284fe68d",
+  "tenant": "test",
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWt1X2FkbWluIiwidXNlcl9pZCI6IjVkMTdhMDM3LWE1ZjYtNTQ3NS1iNGY4LWNiY2Q2ODQyOWIyYSIsIm1vZHVsZSI6Im1vZC1kYXRhLWltcG9ydC0xLjEyLjAtU05BUFNIT1QuMTY3IiwiZXh0cmFfcGVybWlzc2lvbnMiOlsiU1lTI21vZC1kYXRhLWltcG9ydC0xLjEyLjAtU05BUFNIT1QuMTY3I1wvZGF0YS1pbXBvcnRcL3VwbG9hZERlZmluaXRpb25zXC97dXBsb2FkRGVmaW5pdGlvbklkfVwvcHJvY2Vzc0ZpbGVzI1tQT1NUXSJdLCJ0ZW5hbnQiOiJkaWt1In0.DH-FwUrCygNkgVPRJcFkkAEkKUav1qmhESPwMKb3L1I",
+  "okapiUrl": "http://okapi:9130",
+  "context": {
+    "MARC": "{\"id\":\"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"snapshotId\":\"a7fb1c32-1ffb-4a22-a76a-4067284fe68d\",\"matchedId\":\"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"generation\":0,\"recordType\":\"MARC\",\"rawRecord\":{\"id\":\"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"content\":\"03026cam a2200541Ki 4500001000900000003000600009005001700015006001900032007001500051008004100066035009300107040011000200019004700310020003600357020003300393020003600426020003300462020002700495020002400522020003400546020003100580050002700611082001700638049000900655100002200664245003300686264004900719264001100768300003500779336002600814337002600840338003600866490004700902504006400949520076801013630003501781630003101816630004701847630004301894630004701937630002501984650005102009650004002060655002202100776014402122830004802266856017002314\\u001E11271707\\u001EOCoLC\\u001E20200820070942.0\\u001Em     o  d        \\u001  Ecr#cn|||||||||\\u001E130325s2009    miu     ob    001 0 eng d\\u001E  \\u001Fa(OCoLC)831680044\\u001Fz(OCoLC)742315631\\u001Fz(OCoLC)922967240\\u001Fz(OCoLC)960704329\\u001Fz(OCoLC)964859114\\u001E  \\u001FaN$T\\u001Fbeng\\u001Fepn\\u001Ferda\\u001FcN$T\\u001FdOCLCE\\u001FdYDXCP\\u001FdE7B\\u001FdOCLCA\\u001FdOCLCF\\u001FdCFT\\u001FdOCLCA\\u001FdOCLCQ\\u001FdEBLCP\\u001FdOCLCQ\\u001FdIHT\\u001FdRVA\\u001FdOCLCQ\\u001E  \\u001Fa742315631\\u001Fa922967240\\u001Fa960704329\\u001Fa964859114\\u001E  \\u001Fa9781441257789\\u001Fq(electronic bk.)\\u001E  \\u001Fa1441257780\\u001Fq(electronic bk.)\\u001E  \\u001Fa9781441235213\\u001Fq(electronic bk.)\\u001E  \\u001Fa1441235213\\u001Fq(electronic bk.)\\u001E  \\u001Fz9781587431661\\u001Fq(print)\\u001E  \\u001Fz1587431661\\u001Fq(print)\\u001E  \\u001Fz9780334043300\\u001Fq(SCM ;\\u001Fqprint)\\u001E  \\u001Fz0334043301\\u001Fq(SCM ;\\u001Fqprint)\\u001E 4\\u001FaBS1545.53\\u001Fb.J46 2009eb\\u001E04\\u001Fa224/.407\\u001F222\\u001E  \\u001FaLYUU\\u001E1 \\u001FaJenson, Robert W.\\u001E10\\u001FaEzekiel /\\u001FcRobert W. Jenson.\\u001E 1\\u001FaGrand Rapids, Mich. :\\u001FbBrazos Press,\\u001Fc[2009]\\u001E 4\\u001Fc©2009\\u001E  \\u001Fa1 online resource (367 pages).\\u001E  \\u001Fatext\\u001Fbtxt\\u001F2rdacontent\\u001E  \\u001Facomputer\\u001Fbc\\u001F2rdamedia\\u001E  \\u001Faonline resource\\u001Fbcr\\u001F2rdacarrier\\u001E1 \\u001FaBrazos theological commentary on the Bible\\u001E  \\u001FaIncludes bibliographical references (page 347) and indexes.\\u001E  \\u001FaPastors and leaders of the classical church--such as Augustine, Calvin, Luther, and Wesley--interpreted the Bible theologically, believing Scripture as a whole witnessed to the gospel of Jesus Christ. Modern interpreters of the Bible questioned this premise. But in recent decades, a critical mass of theologians and biblical scholars has begun to reassert the priority of a theological reading of Scripture. The Brazos Theological Commentary on the Bible enlists leading theologians to read and interpret  Scripture for the twenty-first century, just as the church fathers, the Reformers, and other orthodox Christians did for their times and places. In this addition to the series, esteemed theologian Robert W. Jenson presents a theological exegesis of Ezekiel.\\u001E00\\u001FaBible.\\u001FpEzekiel\\u001FvCommentaries.\\u001E00\\u001FaBible.\\u001FpEzekiel\\u001FxTheology.\\u001E04\\u001FaBible. -- O.T. -- Ezekiel -- Commentaries.\\u001E04\\u001FaBible. -- O.T. -- Ezekiel -- Theology.\\u001E07\\u001FaBible.\\u001FpEzekiel.\\u001F2fast\\u001F0(OCoLC)fst01892903\\u001E07\\u001FaEzechiel (Buch)\\u001F2swd\\u001E 7\\u001FaRELIGION\\u001FxBiblical Studies\\u001FxProphets.\\u001F2bisacsh\\u001E 7\\u001FaTheology.\\u001F2fast\\u001F0(OCoLC)fst01149559\\u001E 0\\u001FaElectronic books.\\u001E08\\u001FiPrint version:\\u001FaJenson, Robert W.\\u001FtEzekiel.\\u001FdGrand Rapids, Mich. : Brazos Press, ©2009\\u001Fz9781587431661\\u001Fw(DLC)  2008054798\\u001Fw(OCoLC)263987689\\u001E 0\\u001FaBrazos theological commentary on the Bible.\\u001E40\\u001F3Ebook Central\\u001Fuhttps://ebookcentral.proquest.com/lib/lehighlibrary-ebooks/detail.action?docID=3117165\\u001Fwcoral-171\\u001FzAvailable to Lehigh users via Ebook Central\\u001Fx1-user\\u001E\\u001D\"},\"parsedRecord\":{\"id\":\"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"content\":\"{\\\"leader\\\":\\\"03134cam a2200553Ki 4500\\\",\\\"fields\\\":[{\\\"001\\\":\\\"in00000000015\\\"},{\\\"006\\\":\\\"m     o  d        \\\"},{\\\"007\\\":\\\"cr#cn|||||||||\\\"},{\\\"008\\\":\\\"130325s2009    miu     ob    001 0 eng d\\\"},{\\\"005\\\":\\\"20210211130626.4\\\"},{\\\"035\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"(OCoLC)831680044\\\"},{\\\"z\\\":\\\"(OCoLC)742315631\\\"},{\\\"z\\\":\\\"(OCoLC)922967240\\\"},{\\\"z\\\":\\\"(OCoLC)960704329\\\"},{\\\"z\\\":\\\"(OCoLC)964859114\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"035\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"(OCoLC)11271707\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"040\\\":{\\\"subfields\\\":[{\\\"a\\  \":\\\"N$T\\\"},{\\\"b\\\":\\\"eng\\\"},{\\\"e\\\":\\\"pn\\\"},{\\\"e\\\":\\\"rda\\\"},{\\\"c\\\":\\\"N$T\\\"},{\\\"d\\\":\\\"OCLCE\\\"},{\\\"d\\\":\\\"YDXCP\\\"},{\\\"d\\\":\\\"E7B\\\"},{\\\"d\\\":\\\"OCLCA\\\"},{\\\"d\\\":\\\"OCLCF\\\"},{\\\"d\\\":\\\"CFT\\\"},{\\\"d\\\":\\\"OCLCA\\\"},{\\\"d\\\":\\\"OCLCQ\\\"},{\\\"d\\\":\\\"EBLCP\\\"},{\\\"d\\\":\\\"OCLCQ\\\"},{\\\"d\\\":\\\"IHT\\\"},{\\\"d\\\":\\\"RVA\\\"},{\\\"d\\\":\\\"OCLCQ\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"019\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"742315631\\\"},{\\\"a\\\":\\\"922967240\\\"},{\\\"a\\\":\\\"960704329\\\"},{\\\"a\\\":\\\"964859114\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"9781441257789\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"1441257780\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"9781441235213\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"1441235213\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"9781587431661\\\"},{\\\"q\\\":\\\"(print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"1587431661\\\"},{\\\"q\\\":\\\"(print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"9780334043300\\\"},{\\\"q\\\":\\\"(SCM ;\\\"},{\\\"q\\\":\\\"print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"0334043301\\\"},{\\\"q\\\":\\\"(SCM ;\\\"},{\\\"q\\\":\\\"print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"050\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"BS1545.53\\\"},{\\\"b\\\":\\\".J46 2009eb\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"082\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"224/.407\\\"},{\\\"2\\\":\\\"22\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"049\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"LYUU\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"100\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Jenson, Robert W.\\\"}],\\\"ind1\\\":\\\"1\\\",\\\"ind2\\\":\\\" \\\"}},{\\\"245\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Ezekiel /\\\"},{\\\"c\\\":\\\"Robert W. Jenson.\\\"}],\\\"ind1\\\":\\\"1\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"264\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Grand Rapids, Mich. :\\\"},{\\\"b\\\":\\\"Brazos Press,\\\"},{\\\"c\\\":\\\"[2009]\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"1\\\"}},{\\\"264\\\":{\\\"subfields\\\":[{\\\"c\\\":\\\"©2009\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"300\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"1 online resource (367 pages).\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"336\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"text\\\"},{\\\"b\\\":\\\"txt\\\"},{\\\"2\\\":\\\"rdacontent\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"337\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"computer\\\"},{\\\"b\\\":\\\"c\\\"},{\\\"2\\\":\\\"rdamedia\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"338\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"online resource\\\"},{\\\"b\\\":\\\"cr\\\"},{\\\"2\\\":\\\"rdacarrier\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"490\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Brazos theological commentary on the Bible\\\"}],\\\"ind1\\\":\\\"1\\\",\\\"ind2\\\":\\\" \\\"}},{\\\"504\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Includes bibliographical references (page 347) and indexes.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"520\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Pastors and leaders of the classical church--such as Augustine, Calvin, Luther, and Wesley--interpreted the Bible theologically, believing Scripture as a whole witnessed to the gospel of Jesus Christ. Modern interpreters of the Bible questione  d this premise. But in recent decades, a critical mass of theologians and biblical scholars has begun to reassert the priority of a theological reading of Scripture. The Brazos Theological Commentary on the Bible enlists leading theologians to read and interpret Scripture for the twenty-first century, just as the church fathers, the Reformers, and other orthodox Christians did for their times and places. In this addition to the series, esteemed theologian Robert W. Jenson presents a theological exegesis of Ezekiel.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible.\\\"},{\\\"p\\\":\\\"Ezekiel\\\"},{\\\"v\\\":\\\"Commentaries.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible.\\\"},{\\\"p\\\":\\\"Ezekiel\\\"},{\\\"x\\\":\\\"Theology.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible. -- O.T. -- Ezekiel -- Commentaries.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible. -- O.T. -- Ezekiel -- Theology.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible.\\\"},{\\\"p\\\":\\\"Ezekiel.\\\"},{\\\"2\\\":\\\"fast\\\"},{\\\"0\\\":\\\"(OCoLC)fst01892903\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Ezechiel (Buch)\\\"},{\\\"2\\\":\\\"swd\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"650\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"RELIGION\\\"},{\\\"x\\\":\\\"Biblical Studies\\\"},{\\\"x\\\":\\\"Prophets.\\\"},{\\\"2\\\":\\\"bisacsh\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"650\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Theology.\\\"},{\\\"2\\\":\\\"fast\\\"},{\\\"0\\\":\\\"(OCoLC)fst01149559\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"655\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Electronic books.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"0\\\"}},{\\  \"776\\\":{\\\"subfields\\\":[{\\\"i\\\":\\\"Print version:\\\"},{\\\"a\\\":\\\"Jenson, Robert W.\\\"},{\\\"t\\\":\\\"Ezekiel.\\\"},{\\\"d\\\":\\\"Grand Rapids, Mich. : Brazos Press, ©2009\\\"},{\\\"z\\\":\\\"9781587431661\\\"},{\\\"w\\\":\\\"(DLC)  2008054798\\\"},{\\\"w\\\":\\\"(OCoLC)263987689\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"8\\\"}},{\\\"830\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Brazos theological commentary on the Bible.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"856\\\":{\\\"subfields\\\":[{\\\"3\\\":\\\"Ebook Central\\\"},{\\\"u\\\":\\\"https://ebookcentral.proquest.com/lib/lehighlibrary-ebooks/detail.action?docID=3117165\\\"},{\\\"w\\\":\\\"coral-171\\\"},{\\\"z\\\":\\\"Available to Lehigh users via Ebook Central\\\"},{\\\"x\\\":\\\"1-user\\\"}],\\\"ind1\\\":\\\"4\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"999\\\":{\\\"subfields\\\":[{\\\"s\\\":\\\"55a76b7b-841d-45b9-9e64-d0827b9e2480\\\"},{\\\"i\\\":\\\"04b557bc-7c5e-4050-b95d-7510293caa8b\\\"}],\\\"ind1\\\":\\\"f\\\",\\\"ind2\\\":\\\"f\\\"}}]}\",\"formattedContent\":\"LEADER 03109cam a2200565Ki 4500\\n001 11271707\\n003 OCoLC\\n005 20200820070942.0\\n006 m     o  d        \\n007 cr#cn|||||||||\\n008 130325s2009    miu     ob    001 0 eng d\\n035   $a(OCoLC)831680044$z(OCoLC)742315631$z(OCoLC)922967240$z(OCoLC)960704329$z(OCoLC)964859114\\n035   $a(OCoLC)11271707\\n040   $aN$T$beng$epn$erda$cN$T$dOCLCE$dYDXCP$dE7B$dOCLCA$dOCLCF$dCFT$dOCLCA$dOCLCQ$dEBLCP$dOCLCQ$dIHT$dRVA$dOCLCQ\\n019   $a742315631$a922967240$a960704329$a964859114\\n020   $a9781441257789$q(electronic bk.)\\n020   $a1441257780$q(electronic bk.)\\n020   $a9781441235213$q(electronic bk.)\\n020   $a1441235213$q(electronic bk.)\\n020   $z9781587431661$q(print)\\n020   $z1587431661$q(print)\\n020   $z9780334043300$q(SCM ;$qprint)\\n020   $z0334043301$q(SCM ;$qprint)\\n050  4$aBS1545.53$b.J46 2009eb\\n082 04$a224/.407$222\\n049   $aLYUU\\n100 1 $aJenson, Robert W.\\n245 10$aEzekiel /$cRobert W. Jenson.\\n264  1$aGrand Rapids, Mich. :$bBrazos Press,$c[2009]\\n264  4$c©2009\\  n300   $a1 online resource (367  pages).\\n336   $atext$btxt$2rdacontent\\n337   $acomputer$bc$2rdamedia\\n338   $aonline resource$bcr$2rdacarrier\\n490 1 $aBrazos theological commentary on the Bible\\n504   $aIncludes bibliographical references (page 347) and indexes.\\n520   $aPastors and leaders of the classical church--such as Augustine, Calvin, Luther, and Wesley--interpreted the Bible theologically, believing Scripture as a whole witnessed to the gospel of Jesus Christ. Modern interpreters of the Bible questioned this premise. But in recent decades, a critical mass of theologians and biblical scholars has begun to reassert the priority of a theological reading of Scripture. The Brazos Theological Commentary on the Bible enlists leading theologians to read and interpret Scripture for the twenty-first century, just as the church fathers, the Reformers, and other orthodox Christians did for their times and places. In this addition to the series, esteemed theologian Robert W. Jenson presents a theological exegesis of Ezekiel.\\n630 00$aBible.$pEzekiel$vCommentaries.\\n630 00$aBible.$pEzekiel$xTheology.\\n630 04$aBible. -- O.T. -- Ezekiel -- Commentaries.\\n630 04$aBible. -- O.T. -- Ezekiel -- Theology.\\n630 07$aBible.$pEzekiel.$2fast$0(OCoLC)fst01892903\\n630 07$aEzechiel (Buch)$2swd\\n650  7$aRELIGION$xBiblical Studies$xProphets.$2bisacsh\\n650  7$aTheology.$2fast$0(OCoLC)fst01149559\\n655  0$aElectronic books.\\n776 08$iPrint version:$aJenson, Robert W.$tEzekiel.$dGrand Rapids, Mich. : Brazos Press, ©2009$z9781587431661$w(DLC)  2008054798$w(OCoLC)263987689\\n830  0$aBrazos theological commentary on the Bible.\\n856 40$3Ebook Central$uhttps://ebookcentral.proquest.com/lib/lehighlibrary-ebooks/detail.action?docID=3117165$wcoral-171$zAvailable to Lehigh users via Ebook Central$x1-user\\n999 ff$s55a76b7b-841d-45b9-9e64-d0827b9e2480\\n\\n\"},\"deleted\":false,\"order\":0,\"externalIdsHolder\":{\"instanceId\":\"04b557bc-7c5e-4050-b95d-7510293caa8b\",\"instanceHrid\":\"in00000000015\"},\"additionalInfo\":{\"suppres  sDiscovery\":false},\"state\":\"ACTUAL\"}",
+    "INSTANCE": "{\"id\":\"04b557bc-7c5e-4050-b95d-7510293caa8b\",\"hrid\":\"in00000000015\",\"matchKey\":null,\"source\":\"MARC\",\"parentInstances\":[],\"childInstances\":[],\"precedingTitles\":[],\"succeedingTitles\":[],\"title\":\"Ezekiel / Robert W. Jenson.\",\"indexTitle\":\"Ezekiel /\",\"alternativeTitles\":[],\"editions\":[],\"series\":[\"Brazos theological commentary on the Bible.\"],\"identifiers\":[{\"identifierTypeId\":\"439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef\",\"value\":\"(OCoLC)831680044\"},{\"identifierTypeId\":\"439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef\",\"value\":\"(OCoLC)11271707\"},{\"identifierTypeId\":\"8261054f-be78-422d-bd51-4ed9f33c3422\",\"value\":\"9781441257789 (electronic bk.)\"},{\"identifierTypeId\":\"8261054f-be78-422d-bd51-4ed9f33c3422\",\"value\":\"1441257780 (electronic bk.)\"},{\"identifierTypeId\":\"8261054f-be78-422d-bd51-4ed9f33c3422\",\"value\":\"9781441235213 (electronic bk.)\"},{\"identifierTypeId\":\"8261054f-be78-422d-bd51-4ed9f33c3422\",\"value\":\"1441235213 (electronic bk.)\"},{\"identifierTypeId\":\"fcca2643-406a-482a-b760-7a7f8aec640e\",\"value\":\"9781587431661 (print)\"},{\"identifierTypeId\":\"fcca2643-406a-482a-b760-7a7f8aec640e\",\"value\":\"1587431661 (print)\"},{\"identifierTypeId\":\"fcca2643-406a-482a-b760-7a7f8aec640e\",\"value\":\"9780334043300 (SCM ; print)\"},{\"identifierTypeId\":\"fcca2643-406a-482a-b760-7a7f8aec640e\",\"value\":\"0334043301 (SCM ; print)\"}],\"contributors\":[{\"contributorNameTypeId\":\"2b94c631-fca9-4892-a730-03ee529ffe2a\",\"name\":\"Jenson, Robert W\",\"contributorTypeId\":null,\"contributorTypeText\":null,\"primary\":true}],\"subjects\":[\"Bible. Ezekiel--Commentaries\",\"Bible. Ezekiel--Theology\",\"Bible. -- O.T. -- Ezekiel -- Commentaries\",\"Bible. -- O.T. -- Ezekiel -- Theology\",\"Bible. Ezekiel\",\"Ezechiel (Buch)\",\"RELIGION--Biblical Studies--Prophets\",\"Theology\",\"Electronic books\"],\"classifications\":[{\"classificationNumber\":\"BS1545.53 .J46 2009eb\",\"classificationTypeId\":\"c  e176ace-a53e-4b4d-aa89-725ed7b2edac\"},{\"classificationNumber\":\"224.407\",\"classificationTypeId\":\"42471af9-7d25-4f3a-bf78-60d29dcf463b\"}],\"publication\":[{\"publisher\":\"Brazos Press\",\"place\":\"Grand Rapids, Mich.\",\"dateOfPublication\":\"[2009]\",\"role\":\"Publication\"},{\"publisher\":null,\"place\":null,\"dateOfPublication\":\"©2009\",\"role\":null}],\"publicationFrequency\":[],\"publicationRange\":[],\"electronicAccess\":[{\"uri\":\"https://ebookcentral.proquest.com/lib/lehighlibrary-ebooks/detail.action?docID=3117165\",\"linkText\":null,\"materialsSpecification\":\"Ebook Central\",\"publicNote\":\"Available to Lehigh users via Ebook Central\",\"relationshipId\":\"f5d0068e-6272-458e-8a81-b85e7b9a14aa\"}],\"instanceTypeId\":\"6312d172-f0cf-40f6-b27d-9fa8feaf332f\",\"instanceFormatIds\":[\"f5e8210f-7640-459b-a71f-552567f92369\"],\"physicalDescriptions\":[\"1 online resource (367 pages).\"],\"languages\":[\"eng\"],\"notes\":[{\"instanceNoteTypeId\":\"86b6e817-e1bc-42fb-bab0-70e7547de6c1\",\"note\":\"Includes bibliographical references (page 347) and indexes\",\"staffOnly\":false},{\"instanceNoteTypeId\":\"10e2e11b-450f-45c8-b09b-0f819999966e\",\"note\":\"Pastors and leaders of the classical church--such as Augustine, Calvin, Luther, and Wesley--interpreted the Bible theologically, believing Scripture as a whole witnessed to the gospel of Jesus Christ. Modern interpreters of the Bible questioned this premise. But in recent decades, a critical mass of theologians and biblical scholars has begun to reassert the priority of a theological reading of Scripture. The Brazos Theological Commentary on the Bible enlists leading theologians to read and interpret Scripture for the twenty-first century, just as the church fathers, the Reformers, and other orthodox Christians did for their times and places. In this addition to the series, esteemed theologian Robert W. Jenson presents a theological exegesis of Ezekiel\",\"staffOnly\":false}],\"modeOfIssuanceId\":\"9d18a02f-5897-4c31-9106-c9abb5c7ae8b\",\"cataloge  dDate\":null,\"previouslyHeld\":null,\"staffSuppress\":null,\"discoverySuppress\":false,\"statisticalCodeIds\":[],\"sourceRecordFormat\":null,\"statusId\":null,\"statusUpdatedDate\":\"2021-02-11T13:06:24.817+0000\",\"metadata\":{\"createdDate\":\"2021-02-11T13:06:24.817+00:00\",\"createdByUserId\":\"5d17a037-a5f6-5475-b4f8-cbcd68429b2a\",\"updatedDate\":\"2021-02-11T13:06:24.817+00:00\",\"updatedByUserId\":\"5d17a037-a5f6-5475-b4f8-cbcd68429b2a\"},\"tags\":[],\"natureOfContentTermIds\":[]}",
+    "MARC_BIBLIOGRAPHIC": "{\"id\": \"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"snapshotId\": \"a7fb1c32-1ffb-4a22-a76a-4067284fe68d\",\"matchedId\": \"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"generation\": 0,\"recordType\": \"MARC\",\"rawRecord\": {\"id\": \"55a76b7b-841d-45b9-9e64-d0827b9e2480\"},\"parsedRecord\": {\"id\": \"55a76b7b-841d-45b9-9e64-d0827b9e2480\",\"content\": \"{\\\"leader\\\":\\\"03134cam a2200553Ki 4500\\\",\\\"fields\\\":[{\\\"001\\\":\\\"in00000000015\\\"},{\\\"006\\\":\\\"m     o  d        \\\"},{\\\"007\\\":\\\"cr#cn|||||||||\\\"},{\\\"008\\\":\\\"130325s2009    miu     ob    001 0 eng d\\\"},{\\\"005\\\":\\\"20210211130626.4\\\"},{\\\"035\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"(OCoLC)831680044\\\"},{\\\"z\\\":\\\"(OCoLC)742315631\\\"},{\\\"z\\\":\\\"(OCoLC)922967240\\\"},{\\\"z\\\":\\\"(OCoLC)960704329\\\"},{\\\"z\\\":\\\"(OCoLC)964859114\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"035\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"(OCoLC)11271707\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"040\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"N$T\\\"},{\\\"b\\\":\\\"eng\\\"},{\\\"e\\\":\\\"pn\\\"},{\\\"e\\\":\\\"rda\\\"},{\\\"c\\\":\\\"N$T\\\"},{\\\"d\\\":\\\"OCLCE\\\"},{\\\"d\\\":\\\"YDXCP\\\"},{\\\"d\\\":\\\"E7B\\\"},{\\\"d\\\":\\\"OCLCA\\\"},{\\\"d\\\":\\\"OCLCF\\\"},{\\\"d\\\":\\\"CFT\\\"},{\\\"d\\\":\\\"OCLCA\\\"},{\\\"d\\\":\\\"OCLCQ\\\"},{\\\"d\\\":\\\"EBLCP\\\"},{\\\"d\\\":\\\"OCLCQ\\\"},{\\\"d\\\":\\\"IHT\\\"},{\\\"d\\\":\\\"RVA\\\"},{\\\"d\\\":\\\"OCLCQ\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"019\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"742315631\\\"},{\\\"a\\\":\\\"922967240\\\"},{\\\"a\\\":\\\"960704329\\\"},{\\\"a\\\":\\\"964  859114\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"9781441257789\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"1441257780\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"9781441235213\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"1441235213\\\"},{\\\"q\\\":\\\"(electronic bk.)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"9781587431661\\\"},{\\\"q\\\":\\\"(print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"1587431661\\\"},{\\\"q\\\":\\\"(print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"9780334043300\\\"},{\\\"q\\\":\\\"(SCM ;\\\"},{\\\"q\\\":\\\"print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"020\\\":{\\\"subfields\\\":[{\\\"z\\\":\\\"0334043301\\\"},{\\\"q\\\":\\\"(SCM ;\\\"},{\\\"q\\\":\\\"print)\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"050\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"BS1545.53\\\"},{\\\"b\\\":\\\".J46 2009eb\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"082\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"224/.407\\\"},{\\\"2\\\":\\\"22\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"049\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"LYUU\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"100\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Jenson, Robert W.\\\"}],\\\"ind1\\\":\\\"1\\\",\\\"ind2\\\":\\\" \\\"}},{\\\"245\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Ezekiel /\\\"},{\\\"c\\\":\\\"Robert W. Jenson.\\\"}],\\\"ind1\\\":\\\"1\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"264\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Grand Rapids, Mich. :\\\"},{\\\"b\\\":\\\"Brazos Press,  \\\"},{\\\"c\\\":\\\"[2009]\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"1\\\"}},{\\\"264\\\":{\\\"subfields\\\":[{\\\"c\\\":\\\"©2009\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"300\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"1 online resource (367 pages).\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"336\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"text\\\"},{\\\"b\\\":\\\"txt\\\"},{\\\"2\\\":\\\"rdacontent\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"337\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"computer\\\"},{\\\"b\\\":\\\"c\\\"},{\\\"2\\\":\\\"rdamedia\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"338\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"online resource\\\"},{\\\"b\\\":\\\"cr\\\"},{\\\"2\\\":\\\"rdacarrier\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"490\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Brazos theological commentary on the Bible\\\"}],\\\"ind1\\\":\\\"1\\\",\\\"ind2\\\":\\\" \\\"}},{\\\"504\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Includes bibliographical references (page 347) and indexes.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"520\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Pastors and leaders of the classical church--such as Augustine, Calvin, Luther, and Wesley--interpreted the Bible theologically, believing Scripture as a whole witnessed to the gospel of Jesus Christ. Modern interpreters of the Bible questioned this premise. But in recent decades, a critical mass of theologians and biblical scholars has begun to reassert the priority of a theological reading of Scripture. The Brazos Theological Commentary on the Bible enlists leading theologians to read and interpret Scripture for the twenty-first century, just as the church fathers, the Reformers, and other orthodox Christians did for their times and places. In this addition to the series, esteemed theologian Robert W. Jenson presents a theological exegesis of Ezekiel.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\" \\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible.\\\"},{\\\"p\\\":\\\"Ezekiel\\\"},{\\\"v\\\":\\\"Commentaries.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible.\\\"},{\\\"p\\\":\\\"Ezekiel\\\"},{\\\"x\\\":\\\"Theology.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible. -- O.T. -- Ezekiel -- Commentaries.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible. -- O.T. -- Ezekiel -- Theology.\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"4\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Bible.\\\"},{\\\"p\\\":\\\"Ezekiel.\\\"},{\\\"2\\\":\\\"fast\\\"},{\\\"0\\\":\\\"(OCoLC)fst01892903\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"630\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Ezechiel (Buch)\\\"},{\\\"2\\\":\\\"swd\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"650\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"RELIGION\\\"},{\\\"x\\\":\\\"Biblical Studies\\\"},{\\\"x\\\":\\\"Prophets.\\\"},{\\\"2\\\":\\\"bisacsh\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"650\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Theology.\\\"},{\\\"2\\\":\\\"fast\\\"},{\\\"0\\\":\\\"(OCoLC)fst01149559\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"7\\\"}},{\\\"655\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Electronic books.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"776\\\":{\\\"subfields\\\":[{\\\"i\\\":\\\"Print version:\\\"},{\\\"a\\\":\\\"Jenson, Robert W.\\\"},{\\\"t\\\":\\\"Ezekiel.\\\"},{\\\"d\\\":\\\"Grand Rapids, Mich. : Brazos Press, ©2009\\\"},{\\\"z\\\":\\\"9781587431661\\\"},{\\\"w\\\":\\\"(DLC)  2008054798\\\"},{\\\"w\\\":\\\"(OCoLC)263987689\\\"}],\\\"ind1\\\":\\\"0\\\",\\\"ind2\\\":\\\"8\\\"}},{\\\"830\\\":{\\\"subfields\\\":[{\\\"a\\\":\\\"Brazos theological commentary on the Bible.\\\"}],\\\"ind1\\\":\\\" \\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"856\\\":{\\\"subfields\\\":[{\\\"3\\\":\\\"Ebook Central\\\"},{\\\"u\\\":\\\"https://ebookcentral.proquest.com/lib/lehighlibrar  y-ebooks/detail.action?docID=3117165\\\"},{\\\"w\\\":\\\"coral-171\\\"},{\\\"z\\\":\\\"Available to Lehigh users via Ebook Central\\\"},{\\\"x\\\":\\\"1-user\\\"}],\\\"ind1\\\":\\\"4\\\",\\\"ind2\\\":\\\"0\\\"}},{\\\"999\\\":{\\\"subfields\\\":[{\\\"s\\\":\\\"55a76b7b-841d-45b9-9e64-d0827b9e2480\\\"},{\\\"i\\\":\\\"04b557bc-7c5e-4050-b95d-7510293caa8b\\\"}],\\\"ind1\\\":\\\"f\\\",\\\"ind2\\\":\\\"f\\\"}}]}\",\"formattedContent\": \"LEADER 03109cam a2200565Ki 4500\\n001 11271707\\n003 OCoLC\\n005 20200820070942.0\\n006 m     o  d        \\n007 cr#cn|||||||||\\n008 130325s2009    miu     ob    001 0 eng d\\n035   $a(OCoLC)831680044$z(OCoLC)742315631$z(OCoLC)922967240$z(OCoLC)960704329$z(OCoLC)964859114\\n035   $a(OCoLC)11271707\\n040   $aN$T$beng$epn$erda$cN$T$dOCLCE$dYDXCP$dE7B$dOCLCA$dOCLCF$dCFT$dOCLCA$dOCLCQ$dEBLCP$dOCLCQ$dIHT$dRVA$dOCLCQ\\n019   $a742315631$a922967240$a960704329$a964859114\\n020   $a9781441257789$q(electronic bk.)\\n020   $a1441257780$q(electronic bk.)\\n020   $a9781441235213$q(electronic bk.)\\n020   $a1441235213$q(electronic bk.)\\n020   $z9781587431661$q(print)\\n020   $z1587431661$q(print)\\n020   $z9780334043300$q(SCM ;$qprint)\\n020   $z0334043301$q(SCM ;$qprint)\\n050  4$aBS1545.53$b.J46 2009eb\\n082 04$a224/.407$222\\n049   $aLYUU\\n100 1 $aJenson, Robert W.\\n245 10$aEzekiel /$cRobert W. Jenson.\\n264  1$aGrand Rapids, Mich. :$bBrazos Press,$c[2009]\\n264  4$c©2009\\n300   $a1 online resource (367 pages).\\n336   $atext$btxt$2rdacontent\\n337   $acomputer$bc$2rdamedia\\n338   $aonline resource$bcr$2rdacarrier\\n490 1 $aBrazos theological commentary on the Bible\\n504   $aIncludes bibliographical references (page 347) and indexes.\\n520   $aPastors and leaders of the classical church--such as Augustine, Calvin, Luther, and Wesley--interpreted the Bible theologically, believing Scripture as a whole witnessed to the gospel of Jesus Christ. Modern interpreters of the Bible questioned this premise. But in recent decades, a critical mass of theologians and biblical scholars has begun to reas  sert the priority of a theological reading of Scripture. The Brazos Theological Commentary on the Bible enlists leading theologians to read and interpret Scripture for the twenty-first century, just as the church fathers, the Reformers, and other orthodox Christians did for their times and places. In this addition to the series, esteemed theologian Robert W. Jenson presents a theological exegesis of Ezekiel.\\n630 00$aBible.$pEzekiel$vCommentaries.\\n630 00$aBible.$pEzekiel$xTheology.\\n630 04$aBible. -- O.T. -- Ezekiel -- Commentaries.\\n630 04$aBible. -- O.T. -- Ezekiel -- Theology.\\n630 07$aBible.$pEzekiel.$2fast$0(OCoLC)fst01892903\\n630 07$aEzechiel (Buch)$2swd\\n650  7$aRELIGION$xBiblical Studies$xProphets.$2bisacsh\\n650  7$aTheology.$2fast$0(OCoLC)fst01149559\\n655  0$aElectronic books.\\n776 08$iPrint version:$aJenson, Robert W.$tEzekiel.$dGrand Rapids, Mich. : Brazos Press, ©2009$z9781587431661$w(DLC)  2008054798$w(OCoLC)263987689\\n830  0$aBrazos theological commentary on the Bible.\\n856 40$3Ebook Central$uhttps://ebookcentral.proquest.com/lib/lehighlibrary-ebooks/detail.action?docID=3117165$wcoral-171$zAvailable to Lehigh users via Ebook Central$x1-user\\n999 ff$s55a76b7b-841d-45b9-9e64-d0827b9e2480\\n\\n\"},\"deleted\": false,\"order\": 0,\"externalIdsHolder\": {\"instanceId\": \"04b557bc-7c5e-4050-b95d-7510293caa8b\",\"instanceHrid\": \"in00000000015\"},\"additionalInfo\": {\"suppressDiscovery\": false},\"state\": \"ACTUAL\"}"
+  }
+}

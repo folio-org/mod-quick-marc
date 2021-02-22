@@ -9,19 +9,19 @@ stages:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: docker.dev.folio.org/mod-quick-marc:firebird-latest
+      tag: docker.dev.folio.org/mod-quick-marc:spitfire-${CICD_EXECUTION_SEQUENCE}
       pushRemote: true
       registry: docker.dev.folio.org
 - name: Deploy
   steps:
   - applyAppConfig:
-      catalogTemplate: p-ngvqv:firebird-helmcharts-mod-quick-marc
-      version: 0.1.26
+      catalogTemplate: p-htqfq:spitfire-helmcharts-mod-quick-marc
+      version: 0.1.33
       answers:
         image.repository: docker.dev.folio.org/mod-quick-marc
-        image.tag: firebird-latest
+        image.tag: spitfire-${CICD_EXECUTION_SEQUENCE}
         postJob.enabled: true
-      targetNamespace: firebird
+      targetNamespace: spitfire
       name: mod-quick-marc
 timeout: 60
 notification: {}

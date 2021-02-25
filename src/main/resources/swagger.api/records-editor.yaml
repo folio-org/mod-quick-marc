@@ -62,10 +62,22 @@ paths:
             default: "en"
     post:
       responses:
-        "202":
-          description: Request is accepted
+        "201":
+          description: MARC Record status created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/creationStatus"
         "400":
           description: Bad Request
+          content:
+            application/json:
+              example:
+                $ref: "#/components/examples/error"
+              schema:
+                $ref: "#/components/schemas/error"
+        "500":
+          description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
               example:

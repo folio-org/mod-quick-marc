@@ -6,7 +6,7 @@ This software is distributed under the terms of the Apache License,
 Version 2.0. See the file [LICENSE](LICENSE) for more information.
 
 ## Introduction
-API for quickMARC - in-app editor for MARC records in SRS.
+Spring-based module that provides API for quickMARC - in-app editor for MARC records in SRS.
 
 ## Additional information
 quickMARC API provides the following URLs:

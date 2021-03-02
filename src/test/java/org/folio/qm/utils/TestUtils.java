@@ -172,7 +172,7 @@ public class TestUtils {
     mockServer.stubFor(put(urlEqualTo(url)).willReturn(responseDefinitionBuilder));
   }
 
-  public static QuickMarc readQuickMark(String filename) {
+  public static QuickMarc readQuickMarс(String filename) {
     return getJsonObject(filename).mapTo(QuickMarc.class);
   }
 

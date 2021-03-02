@@ -34,7 +34,7 @@ import static org.folio.qm.utils.TestUtils.getJsonObject;
 import static org.folio.qm.utils.TestUtils.getQuickMarcJsonWithMinContent;
 import static org.folio.qm.utils.TestUtils.mockGet;
 import static org.folio.qm.utils.TestUtils.mockPut;
-import static org.folio.qm.utils.TestUtils.readQuickMark;
+import static org.folio.qm.utils.TestUtils.readQuickMarс;
 import static org.folio.qm.utils.TestUtils.recordsEditorPath;
 import static org.folio.qm.utils.TestUtils.recordsEditorResourceByIdPath;
 import static org.folio.qm.utils.TestUtils.recordsEditorStatusPath;
@@ -131,7 +131,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMark(QM_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarс(QM_RECORD_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -156,7 +156,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMark(QM_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarс(QM_RECORD_PATH)
       .parsedRecordDtoId(wrongUUID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -167,7 +167,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordIdsNotEqual() {
     log.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
-    QuickMarc quickMarcJson = readQuickMark(QM_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarс(QM_RECORD_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -201,7 +201,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() {
     log.info("===== Verify PUT record: Invalid fixed length field items =====");
 
-    QuickMarc quickMarcJson = readQuickMark(QM_WRONG_ITEM_LENGTH)
+    QuickMarc quickMarcJson = readQuickMarс(QM_WRONG_ITEM_LENGTH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -216,7 +216,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordLeaderMismatch(String filename) {
     log.info("===== Verify PUT record: Leader and 008 mismatch =====");
 
-    QuickMarc quickMarcJson = readQuickMark(filename)
+    QuickMarc quickMarcJson = readQuickMarс(filename)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -284,9 +284,9 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   }
 
   @Test
-  void testPostQuickMarkValidRecordAccepted() {
+  void testPostQuickMarcValidRecordAccepted() {
     log.info("===== Verify POST record: Successful =====");
-    QuickMarc quickMarcJson = readQuickMark(QM_EDITED_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarс(QM_EDITED_RECORD_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 

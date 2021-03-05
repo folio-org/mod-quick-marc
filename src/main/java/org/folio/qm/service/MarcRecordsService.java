@@ -31,5 +31,13 @@ public interface MarcRecordsService {
    * @return {@link CreationStatus}
    */
   CreationStatus getCreationStatusByQmRecordId(UUID qmRecordId);
+
+  /**
+   * This method triggers the 'mod-source-record-manager' import process of QuickMarc record
+   *
+   * @param quickMarc  QuickMarc object
+   * @return {@link UUID} qmParsedRecordId of record
+   */
+  CreationStatus createNewInstance(QuickMarc quickMarc);
 }
 

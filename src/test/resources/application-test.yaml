@@ -16,3 +16,9 @@ spring:
 logging:
   level:
     io.zonky.test.db.postgres: FATAL
+job:
+  execution:
+    profile:
+      default:
+        id: a7fb1c32-1ffb-4a22-a76a-4067284fe68d
+        name: Default job profile

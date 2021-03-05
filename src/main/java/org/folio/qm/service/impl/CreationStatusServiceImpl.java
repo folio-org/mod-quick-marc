@@ -40,4 +40,9 @@ public class CreationStatusServiceImpl implements CreationStatusService {
         return true;
       }).orElse(false);
   }
+
+  @Override
+  public RecordCreationStatus save(RecordCreationStatus status) {
+    return statusRepository.saveAndFlush(status);
+  }
 }

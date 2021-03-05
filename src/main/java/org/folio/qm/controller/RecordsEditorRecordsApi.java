@@ -1,11 +1,12 @@
 package org.folio.qm.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import java.util.UUID;
 
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,8 +30,9 @@ public class RecordsEditorRecordsApi implements RecordsApi {
   }
 
   @Override
-  public ResponseEntity<Void> recordsPost(@Valid QuickMarc quickMarc) {
-    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+  public ResponseEntity<CreationStatus> recordsPost(@Valid QuickMarc quickMarc) {
+    CreationStatus status = marcRecordsService.createNewInstance(quickMarc);
+    return ResponseEntity.status(CREATED).body(status);
   }
 
   @Override

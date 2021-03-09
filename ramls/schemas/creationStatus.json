@@ -50,14 +50,12 @@
         "createdAt": {
           "description": "Date and time of creation of the status",
           "type": "string",
-          "format": "date-time",
-          "example": "2020-07-14T12:20:10.000"
+          "format": "date-time"
         },
         "updatedAt": {
           "description": "Date and time of last successful update of the status",
           "type": "string",
-          "format": "date-time",
-          "example": "2020-07-14T12:20:10.000"
+          "format": "date-time"
         }
       }
     }

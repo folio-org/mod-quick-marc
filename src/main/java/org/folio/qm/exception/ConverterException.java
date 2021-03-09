@@ -8,7 +8,7 @@ import org.folio.tenant.domain.dto.Error;
 /**
  * Custom exception for QuickMarc <-> ParsedRecordDto converting errors
  */
-public class ConverterException extends QuickMarсException {
+public class ConverterException extends QuickMarcException {
 
   public ConverterException(Error error) {
     super(error);

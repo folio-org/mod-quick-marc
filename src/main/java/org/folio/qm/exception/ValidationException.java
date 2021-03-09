@@ -7,7 +7,7 @@ import org.folio.tenant.domain.dto.Error;
 /**
  * Custom exception for validation errors
  */
-public class ValidationException extends QuickMarсException {
+public class ValidationException extends QuickMarcException {
 
   public ValidationException(Error error) {
     super(error);

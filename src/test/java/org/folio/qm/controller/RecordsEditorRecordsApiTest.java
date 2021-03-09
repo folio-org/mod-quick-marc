@@ -144,7 +144,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarс(QM_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -169,7 +169,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarс(QM_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_PATH)
       .parsedRecordDtoId(wrongUUID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -180,7 +180,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordIdsNotEqual() {
     log.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
-    QuickMarc quickMarcJson = readQuickMarс(QM_RECORD_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -214,7 +214,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() {
     log.info("===== Verify PUT record: Invalid fixed length field items =====");
 
-    QuickMarc quickMarcJson = readQuickMarс(QM_WRONG_ITEM_LENGTH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_WRONG_ITEM_LENGTH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 
@@ -229,7 +229,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordLeaderMismatch(String filename) {
     log.info("===== Verify PUT record: Leader and 008 mismatch =====");
 
-    QuickMarc quickMarcJson = readQuickMarс(filename)
+    QuickMarc quickMarcJson = readQuickMarc(filename)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .instanceId(EXISTED_INSTANCE_ID);
 

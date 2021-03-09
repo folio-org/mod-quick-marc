@@ -11,9 +11,10 @@ import java.nio.charset.StandardCharsets;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
+import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import wiremock.org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -46,6 +48,7 @@ import org.folio.tenant.domain.dto.TenantAttributes;
 @ActiveProfiles("test")
 @AutoConfigureEmbeddedDatabase
 @ExtendWith(DatabaseExtension.class)
+@ConfigurationPropertiesScan("org.folio.qm.util")
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @EmbeddedKafka(partitions = 1, topics = {KafkaListenerApiTest.COMPLETE_TOPIC_NAME, KafkaListenerApiTest.ERROR_TOPIC_NAME})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -78,7 +81,7 @@ class BaseApiTest {
   @BeforeEach
   void before() {
     if (!dbInitialized) {
-      verifyPost("/_/tenant", new TenantAttributes(), HttpStatus.SC_OK);
+      verifyPost("/_/tenant", new TenantAttributes().moduleTo(""), HttpStatus.SC_OK);
       dbInitialized = true;
     }
     if (!kafkaInitialized) {
@@ -124,6 +127,21 @@ class BaseApiTest {
     return RestAssured.with()
       .header(new Header(XOkapiHeaders.URL, okapiUrl))
       .header(new Header(XOkapiHeaders.TENANT, TENANT_ID))
+      .body(body)
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .post(getRequestUrl(path))
+      .then()
+      .statusCode(code)
+      .contentType(StringUtils.EMPTY)
+      .extract()
+      .response();
+  }
+
+  protected Response verifyPost(String path, Object body, int code, Header... headers) {
+    return RestAssured.with()
+      .header(new Header(XOkapiHeaders.URL, okapiUrl))
+      .header(new Header(XOkapiHeaders.TENANT, TENANT_ID))
+      .headers(new Headers(headers))
       .body(body)
       .contentType(MediaType.APPLICATION_JSON_VALUE)
       .post(getRequestUrl(path))

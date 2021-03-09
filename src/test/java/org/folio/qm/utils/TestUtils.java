@@ -2,16 +2,21 @@ package org.folio.qm.utils;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.folio.qm.converter.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
 import static org.folio.qm.util.MarcUtils.decodeFromMarcDateTime;
+import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -23,12 +28,15 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Stream;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import io.restassured.http.Header;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -59,14 +67,23 @@ public class TestUtils {
   public static final String VALID_PARSED_RECORD_DTO_ID = "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c";
   public static final String EXISTED_INSTANCE_ID = "b9a5f035-de63-4e2c-92c2-07240c89b817";
   public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
+  public static final String VALID_JOB_EXECUTION_ID = "a7fb1c32-1ffb-4a22-a76a-4067284fe68d";
+  public static final UUID JOB_EXECUTION_ID = UUID.fromString(VALID_JOB_EXECUTION_ID);
   public static final String TESTED_TAG_NAME = "333";
 
   public static final String TENANT_ID = "test";
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
   public static final String RECORDS_EDITOR_RECORDS_STATUS_PATH = "/records-editor/records/status";
   public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";
+  public static final String CHANGE_MANAGER_JOB_EXECUTION_PATH = "/change-manager/jobExecutions";
+  public static final String CHANGE_MANAGER_JOB_PROFILE_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/jobProfile";
+  public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
   public static final String INSTANCE_ID = "instanceId";
   public static final String QM_RECORD_ID = "qmRecordId";
+
+  public static final String JOHN_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huX2RvZSIsInVzZXJfaWQiOiIzOGQzYTQ0MS1jMTAwLTVlOGQtYmQxMi03MWJkZTQ5MmI3MjMiLCJpYXQiOjE2MTQyNTIzOTAsInRlbmFudCI6InRlc3QifQ.7IrC11gjVVWSETsC1RfzHvUUcpljYcYJk_TbBf6deBo";
+  public static final Header JOHN_TOKEN_HEADER = new Header(TOKEN, JOHN_TOKEN);
+  public static final Header JOHN_TOKEN_HEADER_INVALID = new Header(TOKEN, "eyJhbGciOiJIUzI1NiJ9.ddd.nBC1esXqYAriVH6J2MfR7QPouzJ8oH5x99CYrU92vi0");
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));
@@ -160,6 +177,31 @@ public class TestUtils {
         .withStatus(status)));
   }
 
+  public static void mockPost(String url, String filePath, WireMockServer mockServer) {
+    mockPost(url, filePath, SC_OK, mockServer);
+  }
+
+  public static void mockPost(String url, String filePath, int status, WireMockServer mockServer){
+    mockServer.stubFor(post(urlEqualTo(url))
+      .willReturn(aResponse()
+        .withStatus(status)
+        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .withBody(readFile(filePath))));
+  }
+
+
+  private static String readFile(String filePath) {
+    try {
+      return FileUtils.readFileToString(getFile(filePath), StandardCharsets.UTF_8);
+    } catch (IOException | URISyntaxException e) {
+      return null;
+    }
+  }
+
+  public static File getFile(String filename) throws URISyntaxException {
+    return new File(TestUtils.class.getClassLoader().getResource(filename).toURI());
+  }
+
   public static void mockPut(String url, int status, WireMockServer mockServer) {
     mockPut(url, null, status, mockServer);
   }
@@ -172,7 +214,7 @@ public class TestUtils {
     mockServer.stubFor(put(urlEqualTo(url)).willReturn(responseDefinitionBuilder));
   }
 
-  public static QuickMarc readQuickMarс(String filename) {
+  public static QuickMarc readQuickMarc(String filename) {
     return getJsonObject(filename).mapTo(QuickMarc.class);
   }
 

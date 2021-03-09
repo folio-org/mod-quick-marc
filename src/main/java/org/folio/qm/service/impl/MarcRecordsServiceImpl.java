@@ -1,10 +1,17 @@
 package org.folio.qm.service.impl;
 
 import static org.folio.qm.converter.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
+import static org.folio.qm.util.ChangeManagerPayloadUtils.getDefaultJobProfile;
+import static org.folio.qm.util.ChangeManagerPayloadUtils.getDefaultJodExecutionDto;
+import static org.folio.qm.util.ChangeManagerPayloadUtils.getRawRecordsBody;
 import static org.folio.qm.util.MarcUtils.encodeToMarcDateTime;
 import static org.folio.qm.util.MarcUtils.getFieldByTag;
+import static org.folio.qm.util.StatusUtils.getStatusInProgress;
+import static org.folio.qm.util.StatusUtils.getStatusNew;
+import static org.folio.qm.util.UserTokenUtil.getUserIdFromToken;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -14,11 +21,16 @@ import org.springframework.stereotype.Service;
 import org.folio.qm.client.SRMChangeManagerClient;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcFields;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
+import org.folio.qm.util.JobExecutionProfileProperties;
+import org.folio.qm.util.JsonUtils;
+import org.folio.rest.jaxrs.model.InitialRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
 
 @Service
@@ -34,6 +46,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final Converter<ParsedRecordDto, QuickMarc> parsedRecordToQuickMarcConverter;
   private final Converter<QuickMarc, ParsedRecordDto> quickMarcToParsedRecordConverter;
   private final CreationStatusMapper statusMapper;
+  private final FolioExecutionContext folioExecutionContext;
+  private final JobExecutionProfileProperties jobExecutionProfileProperties;
 
   @Override
   public QuickMarc findByInstanceId(UUID instanceId) {
@@ -54,9 +68,67 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       .orElseThrow(() -> new NotFoundException(String.format(RECORD_NOT_FOUND_MESSAGE, qmRecordId)));
   }
 
+  @Override
+  public CreationStatus createNewInstance(QuickMarc quickMarc) {
+    validationService.validateTokenHeaderExists(folioExecutionContext);
+    final var userId = getUserIdFromToken(folioExecutionContext.getToken());
+
+    final var jobExecutionId = createJobExecution(userId);
+    final var creationStatus = saveStatus(jobExecutionId);
+
+    updateJobExecutionWithProfile(jobExecutionId);
+    postRecordsToParse(quickMarc, jobExecutionId);
+    completeImport(jobExecutionId, null, Boolean.TRUE);
+
+    return creationStatus;
+  }
+
+  public String createJobExecution(String userId) {
+    var jobExecutionDto = getDefaultJodExecutionDto(userId, jobExecutionProfileProperties);
+    var jobExecutionResponse = srmClient.postJobExecution(jobExecutionDto);
+    return jobExecutionResponse.getJobExecutions().get(0).getId();
+  }
+
+  private void updateJobExecutionWithProfile(String jobExecutionId) {
+    srmClient.putJobProfileByJobExecutionId(jobExecutionId, getDefaultJobProfile(jobExecutionProfileProperties));
+    final var status = getStatusInProgress();
+    statusService.updateByJobExecutionId(UUID.fromString(jobExecutionId), status);
+  }
+
+  private void postRecordsToParse(QuickMarc quickMarc, String jobExecutionId) {
+    clearFields(quickMarc);
+    final var parsedRecordDto = quickMarcToParsedRecordConverter.convert(updateRecordTimestamp(quickMarc));
+    final var jsonString = JsonUtils.objectToJsonString(Objects.requireNonNull(parsedRecordDto).getParsedRecord().getContent());
+    final var initialRecord = new InitialRecord().withRecord(jsonString);
+    completeImport(jobExecutionId, initialRecord, Boolean.FALSE);
+  }
+
+  private void completeImport(String jobExecutionId, InitialRecord record, Boolean isEmpty) {
+    final var emptyRawRecordDto = getRawRecordsBody(record, isEmpty);
+    srmClient.postRawRecordsByJobExecutionId(jobExecutionId, emptyRawRecordDto);
+  }
+
+  public CreationStatus saveStatus(String jobExecutionId ) {
+    final var status = getStatusNew(jobExecutionId);
+    final var recordCreationStatus = statusService.save(status);
+    return statusMapper.fromEntity(recordCreationStatus);
+  }
+
+  private void clearFields(QuickMarc quickMarc) {
+    quickMarc.getFields()
+      .removeIf(quickMarcFields ->
+        quickMarcFields.getTag().equals("999"));
+    quickMarc.setParsedRecordId(null);
+    quickMarc.setParsedRecordDtoId(null);
+    quickMarc.setInstanceId(null);
+  }
+
   private QuickMarc updateRecordTimestamp(QuickMarc quickMarc) {
+    final var currentTime = encodeToMarcDateTime(LocalDateTime.now());
     getFieldByTag(quickMarc, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD)
-      .ifPresent(field -> field.setContent(encodeToMarcDateTime(LocalDateTime.now())));
+      .ifPresentOrElse(field -> field.setContent(currentTime),
+        () -> quickMarc.addFieldsItem(new QuickMarcFields().tag(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD).content(currentTime))
+      );
     return quickMarc;
   }
 }

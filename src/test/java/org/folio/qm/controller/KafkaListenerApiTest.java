@@ -7,6 +7,7 @@ import static org.awaitility.Awaitility.await;
 import static org.folio.qm.utils.TestDBUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.utils.TestDBUtils.getCreationStatusById;
 import static org.folio.qm.utils.TestDBUtils.saveCreationStatus;
+import static org.folio.qm.utils.TestUtils.JOB_EXECUTION_ID;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -17,8 +18,6 @@ import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.extension.ClearTable;
 
 class KafkaListenerApiTest extends BaseApiTest {
-
-  private static final UUID JOB_EXECUTION_ID = UUID.fromString("a7fb1c32-1ffb-4a22-a76a-4067284fe68d");
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)

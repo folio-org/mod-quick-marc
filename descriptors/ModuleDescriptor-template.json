@@ -5,6 +5,14 @@
     {
       "id": "source-manager-parsed-records",
       "version": "1.0"
+    },
+    {
+      "id": "source-manager-job-executions",
+      "version": "1.0"
+    },
+    {
+      "id": "source-manager-records",
+      "version": "1.0"
     }
   ],
   "provides": [
@@ -24,6 +32,7 @@
           "permissionsRequired": ["records-editor.records.item.post"],
           "modulePermissions": [
             "change-manager.jobexecutions.post",
+            "change-manager.jobexecutions.put",
             "change-manager.records.post"
           ]
         },

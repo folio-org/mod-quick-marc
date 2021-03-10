@@ -8,7 +8,7 @@ import org.folio.tenant.domain.dto.Error;
  * Custom exception for Authorization errors
  */
 
-public class AuthorizationException extends QuickMarkException {
+public class AuthorizationException extends QuickMarcException {
 
   public AuthorizationException(Error error) {
     super(error);

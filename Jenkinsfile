@@ -7,6 +7,7 @@ buildMvn {
   doApiLint = true
   apiTypes = 'RAML OAS'
   apiDirectories = 'ramls src/main/resources/swagger.api'
+  publishAPI = 'yes'
 
   doDocker = {
     buildDocker {

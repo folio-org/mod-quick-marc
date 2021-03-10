@@ -5,17 +5,17 @@ import static org.folio.qm.util.ErrorUtils.buildError;
 import org.folio.tenant.domain.dto.Error;
 import org.folio.qm.util.ErrorUtils;
 
-public abstract class QuickMarkException extends RuntimeException {
+public abstract class QuickMarcException extends RuntimeException {
 
   private final transient Error error;
 
-  protected QuickMarkException(Error error) {
+  protected QuickMarcException(Error error) {
     this.error = error;
   }
 
-  protected QuickMarkException(Exception ex) {
-    if (ex instanceof QuickMarkException) {
-      QuickMarkException cex = (QuickMarkException) ex;
+  protected QuickMarcException(Exception ex) {
+    if (ex instanceof QuickMarcException) {
+      QuickMarcException cex = (QuickMarcException) ex;
       this.error = cex.getError();
     } else {
       this.error = buildError(ErrorUtils.ErrorType.INTERNAL, ex.getClass().getSimpleName() + ": Generic Error");

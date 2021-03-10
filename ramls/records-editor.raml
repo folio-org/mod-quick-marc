@@ -11,6 +11,7 @@ documentation:
 
 types:
   quickMarcJson: !include schemas/quick_marc_json.json
+  creationStatus: !include schemas/creationStatus.json
   sample: !include examples/quick_marc_json.sample
   error: !include schemas/error.json
   UUID:
@@ -83,6 +84,44 @@ traits:
             example:
               strict: false
               value: !include examples/error.sample
+  /status:
+    get:
+      queryParameters:
+        qmRecordId:
+          description: UUID of ParsedRecord to be created
+          type: UUID
+          required: true
+          example: "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c"
+      responses:
+        200:
+         description: "Status of MARC bibliographic record creation successfully retrieved"
+         body:
+          application/json:
+            type: creationStatus
+        400:
+          description: "Bad request, e.g. malformed request body or query parameter. Details of the error (e.g. name of the parameter or line/character number with malformed data) provided in the response."
+          body:
+            application/json:
+              type: error
+              example:
+                strict: false
+                value: !include examples/error.sample
+        404:
+          description: "MARC record with a given ID not found"
+          body:
+            application/json:
+              type: error
+              example:
+                strict: false
+                value: !include examples/error.sample
+        500:
+          description: "Internal server error, e.g. due to misconfiguration"
+          body:
+            application/json:
+              type: error
+              example:
+                strict: false
+                value: !include examples/error.sample
   /{id}:
     uriParameters:
       id:

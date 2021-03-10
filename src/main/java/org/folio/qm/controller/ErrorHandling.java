@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import org.folio.qm.exception.QuickMarkException;
+import org.folio.qm.exception.QuickMarcException;
 import org.folio.spring.exception.NotFoundException;
 import org.folio.tenant.domain.dto.Error;
 
@@ -34,8 +34,8 @@ public class ErrorHandling {
     return buildError(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
   }
 
-  @ExceptionHandler(QuickMarkException.class)
-  public Error handleConverterException(QuickMarkException e, HttpServletResponse response) {
+  @ExceptionHandler(QuickMarcException.class)
+  public Error handleConverterException(QuickMarcException e, HttpServletResponse response) {
     var code = e.getStatus();
     response.setStatus(code);
     return e.getError();

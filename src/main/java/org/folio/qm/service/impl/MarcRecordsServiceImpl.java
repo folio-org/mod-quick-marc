@@ -8,7 +8,6 @@ import static org.folio.qm.util.MarcUtils.encodeToMarcDateTime;
 import static org.folio.qm.util.MarcUtils.getFieldByTag;
 import static org.folio.qm.util.StatusUtils.getStatusInProgress;
 import static org.folio.qm.util.StatusUtils.getStatusNew;
-import static org.folio.qm.util.UserTokenUtil.getUserIdFromToken;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -70,8 +69,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public CreationStatus createNewInstance(QuickMarc quickMarc) {
-    validationService.validateTokenHeaderExists(folioExecutionContext);
-    final var userId = getUserIdFromToken(folioExecutionContext.getToken());
+    validationService.validateUserId(folioExecutionContext);
+    final var userId = folioExecutionContext.getUserId().toString();
 
     final var jobExecutionId = createJobExecution(userId);
     final var creationStatus = saveStatus(jobExecutionId);

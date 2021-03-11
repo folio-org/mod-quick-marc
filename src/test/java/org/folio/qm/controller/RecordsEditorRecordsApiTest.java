@@ -6,7 +6,6 @@ import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -359,7 +358,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
       .instanceId(EXISTED_INSTANCE_ID);
 
     final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST).as(Error.class);
-    assertThat(error.getMessage(), equalTo("X-Okapi-Token header can not be null"));
+    assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
   }
 
   @Test
@@ -376,7 +375,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
     mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
 
-    final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_UNAUTHORIZED, JOHN_TOKEN_HEADER_INVALID).as(Error.class);
+    final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_TOKEN_HEADER_INVALID).as(Error.class);
     assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
   }
 }

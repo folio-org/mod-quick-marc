@@ -11,5 +11,5 @@ public interface ValidationService {
 
   void validateQmRecordId(UUID qmRecordId);
 
-  void validateTokenHeaderExists(FolioExecutionContext folioExecutionContext);
+  void validateUserId(FolioExecutionContext folioExecutionContext);
 }

@@ -1,3 +1,18 @@
+## 2.0.0 - Released
+
+The primary focus of this release was to support duplication of MARC records and migration of the module to Spring framework
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v1.2.2...v2.0.0)
+
+### Stories
+
+ * [MODQM-52](https://issues.folio.org/browse/MODQM-52) - Update MARC 005 field and send to SRS along with other quickMARC changes
+ * [MODQM-56](https://issues.folio.org/browse/MODQM-56) - Add personal data disclosure form
+ * [MODQM-63](https://issues.folio.org/browse/MODQM-63) - Migrate to Spring stack
+ * [MODQM-78](https://issues.folio.org/browse/MODQM-78) - Implement GET status endpoint
+ * [MODQM-79](https://issues.folio.org/browse/MODQM-79) - Listen DI-events to update creation status
+ * [MODQM-80](https://issues.folio.org/browse/MODQM-80) - Integration between "mod-quick-marc" and srm
+
 ## 1.3.0 - Unreleased
 
 ## 1.2.2 - Released

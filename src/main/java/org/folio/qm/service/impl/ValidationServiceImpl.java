@@ -19,7 +19,7 @@ public class ValidationServiceImpl implements ValidationService {
 
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
   public static final String QM_RECORD_ID_EMPTY_MESSAGE = "Parameter 'qmRecordId' should be not null";
-  public static final String USER_ID_NULL_MESSAGE = "User id can not be null";
+  public static final String X_OKAPI_TOKEN_DOES_NOT_CONTAIN_A_USER_ID_MESSAGE = "X-Okapi-Token does not contain a userId";
 
   @Override
   public void validateIdsMatch(QuickMarc quickMarc, UUID instanceId) {
@@ -40,7 +40,7 @@ public class ValidationServiceImpl implements ValidationService {
   @Override
   public void validateUserId(FolioExecutionContext folioExecutionContext) {
     if (Objects.isNull(folioExecutionContext.getUserId())) {
-      var error = buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, USER_ID_NULL_MESSAGE);
+      var error = buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, X_OKAPI_TOKEN_DOES_NOT_CONTAIN_A_USER_ID_MESSAGE);
       throw new ValidationException(error);
     }
   }

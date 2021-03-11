@@ -358,7 +358,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
       .instanceId(EXISTED_INSTANCE_ID);
 
     final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST).as(Error.class);
-    assertThat(error.getMessage(), equalTo("User id can not be null"));
+    assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
   }
 
   @Test
@@ -376,6 +376,6 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
 
     final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_TOKEN_HEADER_INVALID).as(Error.class);
-    assertThat(error.getMessage(), equalTo("User id can not be null"));
+    assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
   }
 }

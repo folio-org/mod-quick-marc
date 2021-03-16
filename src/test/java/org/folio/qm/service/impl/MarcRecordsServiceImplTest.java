@@ -102,6 +102,7 @@ class MarcRecordsServiceImplTest {
       return content instanceof String && Strings.isEmpty((String)content);
     };
 
+//    main check is come in the next block
     doAnswer(InvocationOnMock::callRealMethod).when(converter).convert(
       argThat(argument -> argument.getFields().stream().noneMatch(field999Predicate.or(emptyContentPredicate))));
     doNothing().when(srmClient).postRawRecordsByJobExecutionId(any(), any());

@@ -72,7 +72,7 @@ class MarcRecordsServiceImplTest {
 
 
   @Test
-  void shouldNotThrowError(@Random JobProfileInfo profile) {
+  void shouldRemoveFieldsWhenEmptyContent(@Random JobProfileInfo profile) {
     doNothing().when(validationService).validateUserId(any(FolioExecutionContext.class));
     when(context.getUserId()).thenReturn(UUID.randomUUID());
     when(props.getId()).thenReturn(VALID_JOB_EXECUTION_ID);

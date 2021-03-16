@@ -12,8 +12,10 @@ import static org.folio.qm.util.StatusUtils.getStatusNew;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.ap.internal.util.Strings;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
@@ -103,8 +105,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private void completeImport(String jobExecutionId, InitialRecord record, Boolean isEmpty) {
-    final var emptyRawRecordDto = getRawRecordsBody(record, isEmpty);
-    srmClient.postRawRecordsByJobExecutionId(jobExecutionId, emptyRawRecordDto);
+    final var rawRecordDto = getRawRecordsBody(record, isEmpty);
+    srmClient.postRawRecordsByJobExecutionId(jobExecutionId, rawRecordDto);
   }
 
   public CreationStatus saveStatus(String jobExecutionId ) {
@@ -114,9 +116,13 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private void clearFields(QuickMarc quickMarc) {
+    final Predicate<QuickMarcFields> field999Predicate = qmFields -> qmFields.getTag().equals("999");
+    final Predicate<QuickMarcFields> emptyContentPredicate =  qmFields -> {
+      final var content = qmFields.getContent();
+      return content instanceof String && Strings.isEmpty((String)content);
+    };
     quickMarc.getFields()
-      .removeIf(quickMarcFields ->
-        quickMarcFields.getTag().equals("999"));
+      .removeIf(field999Predicate.or(emptyContentPredicate));
     quickMarc.setParsedRecordId(null);
     quickMarc.setParsedRecordDtoId(null);
     quickMarc.setInstanceId(null);

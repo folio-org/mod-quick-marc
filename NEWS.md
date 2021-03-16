@@ -1,3 +1,12 @@
+## 2.0.1 - Released
+
+The only focus of this patch release was to fix a bug during duplication of MARC records
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.0...v2.0.1)
+
+### Bug Fixes
+* [MODQM-85](https://issues.folio.org/browse/MODQM-85) - Could not Derive a new MARC bib record
+
 ## 2.0.0 - Released
 
 The primary focus of this release was to support duplication of MARC records and migration of the module to Spring framework

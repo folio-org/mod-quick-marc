@@ -3,6 +3,8 @@ package org.folio.qm.util;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+import java.util.UUID;
+
 import lombok.experimental.UtilityClass;
 
 import org.folio.rest.jaxrs.model.InitJobExecutionsRqDto;
@@ -31,6 +33,7 @@ public class ChangeManagerPayloadUtils {
 
   public static RawRecordsDto getRawRecordsBody(InitialRecord initialRecord, boolean isLast) {
     return new RawRecordsDto()
+      .withId(UUID.randomUUID().toString())
       .withInitialRecords(initialRecord == null ? emptyList(): singletonList(initialRecord))
       .withRecordsMetadata(
         new RecordsMetadata()

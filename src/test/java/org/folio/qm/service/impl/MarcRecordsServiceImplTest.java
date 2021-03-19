@@ -14,6 +14,7 @@ import static org.folio.qm.utils.TestUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.TestUtils.readQuickMarc;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -102,10 +103,11 @@ class MarcRecordsServiceImplTest {
       return content instanceof String && Strings.isEmpty((String)content);
     };
 
-//    main check is come in the next block
     doAnswer(InvocationOnMock::callRealMethod).when(converter).convert(
-      argThat(argument -> argument.getFields().stream().noneMatch(field999Predicate.or(emptyContentPredicate))));
-    doNothing().when(srmClient).postRawRecordsByJobExecutionId(any(), any());
+      argThat(quickMarc -> quickMarc.getFields().stream().noneMatch(field999Predicate.or(emptyContentPredicate))));
+
+    doNothing().when(srmClient).postRawRecordsByJobExecutionId(any(),
+      argThat(rawRecordsDto -> Objects.nonNull(rawRecordsDto.getId())));
 
     var actual = service.createNewInstance(quickMarcJson);
     assertThat(actual).isNotNull();

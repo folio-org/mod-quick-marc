@@ -1,3 +1,12 @@
+## 2.0.2 - Released
+
+The only focus of this patch release was to adjust POST payload according to the latest changes in 'mod-source-record-manager' 
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.1...v2.0.2)
+
+### Stories
+* [MODQM-89](https://issues.folio.org/browse/MODQM-89) - Update POST /jobExecutions/{jobExecutionId}/records payload with required fields
+
 ## 2.0.1 - Released
 
 The only focus of this patch release was to fix a bug during duplication of MARC records

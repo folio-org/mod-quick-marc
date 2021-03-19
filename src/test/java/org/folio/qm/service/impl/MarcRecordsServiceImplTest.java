@@ -106,7 +106,7 @@ class MarcRecordsServiceImplTest {
     doAnswer(InvocationOnMock::callRealMethod).when(converter).convert(
       argThat(quickMarc -> quickMarc.getFields().stream().noneMatch(field999Predicate.or(emptyContentPredicate))));
 
-    doAnswer(InvocationOnMock::callRealMethod).when(srmClient).postRawRecordsByJobExecutionId(any(),
+    doNothing().when(srmClient).postRawRecordsByJobExecutionId(any(),
       argThat(rawRecordsDto -> Objects.nonNull(rawRecordsDto.getId())));
 
     var actual = service.createNewInstance(quickMarcJson);

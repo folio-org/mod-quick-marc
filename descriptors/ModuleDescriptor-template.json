@@ -117,7 +117,7 @@
     "dockerPull": false,
     "dockerArgs": {
       "HostConfig": {
-        "Memory": 357913941,
+        "Memory": 536870912,
         "PortBindings": {
           "8081/tcp": [
             {
@@ -130,7 +130,7 @@
     "env": [
       {
         "name": "JAVA_OPTIONS",
-        "value": "-XX:MaxRAMPercentage=66.0"
+        "value": "-XX:MaxRAMPercentage=85.0"
       },
       {
         "name": "DB_HOST",

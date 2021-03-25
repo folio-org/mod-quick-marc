@@ -10,8 +10,12 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_EDGE_C
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
+import java.time.ZoneOffset;
+import java.util.TimeZone;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -26,6 +30,11 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto;
 class ParsedRecordDtoToQuickMarcConverterTest {
 
   private static final Logger logger = LogManager.getLogger(ParsedRecordDtoToQuickMarcConverterTest.class);
+
+  @BeforeAll
+  static void beforeAll() {
+    TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
+  }
 
   @ParameterizedTest
   @EnumSource(value = GeneralTestEntities.class, mode = EXCLUDE, names = {"BOOKS_MISSING_ITEMS"})

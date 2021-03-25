@@ -97,8 +97,8 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       contentMap.put(LEADER, marcRecord.getLeader()
         .marshal());
 
-      return new ParsedRecordDto().withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId())
-        .withContent(contentMap))
+      return new ParsedRecordDto()
+        .withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId()).withContent(contentMap))
         .withRecordType(ParsedRecordDto.RecordType.MARC)
         .withId(quickMarc.getParsedRecordDtoId())
         .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId()))

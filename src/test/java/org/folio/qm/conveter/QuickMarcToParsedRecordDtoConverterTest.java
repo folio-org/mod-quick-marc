@@ -2,6 +2,7 @@ package org.folio.qm.conveter;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
@@ -9,21 +10,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
-import static org.folio.qm.utils.GeneralTestEntities.BOOKS;
-import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
-import static org.folio.qm.utils.TestUtils.QM_EDITED_RECORD_PATH;
-import static org.folio.qm.utils.TestUtils.RESTORED_PARSED_RECORD_DTO_PATH;
-import static org.folio.qm.utils.TestUtils.TESTED_TAG_NAME;
-import static org.folio.qm.utils.TestUtils.getFieldWithIndicators;
-import static org.folio.qm.utils.TestUtils.getMockAsJson;
-import static org.folio.qm.utils.TestUtils.getParsedRecordDtoWithMinContent;
-import static org.folio.qm.utils.TestUtils.getQuickMarcJsonWithMinContent;
+import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
+import static org.folio.qm.utils.JsonTestUtils.getMockAsJsonNode;
+import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
+import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
+import static org.folio.qm.utils.JsonTestUtils.getObjectAsJsonNode;
+import static org.folio.qm.utils.JsonTestUtils.getObjectFromJsonNode;
+import static org.folio.qm.utils.testentities.GeneralTestEntities.BOOKS;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import io.vertx.core.json.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,9 +44,9 @@ import org.folio.qm.converter.QuickMarcToParsedRecordDtoConverter;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.QuickMarcFields;
 import org.folio.qm.exception.ConverterException;
-import org.folio.qm.utils.GeneralTestEntities;
-import org.folio.qm.utils.LccnFieldsTestEntities;
-import org.folio.qm.utils.PhysicalDescriptionsTestEntities;
+import org.folio.qm.utils.testentities.GeneralTestEntities;
+import org.folio.qm.utils.testentities.LccnFieldsTestEntities;
+import org.folio.qm.utils.testentities.PhysicalDescriptionsTestEntities;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
@@ -54,30 +61,32 @@ class QuickMarcToParsedRecordDtoConverterTest {
   @ParameterizedTest
   @EnumSource(GeneralTestEntities.class)
   void testRestoreGeneralAndAdditionalCharacteristicsControlFields(GeneralTestEntities testEntity) {
-    logger.info("Testing general and additional characteristics restoring for {}", testEntity.getMaterialTypeConfiguration().getName());
-    QuickMarc quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarc.class);
+    logger.info("Testing general and additional characteristics restoring for {}",
+      testEntity.getMaterialTypeConfiguration().getName());
+    QuickMarc quickMarcJson = getMockAsObject(testEntity.getQuickMarcJsonPath(), QuickMarc.class);
     ParsedRecordDto parsedRecordDto = new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson);
-    assertThat(JsonObject.mapFrom(parsedRecordDto.getParsedRecord()), equalTo(getMockAsJson(testEntity.getParsedRecordPath())));
+    assertThat(parsedRecordDto, notNullValue());
+    mockIsEqualToObject(testEntity.getParsedRecordPath(), parsedRecordDto.getParsedRecord());
   }
 
   @ParameterizedTest
   @EnumSource(PhysicalDescriptionsTestEntities.class)
   void testRestorePhysicalCharacteristicsControlField(PhysicalDescriptionsTestEntities testEntity) {
     logger.info("Testing Characteristics field restoring for {}", testEntity.name());
-    QuickMarc quickMarcJson = getMockAsJson(testEntity.getQuickMarcJsonPath()).mapTo(QuickMarc.class);
+    QuickMarc quickMarcJson = getMockAsObject(testEntity.getQuickMarcJsonPath(), QuickMarc.class);
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    assertThat(JsonObject.mapFrom(parsedRecordDto.getParsedRecord()).encodePrettily(), equalTo(getMockAsJson(testEntity.getParsedRecordPath()).encodePrettily()));
+    assertThat(parsedRecordDto, notNullValue());
+    mockIsEqualToObject(testEntity.getParsedRecordPath(), parsedRecordDto.getParsedRecord());
   }
 
   @Test
   void testQuickMarcJsonToParsedRecordDtoConversion() {
     logger.info("Testing QuickMarcJson -> ParsedRecordDto conversion");
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
-    QuickMarc quickMarcJson = getMockAsJson(QM_EDITED_RECORD_PATH).mapTo(QuickMarc.class);
+    QuickMarc quickMarcJson = getMockAsObject(QM_EDITED_RECORD_PATH, QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    ParsedRecordDto expected = getMockAsJson(RESTORED_PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class);
-    assertThat(JsonObject.mapFrom(parsedRecordDto), equalTo(JsonObject.mapFrom(expected)));
+    mockIsEqualToObject(RESTORED_PARSED_RECORD_DTO_PATH, parsedRecordDto);
   }
 
   @Test
@@ -85,23 +94,21 @@ class QuickMarcToParsedRecordDtoConverterTest {
     logger.info("Source record and converted/restored one should be equal");
     QuickMarcToParsedRecordDtoConverter quickMarcToParsedRecordDtoConverter = new QuickMarcToParsedRecordDtoConverter();
     ParsedRecordDtoToQuickMarcConverter parsedRecordDtoToQuickMarcConverter = new ParsedRecordDtoToQuickMarcConverter();
-    ParsedRecord parsedRecord = getMockAsJson(PARSED_RECORD_DTO_PATH).mapTo(ParsedRecordDto.class).getParsedRecord();
+    ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
     QuickMarc quickMarcJson = parsedRecordDtoToQuickMarcConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord));
+    assertThat(quickMarcJson, notNullValue());
     ParsedRecordDto restoredParsedRecordDto = quickMarcToParsedRecordDtoConverter.convert(quickMarcJson);
-    assertThat(getMockAsJson(RESTORED_PARSED_RECORD_DTO_PATH), equalTo(JsonObject.mapFrom(restoredParsedRecordDto)));
+    mockIsEqualToObject(RESTORED_PARSED_RECORD_DTO_PATH, restoredParsedRecordDto);
   }
 
   @Test
   void testFixedLengthControlFieldWrongLength() {
     logger.info("Testing FixedLengthControlField wrong length after editing - ConverterException expected");
-    JsonObject json = getMockAsJson(BOOKS.getQuickMarcJsonPath());
-    json.getJsonArray(FIELDS)
-      .getJsonObject(3)
-      .getJsonObject(CONTENT)
-      .put("Entered", "abcdefg");
-    QuickMarc quickMarcJson = json.mapTo(QuickMarc.class);
+    ObjectNode json = getMockAsJsonNode(BOOKS.getQuickMarcJsonPath());
+    ((ObjectNode) json.at("/" + FIELDS + "/3/" + CONTENT)).put("Entered", "abcdefg");
+    QuickMarc quickMarc = getObjectFromJsonNode(json, QuickMarc.class);
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
-    assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
+    assertThrows(ConverterException.class, () -> converter.convert(quickMarc));
   }
 
   @Test
@@ -114,15 +121,11 @@ class QuickMarcToParsedRecordDtoConverterTest {
     assertThat(quickMarcJson.getFields(), hasSize(1));
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(0));
 
-    JsonObject parsedRecordDto = JsonObject.mapFrom(new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson));
-    JsonObject fieldJsonObject = parsedRecordDto.getJsonObject("parsedRecord")
-      .getJsonObject(CONTENT)
-      .getJsonArray(FIELDS)
-      .getJsonObject(0)
-      .getJsonObject(TESTED_TAG_NAME);
+    ObjectNode parsedRecordDto = getObjectAsJsonNode(new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson));
+    JsonNode fieldJsonObject = parsedRecordDto.at("/parsedRecord/" + CONTENT + "/" + FIELDS + "/0/" + TESTED_TAG_NAME);
 
-    assertThat(fieldJsonObject.getString(IND_1), equalTo(StringUtils.SPACE));
-    assertThat(fieldJsonObject.getString(IND_2), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.get(IND_1).asText(), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.get(IND_2).asText(), equalTo(StringUtils.SPACE));
     assertThat(fieldJsonObject.size(), Is.is(3));
   }
 
@@ -136,15 +139,11 @@ class QuickMarcToParsedRecordDtoConverterTest {
     assertThat(quickMarcJson.getFields(), hasSize(1));
     assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(2));
 
-    JsonObject parsedRecordDto = JsonObject.mapFrom(new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson));
-    JsonObject fieldJsonObject = parsedRecordDto.getJsonObject("parsedRecord")
-      .getJsonObject(CONTENT)
-      .getJsonArray(FIELDS)
-      .getJsonObject(0)
-      .getJsonObject(TESTED_TAG_NAME);
+    ObjectNode parsedRecordDto = getObjectAsJsonNode(new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson));
+    JsonNode fieldJsonObject = parsedRecordDto.at("/parsedRecord/" + CONTENT + "/" + FIELDS + "/0/" + TESTED_TAG_NAME);
 
-    assertThat(fieldJsonObject.getString(IND_1), equalTo(StringUtils.SPACE));
-    assertThat(fieldJsonObject.getString(IND_2), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.get(IND_1).asText(), equalTo(StringUtils.SPACE));
+    assertThat(fieldJsonObject.get(IND_2).asText(), equalTo(StringUtils.SPACE));
     assertThat(fieldJsonObject.size(), Is.is(3));
   }
 
@@ -177,23 +176,24 @@ class QuickMarcToParsedRecordDtoConverterTest {
   }
 
   @ParameterizedTest
-  @EnumSource(value = LccnFieldsTestEntities.class, mode = EXCLUDE, names = { "WRONG_LENGTH" })
+  @EnumSource(value = LccnFieldsTestEntities.class, mode = EXCLUDE, names = {"WRONG_LENGTH"})
   void testRestoreLccn(LccnFieldsTestEntities lccnField) {
     logger.info("Field 010 (LCCN) should match expected format");
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
-    QuickMarc quickMarcJson = getMockAsJson(lccnField.getFilename()).mapTo(QuickMarc.class);
+    QuickMarc quickMarcJson = getMockAsObject(lccnField.getFilename(), QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    assertThat(JsonObject.mapFrom(parsedRecordDto.getParsedRecord()).encode(),
+    assertThat(parsedRecordDto, notNullValue());
+    assertThat(getObjectAsJson(parsedRecordDto.getParsedRecord()),
       hasJsonPath("$.content.fields[0].010.subfields[0].a",
         matchesPattern("[a-z\\s]{2}\\d{10}|[a-z\\s]{3}\\d{8}\\s(/.*$)?")));
   }
 
   @ParameterizedTest
-  @EnumSource(value = LccnFieldsTestEntities.class, mode = INCLUDE, names = { "WRONG_LENGTH" })
+  @EnumSource(value = LccnFieldsTestEntities.class, mode = INCLUDE, names = {"WRONG_LENGTH"})
   void testLccnWrongLegth(LccnFieldsTestEntities lccnField) {
     logger.info("ConverterException should be thrown if field 010 has wrong length");
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
-    QuickMarc quickMarcJson = getMockAsJson(lccnField.getFilename()).mapTo(QuickMarc.class);
+    QuickMarc quickMarcJson = getMockAsObject(lccnField.getFilename(), QuickMarc.class);
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
   }
 }

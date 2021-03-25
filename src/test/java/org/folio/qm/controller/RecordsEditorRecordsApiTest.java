@@ -1,5 +1,6 @@
 package org.folio.qm.controller;
 
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
@@ -14,47 +15,49 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
 
-import static org.folio.qm.utils.TestDBUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.qm.utils.TestDBUtils.getCreationStatusById;
-import static org.folio.qm.utils.TestDBUtils.saveCreationStatus;
-import static org.folio.qm.utils.TestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
-import static org.folio.qm.utils.TestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
-import static org.folio.qm.utils.TestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
-import static org.folio.qm.utils.TestUtils.EXISTED_INSTANCE_ID;
-import static org.folio.qm.utils.TestUtils.INSTANCE_ID;
-import static org.folio.qm.utils.TestUtils.JOHN_TOKEN_HEADER;
-import static org.folio.qm.utils.TestUtils.JOHN_TOKEN_HEADER_INVALID;
-import static org.folio.qm.utils.TestUtils.PARSED_RECORD_DTO_PATH;
-import static org.folio.qm.utils.TestUtils.QM_EDITED_RECORD_PATH;
-import static org.folio.qm.utils.TestUtils.QM_LEADER_MISMATCH1;
-import static org.folio.qm.utils.TestUtils.QM_LEADER_MISMATCH2;
-import static org.folio.qm.utils.TestUtils.QM_RECORD_ID;
-import static org.folio.qm.utils.TestUtils.QM_RECORD_PATH;
-import static org.folio.qm.utils.TestUtils.QM_WRONG_ITEM_LENGTH;
-import static org.folio.qm.utils.TestUtils.VALID_JOB_EXECUTION_ID;
-import static org.folio.qm.utils.TestUtils.VALID_PARSED_RECORD_DTO_ID;
-import static org.folio.qm.utils.TestUtils.VALID_PARSED_RECORD_ID;
-import static org.folio.qm.utils.TestUtils.changeManagerPath;
-import static org.folio.qm.utils.TestUtils.changeManagerResourceByIdPath;
-import static org.folio.qm.utils.TestUtils.getFieldWithIndicators;
-import static org.folio.qm.utils.TestUtils.getJsonObject;
-import static org.folio.qm.utils.TestUtils.getQuickMarcJsonWithMinContent;
-import static org.folio.qm.utils.TestUtils.mockGet;
-import static org.folio.qm.utils.TestUtils.mockPost;
-import static org.folio.qm.utils.TestUtils.mockPut;
-import static org.folio.qm.utils.TestUtils.readQuickMarc;
-import static org.folio.qm.utils.TestUtils.recordsEditorPath;
-import static org.folio.qm.utils.TestUtils.recordsEditorResourceByIdPath;
-import static org.folio.qm.utils.TestUtils.recordsEditorStatusPath;
-import static org.folio.qm.utils.TestUtils.verifyDateTimeUpdating;
+import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
+import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
+import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
+import static org.folio.qm.utils.APITestUtils.INSTANCE_ID;
+import static org.folio.qm.utils.APITestUtils.JOHN_TOKEN_HEADER;
+import static org.folio.qm.utils.APITestUtils.JOHN_TOKEN_HEADER_INVALID;
+import static org.folio.qm.utils.APITestUtils.QM_RECORD_ID;
+import static org.folio.qm.utils.APITestUtils.changeManagerPath;
+import static org.folio.qm.utils.APITestUtils.changeManagerResourceByIdPath;
+import static org.folio.qm.utils.APITestUtils.mockGet;
+import static org.folio.qm.utils.APITestUtils.mockPost;
+import static org.folio.qm.utils.APITestUtils.mockPut;
+import static org.folio.qm.utils.APITestUtils.recordsEditorPath;
+import static org.folio.qm.utils.APITestUtils.recordsEditorResourceByIdPath;
+import static org.folio.qm.utils.APITestUtils.recordsEditorStatusPath;
+import static org.folio.qm.utils.AssertionUtils.verifyDateTimeUpdating;
+import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
+import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
+import static org.folio.qm.utils.IOTestUtils.readFile;
+import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
+import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_INSTANCE_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_WRONG_ITEM_LENGTH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
-import io.vertx.core.json.JsonObject;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -78,7 +81,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   void testGetQuickMarcRecord() {
     log.info("===== Verify GET record: Successful =====");
 
-    mockGet(changeManagerPath(INSTANCE_ID, EXISTED_INSTANCE_ID), getJsonObject(PARSED_RECORD_DTO_PATH).encode(), SC_OK,
+    mockGet(changeManagerPath(INSTANCE_ID, EXISTED_INSTANCE_ID), readFile(PARSED_RECORD_DTO_PATH), SC_OK,
       wireMockServer);
 
     QuickMarc quickMarcJson =
@@ -93,7 +96,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
 
     var changeManagerResponse = wireMockServer.getAllServeEvents().get(0).getResponse().getBodyAsString();
-    ParsedRecordDto parsedRecordDto = new JsonObject(changeManagerResponse).mapTo(ParsedRecordDto.class);
+    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
     assertThat(parsedRecordDto.getId(), equalTo(quickMarcJson.getParsedRecordDtoId()));
   }
 
@@ -150,10 +153,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_ACCEPTED);
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
-    ParsedRecordDto changeManagerRequest = new JsonObject(wireMockServer.getAllServeEvents()
-      .get(0)
-      .getRequest()
-      .getBodyAsString()).mapTo(ParsedRecordDto.class);
+    var response = wireMockServer.getAllServeEvents().get(0).getRequest().getBodyAsString();
+    ParsedRecordDto changeManagerRequest = getObjectFromJson(response, ParsedRecordDto.class);
 
     verifyDateTimeUpdating(changeManagerRequest);
 
@@ -258,6 +259,19 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   }
 
   @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  void testGetCreationStatusHasProperlyFormattedDate() {
+    log.info("===== Verify GET record status: Successful =====");
+
+    var id = UUID.randomUUID();
+    saveCreationStatus(id, id, metadata, jdbcTemplate);
+    var response = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, id.toString()), SC_OK).asString();
+
+    var expectedDatePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+");
+    assertThat(response, hasJsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern)));
+  }
+
+  @Test
   void testReturn404IfStatusNotFound() {
     log.info("===== Verify GET record status: Not found =====");
 
@@ -314,7 +328,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
 
-    CreationStatus response = verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_TOKEN_HEADER).as(CreationStatus.class);
+    CreationStatus response =
+      verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_TOKEN_HEADER).as(CreationStatus.class);
     assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
     assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
 
@@ -344,7 +359,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     String jobExecution = "mockdata/change-manager/job-execution/jobExecution_invalid_user_id.json";
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
 
-    final var error= verifyPost(recordsEditorPath(), quickMarcJson, SC_UNPROCESSABLE_ENTITY, JOHN_TOKEN_HEADER).as(Error.class);
+    final var error =
+      verifyPost(recordsEditorPath(), quickMarcJson, SC_UNPROCESSABLE_ENTITY, JOHN_TOKEN_HEADER).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
     assertThat(error.getCode(), equalTo("UNPROCESSABLE_ENTITY"));
   }
@@ -362,7 +378,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
   }
 
   @Test
-  void testReturn401WhenHeader(){
+  void testReturn401WhenHeader() {
     log.info("===== Verify POST record: Unauthorized =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_PATH)
@@ -375,7 +391,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
     mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
 
-    final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_TOKEN_HEADER_INVALID).as(Error.class);
+    final var error =
+      verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_TOKEN_HEADER_INVALID).as(Error.class);
     assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
   }
 }

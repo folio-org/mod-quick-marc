@@ -1,7 +1,7 @@
 package org.folio.qm.extension;
 
-import static org.folio.qm.utils.TestDBUtils.getTableName;
-import static org.folio.qm.utils.TestUtils.TENANT_ID;
+import static org.folio.qm.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.utils.DBTestUtils.getTableName;
 
 import java.util.Optional;
 

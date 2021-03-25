@@ -1,7 +1,7 @@
 package org.folio.qm.controller;
 
-import static org.folio.qm.utils.TestUtils.TENANT_ID;
-import static org.folio.qm.utils.TestUtils.getMockData;
+import static org.folio.qm.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.utils.IOTestUtils.readFile;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
 
@@ -159,7 +159,7 @@ class BaseApiTest {
   protected void sendKafkaRecord(String eventPayload, String topicName) throws IOException {
     String message = String.format("{"
       + "\"eventPayload\": \"%s\""
-      + "}", ZIPArchiver.zip(getMockData(eventPayload)));
+      + "}", ZIPArchiver.zip(readFile(eventPayload)));
     ProducerRecord<String, String> record = new ProducerRecord<>(topicName, message);
     record.headers()
       .add(createKafkaHeader(TENANT, TENANT_ID))

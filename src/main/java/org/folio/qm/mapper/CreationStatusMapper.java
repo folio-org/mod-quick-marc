@@ -1,5 +1,8 @@
 package org.folio.qm.mapper;
 
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import org.mapstruct.Mapper;
@@ -25,6 +28,10 @@ public interface CreationStatusMapper {
 
   default String uuidToStringSafe(UUID uuid) {
     return uuid != null ? uuid.toString() : null;
+  }
+
+  default OffsetDateTime map(Timestamp value) {
+    return value != null ? OffsetDateTime.from(value.toInstant().atZone(ZoneId.systemDefault())) : null;
   }
 }
 

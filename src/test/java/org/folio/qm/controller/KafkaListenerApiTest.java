@@ -4,10 +4,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-import static org.folio.qm.utils.TestDBUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.qm.utils.TestDBUtils.getCreationStatusById;
-import static org.folio.qm.utils.TestDBUtils.saveCreationStatus;
-import static org.folio.qm.utils.TestUtils.JOB_EXECUTION_ID;
+import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
+import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_ID;
 
 import java.io.IOException;
 import java.util.UUID;

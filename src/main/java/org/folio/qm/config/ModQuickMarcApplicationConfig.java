@@ -1,6 +1,5 @@
 package org.folio.qm.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.JacksonUtils;
 
 import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
@@ -38,10 +36,4 @@ public class ModQuickMarcApplicationConfig {
     factory.setConsumerFactory(consumerFactory);
     return factory;
   }
-
-  @Bean
-  public ObjectMapper objectMapper() {
-    return JacksonUtils.enhancedObjectMapper();
-  }
-
 }

@@ -46,7 +46,6 @@
     <jsonpath.version>2.5.0</jsonpath.version>
     <embedded-postgresql.version>1.6.2</embedded-postgresql.version>
     <junit-extensions.version>2.4.0</junit-extensions.version>
-    <vertx.version>4.0.0</vertx.version>
     <jsonassert.version>1.5.0</jsonassert.version>
   </properties>
 

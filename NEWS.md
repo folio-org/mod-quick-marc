@@ -1,3 +1,13 @@
+## 2.0.3 - Released
+
+The only focus of this patch release was to add a standard admin healthcheck endpoint and remove Vert.X dependency
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.2...v2.0.3)
+
+### Stories
+* [MODQM-84](https://issues.folio.org/browse/MODQM-84) - Add standard admin healthcheck endpoint
+* [MODQM-86](https://issues.folio.org/browse/MODQM-86) - Remove Vert.X dependency
+
 ## 2.0.2 - Released
 
 The only focus of this patch release was to adjust POST payload according to the latest changes in 'mod-source-record-manager' 

@@ -8,6 +8,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.SC_OK;
 
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
+import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,9 +34,11 @@ public class APITestUtils {
   public static final String INSTANCE_ID = "instanceId";
   public static final String QM_RECORD_ID = "qmRecordId";
 
+  public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";
   public static final String JOHN_TOKEN =
     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huX2RvZSIsInVzZXJfaWQiOiIzOGQzYTQ0MS1jMTAwLTVlOGQtYmQxMi03MWJkZTQ5MmI3MjMiLCJpYXQiOjE2MTQyNTIzOTAsInRlbmFudCI6InRlc3QifQ.7IrC11gjVVWSETsC1RfzHvUUcpljYcYJk_TbBf6deBo";
   public static final Header JOHN_TOKEN_HEADER = new Header(TOKEN, JOHN_TOKEN);
+  public static final Header JOHN_USER_ID_HEADER = new Header(USER_ID, JOHN_USER_ID);
   public static final Header JOHN_TOKEN_HEADER_INVALID =
     new Header(TOKEN, "eyJhbGciOiJIUzI1NiJ9.ddd.nBC1esXqYAriVH6J2MfR7QPouzJ8oH5x99CYrU92vi0");
 

@@ -22,8 +22,7 @@ import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
 import static org.folio.qm.utils.APITestUtils.INSTANCE_ID;
-import static org.folio.qm.utils.APITestUtils.JOHN_TOKEN_HEADER;
-import static org.folio.qm.utils.APITestUtils.JOHN_TOKEN_HEADER_INVALID;
+import static org.folio.qm.utils.APITestUtils.JOHN_USER_ID_HEADER;
 import static org.folio.qm.utils.APITestUtils.QM_RECORD_ID;
 import static org.folio.qm.utils.APITestUtils.changeManagerPath;
 import static org.folio.qm.utils.APITestUtils.changeManagerResourceByIdPath;
@@ -329,7 +328,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     mockPost(postRecordsPath, "", wireMockServer);
 
     CreationStatus response =
-      verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_TOKEN_HEADER).as(CreationStatus.class);
+      verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_USER_ID_HEADER).as(CreationStatus.class);
     assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
     assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
 
@@ -360,7 +359,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
 
     final var error =
-      verifyPost(recordsEditorPath(), quickMarcJson, SC_UNPROCESSABLE_ENTITY, JOHN_TOKEN_HEADER).as(Error.class);
+      verifyPost(recordsEditorPath(), quickMarcJson, SC_UNPROCESSABLE_ENTITY, JOHN_USER_ID_HEADER).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
     assertThat(error.getCode(), equalTo("UNPROCESSABLE_ENTITY"));
   }
@@ -374,25 +373,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
       .instanceId(EXISTED_INSTANCE_ID);
 
     final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST).as(Error.class);
-    assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
+    assertThat(error.getMessage(), equalTo("X-Okapi-User-Id header is missing"));
   }
 
-  @Test
-  void testReturn401WhenHeader() {
-    log.info("===== Verify POST record: Unauthorized =====");
-
-    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .instanceId(EXISTED_INSTANCE_ID);
-
-    String jobExecution = "mockdata/change-manager/job-execution/jobExecutionCreated.json";
-    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, wireMockServer);
-
-    final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
-    mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
-
-    final var error =
-      verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_TOKEN_HEADER_INVALID).as(Error.class);
-    assertThat(error.getMessage(), equalTo("X-Okapi-Token does not contain a userId"));
-  }
 }

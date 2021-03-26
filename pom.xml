@@ -26,7 +26,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
 
-    <folio-spring-base.version>1.0.4</folio-spring-base.version>
+    <folio-spring-base.version>1.0.5</folio-spring-base.version>
     <mod-srm-client.version>3.0.0</mod-srm-client.version>
     <openapi-generator.version>4.3.1</openapi-generator.version>
     <mockito.version>3.7.7</mockito.version>
@@ -46,7 +46,6 @@
     <jsonpath.version>2.5.0</jsonpath.version>
     <embedded-postgresql.version>1.6.2</embedded-postgresql.version>
     <junit-extensions.version>2.4.0</junit-extensions.version>
-    <vertx.version>4.0.0</vertx.version>
     <jsonassert.version>1.5.0</jsonassert.version>
   </properties>
 

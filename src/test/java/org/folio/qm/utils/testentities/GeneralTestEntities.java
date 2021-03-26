@@ -1,4 +1,4 @@
-package org.folio.qm.utils;
+package org.folio.qm.utils.testentities;
 
 import java.util.Arrays;
 import java.util.Collections;

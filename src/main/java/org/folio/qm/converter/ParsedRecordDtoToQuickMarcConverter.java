@@ -23,6 +23,8 @@ import static org.folio.qm.converter.elements.MaterialTypeConfiguration.UNKNOWN;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -83,10 +85,15 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
         .suppressDiscovery(parsedRecordDto.getAdditionalInfo().getSuppressDiscovery())
         .updateInfo(new QuickMarcUpdateInfo()
           .recordState(QuickMarcUpdateInfo.RecordStateEnum.fromValue(parsedRecordDto.getRecordState().value()))
-          .updateDate(parsedRecordDto.getMetadata().getUpdatedDate()));
+          .updateDate(convertDate(parsedRecordDto)));
     } catch (Exception e) {
       throw new ConverterException(e);
     }
+  }
+
+  private OffsetDateTime convertDate(ParsedRecordDto parsedRecordDto) {
+    var updatedDate = parsedRecordDto.getMetadata().getUpdatedDate();
+    return updatedDate != null ? OffsetDateTime.ofInstant(updatedDate.toInstant(), ZoneId.systemDefault()) : null;
   }
 
   private Object processControlField(ControlField controlField, String leader) {
@@ -154,7 +161,8 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
   }
 
   private QuickMarcFields controlFieldToQuickMarcField(ControlField cf, String leader) {
-    return new QuickMarcFields().tag(cf.getTag()).content(processControlField(cf, leader)).indicators(Collections.emptyList());
+    return new QuickMarcFields().tag(cf.getTag()).content(processControlField(cf, leader))
+      .indicators(Collections.emptyList());
   }
 
   private String masqueradeBlanks(String sourceString) {

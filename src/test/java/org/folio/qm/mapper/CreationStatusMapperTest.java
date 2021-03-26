@@ -3,6 +3,8 @@ package org.folio.qm.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import io.github.glytching.junit.extension.random.Random;
@@ -37,8 +39,8 @@ class CreationStatusMapperTest {
       .hasFieldOrPropertyWithValue("qmRecordId", id.toString())
       .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId.toString())
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)
-      .hasFieldOrPropertyWithValue("metadata.createdAt", createdAt)
-      .hasFieldOrPropertyWithValue("metadata.updatedAt", updatedAt);
+      .hasFieldOrPropertyWithValue("metadata.createdAt", getFrom(createdAt))
+      .hasFieldOrPropertyWithValue("metadata.updatedAt", getFrom(updatedAt));
   }
 
   @Test
@@ -71,8 +73,11 @@ class CreationStatusMapperTest {
       .hasFieldOrPropertyWithValue("qmRecordId", null)
       .hasFieldOrPropertyWithValue("jobExecutionId", null)
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)
-      .hasFieldOrPropertyWithValue("metadata.createdAt", createdAt)
-      .hasFieldOrPropertyWithValue("metadata.updatedAt", updatedAt);
+      .hasFieldOrPropertyWithValue("metadata.createdAt", getFrom(createdAt))
+      .hasFieldOrPropertyWithValue("metadata.updatedAt", getFrom(updatedAt));
   }
 
+  private OffsetDateTime getFrom(Timestamp timestamp) {
+    return OffsetDateTime.from(timestamp.toInstant().atZone(ZoneId.systemDefault()));
+  }
 }

@@ -1,6 +1,6 @@
 package org.folio.qm.utils;
 
-import static org.folio.qm.utils.TestUtils.TENANT_ID;
+import static org.folio.qm.utils.APITestUtils.TENANT_ID;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +14,7 @@ import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.spring.FolioModuleMetadata;
 
 @UtilityClass
-public class TestDBUtils {
+public class DBTestUtils {
 
   public static final String RECORD_CREATION_STATUS_TABLE_NAME = "record_creation_status";
 

@@ -7,11 +7,11 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import static org.folio.qm.utils.TestUtils.EXISTED_INSTANCE_ID;
-import static org.folio.qm.utils.TestUtils.QM_EMPTY_FIELDS;
-import static org.folio.qm.utils.TestUtils.VALID_JOB_EXECUTION_ID;
-import static org.folio.qm.utils.TestUtils.VALID_PARSED_RECORD_DTO_ID;
-import static org.folio.qm.utils.TestUtils.readQuickMarc;
+import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_INSTANCE_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EMPTY_FIELDS;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 
 import java.util.Collections;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package org.folio.qm.utils;
+package org.folio.qm.utils.testentities;
 
 public enum PhysicalDescriptionsTestEntities {
 

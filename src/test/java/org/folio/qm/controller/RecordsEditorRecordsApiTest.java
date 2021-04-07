@@ -1,5 +1,8 @@
 package org.folio.qm.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
@@ -57,6 +60,7 @@ import java.util.Collections;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import com.github.tomakehurst.wiremock.http.Fault;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -374,6 +378,27 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST).as(Error.class);
     assertThat(error.getMessage(), equalTo("X-Okapi-User-Id header is missing"));
+  }
+
+  @Test
+  void testReturn400WhenConnectionReset() {
+    log.info("===== Verify POST record: Connection reset =====");
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .instanceId(EXISTED_INSTANCE_ID);
+
+    wireMockServer.stubFor(post(urlEqualTo(CHANGE_MANAGER_JOB_EXECUTION_PATH))
+      .willReturn(aResponse()
+        .withStatus(SC_OK)
+        .withFault(Fault.CONNECTION_RESET_BY_PEER)
+      ));
+
+    var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_USER_ID_HEADER).as(Error.class);
+
+    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
+    assertThat(error.getCode(), equalTo("BAD_REQUEST"));
+    assertThat(error.getMessage(), containsString("Connection reset executing"));
   }
 
 }

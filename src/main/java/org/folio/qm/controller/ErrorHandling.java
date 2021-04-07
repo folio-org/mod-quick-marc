@@ -27,11 +27,16 @@ public class ErrorHandling {
   @ExceptionHandler(FeignException.class)
   public Error handleFeignStatusException(FeignException e, HttpServletResponse response) {
     var status = e.status();
-    var message = e.responseBody()
-      .map(byteBuffer -> new String(byteBuffer.array(), UTF_8))
-      .orElse(StringUtils.EMPTY);
-    response.setStatus(status);
-    return buildError(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
+    if (status != -1) {
+      var message = e.responseBody()
+        .map(byteBuffer -> new String(byteBuffer.array(), UTF_8))
+        .orElse(StringUtils.EMPTY);
+      response.setStatus(status);
+      return buildError(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
+    } else {
+      response.setStatus(HttpStatus.BAD_REQUEST.value());
+      return buildError(HttpStatus.BAD_REQUEST, FOLIO_EXTERNAL_OR_UNDEFINED, e.getMessage());
+    }
   }
 
   @ExceptionHandler(QuickMarcException.class)

@@ -1,5 +1,6 @@
 package org.folio.qm.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -15,6 +16,7 @@ public class JsonTestUtils {
 
   private static final JsonMapper MAPPER = JsonMapper.builder()
     .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+    .serializationInclusion(JsonInclude.Include.NON_NULL)
     .addModule(new JavaTimeModule())
     .build();
 

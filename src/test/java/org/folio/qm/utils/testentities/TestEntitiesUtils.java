@@ -18,6 +18,7 @@ public class TestEntitiesUtils {
   public static final String QM_JSON_DIR = "mockdata/change-manager";
   public static final String RESTORED_PARSED_RECORD_DTO_PATH = QM_JSON_DIR + "/parsedRecordDtoRestored.json";
   public static final String PARSED_RECORD_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordDtoMissingWhitespaces.json";
+  public static final String USER_JOHN_PATH = "mockdata/users/userJohn.json";
   public static final String PARSED_RECORD_DTO_PATH = QM_JSON_DIR + "/parsedRecordDto.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
   public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
@@ -34,6 +35,8 @@ public class TestEntitiesUtils {
   public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
   public static final String VALID_JOB_EXECUTION_ID = "a7fb1c32-1ffb-4a22-a76a-4067284fe68d";
   public static final UUID JOB_EXECUTION_ID = UUID.fromString(VALID_JOB_EXECUTION_ID);
+  public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";
+  public static final String JOHN_USER_NAME = "john-doe";
 
   public static QuickMarcFields getFieldWithIndicators(List<String> indicators) {
     return new QuickMarcFields().tag(TESTED_TAG_NAME).content("$333 content").indicators(indicators);
@@ -44,10 +47,16 @@ public class TestEntitiesUtils {
   }
 
   public static ParsedRecordDto getParsedRecordDtoWithMinContent(ParsedRecord parsedRecord) {
-    return new ParsedRecordDto().withId(VALID_PARSED_RECORD_DTO_ID)
+    return new ParsedRecordDto()
+      .withId(VALID_PARSED_RECORD_DTO_ID)
+      .withParsedRecord(parsedRecord)
       .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_INSTANCE_ID))
       .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false)).withRecordType(ParsedRecordDto.RecordType.MARC)
       .withRecordState(ParsedRecordDto.RecordState.ACTUAL)
-      .withMetadata(new Metadata().withUpdatedDate(new Date(1594901616879L))).withParsedRecord(parsedRecord);
+      .withMetadata(new Metadata()
+        .withUpdatedDate(new Date(1594901616879L))
+        .withUpdatedByUserId(JOHN_USER_ID)
+        .withUpdatedByUsername(JOHN_USER_NAME)
+      );
   }
 }

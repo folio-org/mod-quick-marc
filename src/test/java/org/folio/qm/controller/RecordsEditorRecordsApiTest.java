@@ -35,6 +35,7 @@ import static org.folio.qm.utils.APITestUtils.mockPut;
 import static org.folio.qm.utils.APITestUtils.recordsEditorPath;
 import static org.folio.qm.utils.APITestUtils.recordsEditorResourceByIdPath;
 import static org.folio.qm.utils.APITestUtils.recordsEditorStatusPath;
+import static org.folio.qm.utils.APITestUtils.usersByIdPath;
 import static org.folio.qm.utils.AssertionUtils.verifyDateTimeUpdating;
 import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
@@ -43,12 +44,14 @@ import static org.folio.qm.utils.IOTestUtils.readFile;
 import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_INSTANCE_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_WRONG_ITEM_LENGTH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
@@ -86,19 +89,17 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     mockGet(changeManagerPath(INSTANCE_ID, EXISTED_INSTANCE_ID), readFile(PARSED_RECORD_DTO_PATH), SC_OK,
       wireMockServer);
+    mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
 
-    QuickMarc quickMarcJson =
-      verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_INSTANCE_ID), SC_OK).as(QuickMarc.class);
-
+    var quickMarcJson = verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_INSTANCE_ID), SC_OK).as(QuickMarc.class);
 
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
     assertThat(quickMarcJson.getInstanceId(), equalTo(EXISTED_INSTANCE_ID));
     assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
     assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
+    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(JOHN_USER_ID));
 
-    assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
-
-    var changeManagerResponse = wireMockServer.getAllServeEvents().get(0).getResponse().getBodyAsString();
+    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
     ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
     assertThat(parsedRecordDto.getId(), equalTo(quickMarcJson.getParsedRecordDtoId()));
   }

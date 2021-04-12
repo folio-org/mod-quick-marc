@@ -7,7 +7,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.SC_OK;
 
-import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 
 import java.io.UnsupportedEncodingException;
@@ -31,16 +31,12 @@ public class APITestUtils {
   public static final String CHANGE_MANAGER_JOB_EXECUTION_PATH = "/change-manager/jobExecutions";
   public static final String CHANGE_MANAGER_JOB_PROFILE_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/jobProfile";
   public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
+  public static final String USERS_PATH = "/users";
+
   public static final String INSTANCE_ID = "instanceId";
   public static final String QM_RECORD_ID = "qmRecordId";
 
-  public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";
-  public static final String JOHN_TOKEN =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huX2RvZSIsInVzZXJfaWQiOiIzOGQzYTQ0MS1jMTAwLTVlOGQtYmQxMi03MWJkZTQ5MmI3MjMiLCJpYXQiOjE2MTQyNTIzOTAsInRlbmFudCI6InRlc3QifQ.7IrC11gjVVWSETsC1RfzHvUUcpljYcYJk_TbBf6deBo";
-  public static final Header JOHN_TOKEN_HEADER = new Header(TOKEN, JOHN_TOKEN);
   public static final Header JOHN_USER_ID_HEADER = new Header(USER_ID, JOHN_USER_ID);
-  public static final Header JOHN_TOKEN_HEADER_INVALID =
-    new Header(TOKEN, "eyJhbGciOiJIUzI1NiJ9.ddd.nBC1esXqYAriVH6J2MfR7QPouzJ8oH5x99CYrU92vi0");
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));
@@ -52,6 +48,10 @@ public class APITestUtils {
     } catch (UnsupportedEncodingException e) {
       throw new CompletionException(e);
     }
+  }
+
+  public static String usersByIdPath(String id) {
+    return USERS_PATH + "/" + id;
   }
 
   public static String recordsEditorPath() {

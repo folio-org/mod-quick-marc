@@ -4,13 +4,13 @@ spring:
   datasource:
     # to boot up application despite of any DB connection issues
     continue-on-error: true
-    password: ${DB_PASSWORD:-pass}
-    url: jdbc:postgresql://${DB_HOST:-localhost}:${DB_PORT:-5432}/${DB_DATABASE:-db}
-    username: ${DB_USERNAME:-user}
+    password: ${DB_PASSWORD:pass}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:db}
+    username: ${DB_USERNAME:user}
     hikari:
       register-mbeans: true
   kafka:
-    bootstrap-servers: ${KAFKA_HOST:-localhost}:${KAFKA_PORT:-9092}
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
     consumer:
       enable-auto-commit: true
       auto-commit-interval: 1000

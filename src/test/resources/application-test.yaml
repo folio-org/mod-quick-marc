@@ -16,6 +16,13 @@ spring:
 logging:
   level:
     io.zonky.test.db.postgres: FATAL
+folio:
+  logging:
+    request:
+      enabled: true
+    feign:
+      enabled: true
+      level: full
 job:
   execution:
     profile:

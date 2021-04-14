@@ -26,7 +26,7 @@ import org.folio.spring.integration.XOkapiHeaders;
 public class LoggingRequestInterceptor extends HandlerInterceptorAdapter {
 
   private static final String START_TIME_ATTR = "startTime";
-  private static final String REQ_ID_ATTR = "startTime";
+  private static final String REQ_ID_ATTR = "okapiReqId";
 
   private final FolioExecutionContext folioExecutionContext;
 
@@ -49,7 +49,7 @@ public class LoggingRequestInterceptor extends HandlerInterceptorAdapter {
   @Override
   public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                               @NonNull Object handler, @Nullable Exception ex) {
-    var startTime = (Long) request.getAttribute(START_TIME_ATTR);
+    var startTime = (long) request.getAttribute(START_TIME_ATTR);
     var requestId = (String) request.getAttribute(REQ_ID_ATTR);
     if (ex != null) {
       log.error("[{}] Exception: {}", requestId, ex.getMessage());

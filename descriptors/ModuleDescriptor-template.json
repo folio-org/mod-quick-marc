@@ -13,18 +13,25 @@
     {
       "id": "source-manager-records",
       "version": "1.0"
+    },
+    {
+      "id": "users",
+      "version": "15.0"
     }
   ],
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "1.3",
+      "version": "1.4",
       "handlers": [
         {
           "methods": ["GET"],
           "pathPattern": "/records-editor/records",
           "permissionsRequired": ["records-editor.records.item.get"],
-          "modulePermissions": ["change-manager.parsedrecords.get"]
+          "modulePermissions": [
+            "change-manager.parsedrecords.get",
+            "users.item.get"
+          ]
         },
         {
           "methods": ["POST"],

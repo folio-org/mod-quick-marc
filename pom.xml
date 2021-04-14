@@ -257,7 +257,6 @@
               <generateApiTests>true</generateApiTests>
               <generateApiDocumentation>true</generateApiDocumentation>
               <generateModels>true</generateModels>
-              <modelsToGenerate>creationStatus,creationStatus_metadata,quickMarc,quickMarc_fields,quickMarc_updateInfo</modelsToGenerate>
               <generateModelTests>false</generateModelTests>
               <generateSupportingFiles>true</generateSupportingFiles>
               <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
@@ -332,6 +331,7 @@
         <version>3.0.0-M5</version>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
+          <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
         </configuration>
       </plugin>
 

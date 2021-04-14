@@ -20,10 +20,12 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
 import org.folio.qm.client.SRMChangeManagerClient;
+import org.folio.qm.client.UsersClient;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.QuickMarcFields;
 import org.folio.qm.mapper.CreationStatusMapper;
+import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
@@ -41,18 +43,29 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private static final String RECORD_NOT_FOUND_MESSAGE = "Record with id [%s] was not found";
 
   private final SRMChangeManagerClient srmClient;
+  private final UsersClient usersClient;
   private final ValidationService validationService;
   private final CreationStatusService statusService;
 
   private final Converter<ParsedRecordDto, QuickMarc> parsedRecordToQuickMarcConverter;
   private final Converter<QuickMarc, ParsedRecordDto> quickMarcToParsedRecordConverter;
   private final CreationStatusMapper statusMapper;
+  private final UserMapper userMapper;
   private final FolioExecutionContext folioExecutionContext;
   private final JobExecutionProfileProperties jobExecutionProfileProperties;
 
   @Override
   public QuickMarc findByInstanceId(UUID instanceId) {
-    return parsedRecordToQuickMarcConverter.convert(srmClient.getParsedRecordByInstanceId(instanceId.toString()));
+    var parsedRecordDto = srmClient.getParsedRecordByInstanceId(instanceId.toString());
+    var quickMarc = parsedRecordToQuickMarcConverter.convert(parsedRecordDto);
+    if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
+      usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
+        .ifPresent(userDto -> {
+          var userInfo = userMapper.fromDto(userDto);
+          Objects.requireNonNull(quickMarc).getUpdateInfo().setUpdatedBy(userInfo);
+        });
+    }
+    return quickMarc;
   }
 
   @Override
@@ -109,7 +122,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     srmClient.postRawRecordsByJobExecutionId(jobExecutionId, rawRecordDto);
   }
 
-  public CreationStatus saveStatus(String jobExecutionId ) {
+  public CreationStatus saveStatus(String jobExecutionId) {
     final var status = getStatusNew(jobExecutionId);
     final var recordCreationStatus = statusService.save(status);
     return statusMapper.fromEntity(recordCreationStatus);
@@ -117,9 +130,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private void clearFields(QuickMarc quickMarc) {
     final Predicate<QuickMarcFields> field999Predicate = qmFields -> qmFields.getTag().equals("999");
-    final Predicate<QuickMarcFields> emptyContentPredicate =  qmFields -> {
+    final Predicate<QuickMarcFields> emptyContentPredicate = qmFields -> {
       final var content = qmFields.getContent();
-      return content instanceof String && Strings.isEmpty((String)content);
+      return content instanceof String && Strings.isEmpty((String) content);
     };
     quickMarc.getFields()
       .removeIf(field999Predicate.or(emptyContentPredicate));

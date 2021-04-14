@@ -7,6 +7,8 @@ spring:
     password: ${DB_PASSWORD:pass}
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:db}
     username: ${DB_USERNAME:user}
+    hikari:
+      register-mbeans: true
   kafka:
     bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
     consumer:
@@ -41,13 +43,6 @@ management:
       exposure:
         include: info,health,env,httptrace
       base-path: /admin
-#  endpoint:
-#    health:
-#      show-details: always
-#      show-components: always
-###################################################
-# Disable all checks except for readiness
-###################################################
   health:
     defaults:
       enabled: false
@@ -61,3 +56,7 @@ job:
       default:
         id: 6409dcff-71fa-433a-bc6a-e70ad38a9604
         name: CLI Create MARC Bibs and Instances
+
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG

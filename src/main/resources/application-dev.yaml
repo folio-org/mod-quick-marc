@@ -35,9 +35,9 @@ folio:
   logging:
     request:
       enabled: true
+      level: full
     feign:
       enabled: true
-      # Possible values: none, basic, headers, full
       level: full
 management:
   endpoints:

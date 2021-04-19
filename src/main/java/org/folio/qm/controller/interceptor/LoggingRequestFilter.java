@@ -40,20 +40,22 @@ public class LoggingRequestFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
-
-    filterWrapped(wrapRequest(request), wrapResponse(response), chain);
+    if (log.isInfoEnabled()) {
+      filterWrapped(wrapRequest(request), wrapResponse(response), chain);
+    } else {
+      chain.doFilter(request, response);
+    }
   }
 
   private void filterWrapped(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response,
                              FilterChain chain) throws ServletException, IOException {
-    filterBefore(request, response);
+    filterBefore(request);
     chain.doFilter(request, response);
     filterAfter(request, response);
     response.copyBodyToResponse();
   }
 
-  private void filterBefore(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response)
-    throws UnsupportedEncodingException {
+  private void filterBefore(ContentCachingRequestWrapper request) throws UnsupportedEncodingException {
     request.setAttribute(START_TIME_ATTR, Instant.now().toEpochMilli());
 
     var requestId = getRequestId(request);
@@ -68,13 +70,13 @@ public class LoggingRequestFilter extends GenericFilterBean {
     if (level.ordinal() >= Level.HEADERS.ordinal()) {
       var headerNames = request.getHeaderNames();
       while (headerNames.hasMoreElements()) {
-        String headerName = headerNames.nextElement();
+        var headerName = headerNames.nextElement();
         log.info("[{}] {}: {}", requestId, headerName, request.getHeader(headerName));
       }
     }
 
     if (level.ordinal() == Level.FULL.ordinal()) {
-      String body = new String(request.getContentAsByteArray(), request.getCharacterEncoding());
+      var body = new String(request.getContentAsByteArray(), request.getCharacterEncoding());
       log.info("[{}] {}", requestId, body);
     }
 
@@ -93,7 +95,7 @@ public class LoggingRequestFilter extends GenericFilterBean {
     );
 
     if (level.ordinal() == Level.FULL.ordinal()) {
-      String body = new String(response.getContentAsByteArray(), response.getCharacterEncoding());
+      var body = new String(response.getContentAsByteArray(), response.getCharacterEncoding());
       log.info("[{}] {}", requestId, body);
     }
 

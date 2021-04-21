@@ -15,7 +15,7 @@ import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 @Configuration
 @EnableKafka
-public class ModQuickMarcApplicationConfig {
+public class KafkaConfig {
 
   @Bean
   public String kafkaEnvId(@Value("${ENV:folio}") String envId) {

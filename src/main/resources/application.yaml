@@ -26,15 +26,19 @@ spring:
     enabled: true
   jackson:
     default-property-inclusion: NON_EMPTY
-feign:
-  client:
-    config:
-      change-manager:
-        logger-level: full
 folio:
   tenant:
     validation:
       enabled: true
+  logging:
+    request:
+      enabled: true
+      # Possible values: none, basic, headers, full. Default: basic
+      level: full
+    feign:
+      enabled: true
+      # Possible values: none, basic, headers, full. Default: basic
+      level: basic
 management:
   endpoints:
     web:

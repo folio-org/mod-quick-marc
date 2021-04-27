@@ -13,6 +13,7 @@ spring:
       enable-auto-commit: true
       auto-commit-interval: 1000
   jpa:
+    open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate:
       ddl-auto: none

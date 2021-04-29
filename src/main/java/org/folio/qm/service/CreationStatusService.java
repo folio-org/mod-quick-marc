@@ -10,6 +10,8 @@ public interface CreationStatusService {
 
   Optional<RecordCreationStatus> findById(UUID qmRecordId);
 
+  Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId);
+
   boolean updateByJobExecutionId(UUID jobExecutionId, RecordCreationStatusUpdate statusUpdate);
 
   RecordCreationStatus save(RecordCreationStatus status);

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
@@ -23,8 +24,21 @@ public class CreationStatusServiceImpl implements CreationStatusService {
   }
 
   @Override
+  public Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId) {
+    return statusRepository.findByJobExecutionId(jobExecutionId);
+  }
+
+  @Override
+  @Transactional
   public boolean updateByJobExecutionId(UUID jobExecutionId, RecordCreationStatusUpdate statusUpdate) {
-    return statusRepository.update(statusUpdate, jobExecutionId) > 0;
+    return findByJobExecutionId(jobExecutionId)
+      .map(recordCreationStatus -> {
+        recordCreationStatus.setStatus(statusUpdate.getStatus());
+        recordCreationStatus.setInstanceId(statusUpdate.getInstanceId());
+        recordCreationStatus.setMarcBibId(statusUpdate.getMarcBibId());
+        recordCreationStatus.setErrorMessage(statusUpdate.getErrorMessage());
+        return true;
+      }).orElse(false);
   }
 
   @Override

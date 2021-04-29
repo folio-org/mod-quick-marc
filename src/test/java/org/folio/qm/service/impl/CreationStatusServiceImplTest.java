@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.domain.entity.RecordCreationStatus;
+import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.domain.repository.RecordCreationStatusRepository;
 
 @ExtendWith({
@@ -46,5 +47,14 @@ class CreationStatusServiceImplTest {
     var actual = service.findById(notExistedId);
 
     assertThat(actual).isEmpty();
+  }
+
+  @Test
+  void shouldNotUpdateWhenNoRecordInDb(@Random UUID notExistedId, @Random RecordCreationStatusUpdate statusUpdate) {
+    when(statusRepository.update(any(), any())).thenReturn(0);
+
+    var actual = service.updateByJobExecutionId(notExistedId, statusUpdate);
+
+    assertThat(actual).isFalse();
   }
 }

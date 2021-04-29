@@ -23,11 +23,6 @@ public class CreationStatusServiceImpl implements CreationStatusService {
   }
 
   @Override
-  public Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId) {
-    return statusRepository.findByJobExecutionId(jobExecutionId);
-  }
-
-  @Override
   public boolean updateByJobExecutionId(UUID jobExecutionId, RecordCreationStatusUpdate statusUpdate) {
     return statusRepository.update(statusUpdate, jobExecutionId) > 0;
   }

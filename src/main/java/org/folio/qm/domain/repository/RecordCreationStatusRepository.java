@@ -1,6 +1,5 @@
 package org.folio.qm.domain.repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -14,8 +13,6 @@ import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 
 public interface RecordCreationStatusRepository extends JpaRepository<RecordCreationStatus, UUID> {
-
-  Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId);
 
   @Modifying
   @Transactional

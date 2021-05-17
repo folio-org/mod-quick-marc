@@ -113,7 +113,9 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
     if (materialTypeConfiguration.equals(UNKNOWN)) {
       return Collections.singletonMap(VALUE.getName(), content);
     }
-    return fillContentMap(materialTypeConfiguration.getFixedLengthControlFieldItems(), content.substring(1));
+    var valuesMap = fillContentMap(materialTypeConfiguration.getFixedLengthControlFieldItems(), content.substring(1));
+    valuesMap.put(TYPE, content.substring(0, 1));
+    return valuesMap;
   }
 
   private Map<String, Object> splitGeneralInformationControlField(String content, String leader) {

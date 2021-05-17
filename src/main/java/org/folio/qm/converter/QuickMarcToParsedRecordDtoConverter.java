@@ -15,7 +15,7 @@ import static org.folio.qm.converter.Constants.LCCN_TAG;
 import static org.folio.qm.converter.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
-import static org.folio.qm.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
+import static org.folio.qm.converter.Constants.TYPE;
 import static org.folio.qm.converter.elements.FixedLengthDataElements.CATEGORY;
 import static org.folio.qm.converter.elements.FixedLengthDataElements.VALUE;
 import static org.folio.qm.converter.elements.MaterialTypeConfiguration.UNKNOWN;
@@ -158,7 +158,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     if (materialTypeConfiguration.equals(UNKNOWN)) {
       return contentMap.get(VALUE.getName()).toString();
     } else {
-      return leaderString.charAt(TYPE_OF_RECORD_LEADER_POS) + restoreFixedLengthField(
+      return contentMap.get(TYPE) + restoreFixedLengthField(
         ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(),
         contentMap);
     }

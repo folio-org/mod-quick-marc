@@ -15,6 +15,7 @@
   }, {
     "tag" : "006",
     "content" : {
+      "Type": "e",
       "SpFm" : [ "k", "l" ],
       "Form" : "i",
       "GPub" : "h",

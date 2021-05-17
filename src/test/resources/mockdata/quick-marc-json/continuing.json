@@ -15,6 +15,7 @@
   }, {
     "tag" : "006",
     "content" : {
+      "Type": "s",
       "S/L" : "m",
       "Cont" : [ "g", "h", "i" ],
       "Conf" : "k",

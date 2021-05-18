@@ -180,13 +180,14 @@
         },
         {
           "066": {
-            "ind1":" ",
-            "ind2":" ",
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "c": "$1"
               },
-              {"c": "(3"
+              {
+                "c": "(3"
               }
             ]
           }
@@ -358,8 +359,8 @@
         },
         {
           "880": {
-            "ind1":"0",
-            "ind2":"0",
+            "ind1": "0",
+            "ind2": "0",
             "subfields": [
               {
                 "6": "245-01/$1"
@@ -488,7 +489,7 @@
       "leader": "01704ccm a2200361   4500"
     }
   },
-  "recordState":"ACTUAL",
+  "recordState": "ACTUAL",
   "additionalInfo": {
     "suppressDiscovery": false
   }

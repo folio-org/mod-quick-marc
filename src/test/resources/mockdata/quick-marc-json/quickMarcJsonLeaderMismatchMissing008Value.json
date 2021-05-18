@@ -18,6 +18,7 @@
     {
       "tag": "006",
       "content": {
+        "Type": "c",
         "Comp": "ab",
         "FMus": "c",
         "Part": "d",

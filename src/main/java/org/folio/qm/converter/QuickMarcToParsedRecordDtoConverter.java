@@ -15,10 +15,8 @@ import static org.folio.qm.converter.Constants.LCCN_TAG;
 import static org.folio.qm.converter.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
-import static org.folio.qm.converter.Constants.TYPE;
-import static org.folio.qm.converter.elements.FixedLengthDataElements.CATEGORY;
-import static org.folio.qm.converter.elements.FixedLengthDataElements.VALUE;
-import static org.folio.qm.converter.elements.MaterialTypeConfiguration.UNKNOWN;
+import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
+import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FILED;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
@@ -38,19 +36,20 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
+import org.marc4j.marc.VariableField;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.converter.elements.FixedLengthDataElements;
+import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
+import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.QuickMarc;
@@ -66,7 +65,7 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto;
 public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc, ParsedRecordDto> {
 
   private static final int GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
-  private static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 17;
+  private static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
   private static final int LCCN_OLD_PREFIX_LENGTH = 3;
   private static final int LCCN_NEW_PREFIX_LENGTH = 2;
   private static final int TOKEN_MIN_LENGTH = 3;
@@ -75,7 +74,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   private static final String INDICATOR1 = "ind1";
   private static final String INDICATOR2 = "ind2";
   private static final String SUBFIELDS = "subfields";
-  private static final String SPLIT_PATTERN = "(?=[$][a-z0-9])";
+  private static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
   private static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
   private static final char SPACE_CHARACTER = ' ';
   private static final int ADDRESS_LENGTH = 12;
@@ -127,28 +126,27 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     materialTypeConfiguration = MaterialTypeConfiguration.resolveContentType(leaderString);
 
     quickMarcJson.getFields()
-      .forEach(field -> {
-        String tag = field.getTag();
-        if (isControlField(field)) {
-          ControlField controlField = factory.newControlField();
-          controlField.setTag(tag);
-          controlField.setData(restoreControlFieldContent(tag, field.getContent()));
-          marcRecord.getControlFields().add(controlField);
-        } else {
-          DataField dataField = factory.newDataField();
-          dataField.setTag(field.getTag());
-          dataField.getSubfields().addAll(convertFieldToSubfields(field));
-          List<String> indicators = verifyAndGetIndicators(field);
-          dataField.setIndicator1(indicators.get(0).toCharArray()[0]);
-          dataField.setIndicator2(indicators.get(1).toCharArray()[0]);
-          marcRecord.getDataFields().add(dataField);
-        }
-      });
+      .stream().map(this::toVariableField)
+      .forEach(marcRecord::addVariableField);
 
     Leader leader = factory.newLeader(restoreBlanks(leaderString));
     leader.setRecordLength(calculateRecordLength(marcRecord));
     marcRecord.setLeader(leader);
     return marcRecord;
+  }
+
+  private VariableField toVariableField(QuickMarcFields field) {
+    String tag = field.getTag();
+    VariableField variableField;
+    if (isControlField(field)) {
+      variableField = factory.newControlField(tag, restoreControlFieldContent(tag, field.getContent()));
+    } else {
+      List<String> indicators = verifyAndGetIndicators(field);
+      var dataField = factory.newDataField(tag, indicators.get(0).charAt(0), indicators.get(1).charAt(0));
+      dataField.getSubfields().addAll(extractSubfields(field));
+      variableField = dataField;
+    }
+    return variableField;
   }
 
   @SuppressWarnings("unchecked")
@@ -166,13 +164,11 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   }
 
   private String restoreAdditionalCharacteristicsControlField(Map<String, Object> contentMap) {
-    if (materialTypeConfiguration.equals(UNKNOWN)) {
-      return contentMap.get(VALUE.getName()).toString();
-    } else {
-      return contentMap.get(TYPE) + restoreFixedLengthField(
-        ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, materialTypeConfiguration.getFixedLengthControlFieldItems(),
-        contentMap);
-    }
+    var type = contentMap.get(ControlFieldItem.TYPE.getName()).toString();
+    var additionalMaterialConfiguration = AdditionalMaterialConfiguration.resolveByCode(type.charAt(0));
+    return restoreFixedLengthField(
+      ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH, additionalMaterialConfiguration.getControlFieldItems(),
+      contentMap, 0);
   }
 
   private String restorePhysicalDescriptionsControlField(Map<String, Object> contentMap) {
@@ -183,17 +179,17 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       return contentMap.get(VALUE.getName()).toString();
     } else {
       return restoreFixedLengthField(physicalDescriptionFixedFieldElements.getLength(),
-        physicalDescriptionFixedFieldElements.getItems(), contentMap);
+        physicalDescriptionFixedFieldElements.getControlFieldItems(), contentMap, 0);
     }
   }
 
   private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
     if (isLeaderMatches(contentMap)) {
-      String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH,
-        materialTypeConfiguration.getFixedLengthControlFieldItems(), contentMap);
+      String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH - 1,
+        materialTypeConfiguration.getControlFieldItems(), contentMap, -1);
       return new StringBuilder(
         restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(),
-          contentMap))
+          contentMap, -1))
         .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
     }
     throw new ConverterException(
@@ -208,7 +204,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   }
 
   @SuppressWarnings("unchecked")
-  private String restoreFixedLengthField(int length, List<FixedLengthDataElements> items, Map<String, Object> map) {
+  private String restoreFixedLengthField(int length, List<ControlFieldItem> items, Map<String, Object> map, int delta) {
     StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
     items.forEach(item -> {
       String value;
@@ -223,21 +219,23 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
             String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));
         }
       }
-      stringBuilder.replace(item.getPosition(), item.getPosition() + item.getLength(), value);
+      stringBuilder.replace(item.getPosition() + delta, item.getPosition() + delta + item.getLength(), value);
     });
     return stringBuilder.toString();
   }
 
-  private List<Subfield> convertFieldToSubfields(QuickMarcFields field) {
-    LinkedList<String> tokens = Arrays.stream(field.getContent().toString().split(SPLIT_PATTERN))
+  private List<Subfield> extractSubfields(QuickMarcFields field) {
+    LinkedList<String> tokens = Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
       .collect(Collectors.toCollection(LinkedList::new));
 
     List<Subfield> subfields = new ArrayList<>();
     while (!tokens.isEmpty()) {
-      String subfieldString = tokens.pop();
-      subfieldString = subfieldString.concat(checkNextToken(tokens));
-      subfields
-        .add(LCCN_TAG.equals(field.getTag()) ? lccnSubfieldFromString(subfieldString) : subfieldFromString(subfieldString));
+      String token = tokens.pop();
+      String subfieldString = token.concat(checkNextToken(tokens));
+      var subfield = LCCN_TAG.equals(field.getTag())
+        ? lccnSubfieldFromString(subfieldString)
+        : subfieldFromString(subfieldString);
+      subfields.add(subfield);
     }
 
     return subfields;

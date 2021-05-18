@@ -179,13 +179,14 @@
         },
         {
           "066": {
-            "ind1":" ",
-            "ind2":" ",
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "c": "$1"
               },
-              {"c": "(3"
+              {
+                "c": "(3"
               }
             ]
           }
@@ -357,8 +358,8 @@
         },
         {
           "880": {
-            "ind1":"0",
-            "ind2":"0",
+            "ind1": "0",
+            "ind2": "0",
             "subfields": [
               {
                 "6": "245-01/$1"
@@ -490,9 +491,9 @@
   "additionalInfo": {
     "suppressDiscovery": false
   },
-  "recordState":"ACTUAL",
+  "recordState": "ACTUAL",
   "metadata": {
-    "updatedDate":"2020-07-16T15:13:36.879+03:00",
+    "updatedDate": "2020-07-16T15:13:36.879+03:00",
     "updatedByUserId": "38d3a441-c100-5e8d-bd12-71bde492b723"
   }
 }

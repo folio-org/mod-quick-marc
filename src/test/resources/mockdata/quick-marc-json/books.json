@@ -15,6 +15,7 @@
   }, {
     "tag" : "006",
     "content" : {
+      "Type": "a",
       "Biog" : "p",
       "Fest" : "m",
       "Audn" : "e",

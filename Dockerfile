@@ -7,5 +7,11 @@ ARG JAR_FILE=./target/*.jar
 # - copy
 COPY ${JAR_FILE} ${JAVA_APP_DIR}/${APP_FILE}
 
+ENV LIB_DIR ${JAVA_APP_DIR}/lib
+
+RUN mkdir -p ${LIB_DIR}
+
+COPY mod-quick-marc/lib/* ${LIB_DIR}/
+
 # Expose this port locally in the container.
 EXPOSE 8081

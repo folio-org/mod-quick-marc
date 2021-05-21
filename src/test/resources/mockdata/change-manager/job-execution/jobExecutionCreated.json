@@ -9,7 +9,7 @@
       "jobProfileInfo": {
         "id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
         "name": "Default job profile",
-        "dataType": "MARC"
+        "dataType": "MARC_BIB"
       },
       "runBy": {
         "firstName": "SYSTEM",

@@ -11,7 +11,6 @@ ENV LIB_DIR ${JAVA_APP_DIR}/lib
 
 RUN mkdir -p ${LIB_DIR}
 
-COPY mod-quick-marc/lib/* ${LIB_DIR}/
 COPY lib/mod-source-record-manager-client-3.1.0-SNAPSHOT.jar ${LIB_DIR}/
 
 # Expose this port locally in the container.

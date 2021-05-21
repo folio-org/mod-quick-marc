@@ -10,6 +10,7 @@ import lombok.experimental.UtilityClass;
 import org.folio.rest.jaxrs.model.InitJobExecutionsRqDto;
 import org.folio.rest.jaxrs.model.InitialRecord;
 import org.folio.rest.jaxrs.model.JobProfileInfo;
+import org.folio.rest.jaxrs.model.JobProfileInfo.DataType;
 import org.folio.rest.jaxrs.model.RawRecordsDto;
 import org.folio.rest.jaxrs.model.RecordsMetadata;
 
@@ -20,7 +21,7 @@ public class ChangeManagerPayloadUtils {
     return new JobProfileInfo()
       .withId(profileProperties.getId())
       .withName(profileProperties.getName())
-      .withDataType(JobProfileInfo.DataType.MARC);
+      .withDataType(DataType.MARC_BIB);
   }
 
   public static InitJobExecutionsRqDto getDefaultJodExecutionDto(String userId, JobExecutionProfileProperties profileProperties) {

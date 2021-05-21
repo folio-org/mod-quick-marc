@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.folio.rest.jaxrs.model.ParsedRecordDto.RecordType;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
@@ -99,7 +100,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
 
       return new ParsedRecordDto()
         .withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId()).withContent(contentMap))
-        .withRecordType(ParsedRecordDto.RecordType.MARC)
+        .withRecordType(RecordType.MARC_BIB)
         .withId(quickMarc.getParsedRecordDtoId())
         .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId()))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarc.getSuppressDiscovery()));

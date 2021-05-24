@@ -1,3 +1,11 @@
+## 2.0.4 - Released
+
+### Changes
+* [MODQM-103](https://issues.folio.org/browse/MODQM-103) - Fix unexpected changing of 006 field
+* [MODQM-98](https://issues.folio.org/browse/MODQM-98) - Fetch user info while get record
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.3...v2.0.4)
+
 ## 2.0.3 - Released
 
 The only focus of this patch release was to add a standard admin healthcheck endpoint and remove Vert.X dependency

@@ -1,130 +1,102 @@
 {
-  "parsedRecordId":"a5f283d6-665b-4482-8b29-07140495a7f0",
-  "parsedRecordDtoId":"a5f283d6-665b-4482-8b29-07140495a7f0",
-  "suppressDiscovery":false,
-  "instanceId":"02df6658-c639-41f2-8587-1ec44dd43d8e",
-  "leader":"03522nam\\a22004331i\\4500",
-  "fields":[
+  "parsedRecordId": "a5f283d6-665b-4482-8b29-07140495a7f0",
+  "parsedRecordDtoId": "a5f283d6-665b-4482-8b29-07140495a7f0",
+  "suppressDiscovery": false,
+  "instanceId": "02df6658-c639-41f2-8587-1ec44dd43d8e",
+  "leader": "03522nam\\a22004331i\\4500",
+  "fields": [
     {
-      "tag":"001",
-      "content":"ak00005012492",
-      "indicators":[
-
-      ]
+      "tag": "001",
+      "content": "ak00005012492",
+      "indicators": []
     },
     {
-      "tag":"003",
-      "content":"NhCcYBP",
-      "indicators":[
-
-      ]
+      "tag": "003",
+      "content": "NhCcYBP",
+      "indicators": []
     },
     {
-      "tag":"005",
-      "content":"20130220102526.4",
-      "indicators":[
-
-      ]
+      "tag": "005",
+      "content": "20130220102526.4",
+      "indicators": []
     },
     {
-      "tag":"006",
-      "content":{
+      "tag": "006",
+      "content": {
         "Type": "m",
-        "Biog":"",
-        "Fest":"|",
-        "Audn":"|",
-        "Cont":[
-          "|",
-          "|",
-          "d",
-          "|"
-        ],
-        "Conf":"|",
-        "Form":"|",
-        "GPub":"|",
-        "Ills":[
-          "|",
-          "|",
-          "|",
-          "|"
-        ],
-        "LitF":"|",
-        "Indx":"|"
+        "Audn": "|",
+        "Form": "|",
+        "File": "d",
+        "GPub": "|"
       },
-      "indicators":[
-
-      ]
+      "indicators": []
     },
     {
-      "tag":"007",
-      "content":{
-        "Level of compression":"",
-        "Category":"c",
-        "Color":"|",
-        "Antecedent/ Source":"",
-        "File formats":"",
-        "Quality assurance target(s)":"",
-        "Dimensions":"n",
-        "Sound":"|",
-        "SMD":"r",
-        "Reformatting quality":"",
-        "Image bit depth":""
+      "tag": "007",
+      "content": {
+        "Level of compression": "",
+        "Category": "c",
+        "Color": "|",
+        "File formats": "",
+        "Antecedent/ Source": "",
+        "Dimensions": "n",
+        "Quality assurance target(s)": "",
+        "Sound": "|",
+        "SMD": "r",
+        "Reformatting quality": "",
+        "Image bit depth": ""
       },
-      "indicators":[
-
-      ]
+      "indicators": []
     },
     {
-      "tag":"008",
-      "content":{
-        "Type":"a",
-        "BLvl":"m",
-        "ELvl":"1",
-        "Desc":"i",
-        "DtSt":"s",
-        "Entered":"130220",
-        "Srce":"d",
-        "MRec":"\\",
-        "Ctry":"ncu",
-        "Date2":"\\\\\\\\",
-        "Lang":"eng",
-        "Date1":"2013",
-        "Biog":"\\",
-        "Fest":"0",
-        "Audn":"\\",
-        "Cont":[
+      "tag": "008",
+      "content": {
+        "Type": "a",
+        "BLvl": "m",
+        "ELvl": "1",
+        "Desc": "i",
+        "Entered": "130220",
+        "DtSt": "s",
+        "Date1": "2013",
+        "Date2": "\\\\\\\\",
+        "Ctry": "ncu",
+        "Lang": "eng",
+        "MRec": "\\",
+        "Srce": "d",
+        "Ills": [
+          "\\",
+          "\\",
+          "\\",
+          "\\"
+        ],
+        "Audn": "\\",
+        "Form": "o",
+        "Cont": [
           "b",
           "\\",
           "\\",
           "\\"
         ],
-        "Conf":"0",
-        "Form":"o",
-        "GPub":"\\",
-        "Ills":[
-          "\\",
-          "\\",
-          "\\",
-          "\\"
-        ],
-        "LitF":"0",
-        "Indx":"1"
+        "GPub": "\\",
+        "Conf": "0",
+        "Fest": "0",
+        "Indx": "1",
+        "LitF": "0",
+        "Biog": "\\"
       },
-      "indicators":[
-
-      ]
+      "indicators": []
     },
     {
-      "tag":"999",
-      "content":"$s a5f283d6-665b-4482-8b29-07140495a7f0 $i 02df6658-c639-41f2-8587-1ec44dd43d8e",
-      "indicators":[
+      "tag": "999",
+      "content": "$s a5f283d6-665b-4482-8b29-07140495a7f0 $i 02df6658-c639-41f2-8587-1ec44dd43d8e",
+      "indicators": [
         "f",
         "f"
       ]
     }
   ],
-  "updateInfo":{
-    "recordState":"ACTUAL",
+  "updateInfo": {
+    "recordState": "ACTUAL",
     "updateDate": "2020-07-16T12:13:36.879Z"
   }
 }

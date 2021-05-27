@@ -2,7 +2,48 @@ package org.folio.qm.converter.elements;
 
 import static org.folio.qm.converter.Constants.BLVL_LEADER_POS;
 import static org.folio.qm.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
-import static org.folio.qm.converter.elements.FixedLengthDataElements.*;
+import static org.folio.qm.converter.elements.ControlFieldItem.ACCM;
+import static org.folio.qm.converter.elements.ControlFieldItem.ALPH;
+import static org.folio.qm.converter.elements.ControlFieldItem.AUDN;
+import static org.folio.qm.converter.elements.ControlFieldItem.BIOG;
+import static org.folio.qm.converter.elements.ControlFieldItem.COMP;
+import static org.folio.qm.converter.elements.ControlFieldItem.CONF;
+import static org.folio.qm.converter.elements.ControlFieldItem.CONT_B;
+import static org.folio.qm.converter.elements.ControlFieldItem.CONT_C;
+import static org.folio.qm.converter.elements.ControlFieldItem.CRTP;
+import static org.folio.qm.converter.elements.ControlFieldItem.CTRY;
+import static org.folio.qm.converter.elements.ControlFieldItem.DATE1;
+import static org.folio.qm.converter.elements.ControlFieldItem.DATE2;
+import static org.folio.qm.converter.elements.ControlFieldItem.DTST;
+import static org.folio.qm.converter.elements.ControlFieldItem.ENTERED;
+import static org.folio.qm.converter.elements.ControlFieldItem.ENTW;
+import static org.folio.qm.converter.elements.ControlFieldItem.FEST;
+import static org.folio.qm.converter.elements.ControlFieldItem.FILE;
+import static org.folio.qm.converter.elements.ControlFieldItem.FMUS;
+import static org.folio.qm.converter.elements.ControlFieldItem.FORM;
+import static org.folio.qm.converter.elements.ControlFieldItem.FORM_MV;
+import static org.folio.qm.converter.elements.ControlFieldItem.FREQ;
+import static org.folio.qm.converter.elements.ControlFieldItem.GPUB;
+import static org.folio.qm.converter.elements.ControlFieldItem.ILLS;
+import static org.folio.qm.converter.elements.ControlFieldItem.INDX;
+import static org.folio.qm.converter.elements.ControlFieldItem.LANG;
+import static org.folio.qm.converter.elements.ControlFieldItem.LITF;
+import static org.folio.qm.converter.elements.ControlFieldItem.LTXT;
+import static org.folio.qm.converter.elements.ControlFieldItem.MREC;
+import static org.folio.qm.converter.elements.ControlFieldItem.ORIG;
+import static org.folio.qm.converter.elements.ControlFieldItem.PART;
+import static org.folio.qm.converter.elements.ControlFieldItem.PROJ;
+import static org.folio.qm.converter.elements.ControlFieldItem.REGL;
+import static org.folio.qm.converter.elements.ControlFieldItem.RELF;
+import static org.folio.qm.converter.elements.ControlFieldItem.SL;
+import static org.folio.qm.converter.elements.ControlFieldItem.SPFM;
+import static org.folio.qm.converter.elements.ControlFieldItem.SRCE;
+import static org.folio.qm.converter.elements.ControlFieldItem.SRTP;
+import static org.folio.qm.converter.elements.ControlFieldItem.TECH;
+import static org.folio.qm.converter.elements.ControlFieldItem.TIME;
+import static org.folio.qm.converter.elements.ControlFieldItem.TMAT;
+import static org.folio.qm.converter.elements.ControlFieldItem.TRAR;
+import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,14 +61,14 @@ public enum MaterialTypeConfiguration {
   UNKNOWN("Unknown Type", Collections.singletonList(VALUE));
 
   private final String name;
-  private final List<FixedLengthDataElements> fixedLengthControlFieldItems;
+  private final List<ControlFieldItem> controlFieldItems;
 
-  MaterialTypeConfiguration(String name, List<FixedLengthDataElements> fixedLengthControlFieldItems) {
+  MaterialTypeConfiguration(String name, List<ControlFieldItem> controlFieldItems) {
     this.name = name;
-    this.fixedLengthControlFieldItems = fixedLengthControlFieldItems;
+    this.controlFieldItems = controlFieldItems;
   }
 
-  public static List<FixedLengthDataElements> getCommonItems() {
+  public static List<ControlFieldItem> getCommonItems() {
     return Arrays.asList(ENTERED, DTST, DATE1, DATE2, CTRY, LANG, MREC, SRCE);
   }
 
@@ -66,7 +107,7 @@ public enum MaterialTypeConfiguration {
     return name;
   }
 
-  public List<FixedLengthDataElements> getFixedLengthControlFieldItems() {
-    return fixedLengthControlFieldItems;
+  public List<ControlFieldItem> getControlFieldItems() {
+    return controlFieldItems;
   }
 }

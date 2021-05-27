@@ -18,8 +18,6 @@ import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.qm.converter.Constants.TYPE;
 import static org.folio.qm.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
-import static org.folio.qm.converter.elements.FixedLengthDataElements.VALUE;
-import static org.folio.qm.converter.elements.MaterialTypeConfiguration.UNKNOWN;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +40,8 @@ import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.converter.elements.FixedLengthDataElements;
+import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
+import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.QuickMarc;
@@ -109,13 +108,8 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
     }
   }
 
-  private Object splitAdditionalCharacteristicsControlField(String content) {
-    if (materialTypeConfiguration.equals(UNKNOWN)) {
-      return Collections.singletonMap(VALUE.getName(), content);
-    }
-    var valuesMap = fillContentMap(materialTypeConfiguration.getFixedLengthControlFieldItems(), content.substring(1));
-    valuesMap.put(TYPE, content.substring(0, 1));
-    return valuesMap;
+  private Map<String, Object> splitAdditionalCharacteristicsControlField(String content) {
+    return fillContentMap(AdditionalMaterialConfiguration.resolveByCode(content.charAt(0)).getControlFieldItems(), content, 0);
   }
 
   private Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
@@ -124,30 +118,38 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
     fieldItems.put(BLVL, leader.charAt(BLVL_LEADER_POS));
     fieldItems.put(ELVL, leader.charAt(ELVL_LEADER_POS));
     fieldItems.put(DESC, leader.charAt(DESC_LEADER_POS));
-    fieldItems.putAll(fillContentMap(MaterialTypeConfiguration.getCommonItems(), content));
-    fieldItems.putAll(fillContentMap(materialTypeConfiguration.getFixedLengthControlFieldItems(),
-      content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX)));
+    fieldItems.putAll(fillContentMap(MaterialTypeConfiguration.getCommonItems(), content, -1));
+    fieldItems.putAll(fillContentMap(materialTypeConfiguration.getControlFieldItems(),
+      content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX), -1));
     return fieldItems;
   }
 
   private Map<String, Object> splitPhysicalDescriptionsControlField(String content) {
     PhysicalDescriptionFixedFieldElements physicalDescriptionFixedFieldElements = PhysicalDescriptionFixedFieldElements
       .resolveByCode(content.charAt(0));
-    return physicalDescriptionFixedFieldElements.getItems()
+    return physicalDescriptionFixedFieldElements.getControlFieldItems()
       .stream()
-      .collect(toMap(FixedLengthDataElements::getName,
-        element -> (element.getLength() != 0) ? extractElementFromContent(content, element) : content));
+      .collect(toMap(ControlFieldItem::getName,
+        element -> (element.getLength() != 0) ? extractElementFromContent(content, element, 0) : content));
   }
 
-  private Map<String, Object> fillContentMap(List<FixedLengthDataElements> items, String content) {
+  private Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {
     return items.stream()
-      .collect(toMap(FixedLengthDataElements::getName, element -> element.isArray() ?
-        Arrays.asList(extractElementFromContent(content, element).split(EMPTY)) :
-        extractElementFromContent(content, element)));
+      .collect(
+        toMap(ControlFieldItem::getName, element -> getControlFieldElementContent(content, element, delta), (o, o2) -> o,
+          LinkedHashMap::new));
   }
 
-  private String extractElementFromContent(String content, FixedLengthDataElements element) {
-    return StringUtils.substring(content, element.getPosition(), element.getPosition() + element.getLength());
+  private Object getControlFieldElementContent(String content, ControlFieldItem element, int delta) {
+    var elementFromContent = extractElementFromContent(content, element, delta);
+    return element.isArray()
+      ? Arrays.asList(elementFromContent.split(EMPTY))
+      : elementFromContent;
+  }
+
+  private String extractElementFromContent(String content, ControlFieldItem element, int delta) {
+    return StringUtils
+      .substring(content, element.getPosition() + delta, element.getPosition() + delta + element.getLength());
   }
 
   private QuickMarcFields dataFieldToQuickMarcField(DataField dataField) {

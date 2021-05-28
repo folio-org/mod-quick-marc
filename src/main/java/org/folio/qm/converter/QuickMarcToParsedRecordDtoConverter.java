@@ -98,7 +98,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
 
       return new ParsedRecordDto()
         .withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId()).withContent(contentMap))
-        .withRecordType(ParsedRecordDto.RecordType.MARC)
+        .withRecordType(ParsedRecordDto.RecordType.MARC_BIB)
         .withId(quickMarc.getParsedRecordDtoId())
         .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId()))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarc.getSuppressDiscovery()));

@@ -3,7 +3,7 @@
   "externalIdsHolder": {
     "instanceId": "02df6658-c639-41f2-8587-1ec44dd43d8e"
   },
-  "recordType": "MARC",
+  "recordType": "MARC_BIB",
   "parsedRecord": {
     "id": "a5f283d6-665b-4482-8b29-07140495a7f0",
     "content": {

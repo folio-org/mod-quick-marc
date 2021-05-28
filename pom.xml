@@ -86,7 +86,11 @@
       <!-- to import data model -->
       <groupId>org.folio</groupId>
       <artifactId>mod-source-record-manager-client</artifactId>
-      <version>${mod-srm-client.version}</version>
+      <!-- Should be used only for rancher env -->
+      <scope>system</scope>
+      <version>3.1.0-SNAPSHOT</version>
+      <systemPath>${project.basedir}/lib/mod-source-record-manager-client-3.1.0-SNAPSHOT.jar</systemPath>
+      <type>jar</type>
       <exclusions>
         <exclusion>
           <groupId>org.folio</groupId>

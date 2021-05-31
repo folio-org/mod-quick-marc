@@ -12,6 +12,7 @@ import org.folio.rest.jaxrs.model.ExternalIdsHolder;
 import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.rest.jaxrs.model.ParsedRecordDto.RecordType;
 
 public class TestEntitiesUtils {
 
@@ -51,7 +52,7 @@ public class TestEntitiesUtils {
       .withId(VALID_PARSED_RECORD_DTO_ID)
       .withParsedRecord(parsedRecord)
       .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_INSTANCE_ID))
-      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false)).withRecordType(ParsedRecordDto.RecordType.MARC)
+      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false)).withRecordType(RecordType.MARC_BIB)
       .withRecordState(ParsedRecordDto.RecordState.ACTUAL)
       .withMetadata(new Metadata()
         .withUpdatedDate(new Date(1594901616879L))

@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Globe",
         "Physical medium": "c",
         "Category": "d",
         "Type of reproduction": "d",

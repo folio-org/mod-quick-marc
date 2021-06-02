@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Electronic resource",
         "Category": "c",
         "SMD": "a",
         "Color": "b",

@@ -43,6 +43,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Sound recording",
         "Speed": "b",
         "Kind of cutting": "j",
         "Category": "s",

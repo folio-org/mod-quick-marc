@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Remote-sensing image",
         "Altitude of sensor": "b",
         "Data type": "hi",
         "Cloud cover": "d",

@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Tactile material",
         "Category": "f",
         "Class of braille writing": "bc",
         "Level of contraction": "d",

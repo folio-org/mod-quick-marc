@@ -4,15 +4,15 @@
   "requires": [
     {
       "id": "source-manager-parsed-records",
-      "version": "1.0"
+      "version": "2.0"
     },
     {
       "id": "source-manager-job-executions",
-      "version": "1.0"
+      "version": "2.0"
     },
     {
       "id": "source-manager-records",
-      "version": "1.0"
+      "version": "2.0"
     },
     {
       "id": "users",

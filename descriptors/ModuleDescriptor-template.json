@@ -8,11 +8,11 @@
     },
     {
       "id": "source-manager-job-executions",
-      "version": "3.0"
+      "version": "2.0"
     },
     {
       "id": "source-manager-records",
-      "version": "3.0"
+      "version": "2.0"
     },
     {
       "id": "users",

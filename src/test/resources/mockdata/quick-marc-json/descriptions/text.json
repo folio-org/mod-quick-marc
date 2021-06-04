@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Text",
         "Category": "t",
         "SMD": "a"
       },

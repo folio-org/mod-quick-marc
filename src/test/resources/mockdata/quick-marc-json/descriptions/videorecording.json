@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Videorecording",
         "Category": "v",
         "Color": "b",
         "Configuration of playback channels": "g",

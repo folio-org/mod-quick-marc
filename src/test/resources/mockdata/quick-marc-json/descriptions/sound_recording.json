@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Sound recording",
         "Kind of cutting": "j",
         "Tape configuration": "g",
         "Tape width": "f",

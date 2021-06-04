@@ -1,6 +1,8 @@
 package org.folio.qm.converter;
 
 public class Constants {
+
+  public static final String CATEGORY_NAME = "$categoryName";
   public static final String BLVL = "BLvl";
   public static final String TYPE = "Type";
   public static final String ELVL = "ELvl";
@@ -19,6 +21,7 @@ public class Constants {
   public static final int BLVL_LEADER_POS = 7;
   public static final int ELVL_LEADER_POS = 17;
   public static final int DESC_LEADER_POS = 18;
+
   private Constants() {
   }
 }

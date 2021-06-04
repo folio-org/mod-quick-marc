@@ -8,6 +8,7 @@
     {
       "tag": "007",
       "content": {
+        "$categoryName": "Map",
         "Physical medium": "c",
         "Category": "a",
         "Type of reproduction": "d",

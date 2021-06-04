@@ -125,12 +125,17 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
   }
 
   private Map<String, Object> splitPhysicalDescriptionsControlField(String content) {
-    PhysicalDescriptionFixedFieldElements physicalDescriptionFixedFieldElements = PhysicalDescriptionFixedFieldElements
+    var physicalDescription = PhysicalDescriptionFixedFieldElements
       .resolveByCode(content.charAt(0));
-    return physicalDescriptionFixedFieldElements.getControlFieldItems()
-      .stream()
-      .collect(toMap(ControlFieldItem::getName,
-        element -> (element.getLength() != 0) ? extractElementFromContent(content, element, 0) : content));
+    Map<String, Object> contentMap = new LinkedHashMap<>();
+    contentMap.put(Constants.CATEGORY_NAME, physicalDescription.getName());
+    physicalDescription.getControlFieldItems()
+      .forEach(item -> contentMap.put(item.getName(), getControlFieldItemVal(content, item)));
+    return contentMap;
+  }
+
+  private String getControlFieldItemVal(String content, ControlFieldItem element) {
+    return element.getLength() != 0 ? extractElementFromContent(content, element, 0) : content;
   }
 
   private Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {

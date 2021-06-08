@@ -43,6 +43,10 @@ public class TestEntitiesUtils {
     return new QuickMarcFields().tag(TESTED_TAG_NAME).content("$333 content").indicators(indicators);
   }
 
+  public static QuickMarcFields getFieldWithValue(String tag, String value) {
+    return new QuickMarcFields().tag(tag).content(value).indicators(List.of(" ", " "));
+  }
+
   public static QuickMarc getQuickMarcJsonWithMinContent(QuickMarcFields... fields) {
     return new QuickMarc().leader("01542ccm a2200361   4500").fields(Arrays.asList(fields));
   }

@@ -6,6 +6,11 @@
   "leader": "00052caa a2200361   4500",
   "fields": [
     {
+      "tag": "001",
+      "content": "393893",
+      "indicators": []
+    },
+    {
       "tag": "010",
       "content": "$aagr25000003 /M",
       "indicators": [

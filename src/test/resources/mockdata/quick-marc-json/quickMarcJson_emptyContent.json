@@ -7,7 +7,7 @@
   "fields": [
     {
       "tag": "001",
-      "content": "",
+      "content": "20141107001016",
       "indicators": []
     },
     {
@@ -121,7 +121,7 @@
     },
     {
       "tag": "040",
-      "content": "$cUPB$d UPB $d NIC$d NIC",
+      "content": "",
       "indicators": [
         "\\",
         "\\"

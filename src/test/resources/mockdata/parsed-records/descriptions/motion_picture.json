@@ -3,9 +3,12 @@
   "content": {
     "fields": [
       {
+        "001": "393893"
+      },
+      {
         "007": "ma bcdefghijklmnopqrstu"
       }
     ],
-    "leader": "00061caa a2200361   4500"
+    "leader": "00080caa a2200361   4500"
   }
 }

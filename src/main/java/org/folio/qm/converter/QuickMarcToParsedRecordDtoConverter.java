@@ -24,6 +24,7 @@ import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
 import static org.folio.qm.util.ErrorCodes.LEADER_AND_008_MISMATCHING;
 import static org.folio.qm.util.ErrorUtils.buildError;
+import static org.folio.qm.util.MarcUtils.getFieldByTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,6 +84,8 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   private static final int LEADER_LENGTH = 24;
   private static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
 
+  public static final String INSTANCE_HR_ID_CONTROL_FIELD = "001";
+
   private final MarcFactory factory = new MarcFactoryImpl();
   private String leaderString;
   private MaterialTypeConfiguration materialTypeConfiguration;
@@ -101,12 +104,20 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
         .withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId()).withContent(contentMap))
         .withRecordType(ParsedRecordDto.RecordType.MARC)
         .withId(quickMarc.getParsedRecordDtoId())
-        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId()))
+        .withExternalIdsHolder(constructExternalIdsHolder(quickMarc))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarc.getSuppressDiscovery()));
 
     } catch (Exception e) {
       throw new ConverterException(e);
     }
+  }
+
+  private ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
+    var instanceId = quickMarc.getInstanceId();
+    var instanceHrId = getFieldByTag(quickMarc, INSTANCE_HR_ID_CONTROL_FIELD)
+      .map(quickMarcFields -> quickMarcFields.getContent().toString())
+      .orElse("");
+    return new ExternalIdsHolder().withInstanceId(instanceId).withInstanceHrid(instanceHrId);
   }
 
   private Record quickMarcJsonToMarcRecord(QuickMarc quickMarcJson) {

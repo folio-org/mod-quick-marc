@@ -30,6 +30,10 @@ public final class ErrorUtils {
     return new Error().code(code.name()).type(type.getTypeCode()).message(message);
   }
 
+  public static Error buildInternalError(ErrorCodes code, String message) {
+    return buildError(code, ErrorType.INTERNAL, message);
+  }
+
   public enum ErrorType {
     INTERNAL("-1"),
     FOLIO_EXTERNAL_OR_UNDEFINED("-2"),

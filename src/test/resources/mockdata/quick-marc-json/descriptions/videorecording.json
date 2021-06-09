@@ -3,8 +3,13 @@
   "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
   "suppressDiscovery": false,
   "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
-  "leader": "00047caa\\a2200361\\\\\\4500",
+  "leader": "00066caa\\a2200361\\\\\\4500",
   "fields": [
+    {
+      "tag": "001",
+      "content": "393893",
+      "indicators": []
+    },
     {
       "tag": "007",
       "content": {

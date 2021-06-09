@@ -225,7 +225,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     Error error =
       verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_UNPROCESSABLE_ENTITY)
         .as(Error.class);
-    assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FILED.name()));
+    assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD.name()));
   }
 
   @ParameterizedTest

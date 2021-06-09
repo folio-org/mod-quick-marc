@@ -13,6 +13,7 @@ public class Constants {
   public static final String ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD = "006";
   public static final String PHYSICAL_DESCRIPTIONS_CONTROL_FIELD = "007";
   public static final String GENERAL_INFORMATION_CONTROL_FIELD = "008";
+  public static final String INSTANCE_HR_ID_CONTROL_FIELD = "001";
   public static final String LCCN_TAG = "010";
   public static final int SPECIFIC_ELEMENTS_BEGIN_INDEX = 18;
   public static final int SPECIFIC_ELEMENTS_END_INDEX = 35;

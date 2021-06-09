@@ -1,6 +1,7 @@
 package org.folio.qm.conveter;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,6 +23,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
@@ -115,14 +117,15 @@ class QuickMarcToParsedRecordDtoConverterTest {
   void testEmptyIndicatorsList() {
     logger.info("Test empty indicators list");
 
-    QuickMarcFields field = getFieldWithIndicators(new ArrayList<>());
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field);
+    QuickMarcFields testedField = getFieldWithIndicators(new ArrayList<>());
+    QuickMarcFields field001 = getFieldWithValue("001", "value");
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field001, testedField);
 
-    assertThat(quickMarcJson.getFields(), hasSize(1));
-    assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(0));
+    assertThat(quickMarcJson.getFields(), hasSize(2));
+    assertThat(quickMarcJson.getFields().get(1).getIndicators(), hasSize(0));
 
     ObjectNode parsedRecordDto = getObjectAsJsonNode(new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson));
-    JsonNode fieldJsonObject = parsedRecordDto.at("/parsedRecord/" + CONTENT + "/" + FIELDS + "/0/" + TESTED_TAG_NAME);
+    JsonNode fieldJsonObject = parsedRecordDto.at("/parsedRecord/" + CONTENT + "/" + FIELDS + "/1/" + TESTED_TAG_NAME);
 
     assertThat(fieldJsonObject.get(IND_1).asText(), equalTo(StringUtils.SPACE));
     assertThat(fieldJsonObject.get(IND_2).asText(), equalTo(StringUtils.SPACE));
@@ -133,14 +136,15 @@ class QuickMarcToParsedRecordDtoConverterTest {
   void testListWithEmptyIndicators() {
     logger.info("Test list with empty indicators");
 
-    QuickMarcFields field = getFieldWithIndicators(Arrays.asList(" ", ""));
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field);
+    QuickMarcFields testedField = getFieldWithIndicators(Arrays.asList(" ", ""));
+    QuickMarcFields field001 = getFieldWithValue("001", "value");
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field001, testedField);
 
-    assertThat(quickMarcJson.getFields(), hasSize(1));
-    assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(2));
+    assertThat(quickMarcJson.getFields(), hasSize(2));
+    assertThat(quickMarcJson.getFields().get(1).getIndicators(), hasSize(2));
 
     ObjectNode parsedRecordDto = getObjectAsJsonNode(new QuickMarcToParsedRecordDtoConverter().convert(quickMarcJson));
-    JsonNode fieldJsonObject = parsedRecordDto.at("/parsedRecord/" + CONTENT + "/" + FIELDS + "/0/" + TESTED_TAG_NAME);
+    JsonNode fieldJsonObject = parsedRecordDto.at("/parsedRecord/" + CONTENT + "/" + FIELDS + "/1/" + TESTED_TAG_NAME);
 
     assertThat(fieldJsonObject.get(IND_1).asText(), equalTo(StringUtils.SPACE));
     assertThat(fieldJsonObject.get(IND_2).asText(), equalTo(StringUtils.SPACE));
@@ -151,11 +155,12 @@ class QuickMarcToParsedRecordDtoConverterTest {
   void testIllegalNumberOfIndicators() {
     logger.info("Test illegal number of indicators - ConverterException expected");
 
-    QuickMarcFields field = getFieldWithIndicators(Collections.singletonList("1"));
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field);
+    QuickMarcFields testField = getFieldWithIndicators(Collections.singletonList("1"));
+    QuickMarcFields field001 = getFieldWithValue("001", "value");
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field001, testField);
 
-    assertThat(quickMarcJson.getFields(), hasSize(1));
-    assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(1));
+    assertThat(quickMarcJson.getFields(), hasSize(2));
+    assertThat(quickMarcJson.getFields().get(1).getIndicators(), hasSize(1));
 
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
@@ -165,14 +170,29 @@ class QuickMarcToParsedRecordDtoConverterTest {
   void testIllegalIndicatorSize() {
     logger.info("Test illegal number of indicators - ConverterException expected");
 
-    QuickMarcFields field = getFieldWithIndicators(Arrays.asList(" ", " 1"));
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field);
+    QuickMarcFields testField = getFieldWithIndicators(Arrays.asList(" ", " 1"));
+    QuickMarcFields field001 = getFieldWithValue("001", "value");
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field001, testField);
 
-    assertThat(quickMarcJson.getFields(), hasSize(1));
-    assertThat(quickMarcJson.getFields().get(0).getIndicators(), hasSize(2));
+    assertThat(quickMarcJson.getFields(), hasSize(2));
+    assertThat(quickMarcJson.getFields().get(1).getIndicators(), hasSize(2));
 
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
+  }
+
+  @Test
+  void testMissing001Field() {
+    logger.info("Test missing 001 field - ConverterException expected");
+
+    QuickMarcFields field = getFieldWithValue("245", "value");
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field);
+
+    assertThat(quickMarcJson.getFields(), hasSize(1));
+
+    QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
+    ConverterException exception = assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
+    assertThat(exception.getError().getMessage(), containsString("001 field is required"));
   }
 
   @ParameterizedTest
@@ -184,7 +204,7 @@ class QuickMarcToParsedRecordDtoConverterTest {
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
     assertThat(getObjectAsJson(parsedRecordDto.getParsedRecord()),
-      hasJsonPath("$.content.fields[0].010.subfields[0].a",
+      hasJsonPath("$.content.fields[1].['010'].subfields[0].a",
         matchesPattern("[a-z\\s]{2}\\d{10}|[a-z\\s]{3}\\d{8}\\s(/.*$)?")));
   }
 

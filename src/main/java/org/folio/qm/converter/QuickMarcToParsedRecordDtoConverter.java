@@ -11,17 +11,20 @@ import static org.folio.qm.converter.Constants.DESC_LEADER_POS;
 import static org.folio.qm.converter.Constants.ELVL;
 import static org.folio.qm.converter.Constants.ELVL_LEADER_POS;
 import static org.folio.qm.converter.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
+import static org.folio.qm.converter.Constants.INSTANCE_HR_ID_CONTROL_FIELD;
 import static org.folio.qm.converter.Constants.LCCN_TAG;
 import static org.folio.qm.converter.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
 import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
-import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FILED;
+import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
 import static org.folio.qm.util.ErrorCodes.LEADER_AND_008_MISMATCHING;
-import static org.folio.qm.util.ErrorUtils.buildError;
+import static org.folio.qm.util.ErrorCodes.MISSED_001_FIELD;
+import static org.folio.qm.util.ErrorUtils.buildInternalError;
+import static org.folio.qm.util.MarcUtils.getFieldByTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +57,6 @@ import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.QuickMarcFields;
 import org.folio.qm.exception.ConverterException;
-import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.AdditionalInfo;
 import org.folio.rest.jaxrs.model.ExternalIdsHolder;
 import org.folio.rest.jaxrs.model.ParsedRecord;
@@ -82,6 +84,8 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   private static final int LEADER_LENGTH = 24;
   private static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
 
+  private static final String MISSED_001_MESSAGE = "001 field is required";
+
   private final MarcFactory factory = new MarcFactoryImpl();
   private String leaderString;
   private MaterialTypeConfiguration materialTypeConfiguration;
@@ -90,22 +94,26 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   public ParsedRecordDto convert(@NonNull QuickMarc quickMarc) {
     try {
       Record marcRecord = quickMarcJsonToMarcRecord(quickMarc);
-
       Map<String, Object> contentMap = new LinkedHashMap<>();
       contentMap.put(FIELDS, convertMarcFieldsToObjects(marcRecord));
-      contentMap.put(LEADER, marcRecord.getLeader()
-        .marshal());
-
+      contentMap.put(LEADER, marcRecord.getLeader().marshal());
       return new ParsedRecordDto()
         .withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId()).withContent(contentMap))
         .withRecordType(ParsedRecordDto.RecordType.MARC_BIB)
         .withId(quickMarc.getParsedRecordDtoId())
-        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId()))
+        .withExternalIdsHolder(constructExternalIdsHolder(quickMarc))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarc.getSuppressDiscovery()));
-
     } catch (Exception e) {
       throw new ConverterException(e);
     }
+  }
+
+  private ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
+    var instanceId = quickMarc.getInstanceId();
+    var instanceHrId = getFieldByTag(quickMarc, INSTANCE_HR_ID_CONTROL_FIELD)
+        .map(quickMarcFields -> quickMarcFields.getContent().toString())
+        .orElseThrow(() -> new ConverterException(buildInternalError(MISSED_001_FIELD, MISSED_001_MESSAGE)));
+    return new ExternalIdsHolder().withInstanceId(instanceId).withInstanceHrid(instanceHrId);
   }
 
   private Record quickMarcJsonToMarcRecord(QuickMarc quickMarcJson) {
@@ -181,8 +189,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
           contentMap, -1))
         .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
     }
-    throw new ConverterException(
-      buildError(LEADER_AND_008_MISMATCHING, ErrorUtils.ErrorType.INTERNAL, "The Leader and 008 do not match"));
+    throw new ConverterException(buildInternalError(LEADER_AND_008_MISMATCHING, "The Leader and 008 do not match"));
   }
 
   private boolean isLeaderMatches(Map<String, Object> contentMap) {
@@ -204,7 +211,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
           ? String.join(EMPTY, ((List<String>) map.get(item.getName())))
           : map.get(item.getName()).toString();
         if (value.length() != item.getLength()) {
-          throw new ConverterException(buildError(ILLEGAL_FIXED_LENGTH_CONTROL_FILED, ErrorUtils.ErrorType.INTERNAL,
+          throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD,
             String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));
         }
       }
@@ -256,8 +263,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       }
       return new SubfieldImpl(string.charAt(1), lccnString);
     }
-    throw new ConverterException(
-      buildError(ILLEGAL_FIXED_LENGTH_CONTROL_FILED, ErrorUtils.ErrorType.INTERNAL, "Illegal 010 (LCCN) subfield length"));
+    throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD, "Illegal 010 (LCCN) subfield length"));
   }
 
   private List<Object> convertMarcFieldsToObjects(Record marcRecord) {
@@ -326,8 +332,8 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     } else if (indicators.isEmpty()) {
       return Arrays.asList(SPACE, SPACE);
     } else {
-      throw new ConverterException(buildError(ILLEGAL_INDICATORS_NUMBER, ErrorUtils.ErrorType.INTERNAL,
-        "Illegal indicators number for field: " + field.getTag()));
+      throw new ConverterException(buildInternalError(ILLEGAL_INDICATORS_NUMBER,
+        String.format("Illegal indicators number for field: %s", field.getTag())));
     }
   }
 
@@ -338,7 +344,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       String indicator = restoreBlanks(input.toString());
       if (indicator.length() > 1) {
         throw new ConverterException(
-          buildError(ILLEGAL_SIZE_OF_INDICATOR, ErrorUtils.ErrorType.INTERNAL, "Illegal size of indicator: " + indicator));
+          buildInternalError(ILLEGAL_SIZE_OF_INDICATOR, String.format("Illegal size of indicator: %s", indicator)));
       }
       return indicator;
     }

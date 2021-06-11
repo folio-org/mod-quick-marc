@@ -1,7 +1,6 @@
 package org.folio.qm.conveter;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -179,20 +178,6 @@ class QuickMarcToParsedRecordDtoConverterTest {
 
     QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
-  }
-
-  @Test
-  void testMissing001Field() {
-    logger.info("Test missing 001 field - ConverterException expected");
-
-    QuickMarcFields field = getFieldWithValue("245", "value");
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field);
-
-    assertThat(quickMarcJson.getFields(), hasSize(1));
-
-    QuickMarcToParsedRecordDtoConverter converter = new QuickMarcToParsedRecordDtoConverter();
-    ConverterException exception = assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
-    assertThat(exception.getError().getMessage(), containsString("001 field is required"));
   }
 
   @ParameterizedTest

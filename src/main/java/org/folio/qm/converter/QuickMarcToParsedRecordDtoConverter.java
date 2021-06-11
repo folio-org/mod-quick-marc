@@ -22,7 +22,6 @@ import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
 import static org.folio.qm.util.ErrorCodes.LEADER_AND_008_MISMATCHING;
-import static org.folio.qm.util.ErrorCodes.MISSED_001_FIELD;
 import static org.folio.qm.util.ErrorUtils.buildInternalError;
 import static org.folio.qm.util.MarcUtils.getFieldByTag;
 
@@ -84,8 +83,6 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   private static final int LEADER_LENGTH = 24;
   private static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
 
-  private static final String MISSED_001_MESSAGE = "001 field is required";
-
   private final MarcFactory factory = new MarcFactoryImpl();
   private String leaderString;
   private MaterialTypeConfiguration materialTypeConfiguration;
@@ -109,11 +106,11 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
   }
 
   private ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
-    var instanceId = quickMarc.getInstanceId();
-    var instanceHrId = getFieldByTag(quickMarc, INSTANCE_HR_ID_CONTROL_FIELD)
+    var externalIdsHolder = new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId());
+    getFieldByTag(quickMarc, INSTANCE_HR_ID_CONTROL_FIELD)
         .map(quickMarcFields -> quickMarcFields.getContent().toString())
-        .orElseThrow(() -> new ConverterException(buildInternalError(MISSED_001_FIELD, MISSED_001_MESSAGE)));
-    return new ExternalIdsHolder().withInstanceId(instanceId).withInstanceHrid(instanceHrId);
+        .ifPresent(externalIdsHolder::setInstanceHrid);
+    return externalIdsHolder;
   }
 
   private Record quickMarcJsonToMarcRecord(QuickMarc quickMarcJson) {

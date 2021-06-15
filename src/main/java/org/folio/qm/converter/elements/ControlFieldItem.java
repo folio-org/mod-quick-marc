@@ -78,7 +78,7 @@ public enum ControlFieldItem {
   PRIMARY_SUPPORT("Primary support material", 4, 1, false),
   PRODUCTION_DETAILS("Production/reproduction details", 6, 1, false),
   PRODUCTION_ELEMENTS("Production elements", 9, 1, false),
-  PROJ("Proj", 5, 2, false),
+  PROJ("Proj", 5, 2, true),
   QUALITY_ASSURANCE_TARGET("Quality assurance target(s)", 10, 1, false),
   REDUCTION_RATIO("Reduction ratio range/Reduction ratio", 5, 4, false),
   REFINED_CATEGORIES("Refined categories of color", 13, 1, false),

@@ -5,6 +5,7 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_DTO_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_DTO_UNSORTED_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_PATH;
@@ -57,8 +58,11 @@ class ParsedRecordDtoToQuickMarcConverterTest {
   }
 
   @ParameterizedTest
-  @CsvSource(value = {PARSED_RECORD_DTO_PATH + "," + QM_RECORD_PATH,
-    PARSED_RECORD_EDGE_CASES_PATH + "," + QM_RECORD_EDGE_CASES_PATH})
+  @CsvSource(value = {
+    PARSED_RECORD_DTO_PATH + "," + QM_RECORD_PATH,
+    PARSED_RECORD_EDGE_CASES_PATH + "," + QM_RECORD_EDGE_CASES_PATH,
+    PARSED_RECORD_DTO_UNSORTED_PATH + "," + QM_RECORD_PATH
+  })
   void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) {
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");
     ParsedRecordDtoToQuickMarcConverter converter = new ParsedRecordDtoToQuickMarcConverter();

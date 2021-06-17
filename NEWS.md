@@ -1,3 +1,11 @@
+## 2.0.5 - Released
+
+### Changes
+* [MODQM-107](https://issues.folio.org/browse/MODQM-107) - Support 006 field items
+* [MODQM-122](https://issues.folio.org/browse/MODQM-122) - Fix handling of instance HRID
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.4...v2.0.5)
+
 ## 2.0.4 - Released
 
 ### Changes

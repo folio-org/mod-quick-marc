@@ -1,3 +1,31 @@
+## 2.1.0 - Released
+
+### Changes
+* [MODQM-96](https://issues.folio.org/browse/MODQM-96) - Add logging to controller and clients
+* [MODQM-97](https://issues.folio.org/browse/MODQM-97) - Fix FeignException handler
+* [MODQM-98](https://issues.folio.org/browse/MODQM-98) - Fetch user info while get record
+* [MODQM-99](https://issues.folio.org/browse/MODQM-99) - Fix DB connections, not releasing while deriving record
+* [MODQM-106](https://issues.folio.org/browse/MODQM-106) - Add category name to 007 field
+* [MODQM-110](https://issues.folio.org/browse/MODQM-110) - Support MARC_BIB records instead of MARC
+* [MODQM-124](https://issues.folio.org/browse/MODQM-124) - Fix derive without 001 field
+
+## 2.0.5 - Released
+
+### Changes
+* [MODQM-107](https://issues.folio.org/browse/MODQM-107) - Support 006 field items
+* [MODQM-122](https://issues.folio.org/browse/MODQM-122) - Fix handling of instance HRID
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.4...v2.0.5)
+
+## 2.0.4 - Released
+
+### Changes
+* [MODQM-103](https://issues.folio.org/browse/MODQM-103) - Fix unexpected changing of 006 field
+* [MODQM-98](https://issues.folio.org/browse/MODQM-98) - Fetch user info while get record
+
+[Full Changelog](https://github.com/folio-org/mod-quick-marc/compare/v2.0.3...v2.0.4)
+
+
 ## 2.0.3 - Released
 
 The only focus of this patch release was to add a standard admin healthcheck endpoint and remove Vert.X dependency

@@ -25,6 +25,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,9 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto;
 @Component
 public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedRecordDto, QuickMarc> {
 
+  private static final Comparator<QuickMarcFields> QUICK_MARC_FIELDS_COMPARATOR =
+    Comparator.comparingInt(o -> Integer.parseInt(o.getTag()));
+
   private MaterialTypeConfiguration materialTypeConfiguration;
 
   @Override
@@ -75,6 +79,8 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
         .stream()
         .map(this::dataFieldToQuickMarcField)
         .collect(Collectors.toList()));
+
+      fields.sort(QUICK_MARC_FIELDS_COMPARATOR);
 
       return new QuickMarc().parsedRecordId(parsedRecord.getId())
         .leader(leader)

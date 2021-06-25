@@ -21,7 +21,7 @@ public class ChangeManagerPayloadUtils {
     return new JobProfileInfo()
       .withId(profileProperties.getId())
       .withName(profileProperties.getName())
-      .withDataType(DataType.MARC_BIB);
+      .withDataType(DataType.MARC);
   }
 
   public static InitJobExecutionsRqDto getDefaultJodExecutionDto(String userId, JobExecutionProfileProperties profileProperties) {

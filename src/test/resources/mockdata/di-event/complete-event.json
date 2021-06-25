@@ -8,7 +8,7 @@
       "id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
       "name": "Default - Create instance and SRS MARC Bib",
       "deleted": false,
-      "dataType": "MARC_BIB",
+      "dataType": "MARC",
       "metadata": {
         "createdDate": "2021-01-14T14:00:00.000+00:00",
         "updatedDate": "2021-01-14T15:00:00.462+00:00",

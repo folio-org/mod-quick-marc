@@ -27,7 +27,7 @@
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
 
     <folio-spring-base.version>1.0.5</folio-spring-base.version>
-    <mod-srm-client.version>3.1.0-SNAPSHOT</mod-srm-client.version>
+    <mod-srm-client.version>3.1.1</mod-srm-client.version>
     <openapi-generator.version>4.3.1</openapi-generator.version>
     <mockito.version>3.7.7</mockito.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
@@ -86,7 +86,7 @@
       <!-- to import data model -->
       <groupId>org.folio</groupId>
       <artifactId>mod-source-record-manager-client</artifactId>
-      <version>3.1.0</version>
+      <version>${mod-srm-client.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.folio</groupId>

@@ -55,6 +55,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_WITH_INCORRECT_TAG_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
@@ -193,6 +194,25 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
         .as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
     assertThat(error.getCode(), equalTo("BAD_REQUEST"));
+    assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
+  }
+
+  @Test
+  void testUpdateQuickMarcRecordTagIsInvalid() {
+    log.info("===== Verify PUT record: Invalid MARC tag.The tag has alphabetic symbols =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_WITH_INCORRECT_TAG_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .instanceId(EXISTED_INSTANCE_ID);
+
+    Error error =
+      verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_BAD_REQUEST)
+        .as(Error.class);
+    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
+    assertThat(error.getCode(), equalTo("BAD_REQUEST"));
+    assertThat(error.getMessage(), equalTo("Invalid MARC tag.The tag has alphabetic symbols"));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 

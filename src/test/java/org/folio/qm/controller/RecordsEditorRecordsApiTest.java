@@ -212,7 +212,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
         .as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
     assertThat(error.getCode(), equalTo("BAD_REQUEST"));
-    assertThat(error.getMessage(), equalTo("Invalid MARC tag.The tag has alphabetic symbols"));
+    assertThat(error.getMessage(), equalTo("Parameter 'fields[0].tag' must match \"^[0-9]{3}$\""));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 
@@ -330,7 +330,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, ""), SC_BAD_REQUEST).as(Error.class);
 
-    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' should be not null"));
+    assertThat(error.getMessage(), containsString("Parameter getRecordCreationStatus.qmRecordId: must not be null"));
   }
 
   @Test

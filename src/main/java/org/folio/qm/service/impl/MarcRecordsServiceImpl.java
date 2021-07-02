@@ -71,7 +71,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID instanceId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, instanceId);
-    validationService.validateTags(quickMarc);
     ParsedRecordDto parsedRecordDto = quickMarcToParsedRecordConverter.convert(updateRecordTimestamp(quickMarc));
     srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
   }

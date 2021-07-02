@@ -12,6 +12,4 @@ public interface ValidationService {
   void validateQmRecordId(UUID qmRecordId);
 
   void validateUserId(FolioExecutionContext folioExecutionContext);
-
-  void validateTags(QuickMarc quickMarc);
 }

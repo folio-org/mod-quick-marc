@@ -8,8 +8,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_REQUEST_TIMEOUT;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -213,6 +215,24 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
     assertThat(error.getCode(), equalTo("BAD_REQUEST"));
     assertThat(error.getMessage(), equalTo("Parameter 'fields[0].tag' must match \"^[0-9]{3}$\""));
+    assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
+  }
+
+  @Test
+  void testUpdateQuickMarcRecordWithEmptyBody() {
+    log.info("===== Verify PUT record: Invalid MARC tag.The tag has alphabetic symbols =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_WITH_INCORRECT_TAG_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .instanceId(EXISTED_INSTANCE_ID);
+
+    Error error =
+      verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), "", SC_INTERNAL_SERVER_ERROR)
+        .as(Error.class);
+    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.UNKNOWN.getTypeCode()));
+    assertThat(error.getCode(), equalTo("INTERNAL_SERVER_ERROR"));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 

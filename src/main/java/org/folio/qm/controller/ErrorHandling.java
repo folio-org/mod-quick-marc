@@ -25,6 +25,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class ErrorHandling {
 
+  public static final String PARAMETER = "Parameter '";
+
   @ExceptionHandler(FeignException.class)
   public Error handleFeignStatusException(FeignException e, HttpServletResponse response) {
     var status = e.status();
@@ -45,7 +47,7 @@ public class ErrorHandling {
   public Error handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     FieldError fieldError = e.getBindingResult().getFieldError();
     if (fieldError != null) {
-      String message = "Parameter '" + fieldError.getField() + "' " + fieldError.getDefaultMessage();
+      String message = PARAMETER + fieldError.getField() + "' " + fieldError.getDefaultMessage();
       return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
     } else {
       return buildError(HttpStatus.BAD_REQUEST, INTERNAL, e.getMessage());
@@ -68,14 +70,14 @@ public class ErrorHandling {
   @ExceptionHandler(MissingServletRequestParameterException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMissingParameterException(MissingServletRequestParameterException e, HttpServletResponse response) {
-    var message = "Parameter '" + e.getParameterName() + "' is required";
+    var message = PARAMETER + e.getParameterName() + "' is required";
     return buildBadRequestResponse(message);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleGlobalException(MethodArgumentTypeMismatchException e) {
-    var message = "Parameter '" + e.getParameter().getParameterName() + "' is invalid";
+    var message = PARAMETER + e.getParameter().getParameterName() + "' is invalid";
     return buildBadRequestResponse(message);
   }
 

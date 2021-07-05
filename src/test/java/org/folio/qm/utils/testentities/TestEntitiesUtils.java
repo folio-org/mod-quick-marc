@@ -29,6 +29,7 @@ public class TestEntitiesUtils {
   public static final String QM_LEADER_MISMATCH1 = PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchValueMismatch.json";
   public static final String QM_RECORD_EDGE_CASES_PATH = PARSED_RECORDS_DIR + "/quickMarcJsonMissingWhitespaces.json";
   public static final String QM_EDITED_RECORD_PATH = PARSED_RECORDS_DIR + "/quickMarcJson_edited.json";
+  public static final String QM_RECORD_WITH_INCORRECT_TAG_PATH = PARSED_RECORDS_DIR + "/quickMarcJson_withIncorrectTag.json";
   public static final String QM_RECORD_PATH = PARSED_RECORDS_DIR + "/quickMarcJson.json";
 
   public static final String TESTED_TAG_NAME = "333";

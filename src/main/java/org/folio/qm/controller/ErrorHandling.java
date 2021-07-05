@@ -8,12 +8,16 @@ import static org.folio.qm.util.ErrorUtils.ErrorType.UNKNOWN;
 import static org.folio.qm.util.ErrorUtils.buildError;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 
 import feign.FeignException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -23,6 +27,11 @@ import org.folio.tenant.domain.dto.Error;
 
 @RestControllerAdvice
 public class ErrorHandling {
+
+  private static final String TYPE_MISMATCH_MSG_PATTERN = "Parameter '%s' is invalid";
+  private static final String MISSING_PARAMETER_MSG_PATTERN = "Parameter '%s' is required";
+  private static final String ARGUMENT_NOT_VALID_MSG_PATTERN = "Parameter '%s' %s";
+  private static final String CONSTRAINT_VIOLATION_MSG_PATTERN = "Parameter %s";
 
   @ExceptionHandler(FeignException.class)
   public Error handleFeignStatusException(FeignException e, HttpServletResponse response) {
@@ -39,6 +48,19 @@ public class ErrorHandling {
     }
   }
 
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public Error handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    FieldError fieldError = e.getBindingResult().getFieldError();
+    if (fieldError != null) {
+      var message = String.format(ARGUMENT_NOT_VALID_MSG_PATTERN,
+        fieldError.getField(), fieldError.getDefaultMessage());
+      return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
+    } else {
+      return buildError(HttpStatus.BAD_REQUEST, INTERNAL, e.getMessage());
+    }
+  }
+
   @ExceptionHandler(QuickMarcException.class)
   public Error handleConverterException(QuickMarcException e, HttpServletResponse response) {
     var code = e.getStatus();
@@ -47,34 +69,39 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(NotFoundException.class)
-  public Error handleNotFoundException(NotFoundException e, HttpServletResponse response) {
-    var status = HttpStatus.NOT_FOUND.value();
-    response.setStatus(status);
-    return buildError(status, INTERNAL, e.getMessage());
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  public Error handleNotFoundException(NotFoundException e) {
+    return buildError(HttpStatus.NOT_FOUND, INTERNAL, e.getMessage());
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
-  public Error handleMissingParameterException(MissingServletRequestParameterException e, HttpServletResponse response) {
-    var message = "Parameter '" + e.getParameterName() + "' is required";
-    return buildBadRequestResponse(response, message);
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleMissingParameterException(MissingServletRequestParameterException e) {
+    var message = String.format(MISSING_PARAMETER_MSG_PATTERN, e.getParameterName());
+    return buildBadRequestResponse(message);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public Error handleGlobalException(MethodArgumentTypeMismatchException e, HttpServletResponse response) {
-    var message = "Parameter '" + e.getParameter().getParameterName() + "' is invalid";
-    return buildBadRequestResponse(response, message);
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+    var message = String.format(TYPE_MISMATCH_MSG_PATTERN, e.getParameter().getParameterName());
+    return buildBadRequestResponse(message);
   }
 
-  private Error buildBadRequestResponse(HttpServletResponse response, String message) {
-    var status = HttpStatus.BAD_REQUEST.value();
-    response.setStatus(status);
-    return buildError(status, INTERNAL, message);
+  private Error buildBadRequestResponse(String message) {
+    return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleConstraintViolationException(Exception e) {
+    var message = String.format(CONSTRAINT_VIOLATION_MSG_PATTERN, e.getMessage());
+    return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
   }
 
   @ExceptionHandler(Exception.class)
-  public Error handleGlobalException(Exception e, HttpServletResponse response) {
-    var status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-    response.setStatus(status);
-    return buildError(status, UNKNOWN, e.getMessage());
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public Error handleGlobalException(Exception e) {
+    return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
   }
 }

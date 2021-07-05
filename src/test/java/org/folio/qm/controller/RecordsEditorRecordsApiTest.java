@@ -1,13 +1,16 @@
 package org.folio.qm.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
@@ -50,6 +53,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_WITH_INCORRECT_TAG_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_WRONG_ITEM_LENGTH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
@@ -177,6 +181,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
       .parsedRecordDtoId(wrongUUID)
       .instanceId(EXISTED_INSTANCE_ID);
 
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(wrongUUID))));
     verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_NOT_FOUND);
   }
 
@@ -191,8 +196,43 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     Error error =
       verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), quickMarcJson, SC_BAD_REQUEST)
         .as(Error.class);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID))));
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
     assertThat(error.getCode(), equalTo("BAD_REQUEST"));
+    assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
+  }
+
+  @Test
+  void testUpdateQuickMarcRecordTagIsInvalid() {
+    log.info("===== Verify PUT record: Invalid MARC tag.The tag has alphabetic symbols =====");
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_WITH_INCORRECT_TAG_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .instanceId(EXISTED_INSTANCE_ID);
+
+    Error error =
+      verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_BAD_REQUEST)
+        .as(Error.class);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID))));
+    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
+    assertThat(error.getCode(), equalTo("BAD_REQUEST"));
+    assertThat(error.getMessage(), equalTo("Parameter 'fields[0].tag' must match \"^[0-9]{3}$\""));
+    assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
+  }
+
+  @Test
+  void testUpdateQuickMarcRecordWithEmptyBody() {
+    log.info("===== Verify PUT record: Request with empty body =====");
+
+    Error error =
+      verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), "", SC_INTERNAL_SERVER_ERROR)
+        .as(Error.class);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.UNKNOWN.getTypeCode()));
+    assertThat(error.getCode(), equalTo("INTERNAL_SERVER_ERROR"));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 
@@ -209,6 +249,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     Error error = verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson,
       SC_UNPROCESSABLE_ENTITY).as(Error.class);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
     assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_INDICATORS_NUMBER.name()));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
@@ -225,6 +267,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     Error error =
       verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_UNPROCESSABLE_ENTITY)
         .as(Error.class);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID))));
     assertThat(error.getCode(), equalTo(ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD.name()));
   }
 
@@ -240,6 +284,8 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
     Error error =
       verifyPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson, SC_UNPROCESSABLE_ENTITY)
         .as(Error.class);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
     assertThat(error.getCode(), equalTo(ErrorCodes.LEADER_AND_008_MISMATCHING.name()));
   }
 
@@ -310,7 +356,7 @@ class RecordsEditorRecordsApiTest extends BaseApiTest {
 
     var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, ""), SC_BAD_REQUEST).as(Error.class);
 
-    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' should be not null"));
+    assertThat(error.getMessage(), containsString("Parameter getRecordCreationStatus.qmRecordId: must not be null"));
   }
 
   @Test

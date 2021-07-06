@@ -1,3 +1,8 @@
+## 2.1.1 - Released
+
+### Changes
+* [MODQM-134](https://issues.folio.org/browse/MODQM-134) - MODQM-134 Change dataType to have common type for MARC related subtypes
+
 ## 2.1.0 - Released
 
 ### Changes

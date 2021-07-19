@@ -5,4 +5,6 @@ public interface TopicPatternProvider {
   String diCompletedTopicName();
 
   String diErrorTopicName();
+
+  String qmCompletedTopicName();
 }

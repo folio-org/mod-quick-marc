@@ -16,15 +16,20 @@ public class GroupIdProviderImpl implements GroupIdProvider {
 
   @Override
   public String diCompletedGroupId() {
-    return getGroupId(DataImportEventTypes.DI_COMPLETED);
+    return getGroupId(DataImportEventTypes.DI_COMPLETED.name());
   }
 
   @Override
   public String diErrorGroupId() {
-    return getGroupId(DataImportEventTypes.DI_ERROR);
+    return getGroupId(DataImportEventTypes.DI_ERROR.name());
   }
 
-  private String getGroupId(DataImportEventTypes diError) {
-    return String.format(GROUP_ID_TEMPLATE, diError, metadata.getModuleName());
+  @Override
+  public String qmCompletedGroupId() {
+    return getGroupId("QM_COMPLETED");
+  }
+
+  private String getGroupId(String eventName) {
+    return String.format(GROUP_ID_TEMPLATE, eventName, metadata.getModuleName());
   }
 }

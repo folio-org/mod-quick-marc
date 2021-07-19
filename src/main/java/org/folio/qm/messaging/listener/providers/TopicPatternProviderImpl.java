@@ -15,15 +15,20 @@ public class TopicPatternProviderImpl implements TopicPatternProvider {
 
   @Override
   public String diCompletedTopicName() {
-    return createTopicPattern(DataImportEventTypes.DI_COMPLETED);
+    return createTopicPattern(DataImportEventTypes.DI_COMPLETED.name());
   }
 
   @Override
   public String diErrorTopicName() {
-    return createTopicPattern(DataImportEventTypes.DI_ERROR);
+    return createTopicPattern(DataImportEventTypes.DI_ERROR.name());
   }
 
-  private String createTopicPattern(DataImportEventTypes eventType) {
-    return String.format(TOPIC_PATTERN_TEMPLATE, kafkaEnvId, eventType);
+  @Override
+  public String qmCompletedTopicName() {
+    return createTopicPattern("QM_COMPLETED");
+  }
+
+  private String createTopicPattern(String eventName) {
+    return String.format(TOPIC_PATTERN_TEMPLATE, kafkaEnvId, eventName);
   }
 }

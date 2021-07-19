@@ -7,6 +7,8 @@ servers:
 paths:
   /records:
     get:
+      tags:
+        - records
       responses:
         "200":
           description: MARC record successfully retrieved
@@ -61,6 +63,8 @@ paths:
             pattern: "[a-zA-Z]{2}"
             default: "en"
     post:
+      tags:
+        - records
       responses:
         "201":
           description: MARC Record status created
@@ -92,49 +96,10 @@ paths:
             schema:
               $ref: "#/components/schemas/quickMarc"
         required: true
-  /records/{id}:
-    put:
-      responses:
-        "202":
-          description: MARC record accepted for updating
-        "400":
-          description:
-            Bad request, e.g. malformed request body or query parameter.
-            Details of the error (e.g. name of the parameter or line/character number
-            with malformed data) provided in the response.
-          content:
-            application/json:
-              example:
-                $ref: "#/components/examples/error"
-              schema:
-                $ref: "#/components/schemas/error"
-        "500":
-          description: Internal server error, e.g. due to misconfiguration
-          content:
-            application/json:
-              example:
-                $ref: "#/components/examples/error"
-              schema:
-                $ref: "#/components/schemas/error"
-      description: Edit MARC record
-      operationId: putRecord
-      requestBody:
-        content:
-          application/json:
-            example:
-              $ref: "#/components/examples/quickMarc"
-            schema:
-              $ref: "#/components/schemas/quickMarc"
-        required: true
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          "$ref": "#/components/schemas/UUID"
-        description: The UUID of a record
   /records/status:
     get:
+      tags:
+        - records
       responses:
         '200':
           description: Status of MARC bibliographic record creation successfully retrieved

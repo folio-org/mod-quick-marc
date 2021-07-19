@@ -5,4 +5,6 @@ public interface GroupIdProvider {
   String diCompletedGroupId();
 
   String diErrorGroupId();
+
+  String qmCompletedGroupId();
 }

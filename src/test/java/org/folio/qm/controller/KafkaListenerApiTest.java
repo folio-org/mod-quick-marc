@@ -26,7 +26,7 @@ class KafkaListenerApiTest extends BaseApiTest {
     var expectedInstanceId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
     var expectedMarcBibId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendKafkaRecord("mockdata/di-event/complete-event.json", COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/complete-event.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.CREATED)
@@ -46,7 +46,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithoutInstanceId() throws IOException {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendKafkaRecord("mockdata/di-event/complete-event-without-instance.json", COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/complete-event-without-instance.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.ERROR)
@@ -65,7 +65,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInvalidJson() throws IOException {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendKafkaRecord("mockdata/di-event/complete-event-with-invalid-json.json", COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/complete-event-with-invalid-json.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.ERROR)
@@ -84,7 +84,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() throws IOException {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendKafkaRecord("mockdata/di-event/error-event.json", ERROR_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/error-event.json", DI_ERROR_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.ERROR)

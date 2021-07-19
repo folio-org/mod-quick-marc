@@ -11,6 +11,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
+import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 @Configuration
@@ -23,16 +24,31 @@ public class KafkaConfig {
   }
 
   @Bean
-  public ConsumerFactory<String, DataImportEventPayload> consumerFactory(KafkaProperties kafkaProperties,
+  public ConsumerFactory<String, DataImportEventPayload> dataImportConsumerFactory(KafkaProperties kafkaProperties,
                                                                          Deserializer<DataImportEventPayload> deserializer) {
     var consumerProperties = kafkaProperties.buildConsumerProperties();
     return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, DataImportEventPayload> kafkaListenerContainerFactory(
+  public ConcurrentKafkaListenerContainerFactory<String, DataImportEventPayload> dataImportKafkaListenerContainerFactory(
     ConsumerFactory<String, DataImportEventPayload> consumerFactory) {
     var factory = new ConcurrentKafkaListenerContainerFactory<String, DataImportEventPayload>();
+    factory.setConsumerFactory(consumerFactory);
+    return factory;
+  }
+
+  @Bean
+  public ConsumerFactory<String, QmCompletedEventPayload> quickMarcConsumerFactory(KafkaProperties kafkaProperties,
+                                                                                   Deserializer<QmCompletedEventPayload> deserializer) {
+    var consumerProperties = kafkaProperties.buildConsumerProperties();
+    return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, QmCompletedEventPayload> quickMarcKafkaListenerContainerFactory(
+    ConsumerFactory<String, QmCompletedEventPayload> consumerFactory) {
+    var factory = new ConcurrentKafkaListenerContainerFactory<String, QmCompletedEventPayload>();
     factory.setConsumerFactory(consumerFactory);
     return factory;
   }

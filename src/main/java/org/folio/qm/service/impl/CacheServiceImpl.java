@@ -2,11 +2,13 @@ package org.folio.qm.service.impl;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import org.folio.qm.service.CacheService;
 
+@Log4j2
 @Service
 @SuppressWarnings("rawtypes")
 public class CacheServiceImpl implements CacheService<DeferredResult> {
@@ -15,6 +17,7 @@ public class CacheServiceImpl implements CacheService<DeferredResult> {
 
   @Override
   public void putToCache(String key, DeferredResult object) {
+    log.info("Save DeferredResult to cache with key [{}]", key);
     cache.put(key, object);
   }
 

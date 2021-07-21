@@ -26,15 +26,17 @@ public class QuickMarcEventListener {
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data, MessageHeaders messageHeaders) {
     var recordId = data.getRecordId();
+    log.info("QM_COMPLETED received for record id [{}]", recordId);
     DeferredResult deferredResult = cacheService.getFromCache(recordId);
     if (deferredResult != null) {
-      cacheService.invalidate(recordId);
+      log.info("DeferredResult was found for record id [{}]", recordId);
       if (data.isSucceed()) {
         deferredResult.setResult(ResponseEntity.accepted().build());
       } else {
         var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, data.getErrorMessage());
         deferredResult.setErrorResult(new ExternalException(error));
       }
+      cacheService.invalidate(recordId);
     }
   }
 }

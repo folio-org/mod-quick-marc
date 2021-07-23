@@ -14,16 +14,19 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -36,6 +39,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 
 import org.folio.qm.extension.DatabaseExtension;
 import org.folio.qm.extension.WireMockInitializer;
@@ -44,18 +48,23 @@ import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
 
-
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase
 @ExtendWith(DatabaseExtension.class)
 @ConfigurationPropertiesScan("org.folio.qm.util")
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-@EmbeddedKafka(partitions = 1, topics = {KafkaListenerApiTest.COMPLETE_TOPIC_NAME, KafkaListenerApiTest.ERROR_TOPIC_NAME})
+@EmbeddedKafka(partitions = 1, topics = {
+  KafkaListenerApiTest.DI_COMPLETE_TOPIC_NAME,
+  KafkaListenerApiTest.DI_ERROR_TOPIC_NAME,
+  KafkaListenerApiTest.QM_COMPLETE_TOPIC_NAME
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BaseApiTest {
 
-  protected static final String COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
-  protected static final String ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
+  protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
+  protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
+  protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
 
   private static boolean dbInitialized = false;
   private static boolean kafkaInitialized = false;
@@ -68,6 +77,8 @@ class BaseApiTest {
   protected JdbcTemplate jdbcTemplate;
   @Autowired
   protected KafkaTemplate<String, String> kafkaTemplate;
+  @Autowired
+  protected MockMvc mockMvc;
 
   @Autowired
   private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
@@ -152,20 +163,35 @@ class BaseApiTest {
       .response();
   }
 
-  private String getRequestUrl(String path) {
-    return "http://localhost:" + port + path;
-  }
-
-  protected void sendKafkaRecord(String eventPayload, String topicName) throws IOException {
+  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) throws IOException {
     String message = String.format("{"
       + "\"eventPayload\": \"%s\""
-      + "}", ZIPArchiver.zip(readFile(eventPayload)));
-    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, message);
+      + "}", ZIPArchiver.zip(readFile(eventPayloadFilePath)));
+    sendKafkaRecord(message, topicName);
+  }
+
+  @SneakyThrows
+  protected void sendQMKafkaRecord(String eventPayload, String topicName) {
+    var jsonObject = new JSONObject();
+    jsonObject.put("eventPayload", eventPayload);
+    sendKafkaRecord(jsonObject.toString(), topicName);
+  }
+
+  protected void sendKafkaRecord(String eventPayload, String topicName) {
+    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
     record.headers()
       .add(createKafkaHeader(TENANT, TENANT_ID))
       .add(createKafkaHeader(URL, okapiUrl));
     kafkaTemplate.send(record);
     kafkaTemplate.flush();
+  }
+
+  protected String getOkapiUrl() {
+    return okapiUrl;
+  }
+
+  private String getRequestUrl(String path) {
+    return "http://localhost:" + port + path;
   }
 
   private RecordHeader createKafkaHeader(String headerName, String headerValue) {

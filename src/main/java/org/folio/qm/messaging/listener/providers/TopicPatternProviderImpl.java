@@ -3,6 +3,7 @@ package org.folio.qm.messaging.listener.providers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.messaging.domain.QmEventTypes;
 import org.folio.rest.jaxrs.model.DataImportEventTypes;
 
 @Component("topicPatternProvider")
@@ -15,15 +16,20 @@ public class TopicPatternProviderImpl implements TopicPatternProvider {
 
   @Override
   public String diCompletedTopicName() {
-    return createTopicPattern(DataImportEventTypes.DI_COMPLETED);
+    return createTopicPattern(DataImportEventTypes.DI_COMPLETED.name());
   }
 
   @Override
   public String diErrorTopicName() {
-    return createTopicPattern(DataImportEventTypes.DI_ERROR);
+    return createTopicPattern(DataImportEventTypes.DI_ERROR.name());
   }
 
-  private String createTopicPattern(DataImportEventTypes eventType) {
-    return String.format(TOPIC_PATTERN_TEMPLATE, kafkaEnvId, eventType);
+  @Override
+  public String qmCompletedTopicName() {
+    return createTopicPattern(QmEventTypes.QM_COMPLETED.name());
+  }
+
+  private String createTopicPattern(String eventName) {
+    return String.format(TOPIC_PATTERN_TEMPLATE, kafkaEnvId, eventName);
   }
 }

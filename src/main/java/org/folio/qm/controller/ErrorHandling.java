@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import feign.FeignException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -81,15 +82,17 @@ public class ErrorHandling {
     return buildBadRequestResponse(message);
   }
 
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    return buildBadRequestResponse(e.getMessage());
+  }
+
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
     var message = String.format(TYPE_MISMATCH_MSG_PATTERN, e.getParameter().getParameterName());
     return buildBadRequestResponse(message);
-  }
-
-  private Error buildBadRequestResponse(String message) {
-    return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
@@ -103,5 +106,9 @@ public class ErrorHandling {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public Error handleGlobalException(Exception e) {
     return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
+  }
+
+  private Error buildBadRequestResponse(String message) {
+    return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
   }
 }

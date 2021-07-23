@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.rest.resource.RecordsApi;
+import org.folio.qm.rest.resource.RecordsEditorApi;
 import org.folio.qm.service.MarcRecordsService;
 
 @RestController
 @RequestMapping(value = "/records-editor")
 @RequiredArgsConstructor
-public class RecordsEditorRecordsApi implements RecordsApi {
+public class RecordsEditorApiImpl implements RecordsEditorApi {
 
   private final MarcRecordsService marcRecordsService;
 
@@ -30,19 +30,14 @@ public class RecordsEditorRecordsApi implements RecordsApi {
   }
 
   @Override
+  public ResponseEntity<CreationStatus> getRecordCreationStatus(UUID qmRecordId) {
+    return ResponseEntity.ok(marcRecordsService.getCreationStatusByQmRecordId(qmRecordId));
+  }
+
+  @Override
   public ResponseEntity<CreationStatus> recordsPost(@Valid QuickMarc quickMarc) {
     CreationStatus status = marcRecordsService.createNewInstance(quickMarc);
     return ResponseEntity.status(CREATED).body(status);
   }
 
-  @Override
-  public ResponseEntity<Void> putRecord(UUID id, QuickMarc quickMarc) {
-    marcRecordsService.updateById(id, quickMarc);
-    return ResponseEntity.accepted().build();
-  }
-
-  @Override
-  public ResponseEntity<CreationStatus> getRecordCreationStatus(UUID qmRecordId) {
-    return ResponseEntity.ok(marcRecordsService.getCreationStatusByQmRecordId(qmRecordId));
-  }
 }

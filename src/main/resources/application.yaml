@@ -28,6 +28,12 @@ spring:
   jackson:
     default-property-inclusion: NON_EMPTY
 folio:
+  qm:
+    cache:
+      update:
+        max-size: 1000
+        duration:
+          min: 10
   tenant:
     validation:
       enabled: true

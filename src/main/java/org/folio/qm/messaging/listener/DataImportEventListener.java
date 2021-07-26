@@ -17,13 +17,15 @@ public class DataImportEventListener {
   private final DataImportEventProcessingService processingService;
 
   @KafkaListener(groupId = "#{@groupIdProvider.diCompletedGroupId()}",
-    topicPattern = "#{@topicPatternProvider.diCompletedTopicName()}")
+    topicPattern = "#{@topicPatternProvider.diCompletedTopicName()}",
+    containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diCompletedListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
     processingService.processDICompleted(data);
   }
 
   @KafkaListener(groupId = "#{@groupIdProvider.diErrorGroupId()}",
-    topicPattern = "#{@topicPatternProvider.diErrorTopicName()}")
+    topicPattern = "#{@topicPatternProvider.diErrorTopicName()}",
+    containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diErrorListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
     processingService.processDIError(data);
   }

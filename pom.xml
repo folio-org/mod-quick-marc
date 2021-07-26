@@ -25,6 +25,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
+    <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
     <folio-spring-base.version>1.0.5</folio-spring-base.version>
     <mod-srm-client.version>3.2.0-SNAPSHOT</mod-srm-client.version>
@@ -270,9 +271,41 @@
                 <importMapping>error=org.folio.tenant.domain.dto.Error</importMapping>
               </importMappings>
               <configOptions>
+                <useTags>true</useTags>
                 <java8>true</java8>
                 <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
+              </configOptions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>records-editor-async</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${records-editor-async.yaml.file}</inputSpec>
+              <output>${project.build.directory}/generated-sources</output>
+              <generatorName>spring</generatorName>
+              <modelPackage>${project.groupId}.qm.domain.dto</modelPackage>
+              <apiPackage>${project.groupId}.qm.rest.resource</apiPackage>
+              <generateApis>true</generateApis>
+              <generateApiTests>true</generateApiTests>
+              <generateApiDocumentation>true</generateApiDocumentation>
+              <generateModels>true</generateModels>
+              <generateModelTests>false</generateModelTests>
+              <generateSupportingFiles>true</generateSupportingFiles>
+              <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+              <generateModelDocumentation>true</generateModelDocumentation>
+              <importMappings>
+                <importMapping>error=org.folio.tenant.domain.dto.Error</importMapping>
+              </importMappings>
+              <configOptions>
+                <java8>true</java8>
+                <useTags>true</useTags>
+                <dateLibrary>java8</dateLibrary>
+                <interfaceOnly>true</interfaceOnly>
+                <responseWrapper>DeferredResult</responseWrapper>
               </configOptions>
             </configuration>
           </execution>

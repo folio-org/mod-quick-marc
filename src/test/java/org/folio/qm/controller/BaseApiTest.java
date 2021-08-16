@@ -54,11 +54,7 @@ import org.folio.tenant.domain.dto.TenantAttributes;
 @ExtendWith(DatabaseExtension.class)
 @ConfigurationPropertiesScan("org.folio.qm.util")
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-@EmbeddedKafka(partitions = 1, topics = {
-  KafkaListenerApiTest.DI_COMPLETE_TOPIC_NAME,
-  KafkaListenerApiTest.DI_ERROR_TOPIC_NAME,
-  KafkaListenerApiTest.QM_COMPLETE_TOPIC_NAME
-})
+@EmbeddedKafka(partitions = 1)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BaseApiTest {
 

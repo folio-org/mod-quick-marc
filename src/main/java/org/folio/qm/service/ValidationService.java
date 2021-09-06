@@ -7,7 +7,7 @@ import org.folio.spring.FolioExecutionContext;
 
 public interface ValidationService {
 
-  void validateIdsMatch(QuickMarc quickMarc, UUID instanceId);
+  void validateIdsMatch(QuickMarc quickMarc, UUID externalId);
 
   void validateQmRecordId(UUID qmRecordId);
 

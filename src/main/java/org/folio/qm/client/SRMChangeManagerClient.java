@@ -21,7 +21,7 @@ import org.folio.rest.jaxrs.model.RawRecordsDto;
 public interface SRMChangeManagerClient {
 
   @GetMapping(value = "/parsedRecords", produces = MediaType.APPLICATION_JSON_VALUE)
-  ParsedRecordDto getParsedRecordByInstanceId(@RequestParam("instanceId") String instanceId);
+  ParsedRecordDto getParsedRecordByExternalId(@RequestParam("externalId") String externalId);
 
   @PutMapping(value = "/parsedRecords/{id}")
   void putParsedRecordByInstanceId(@PathVariable("id") String id, ParsedRecordDto recordDto);

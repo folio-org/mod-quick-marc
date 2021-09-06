@@ -8,7 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_INSTANCE_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EMPTY_FIELDS;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
@@ -95,7 +95,7 @@ class MarcRecordsServiceImplTest {
 
     var quickMarcJson = readQuickMarc(QM_EMPTY_FIELDS)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .instanceId(EXISTED_INSTANCE_ID);
+      .instanceId(EXISTED_EXTERNAL_ID);
 
     final Predicate<QuickMarcFields> field999Predicate = qmFields -> qmFields.getTag().equals("999");
     final Predicate<QuickMarcFields> emptyContentPredicate =  qmFields -> {

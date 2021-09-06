@@ -55,8 +55,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final JobExecutionProfileProperties jobExecutionProfileProperties;
 
   @Override
-  public QuickMarc findByInstanceId(UUID instanceId) {
-    var parsedRecordDto = srmClient.getParsedRecordByInstanceId(instanceId.toString());
+  public QuickMarc findByExternalId(UUID externalId) {
+    var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
     var quickMarc = parsedRecordToQuickMarcConverter.convert(parsedRecordDto);
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())

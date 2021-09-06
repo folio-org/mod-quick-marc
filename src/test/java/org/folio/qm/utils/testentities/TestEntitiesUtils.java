@@ -34,7 +34,7 @@ public class TestEntitiesUtils {
 
   public static final String TESTED_TAG_NAME = "333";
   public static final String VALID_PARSED_RECORD_DTO_ID = "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c";
-  public static final String EXISTED_INSTANCE_ID = "b9a5f035-de63-4e2c-92c2-07240c89b817";
+  public static final String EXISTED_EXTERNAL_ID = "b9a5f035-de63-4e2c-92c2-07240c89b817";
   public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
   public static final String VALID_JOB_EXECUTION_ID = "a7fb1c32-1ffb-4a22-a76a-4067284fe68d";
   public static final UUID JOB_EXECUTION_ID = UUID.fromString(VALID_JOB_EXECUTION_ID);
@@ -57,7 +57,7 @@ public class TestEntitiesUtils {
     return new ParsedRecordDto()
       .withId(VALID_PARSED_RECORD_DTO_ID)
       .withParsedRecord(parsedRecord)
-      .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_INSTANCE_ID))
+      .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_EXTERNAL_ID))
       .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false)).withRecordType(RecordType.MARC_BIB)
       .withRecordState(ParsedRecordDto.RecordState.ACTUAL)
       .withMetadata(new Metadata()

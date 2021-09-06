@@ -22,8 +22,8 @@ public class ValidationServiceImpl implements ValidationService {
   public static final String X_OKAPI_TOKEN_USER_ID_IS_MISSING_MESSAGE = "X-Okapi-User-Id header is missing";
 
   @Override
-  public void validateIdsMatch(QuickMarc quickMarc, UUID instanceId) {
-    if (!quickMarc.getParsedRecordId().equals(instanceId.toString())) {
+  public void validateIdsMatch(QuickMarc quickMarc, UUID externalId) {
+    if (!quickMarc.getParsedRecordId().equals(externalId.toString())) {
       var error = buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
       throw new ValidationException(error);
     }

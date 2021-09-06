@@ -3,6 +3,7 @@
   "parsedRecordDtoId": "a5f283d6-665b-4482-8b29-07140495a7f0",
   "suppressDiscovery": false,
   "instanceId": "02df6658-c639-41f2-8587-1ec44dd43d8e",
+  "recordType": "MARC_BIB",
   "leader": "03522nam\\a22004331i\\4500",
   "fields": [
     {

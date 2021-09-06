@@ -31,7 +31,6 @@ public class Constants {
   public static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
   public static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
 
-  public static final String HR_ID_CONTROL_FIELD = "001";
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
   public static final String ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD = "006";
   public static final String PHYSICAL_DESCRIPTIONS_CONTROL_FIELD = "007";

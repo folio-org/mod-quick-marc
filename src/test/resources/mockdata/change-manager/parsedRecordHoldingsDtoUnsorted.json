@@ -1,7 +1,8 @@
 {
   "id": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
   "externalIdsHolder": {
-    "holdingsId": "b9a5f035-de63-4e2c-92c2-07240c89b817"
+    "holdingsId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
+    "holdingsHrid": "hold0001"
   },
   "recordType": "MARC_HOLDING",
   "parsedRecord": {
@@ -10,6 +11,9 @@
       "fields": [
         {
           "001": "393893"
+        },
+        {
+          "004": "in00001"
         },
         {
           "005": "20141107001016.0"
@@ -420,7 +424,7 @@
           }
         },
         {
-          "880": {
+          "852": {
             "ind1": "0",
             "ind2": "0",
             "subfields": [

@@ -6,6 +6,7 @@ import static org.folio.qm.util.ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED
 import static org.folio.qm.util.ErrorUtils.ErrorType.INTERNAL;
 import static org.folio.qm.util.ErrorUtils.ErrorType.UNKNOWN;
 import static org.folio.qm.util.ErrorUtils.buildError;
+import static org.folio.qm.util.ErrorUtils.buildErrors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
@@ -22,9 +23,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.QuickMarcException;
 import org.folio.spring.exception.NotFoundException;
 import org.folio.tenant.domain.dto.Error;
+import org.folio.tenant.domain.dto.Errors;
 
 @RestControllerAdvice
 public class ErrorHandling {
@@ -42,7 +45,7 @@ public class ErrorHandling {
         .map(byteBuffer -> new String(byteBuffer.array(), UTF_8))
         .orElse(StringUtils.EMPTY);
       response.setStatus(status);
-      return buildError(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
+      return buildErrors(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
     } else {
       response.setStatus(HttpStatus.BAD_REQUEST.value());
       return buildError(HttpStatus.BAD_REQUEST, FOLIO_EXTERNAL_OR_UNDEFINED, e.getMessage());
@@ -73,6 +76,12 @@ public class ErrorHandling {
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public Error handleNotFoundException(NotFoundException e) {
     return buildError(HttpStatus.NOT_FOUND, INTERNAL, e.getMessage());
+  }
+
+  @ExceptionHandler(FieldsValidationException.class)
+  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+  public Errors handleFieldsValidationException(FieldsValidationException e) {
+    return buildErrors(e.getValidationResult().getErrors());
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)

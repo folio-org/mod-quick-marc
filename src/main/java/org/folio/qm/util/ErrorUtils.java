@@ -1,9 +1,15 @@
 package org.folio.qm.util;
 
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 
+import org.folio.qm.validation.ValidationError;
 import org.folio.tenant.domain.dto.Error;
+import org.folio.tenant.domain.dto.Errors;
+import org.folio.tenant.domain.dto.Parameter;
 
 public final class ErrorUtils {
 
@@ -22,16 +28,31 @@ public final class ErrorUtils {
     return new Error().code(status.name()).type(type.getTypeCode()).message(message);
   }
 
-  public static Error buildError(int status, ErrorType type, String message) {
+  public static Error buildErrors(int status, ErrorType type, String message) {
     return new Error().code(HttpStatus.valueOf(status).name()).type(type.getTypeCode()).message(message);
   }
 
-  public static Error buildError(ErrorCodes code, ErrorType type, String message) {
+  public static Error buildErrors(ErrorCodes code, ErrorType type, String message) {
     return new Error().code(code.name()).type(type.getTypeCode()).message(message);
   }
 
   public static Error buildInternalError(ErrorCodes code, String message) {
-    return buildError(code, ErrorType.INTERNAL, message);
+    return buildErrors(code, ErrorType.INTERNAL, message);
+  }
+
+  public static Errors buildErrors(List<ValidationError> validationErrors) {
+    var errors = validationErrors.stream()
+      .map(ErrorUtils::buildError)
+      .collect(Collectors.toList());
+    return new Errors().errors(errors).totalRecords(errors.size());
+  }
+
+  public static Error buildError(ValidationError validationError) {
+    var parameter = new Parameter().key(validationError.getTag());
+    return new Error()
+      .type(ErrorType.INTERNAL.getTypeCode())
+      .message(validationError.getMessage())
+      .parameters(List.of(parameter));
   }
 
   public enum ErrorType {

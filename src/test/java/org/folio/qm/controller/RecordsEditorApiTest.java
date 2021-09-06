@@ -39,9 +39,11 @@ import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
 import static org.folio.qm.utils.IOTestUtils.readFile;
 import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
@@ -58,6 +60,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.CreationStatus;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.extension.ClearTable;
@@ -69,8 +72,8 @@ import org.folio.tenant.domain.dto.Error;
 class RecordsEditorApiTest extends BaseApiTest {
 
   @Test
-  void testGetQuickMarcRecord() {
-    log.info("===== Verify GET record: Successful =====");
+  void testGetQuickMarcBibRecord() {
+    log.info("===== Verify GET Bibliographic record: Successful =====");
 
     mockGet(changeManagerPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
       wireMockServer);
@@ -78,8 +81,32 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     var quickMarcJson = verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
 
+    assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.BIBLIOGRAPHIC));
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
     assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
+    assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
+    assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
+    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(JOHN_USER_ID));
+
+    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
+    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
+    assertThat(parsedRecordDto.getId(), equalTo(quickMarcJson.getParsedRecordDtoId()));
+  }
+
+  @Test
+  void testGetQuickMarcHoldingsRecord() {
+    log.info("===== Verify GET Holdings record: Successful =====");
+
+    mockGet(changeManagerPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
+      wireMockServer);
+    mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
+
+    var quickMarcJson = verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+
+    assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.HOLDINGS));
+    assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
+    assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
+    assertThat(quickMarcJson.getExternalHrid(), equalTo(EXISTED_EXTERNAL_HRID));
     assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
     assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
     assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(JOHN_USER_ID));

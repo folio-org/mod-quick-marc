@@ -24,6 +24,7 @@ import org.folio.qm.converter.MarcConverterFactory;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.CreationStatusService;
@@ -70,6 +71,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
+    var validationResult = validationService.validate(quickMarc);
+    if (!validationResult.isValid()) {
+      throw new FieldsValidationException(validationResult);
+    }
     ParsedRecordDto parsedRecordDto =
       marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
     srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);

@@ -13,6 +13,11 @@
       "indicators": []
     },
     {
+      "tag": "004",
+      "content": "in00001",
+      "indicators": []
+    },
+    {
       "tag": "005",
       "content": "20141107001016.0",
       "indicators": []
@@ -266,7 +271,7 @@
       ]
     },
     {
-      "tag": "880",
+      "tag": "852",
       "content": "$6 245-01/$1 $a abcde / $c fghij",
       "indicators": [
         "0",

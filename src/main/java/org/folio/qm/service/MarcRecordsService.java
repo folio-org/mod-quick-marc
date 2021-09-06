@@ -18,11 +18,10 @@ public interface MarcRecordsService {
   /**
    * This method updates QuickMarc record
    *
-   * @param instanceId DTO id
+   * @param parsedRecordId DTO id
    * @param quickMarc  QuickMarc object
-   * @return {@link QuickMarc} record
    */
-  void updateById(UUID instanceId, QuickMarc quickMarc);
+  void updateById(UUID parsedRecordId, QuickMarc quickMarc);
 
   /**
    * This method retrieves status of new record creation

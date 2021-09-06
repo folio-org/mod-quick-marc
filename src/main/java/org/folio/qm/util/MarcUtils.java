@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.QuickMarcFields;
 
 public final class MarcUtils {
 
@@ -15,7 +15,7 @@ public final class MarcUtils {
   private MarcUtils() {
   }
 
-  public static Optional<QuickMarcFields> getFieldByTag(QuickMarc quickMarc, String tag) {
+  public static Optional<FieldItem> getFieldByTag(QuickMarc quickMarc, String tag) {
     return quickMarc.getFields().stream()
       .filter(field -> tag.equals(field.getTag()))
       .findFirst();

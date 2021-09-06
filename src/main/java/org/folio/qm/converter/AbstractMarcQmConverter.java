@@ -4,18 +4,35 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
-import static org.folio.qm.converter.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
-import static org.folio.qm.converter.Constants.BLANK_REPLACEMENT;
-import static org.folio.qm.converter.Constants.DESC;
-import static org.folio.qm.converter.Constants.DESC_LEADER_POS;
-import static org.folio.qm.converter.Constants.ELVL;
-import static org.folio.qm.converter.Constants.ELVL_LEADER_POS;
-import static org.folio.qm.converter.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
-import static org.folio.qm.converter.Constants.INSTANCE_HR_ID_CONTROL_FIELD;
-import static org.folio.qm.converter.Constants.LCCN_TAG;
-import static org.folio.qm.converter.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
-import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
-import static org.folio.qm.converter.Constants.SPECIFIC_ELEMENTS_END_INDEX;
+import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH;
+import static org.folio.qm.converter.elements.Constants.ADDRESS_LENGTH;
+import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
+import static org.folio.qm.converter.elements.Constants.CONCAT_CONDITION_PATTERN;
+import static org.folio.qm.converter.elements.Constants.CONTROL_FIELD_PATTERN;
+import static org.folio.qm.converter.elements.Constants.DESC;
+import static org.folio.qm.converter.elements.Constants.DESC_LEADER_POS;
+import static org.folio.qm.converter.elements.Constants.ELVL;
+import static org.folio.qm.converter.elements.Constants.ELVL_LEADER_POS;
+import static org.folio.qm.converter.elements.Constants.FIELDS;
+import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD_LENGTH;
+import static org.folio.qm.converter.elements.Constants.INDICATOR1;
+import static org.folio.qm.converter.elements.Constants.INDICATOR2;
+import static org.folio.qm.converter.elements.Constants.LCCN_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.LCCN_NEW_PREFIX_LENGTH;
+import static org.folio.qm.converter.elements.Constants.LCCN_OLD_PREFIX_LENGTH;
+import static org.folio.qm.converter.elements.Constants.LEADER;
+import static org.folio.qm.converter.elements.Constants.LEADER_LENGTH;
+import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.SPACE_CHARACTER;
+import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
+import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_INDEX;
+import static org.folio.qm.converter.elements.Constants.SPLIT_PATTERN;
+import static org.folio.qm.converter.elements.Constants.SUBFIELDS;
+import static org.folio.qm.converter.elements.Constants.TAG_LENGTH;
+import static org.folio.qm.converter.elements.Constants.TERMINATOR_LENGTH;
+import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
 import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
 import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD;
@@ -23,7 +40,6 @@ import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
 import static org.folio.qm.util.ErrorCodes.LEADER_AND_008_MISMATCHING;
 import static org.folio.qm.util.ErrorUtils.buildInternalError;
-import static org.folio.qm.util.MarcUtils.getFieldByTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +49,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,73 +60,45 @@ import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
+import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.QuickMarcFields;
 import org.folio.qm.exception.ConverterException;
 import org.folio.rest.jaxrs.model.AdditionalInfo;
 import org.folio.rest.jaxrs.model.ExternalIdsHolder;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
-@Component
-public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc, ParsedRecordDto> {
-
-  private static final int GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
-  private static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
-  private static final int LCCN_OLD_PREFIX_LENGTH = 3;
-  private static final int LCCN_NEW_PREFIX_LENGTH = 2;
-  private static final int TOKEN_MIN_LENGTH = 3;
-  private static final String FIELDS = "fields";
-  private static final String LEADER = "leader";
-  private static final String INDICATOR1 = "ind1";
-  private static final String INDICATOR2 = "ind2";
-  private static final String SUBFIELDS = "subfields";
-  private static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
-  private static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
-  private static final char SPACE_CHARACTER = ' ';
-  private static final int ADDRESS_LENGTH = 12;
-  private static final int TAG_LENGTH = 4;
-  private static final int TERMINATOR_LENGTH = 1;
-  private static final int LEADER_LENGTH = 24;
-  private static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
+public abstract class AbstractMarcQmConverter implements MarcQmConverter {
 
   private final MarcFactory factory = new MarcFactoryImpl();
   private String leaderString;
   private MaterialTypeConfiguration materialTypeConfiguration;
 
   @Override
-  public ParsedRecordDto convert(@NonNull QuickMarc quickMarc) {
+  public ParsedRecordDto convert(@NonNull QuickMarc source) {
     try {
-      Record marcRecord = quickMarcJsonToMarcRecord(quickMarc);
+      Record marcRecord = quickMarcJsonToMarcRecord(source);
       Map<String, Object> contentMap = new LinkedHashMap<>();
       contentMap.put(FIELDS, convertMarcFieldsToObjects(marcRecord));
       contentMap.put(LEADER, marcRecord.getLeader().marshal());
       return new ParsedRecordDto()
-        .withParsedRecord(new ParsedRecord().withId(quickMarc.getParsedRecordId()).withContent(contentMap))
-        .withRecordType(ParsedRecordDto.RecordType.MARC_BIB)
-        .withId(quickMarc.getParsedRecordDtoId())
-        .withExternalIdsHolder(constructExternalIdsHolder(quickMarc))
-        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(quickMarc.getSuppressDiscovery()));
+        .withParsedRecord(new ParsedRecord().withId(source.getParsedRecordId()).withContent(contentMap))
+        .withRecordType(supportedType())
+        .withId(source.getParsedRecordDtoId())
+        .withExternalIdsHolder(constructExternalIdsHolder(source))
+        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(source.getSuppressDiscovery()));
     } catch (Exception e) {
       throw new ConverterException(e);
     }
   }
 
-  private ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
-    var externalIdsHolder = new ExternalIdsHolder().withInstanceId(quickMarc.getInstanceId());
-    getFieldByTag(quickMarc, INSTANCE_HR_ID_CONTROL_FIELD)
-        .map(quickMarcFields -> quickMarcFields.getContent().toString())
-        .ifPresent(externalIdsHolder::setInstanceHrid);
-    return externalIdsHolder;
-  }
+  protected abstract ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc);
 
   private Record quickMarcJsonToMarcRecord(QuickMarc quickMarcJson) {
     Record marcRecord = factory.newRecord();
@@ -129,7 +116,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     return marcRecord;
   }
 
-  private VariableField toVariableField(QuickMarcFields field) {
+  private VariableField toVariableField(FieldItem field) {
     String tag = field.getTag();
     VariableField variableField;
     if (isControlField(field)) {
@@ -217,7 +204,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     return stringBuilder.toString();
   }
 
-  private List<Subfield> extractSubfields(QuickMarcFields field) {
+  private List<Subfield> extractSubfields(FieldItem field) {
     LinkedList<String> tokens = Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
       .collect(Collectors.toCollection(LinkedList::new));
 
@@ -225,7 +212,7 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
     while (!tokens.isEmpty()) {
       String token = tokens.pop();
       String subfieldString = token.concat(checkNextToken(tokens));
-      var subfield = LCCN_TAG.equals(field.getTag())
+      var subfield = LCCN_CONTROL_FIELD.equals(field.getTag())
         ? lccnSubfieldFromString(subfieldString)
         : subfieldFromString(subfieldString);
       subfields.add(subfield);
@@ -260,7 +247,8 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
       }
       return new SubfieldImpl(string.charAt(1), lccnString);
     }
-    throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD, "Illegal 010 (LCCN) subfield length"));
+    throw new ConverterException(
+      buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD, "Illegal 010 (LCCN) subfield length"));
   }
 
   private List<Object> convertMarcFieldsToObjects(Record marcRecord) {
@@ -309,17 +297,17 @@ public class QuickMarcToParsedRecordDtoConverter implements Converter<QuickMarc,
    * @param field {@link QuickMarc} field
    * @return true if field is Control Field, otherwise - false
    */
-  private boolean isControlField(QuickMarcFields field) {
+  private boolean isControlField(FieldItem field) {
     return CONTROL_FIELD_PATTERN.matcher(field.getTag()).matches();
   }
 
   /**
-   * This method returns indicators list of QuickMarc {@link QuickMarcFields}.
+   * This method returns indicators list of QuickMarc {@link FieldItem}.
    *
    * @param field field from {@link QuickMarc}
    * @return list of indicators
    */
-  private List<String> verifyAndGetIndicators(QuickMarcFields field) {
+  private List<String> verifyAndGetIndicators(FieldItem field) {
     List<String> indicators = field.getIndicators();
     if (indicators.size() == 2) {
       List<String> list = new ArrayList<>();

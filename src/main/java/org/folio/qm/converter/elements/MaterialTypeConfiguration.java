@@ -1,7 +1,7 @@
 package org.folio.qm.converter.elements;
 
-import static org.folio.qm.converter.Constants.BLVL_LEADER_POS;
-import static org.folio.qm.converter.Constants.TYPE_OF_RECORD_LEADER_POS;
+import static org.folio.qm.converter.elements.Constants.BLVL_LEADER_POS;
+import static org.folio.qm.converter.elements.Constants.TYPE_OF_RECORD_LEADER_POS;
 import static org.folio.qm.converter.elements.ControlFieldItem.ACCM;
 import static org.folio.qm.converter.elements.ControlFieldItem.ALPH;
 import static org.folio.qm.converter.elements.ControlFieldItem.AUDN;

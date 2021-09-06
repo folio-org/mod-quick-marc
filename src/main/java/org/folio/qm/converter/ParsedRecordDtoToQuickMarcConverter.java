@@ -83,6 +83,7 @@ public class ParsedRecordDtoToQuickMarcConverter implements Converter<ParsedReco
       fields.sort(QUICK_MARC_FIELDS_COMPARATOR);
 
       return new QuickMarc().parsedRecordId(parsedRecord.getId())
+        .recordType(parsedRecordDto.getRecordType().value())
         .leader(leader)
         .fields(fields)
         .parsedRecordDtoId(parsedRecordDto.getId())

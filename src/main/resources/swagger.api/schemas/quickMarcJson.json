@@ -31,6 +31,11 @@
       "$ref": "#/$defs/uuid",
       "example": "b9a5f035-de63-4e2c-92c2-07240c89b817"
     },
+    "recordType": {
+      "description": "Type of record, e.g. MARC",
+      "type": "string",
+      "example": "MARC_BIB"
+    },
     "leader": {
       "description": "Leader record",
       "type": "string",

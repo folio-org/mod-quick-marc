@@ -13,7 +13,7 @@ quickMARC API provides the following URLs:
 
 |  Method | URL| Permissions  | Description  | 
 |---|---|---|---|
-| GET | /records-editor/records?instanceId={instanceId}  |records-editor.records.item.get   | Retrieves QuickMarc by instance's id  |
+| GET | /records-editor/records?externalId={externalId}  |records-editor.records.item.get   | Retrieves QuickMarc by external id  |
 | POST| /records-editor/records|records-editor.records.item.post| Create a new MARC and Instance records|
 | PUT | /records-editor/records/{recordId}  |records-editor.records.item.get   | Updates SRS record |
 | GET | /records-editor/records/status?qmRecordId={qmRecordId}  |records-editor.records.status.item.get   | Retrieves status of MARC bibliographic record creation  |

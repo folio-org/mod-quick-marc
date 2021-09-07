@@ -79,6 +79,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       fields.sort(QUICK_MARC_FIELDS_COMPARATOR);
 
       return new QuickMarc().parsedRecordId(parsedRecord.getId())
+        .recordType(parsedRecordDto.getRecordType().value())
         .leader(leader)
         .fields(fields)
         .parsedRecordDtoId(source.getId())

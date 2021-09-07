@@ -37,13 +37,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/error"
-      description: Get MARC record by instanceId
-      operationId: getRecordByInstanceId
+      description: Get MARC record by externalId
+      operationId: getRecordByExternalId
       parameters:
-        - name: instanceId
+        - name: externalId
           in: query
           required: true
-          description: UUID of the instance that is related to the MARC record
+          description: UUID of the external that is related to the MARC record
           schema:
             $ref: "#/components/schemas/UUID"
         - name: lang

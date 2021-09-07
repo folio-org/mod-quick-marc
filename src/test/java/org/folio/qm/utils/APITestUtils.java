@@ -33,7 +33,7 @@ public class APITestUtils {
   public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
   public static final String USERS_PATH = "/users";
 
-  public static final String INSTANCE_ID = "instanceId";
+  public static final String EXTERNAL_ID = "externalId";
   public static final String QM_RECORD_ID = "qmRecordId";
 
   public static final Header JOHN_USER_ID_HEADER = new Header(USER_ID, JOHN_USER_ID);

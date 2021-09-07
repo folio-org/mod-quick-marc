@@ -8,12 +8,12 @@ import org.folio.qm.domain.dto.QuickMarc;
 public interface MarcRecordsService {
 
   /**
-   * This method returns QuickMarc record from SRS by corresponding instance's id
+   * This method returns QuickMarc record from SRS by corresponding external id
    *
-   * @param instanceId instance's id
+   * @param externalId external id
    * @return {@link QuickMarc} record
    */
-  QuickMarc findByInstanceId(UUID instanceId);
+  QuickMarc findByExternalId(UUID externalId);
 
   /**
    * This method updates QuickMarc record

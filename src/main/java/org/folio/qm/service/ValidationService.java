@@ -10,7 +10,7 @@ public interface ValidationService {
 
   ValidationResult validate(QuickMarc quickMarc);
 
-  void validateIdsMatch(QuickMarc quickMarc, UUID instanceId);
+  void validateIdsMatch(QuickMarc quickMarc, UUID externalId);
 
   void validateQmRecordId(UUID qmRecordId);
 

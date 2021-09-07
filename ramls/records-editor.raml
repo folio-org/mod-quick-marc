@@ -24,11 +24,11 @@ traits:
 /records-editor/records:
   displayName: quickMARC API
   get:
-    description: "Get MARC record by instanceId"
+    description: "Get MARC record by externalId"
     is: [language]
     queryParameters:
       instanceId:
-        description: "UUID of the instance that is related to the MARC record"
+        description: "UUID of the external that is related to the MARC record"
         type: UUID
         required: true
         example: f6c574b5-b1d5-4e5e-a28b-161b7e03e81a

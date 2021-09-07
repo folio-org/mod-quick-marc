@@ -55,8 +55,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final MarcConverterFactory marcConverterFactory;
 
   @Override
-  public QuickMarc findByInstanceId(UUID instanceId) {
-    var parsedRecordDto = srmClient.getParsedRecordByInstanceId(instanceId.toString());
+  public QuickMarc findByExternalId(UUID externalId) {
+    var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
     var quickMarc = marcConverterFactory.findConverter(parsedRecordDto.getRecordType()).convert(parsedRecordDto);
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
@@ -75,7 +75,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);
     }
-    ParsedRecordDto parsedRecordDto =
+    var parsedRecordDto =
       marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
     srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
   }

@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
-import static org.folio.qm.utils.APITestUtils.INSTANCE_ID;
+import static org.folio.qm.utils.APITestUtils.EXTERNAL_ID;
 import static org.folio.qm.utils.APITestUtils.JOHN_USER_ID_HEADER;
 import static org.folio.qm.utils.APITestUtils.QM_RECORD_ID;
 import static org.folio.qm.utils.APITestUtils.changeManagerPath;
@@ -75,11 +75,11 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testGetQuickMarcBibRecord() {
     log.info("===== Verify GET Bibliographic record: Successful =====");
 
-    mockGet(changeManagerPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
+    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
 
-    var quickMarcJson = verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+    var quickMarcJson = verifyGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
 
     assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.BIBLIOGRAPHIC));
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
@@ -97,11 +97,11 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testGetQuickMarcHoldingsRecord() {
     log.info("===== Verify GET Holdings record: Successful =====");
 
-    mockGet(changeManagerPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
+    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
 
-    var quickMarcJson = verifyGet(recordsEditorPath(INSTANCE_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+    var quickMarcJson = verifyGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
 
     assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.HOLDINGS));
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
@@ -122,9 +122,9 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     String recordNotFoundId = UUID.randomUUID().toString();
 
-    mockGet(changeManagerPath(INSTANCE_ID, recordNotFoundId), "Not found", SC_NOT_FOUND, wireMockServer);
+    mockGet(changeManagerPath(EXTERNAL_ID, recordNotFoundId), "Not found", SC_NOT_FOUND, wireMockServer);
 
-    Error error = verifyGet(recordsEditorPath(INSTANCE_ID, recordNotFoundId), SC_NOT_FOUND).as(Error.class);
+    Error error = verifyGet(recordsEditorPath(EXTERNAL_ID, recordNotFoundId), SC_NOT_FOUND).as(Error.class);
 
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
@@ -136,9 +136,9 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     String instanceId = UUID.randomUUID().toString();
 
-    mockGet(changeManagerPath(INSTANCE_ID, instanceId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
+    mockGet(changeManagerPath(EXTERNAL_ID, instanceId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
 
-    Error error = verifyGet(recordsEditorPath(INSTANCE_ID, instanceId), SC_UNPROCESSABLE_ENTITY).as(Error.class);
+    Error error = verifyGet(recordsEditorPath(EXTERNAL_ID, instanceId), SC_UNPROCESSABLE_ENTITY).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));

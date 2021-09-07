@@ -277,13 +277,13 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
     return fieldMap;
   }
 
-  private int calculateRecordLength(Record record) {
-    int addressesLength = record.getVariableFields().size() * ADDRESS_LENGTH;
-    int controlFieldsLength = record.getControlFields()
+  private int calculateRecordLength(Record marcRecord) {
+    int addressesLength = marcRecord.getVariableFields().size() * ADDRESS_LENGTH;
+    int controlFieldsLength = marcRecord.getControlFields()
       .stream()
       .mapToInt(controlField -> controlField.getData().length() + TERMINATOR_LENGTH)
       .sum();
-    int dataFieldsLength = record.getDataFields()
+    int dataFieldsLength = marcRecord.getDataFields()
       .stream()
       .mapToInt(dataField -> dataField.toString().length() - TAG_LENGTH + TERMINATOR_LENGTH)
       .sum();

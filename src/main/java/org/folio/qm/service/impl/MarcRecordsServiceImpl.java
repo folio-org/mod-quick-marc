@@ -33,7 +33,6 @@ import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.JobExecutionProfileProperties;
 import org.folio.qm.util.JsonUtils;
 import org.folio.rest.jaxrs.model.InitialRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
 

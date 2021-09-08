@@ -2,7 +2,7 @@ package org.folio.qm.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.folio.qm.converter.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
+import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
 import static org.folio.qm.util.MarcUtils.decodeFromMarcDateTime;
 
 import java.time.LocalDateTime;

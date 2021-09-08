@@ -1,0 +1,104 @@
+{
+  "parsedRecordId": "a5f283d6-665b-4482-8b29-07140495a7f0",
+  "parsedRecordDtoId": "a5f283d6-665b-4482-8b29-07140495a7f0",
+  "suppressDiscovery": false,
+  "externalId": "02df6658-c639-41f2-8587-1ec44dd43d8e",
+  "marcFormat": "HOLDINGS",
+  "leader": "03522nam\\a22004331i\\4500",
+  "fields": [
+    {
+      "tag": "001",
+      "content": "ak00005012492",
+      "indicators": []
+    },
+    {
+      "tag": "003",
+      "content": "NhCcYBP",
+      "indicators": []
+    },
+    {
+      "tag": "005",
+      "content": "20130220102526.4",
+      "indicators": []
+    },
+    {
+      "tag": "006",
+      "content": {
+        "Type": "m",
+        "Audn": "|",
+        "Form": "|",
+        "File": "d",
+        "GPub": "|"
+      },
+      "indicators": []
+    },
+    {
+      "tag": "007",
+      "content": {
+        "$categoryName": "Electronic resource",
+        "Level of compression": "",
+        "Category": "c",
+        "Color": "|",
+        "File formats": "",
+        "Antecedent/ Source": "",
+        "Dimensions": "n",
+        "Quality assurance target(s)": "",
+        "Sound": "|",
+        "SMD": "r",
+        "Reformatting quality": "",
+        "Image bit depth": ""
+      },
+      "indicators": []
+    },
+    {
+      "tag": "008",
+      "content": {
+        "Type": "a",
+        "BLvl": "m",
+        "ELvl": "1",
+        "Desc": "i",
+        "Entered": "130220",
+        "DtSt": "s",
+        "Date1": "2013",
+        "Date2": "\\\\\\\\",
+        "Ctry": "ncu",
+        "Lang": "eng",
+        "MRec": "\\",
+        "Srce": "d",
+        "Ills": [
+          "\\",
+          "\\",
+          "\\",
+          "\\"
+        ],
+        "Audn": "\\",
+        "Form": "o",
+        "Cont": [
+          "b",
+          "\\",
+          "\\",
+          "\\"
+        ],
+        "GPub": "\\",
+        "Conf": "0",
+        "Fest": "0",
+        "Indx": "1",
+        "LitF": "0",
+        "Biog": "\\"
+      },
+      "indicators": []
+    },
+    {
+      "tag": "999",
+      "content": "$s a5f283d6-665b-4482-8b29-07140495a7f0 $i 02df6658-c639-41f2-8587-1ec44dd43d8e",
+      "indicators": [
+        "f",
+        "f"
+      ]
+    }
+  ],
+  "updateInfo": {
+    "recordState": "ACTUAL",
+    "updateDate": "2020-07-16T12:13:36.879Z"
+  }
+}

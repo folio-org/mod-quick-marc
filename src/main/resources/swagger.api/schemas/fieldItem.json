@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MARC Field Schema",
+  "description": "MARC Field Schema",
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "tag": {
+      "description": "MARC record tag name",
+      "type": "string",
+      "pattern": "^[0-9]{3}$",
+      "example": "001"
+    },
+    "content": {
+      "description": "MARC record tag content",
+      "type": "object",
+      "example": "393893"
+    },
+    "indicators": {
+      "description": "MARC record tag indicator values",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "maxItems": 2
+    }
+  },
+  "required": [
+    "tag",
+    "content"
+  ]
+}

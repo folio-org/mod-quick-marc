@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MARC Format Schema",
+  "description": "MARC Format Schema",
+  "type": "string",
+  "additionalProperties": false,
+  "enum": [
+    "BIBLIOGRAPHIC",
+    "HOLDINGS"
+  ]
+}

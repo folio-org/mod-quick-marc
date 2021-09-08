@@ -2,13 +2,19 @@
   "parsedRecordId": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
   "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
   "suppressDiscovery": false,
-  "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
-  "recordType": "MARC_BIB",
+  "externalId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
+  "externalHrid": "hold0001",
+  "marcFormat": "HOLDINGS",
   "leader": "01706ccm\\a2200361\\\\ 4500",
   "fields": [
     {
       "tag": "001",
       "content": "393893",
+      "indicators": []
+    },
+    {
+      "tag": "004",
+      "content": "in00001",
       "indicators": []
     },
     {
@@ -20,7 +26,11 @@
       "tag": "006",
       "content": {
         "Type": "c",
+        "Comp": " b",
+        "FMus": "c",
+        "Part": "d",
         "Audn": "e",
+        "Form": "f",
         "AccM": [
           "g",
           "h",
@@ -29,34 +39,31 @@
           "k",
           "l"
         ],
-        "FMus": "c",
-        "Form": "f",
-        "Part": "d",
         "LTxt": [
           "m",
           "n"
         ],
-        "TrAr": "o",
-        "Comp": " b"
+        "TrAr": "o"
       },
       "indicators": []
     },
     {
       "tag": "007",
       "content": {
-        "Kind of cutting": "j",
-        "Tape configuration": "g",
-        "Tape width": "f",
+        "$categoryName": "Sound recording",
         "Speed": "b",
+        "Kind of cutting": "j",
         "Category": "s",
-        "Groove width/ groove pitch": "d",
         "Dimensions": "e",
-        "Configuration of playback channels": "c",
         "SMD": "a",
-        "Capture and storage technique": "l",
+        "Kind of disc, cylinder, or tape": "h",
+        "Tape width": "f",
+        "Tape configuration": "g",
+        "Groove width/ groove pitch": "d",
+        "Configuration of playback channels": "c",
         "Kind of material": "i",
-        "Special playback characteristics": "k",
-        "Kind of disc, cylinder, or tape": "h"
+        "Capture and storage technique": "l",
+        "Special playback characteristics": "k"
       },
       "indicators": []
     },
@@ -67,15 +74,19 @@
         "BLvl": "m",
         "ELvl": "\\",
         "Desc": "\\",
-        "DtSt": "g",
         "Entered": "abcdef",
-        "Srce": "w",
-        "MRec": "v",
-        "Ctry": "pqr",
-        "Date2": "lmno",
-        "Lang": "stu",
+        "DtSt": "g",
         "Date1": "hijk",
+        "Date2": "lmno",
+        "Ctry": "pqr",
+        "Lang": "stu",
+        "MRec": "v",
+        "Srce": "w",
+        "Comp": " b",
+        "FMus": "c",
+        "Part": "d",
         "Audn": "e",
+        "Form": "f",
         "AccM": [
           "g",
           "h",
@@ -84,15 +95,11 @@
           "k",
           "l"
         ],
-        "FMus": "c",
-        "Form": "f",
-        "Part": "d",
         "LTxt": [
           "m",
           "n"
         ],
-        "TrAr": "o",
-        "Comp": " b"
+        "TrAr": "o"
       },
       "indicators": []
     },
@@ -114,7 +121,7 @@
     },
     {
       "tag": "035",
-      "content": "$a393893",
+      "content": "$a 393893",
       "indicators": [
         "\\",
         "\\"
@@ -122,7 +129,7 @@
     },
     {
       "tag": "040",
-      "content": "$cUPB$d UPB $d NIC$d NIC",
+      "content": "$c UPB $d UPB $d NIC $d NIC",
       "indicators": [
         "\\",
         "\\"
@@ -146,7 +153,7 @@
     },
     {
       "tag": "047",
-      "content": "$acn$act$a co $a df $a dv$aft$a fg$a ms$a mi $a nc$a op $a ov$a rq$a sn$asu$a sy $a vr $a zz",
+      "content": "$a cn $a ct $a co $a df $a dv $a ft $a fg $a ms $a mi $a nc $a op $a ov $a rq $a sn $a su $a sy $a vr $a zz",
       "indicators": [
         "\\",
         "\\"
@@ -202,7 +209,7 @@
     },
     {
       "tag": "260",
-      "content": "$aKassel,$bBarenreiter,$cc1955-",
+      "content": "$a Kassel, $b Barenreiter, $c c1955-",
       "indicators": [
         "\\",
         "\\"
@@ -265,7 +272,7 @@
       ]
     },
     {
-      "tag": "880",
+      "tag": "852",
       "content": "$6 245-01/$1 $a abcde / $c fghij",
       "indicators": [
         "0",
@@ -323,6 +330,6 @@
   ],
   "updateInfo": {
     "recordState": "ACTUAL",
-    "updateDate": "2020-07-16T15:13:36.879+03:00"
+    "updateDate": "2020-07-16T12:13:36.879Z"
   }
 }

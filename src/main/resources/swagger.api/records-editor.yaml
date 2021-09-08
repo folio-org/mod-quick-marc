@@ -126,7 +126,7 @@ paths:
 components:
   schemas:
     quickMarc:
-      $ref: schemas/quickMarcJson.json
+      $ref: schemas/quickMarc.json
     creationStatus:
       $ref: schemas/creationStatus.json
     error:

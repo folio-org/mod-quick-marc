@@ -14,7 +14,6 @@ import static org.folio.qm.converter.elements.Constants.ELVL;
 import static org.folio.qm.converter.elements.Constants.ELVL_LEADER_POS;
 import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
-import static org.folio.qm.converter.elements.Constants.QUICK_MARC_FIELDS_COMPARATOR;
 import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.qm.converter.elements.Constants.TYPE;
@@ -75,8 +74,6 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
         .stream()
         .map(this::dataFieldToQuickMarcField)
         .collect(Collectors.toList()));
-
-      fields.sort(QUICK_MARC_FIELDS_COMPARATOR);
 
       return new QuickMarc().parsedRecordId(parsedRecord.getId())
         .leader(leader)

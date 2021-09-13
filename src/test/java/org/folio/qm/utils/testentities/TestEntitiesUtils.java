@@ -24,8 +24,6 @@ public class TestEntitiesUtils {
   public static final String USER_JOHN_PATH = "mockdata/users/userJohn.json";
   public static final String PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto.json";
-  public static final String PARSED_RECORD_BIB_DTO_UNSORTED_PATH = QM_JSON_DIR + "/parsedRecordBibDtoUnsorted.json";
-  public static final String PARSED_RECORD_HOLDINGS_DTO_UNSORTED_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDtoUnsorted.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
   public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
   public static final String QM_WRONG_ITEM_LENGTH = PARSED_RECORDS_DIR + "/quickMarcJsonWrongItemLength.json";

@@ -6,7 +6,6 @@ import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_UNSORTED_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
@@ -65,7 +64,6 @@ class MarcBibliographicDtoConverterTest {
   @CsvSource(value = {
     PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_BIB_PATH,
     PARSED_RECORD_BIB_EDGE_CASES_PATH + "," + QM_RECORD_BIB_EDGE_CASES_PATH,
-    PARSED_RECORD_BIB_DTO_UNSORTED_PATH + "," + QM_RECORD_BIB_PATH
   })
   void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) {
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");

@@ -53,38 +53,23 @@
     {
       "tag": "008",
       "content": {
-        "Type": "a",
-        "BLvl": "m",
-        "ELvl": "1",
-        "Desc": "i",
-        "Entered": "130220",
-        "DtSt": "s",
-        "Date1": "2013",
-        "Date2": "\\\\\\\\",
-        "Ctry": "ncu",
-        "Lang": "eng",
-        "MRec": "\\",
-        "Srce": "d",
-        "Ills": [
-          "\\",
-          "\\",
-          "\\",
-          "\\"
-        ],
-        "Audn": "\\",
-        "Form": "o",
-        "Cont": [
-          "b",
+        "AcqStatus": "5",
+        "AcqMethod": "u",
+        "AcqEndDate": "\\\\\\\\",
+        "Compl": "0",
+        "Copies": "\\\\\\",
+        "Date Ent": "930123",
+        "Gen ret": "8",
+        "Lang": "\\\\\\",
+        "Lend": "u",
+        "Repro": "u",
+        "Rept date": "\\\\\\\\\\\\",
+        "Sep/comp": "\\",
+        "Spec ret": [
           "\\",
           "\\",
           "\\"
-        ],
-        "GPub": "\\",
-        "Conf": "0",
-        "Fest": "0",
-        "Indx": "1",
-        "LitF": "0",
-        "Biog": "\\"
+        ]
       },
       "indicators": []
     },

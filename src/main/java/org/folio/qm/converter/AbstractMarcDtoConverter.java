@@ -117,7 +117,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       0);
   }
 
-  private Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
+  protected Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
     Map<String, Object> fieldItems = new LinkedHashMap<>();
     fieldItems.put(TYPE, leader.charAt(TYPE_OF_RECORD_LEADER_POS));
     fieldItems.put(BLVL, leader.charAt(BLVL_LEADER_POS));
@@ -143,7 +143,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
     return element.getLength() != 0 ? extractElementFromContent(content, element, 0) : content;
   }
 
-  private Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {
+  protected Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {
     return items.stream()
       .collect(
         toMap(ControlFieldItem::getName, element -> getControlFieldElementContent(content, element, delta), (o, o2) -> o,
@@ -175,8 +175,10 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
   }
 
   private FieldItem controlFieldToQuickMarcField(ControlField cf, String leader) {
-    return new FieldItem().tag(cf.getTag()).content(processControlField(cf, leader))
-      .indicators(Collections.emptyList());
+    return new FieldItem()
+        .tag(cf.getTag())
+        .content(processControlField(cf, leader))
+        .indicators(Collections.emptyList());
   }
 
   private String masqueradeBlanks(String sourceString) {

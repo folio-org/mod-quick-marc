@@ -32,7 +32,7 @@ public interface FieldValidationRule {
         return Optional.of(createValidationError(tagCode, "Is required tag"));
       } else if (fields.size() != 1) {
         return Optional.of(createValidationError(tagCode, "Is unique tag"));
-      } else if (StringUtils.isEmpty((CharSequence) fields.get(0).getContent())) {
+      } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty((CharSequence) fields.get(0).getContent())) {
         return Optional.of(createValidationError(tagCode, "Content couldn't be empty"));
       } else {
         return Optional.empty();

@@ -108,7 +108,23 @@ public enum ControlFieldItem {
   TYPE_OF_REPRODUCTION("Type of reproduction", 5, 1, false),
   VAL("Value", 0, 0, false),
   VALUE("Value", 1, 17, false),
-  VIDEORECORDING_FORMAT("Videorecording format", 4, 1, false);
+  VIDEORECORDING_FORMAT("Videorecording format", 4, 1, false),
+
+//  MARC HOLDINGS
+//  008 field
+  ACQ_STATUS("AcqStatus", 6, 1, false),
+  ACQ_METHOD("AcqMethod", 7, 1, false),
+  ACQ_ENDDATE("AcqEndDate", 8, 4, false),
+  COMPL("Compl", 16, 1, false),
+  COPIES("Copies", 17, 3, false),
+  DATE_ENTERED("Date Ent", 0, 6, false),
+  GEN_RET("Gen ret", 12, 1, false),
+  LANG_HOLDINGS("Lang", 22, 3, false),
+  LEND("Lend", 20, 1, false),
+  REPRO("Repro", 21, 1, false),
+  REPT_DATE("Rept date", 26, 6, false),
+  SEP_COMP("Sep/comp", 25, 1, false),
+  SPEC_RET("Spec ret", 13, 3, true);
 
   private final String name;
   private final int position;

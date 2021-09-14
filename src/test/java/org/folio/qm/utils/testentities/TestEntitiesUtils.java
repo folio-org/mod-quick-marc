@@ -24,6 +24,8 @@ public class TestEntitiesUtils {
   public static final String USER_JOHN_PATH = "mockdata/users/userJohn.json";
   public static final String PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto.json";
+  public static final String PARSED_RECORD_HOLDINGS_DTO2_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto2.json";
+  public static final String PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH = QM_JSON_DIR + "/parsedRecordHoldingsDto_invalid_008_field_length.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
   public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
   public static final String QM_WRONG_ITEM_LENGTH = PARSED_RECORDS_DIR + "/quickMarcJsonWrongItemLength.json";
@@ -33,6 +35,7 @@ public class TestEntitiesUtils {
   public static final String QM_RECORD_HOLDINGS_EDGE_CASES_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsMissingWhitespaces.json";
   public static final String QM_EDITED_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib_edited.json";
   public static final String QM_EDITED_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings_edited.json";
+  public static final String QM_RECORD_HOLDINGS = PARSED_RECORDS_DIR + "/qiuckMarcHoldings.json";
   public static final String QM_RECORD_WITH_INCORRECT_TAG_PATH = PARSED_RECORDS_DIR + "/quickMarcJson_withIncorrectTag.json";
   public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";

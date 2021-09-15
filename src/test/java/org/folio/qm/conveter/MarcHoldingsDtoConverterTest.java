@@ -44,20 +44,6 @@ class MarcHoldingsDtoConverterTest {
     TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
   }
 
-//  @ParameterizedTest
-//  @EnumSource(value = GeneralTestEntities.class, mode = EXCLUDE, names = {"BOOKS_MISSING_ITEMS"})
-//  void testSplitFixedLengthControlField(GeneralTestEntities testEntity) throws JSONException {
-//    logger.info("Testing FixedLengthControlField splitting for {}", testEntity.getMaterialTypeConfiguration().getName());
-//    var parsedRecord = getMockAsObject(testEntity.getParsedRecordPath(), ParsedRecord.class);
-//    var parsedRecordDto = getParsedRecordDtoWithMinContent(parsedRecord, ParsedRecordDto.RecordType.MARC_HOLDING);
-//    var converter = new MarcHoldingsDtoConverter();
-//    QuickMarc actual = converter.convert(parsedRecordDto);
-//
-//    var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
-//    expected.setMarcFormat(MarcFormat.HOLDINGS);
-//    JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(actual), true);
-//  }
-
   @ParameterizedTest
   @EnumSource(value = PhysicalDescriptionsTestEntities.class, mode = EXCLUDE, names = {"ELECTRONIC_RESOURCE_MISSING_ITEMS"})
   void testSplitFixedLengthControlField(PhysicalDescriptionsTestEntities testEntity) throws JSONException {
@@ -87,7 +73,7 @@ class MarcHoldingsDtoConverterTest {
   }
 
   @Test
-  void testHoldingsGeneralCharacteristicsControlFieldWrongLength(){
+  void testHoldingsGeneralCharacteristicsControlFieldWrongLength() {
     logger.info("Testing Holdings General Information wrong length after editing - ConverterException expected");
     var converter = new MarcHoldingsDtoConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH, ParsedRecordDto.class);

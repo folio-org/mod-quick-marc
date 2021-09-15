@@ -30,6 +30,11 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
 
+  protected static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = Arrays.asList(ACQ_STATUS, ACQ_METHOD,
+      ACQ_ENDDATE, COMPL, COPIES,
+      DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
+      REPT_DATE, SEP_COMP, SPEC_RET);
+
   @Override
   public MarcFormat supportedType() {
     return MarcFormat.HOLDINGS;
@@ -45,15 +50,10 @@ public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
     return source.getExternalIdsHolder().getHoldingsHrid();
   }
 
-
-  @Override
   protected Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
-    List<ControlFieldItem> controlFieldItems = Arrays.asList(ACQ_STATUS, ACQ_METHOD, ACQ_ENDDATE, COMPL, COPIES,
-                                                             DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
-                                                             REPT_DATE, SEP_COMP, SPEC_RET);
     if(content.length() > HOLDINGS_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH) {
       throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD, "Content of 008 field has wrong length"));
     }
-    return new LinkedHashMap<>(fillContentMap(controlFieldItems, content, 0));
+    return new LinkedHashMap<>(fillContentMap(HOLDINGS_CONTROL_FIELD_ITEMS, content, 0));
   }
 }

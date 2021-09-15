@@ -59,17 +59,6 @@ class MarcHoldingsQmConverterTest {
   public static final String IND_2 = "ind2";
   private static final Logger logger = LogManager.getLogger(MarcHoldingsQmConverterTest.class);
 
-//  @ParameterizedTest
-//  @EnumSource(GeneralTestEntities.class)
-//  void testRestoreGeneralAndAdditionalCharacteristicsControlFields(GeneralTestEntities testEntity) {
-//    logger.info("Testing general and additional characteristics restoring for {}",
-//      testEntity.getMaterialTypeConfiguration().getName());
-//    QuickMarc quickMarcJson = getMockAsObject(testEntity.getQuickMarcJsonPath(), QuickMarc.class);
-//    ParsedRecordDto parsedRecordDto = new MarcHoldingsQmConverter().convert(quickMarcJson);
-//    assertThat(parsedRecordDto, notNullValue());
-//    mockIsEqualToObject(testEntity.getParsedRecordPath(), parsedRecordDto.getParsedRecord());
-//  }
-
   @ParameterizedTest
   @EnumSource(PhysicalDescriptionsTestEntities.class)
   void testRestorePhysicalCharacteristicsControlField(PhysicalDescriptionsTestEntities testEntity) {

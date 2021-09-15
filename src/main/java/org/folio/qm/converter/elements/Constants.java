@@ -1,15 +1,10 @@
 package org.folio.qm.converter.elements;
 
-import java.util.Comparator;
 import java.util.regex.Pattern;
-
-import org.folio.qm.domain.dto.FieldItem;
 
 public class Constants {
 
   public static final char SPACE_CHARACTER = ' ';
-
-  public static final Comparator<FieldItem> QUICK_MARC_FIELDS_COMPARATOR = Comparator.comparingInt(o -> Integer.parseInt(o.getTag()));
 
   public static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
   public static final int GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;

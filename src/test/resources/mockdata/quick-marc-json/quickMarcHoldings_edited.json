@@ -69,36 +69,23 @@
     {
       "tag": "008",
       "content": {
-        "Type": "c",
-        "BLvl": "m",
-        "ELvl": "\\",
-        "Desc": "\\",
-        "DtSt": "g",
-        "Entered": "abcdef",
-        "Srce": "w",
-        "MRec": "v",
-        "Ctry": "pqr",
-        "Date2": "lmno",
-        "Lang": "stu",
-        "Date1": "hijk",
-        "Audn": "e",
-        "AccM": [
-          "g",
-          "h",
-          "i",
-          "j",
-          "k",
-          "l"
-        ],
-        "FMus": "c",
-        "Form": "f",
-        "Part": "d",
-        "LTxt": [
-          "m",
-          "n"
-        ],
-        "TrAr": "o",
-        "Comp": " b"
+        "AcqStatus": "5",
+        "AcqMethod": "u",
+        "AcqEndDate": "\\\\\\\\",
+        "Compl": "0",
+        "Copies": "\\\\\\",
+        "Date Ent": "930123",
+        "Gen ret": "8",
+        "Lang": "\\\\\\",
+        "Lend": "u",
+        "Repro": "u",
+        "Rept date": "\\\\\\\\\\\\",
+        "Sep/comp": "\\",
+        "Spec ret": [
+          "\\",
+          "\\",
+          "\\"
+        ]
       },
       "indicators": []
     },

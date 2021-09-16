@@ -1,0 +1,176 @@
+{
+  "parsedRecordId": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "parsedRecordDtoId": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
+  "suppressDiscovery": false,
+  "marcFormat": "HOLDINGS",
+  "externalId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
+  "externalHrid": "hold0001",
+  "leader": "01066cv\\\\a22002533\\\\4500",
+  "fields": [
+    {
+      "tag": "001",
+      "content": "1430000",
+      "indicators": []
+    },
+    {
+      "tag": "004",
+      "content": "1165205",
+      "indicators": []
+    },
+    {
+      "tag": "008",
+      "content": {
+        "AcqStatus": "5",
+        "AcqMethod": "u",
+        "AcqEndDate": "\\\\\\\\",
+        "Compl": "0",
+        "Copies": "\\\\\\",
+        "Date Ent": "930123",
+        "Gen ret": "8",
+        "Lang": "\\\\\\",
+        "Lend": "u",
+        "Repro": "u",
+        "Rept date": "\\\\\\\\\\\\",
+        "Sep/comp": "\\",
+        "Spec ret": [
+          "\\",
+          "\\",
+          "\\"
+        ]
+      },
+      "indicators": []
+    },
+    {
+      "tag": "014",
+      "content": "$a AFC6583CU001",
+      "indicators": [
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag": "014",
+      "content": "$9 001428020",
+      "indicators": [
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag": "035",
+      "content": "$a 1430000",
+      "indicators": [
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag": "852",
+      "content": "$b law $h KFV2457 $i .V81 $x Cancelled 6/14/95.pj  ",
+      "indicators": [
+        "0",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.1 (1981); v.1A-B (1981); v.2 (1970); v.2A-B (1970);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.3 (1961); v.3A-B (1991); v.4 (1986); v.4A-B (1986);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.5 (1986); v.5A (1969); v.6 (1960); v.6A-B (1981);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.7 (1973); v.7A (1973); v.8 (1943); v.9 (1972); ",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.9A-B (1986); v.10 (1972); v.10A (1972); v.11 (1964);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.11A (1964); v.12 (1971); v.12A (1971); v.13 (1976);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.13A (1976); v.14 (1965); v.14A (1965); v.15 (1975);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.15A (1975); v.16 (1970); v.16A (1970); v.17 (1968);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.17A (1968); v.18 (1972); v.18A (1972); v.19 (1971);",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "866",
+      "content": "$8 0 $a v.19A (1971); v.20 (1987); v.21 (1987); v.22 (1987)",
+      "indicators": [
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag": "867",
+      "content": "$8 0 $a Mar.1995 pamph.suppl.",
+      "indicators": [
+        "4",
+        "1"
+      ]
+    },
+    {
+      "tag": "999",
+      "content": "$s b0e56b02-5d71-4321-882a-fdf3bc1ab8f6",
+      "indicators": [
+        "f",
+        "f"
+      ]
+    }
+  ],
+  "updateInfo": {
+    "recordState": "ACTUAL",
+    "updateDate": "2020-07-16T12:13:36.879Z"
+  }
+}

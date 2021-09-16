@@ -7,6 +7,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.ADDRESS_LENGTH;
+import static org.folio.qm.converter.elements.Constants.BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.CONCAT_CONDITION_PATTERN;
 import static org.folio.qm.converter.elements.Constants.CONTROL_FIELD_PATTERN;
@@ -16,7 +17,6 @@ import static org.folio.qm.converter.elements.Constants.ELVL;
 import static org.folio.qm.converter.elements.Constants.ELVL_LEADER_POS;
 import static org.folio.qm.converter.elements.Constants.FIELDS;
 import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
-import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.INDICATOR1;
 import static org.folio.qm.converter.elements.Constants.INDICATOR2;
 import static org.folio.qm.converter.elements.Constants.LCCN_CONTROL_FIELD;
@@ -164,12 +164,12 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
     }
   }
 
-  private String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
+  protected String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
     if (isLeaderMatches(contentMap)) {
       String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH - 1,
         materialTypeConfiguration.getControlFieldItems(), contentMap, -1);
       return new StringBuilder(
-        restoreFixedLengthField(GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(),
+        restoreFixedLengthField(BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(),
           contentMap, -1))
         .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
     }
@@ -184,7 +184,7 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
   }
 
   @SuppressWarnings("unchecked")
-  private String restoreFixedLengthField(int length, List<ControlFieldItem> items, Map<String, Object> map, int delta) {
+  protected String restoreFixedLengthField(int length, List<ControlFieldItem> items, Map<String, Object> map, int delta) {
     StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
     items.forEach(item -> {
       String value;

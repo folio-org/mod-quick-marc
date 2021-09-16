@@ -6,18 +6,8 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
-import static org.folio.qm.converter.elements.Constants.BLVL;
-import static org.folio.qm.converter.elements.Constants.BLVL_LEADER_POS;
-import static org.folio.qm.converter.elements.Constants.DESC;
-import static org.folio.qm.converter.elements.Constants.DESC_LEADER_POS;
-import static org.folio.qm.converter.elements.Constants.ELVL;
-import static org.folio.qm.converter.elements.Constants.ELVL_LEADER_POS;
 import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
-import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
-import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_INDEX;
-import static org.folio.qm.converter.elements.Constants.TYPE;
-import static org.folio.qm.converter.elements.Constants.TYPE_OF_RECORD_LEADER_POS;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +32,6 @@ import org.springframework.lang.NonNull;
 import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.ControlFieldItem;
-import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
@@ -53,8 +42,6 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
 
-  private MaterialTypeConfiguration materialTypeConfiguration;
-
   @Override
   public QuickMarc convert(@NonNull ParsedRecordDto source) {
     ParsedRecord parsedRecord = source.getParsedRecord();
@@ -63,7 +50,6 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       .toInputStream(new ObjectMapper().writeValueAsString(parsedRecord), StandardCharsets.UTF_8)) {
       Record marcRecord = new MarcJsonReader(input).next();
       String leader = masqueradeBlanks(marcRecord.getLeader().marshal());
-      materialTypeConfiguration = MaterialTypeConfiguration.resolveContentType(leader);
 
       List<FieldItem> fields = marcRecord.getControlFields()
         .stream()
@@ -93,6 +79,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
 
   protected abstract String getExternalId(ParsedRecordDto source);
   protected abstract String getExternalHrId(ParsedRecordDto source);
+  protected abstract Map<String, Object> splitGeneralInformationControlField(String content, String leader);
 
   private OffsetDateTime convertDate(ParsedRecordDto parsedRecordDto) {
     var updatedDate = parsedRecordDto.getMetadata().getUpdatedDate();
@@ -117,18 +104,6 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       0);
   }
 
-  private Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
-    Map<String, Object> fieldItems = new LinkedHashMap<>();
-    fieldItems.put(TYPE, leader.charAt(TYPE_OF_RECORD_LEADER_POS));
-    fieldItems.put(BLVL, leader.charAt(BLVL_LEADER_POS));
-    fieldItems.put(ELVL, leader.charAt(ELVL_LEADER_POS));
-    fieldItems.put(DESC, leader.charAt(DESC_LEADER_POS));
-    fieldItems.putAll(fillContentMap(MaterialTypeConfiguration.getCommonItems(), content, -1));
-    fieldItems.putAll(fillContentMap(materialTypeConfiguration.getControlFieldItems(),
-      content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX), -1));
-    return fieldItems;
-  }
-
   private Map<String, Object> splitPhysicalDescriptionsControlField(String content) {
     var physicalDescription = PhysicalDescriptionFixedFieldElements
       .resolveByCode(content.charAt(0));
@@ -143,7 +118,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
     return element.getLength() != 0 ? extractElementFromContent(content, element, 0) : content;
   }
 
-  private Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {
+  protected Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {
     return items.stream()
       .collect(
         toMap(ControlFieldItem::getName, element -> getControlFieldElementContent(content, element, delta), (o, o2) -> o,
@@ -175,8 +150,10 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
   }
 
   private FieldItem controlFieldToQuickMarcField(ControlField cf, String leader) {
-    return new FieldItem().tag(cf.getTag()).content(processControlField(cf, leader))
-      .indicators(Collections.emptyList());
+    return new FieldItem()
+        .tag(cf.getTag())
+        .content(processControlField(cf, leader))
+        .indicators(Collections.emptyList());
   }
 
   private String masqueradeBlanks(String sourceString) {

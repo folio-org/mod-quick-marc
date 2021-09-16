@@ -11,14 +11,13 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
 import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
-import static org.folio.qm.utils.JsonTestUtils.getMockAsJsonNode;
 import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.utils.JsonTestUtils.getObjectAsJsonNode;
-import static org.folio.qm.utils.JsonTestUtils.getObjectFromJsonNode;
-import static org.folio.qm.utils.testentities.GeneralTestEntities.BOOKS;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO2_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
@@ -29,6 +28,8 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJson
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -45,7 +46,6 @@ import org.folio.qm.converter.impl.MarcHoldingsQmConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
-import org.folio.qm.utils.testentities.GeneralTestEntities;
 import org.folio.qm.utils.testentities.LccnFieldsTestEntities;
 import org.folio.qm.utils.testentities.PhysicalDescriptionsTestEntities;
 import org.folio.rest.jaxrs.model.ParsedRecord;
@@ -60,17 +60,6 @@ class MarcHoldingsQmConverterTest {
   private static final Logger logger = LogManager.getLogger(MarcHoldingsQmConverterTest.class);
 
   @ParameterizedTest
-  @EnumSource(GeneralTestEntities.class)
-  void testRestoreGeneralAndAdditionalCharacteristicsControlFields(GeneralTestEntities testEntity) {
-    logger.info("Testing general and additional characteristics restoring for {}",
-      testEntity.getMaterialTypeConfiguration().getName());
-    QuickMarc quickMarcJson = getMockAsObject(testEntity.getQuickMarcJsonPath(), QuickMarc.class);
-    ParsedRecordDto parsedRecordDto = new MarcHoldingsQmConverter().convert(quickMarcJson);
-    assertThat(parsedRecordDto, notNullValue());
-    mockIsEqualToObject(testEntity.getParsedRecordPath(), parsedRecordDto.getParsedRecord());
-  }
-
-  @ParameterizedTest
   @EnumSource(PhysicalDescriptionsTestEntities.class)
   void testRestorePhysicalCharacteristicsControlField(PhysicalDescriptionsTestEntities testEntity) {
     logger.info("Testing Characteristics field restoring for {}", testEntity.name());
@@ -79,6 +68,48 @@ class MarcHoldingsQmConverterTest {
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
     mockIsEqualToObject(testEntity.getParsedRecordPath(), parsedRecordDto.getParsedRecord());
+  }
+
+  @Test
+  void testRestoreHoldingsGeneralCharacteristicsControlField() {
+    logger.info("Testing Holdings General Information restoring");
+    QuickMarc quickMarcJson = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
+    ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    assertThat(parsedRecordDto, notNullValue());
+    mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
+  }
+
+  @Test
+  void testHoldingsGeneralCharacteristicsControlFieldUnknownFieldAdded() {
+    logger.info("Testing Holdings General Information wrong element added - unknown property should be ignored");
+    QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
+        .stream()
+        .filter(fieldItem -> fieldItem.getTag().equals("008"))
+        .collect(Collectors.toList())
+        .get(0)
+        .getContent();
+    content.put("invalid_key", "invalid_value");
+    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
+    ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
+    assertThat(parsedRecordDto, notNullValue());
+    mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
+  }
+
+  @Test
+  void testHoldingsGeneralCharacteristicsControlFieldWrongLength() {
+    logger.info("Testing Holdings General Information wrong field length after editing - ConverterException expected");
+    QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
+        .stream()
+        .filter(fieldItem -> fieldItem.getTag().equals("008"))
+        .collect(Collectors.toList())
+        .get(0)
+        .getContent();
+    content.put("Copies", "1234");
+    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
+    assertThrows(ConverterException.class, () -> converter.convert(quickMarc));
   }
 
   @Test
@@ -101,16 +132,6 @@ class MarcHoldingsQmConverterTest {
     assertThat(quickMarcJson, notNullValue());
     ParsedRecordDto restoredParsedRecordDto = qmConverter.convert(quickMarcJson);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, restoredParsedRecordDto);
-  }
-
-  @Test
-  void testFixedLengthControlFieldWrongLength() {
-    logger.info("Testing FixedLengthControlField wrong length after editing - ConverterException expected");
-    ObjectNode json = getMockAsJsonNode(BOOKS.getQuickMarcJsonPath());
-    ((ObjectNode) json.at("/" + FIELDS + "/3/" + CONTENT)).put("Entered", "abcdefg");
-    QuickMarc quickMarc = getObjectFromJsonNode(json, QuickMarc.class);
-    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
-    assertThrows(ConverterException.class, () -> converter.convert(quickMarc));
   }
 
   @Test

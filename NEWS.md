@@ -8,6 +8,7 @@
 * [MODQM-146](https://issues.folio.org/browse/MODQM-146) - View MARC Holdings via quickMARC
 * [MODQM-142](https://issues.folio.org/browse/MODQM-142) - Backend: Edit MARC Holdings via quickMARC
 * [MODQM-150](https://issues.folio.org/browse/MODQM-150) - MARC holdings - 008 rules
+* [MODQM-151](https://issues.folio.org/browse/MODQM-151) - MARC holdings - Leader rules
 
 ## 2.1.0 - Released
 

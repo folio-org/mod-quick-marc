@@ -60,7 +60,9 @@ public interface LeaderValidationRule {
       .findFirst();
 
     if (wrongField.isPresent()) {
-      return Optional.of(createValidationError(wrongField.get().getName(), "Wrong value! Allowed only: " + wrongField.get().getPossibleValues()));
+      int position = wrongField.get().getPosition();
+      return Optional.of(createValidationError(wrongField.get().getName(),
+        String.format("Wrong value '%s', on position %d. Allowed only: %s",leader.charAt(position), position, wrongField.get().getPossibleValues())));
     }
     return Optional.empty();
   }

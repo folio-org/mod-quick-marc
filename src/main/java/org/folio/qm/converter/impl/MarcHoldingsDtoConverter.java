@@ -22,14 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD;
-import static org.folio.qm.util.ErrorUtils.buildInternalError;
-
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.domain.dto.MarcFormat;

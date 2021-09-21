@@ -13,7 +13,7 @@ import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationRule;
 
-public class BibliographicLeaderValidationRuleTest {
+class BibliographicLeaderValidationRuleTest {
 
   private LeaderValidationRule rule = new BibliographicLeaderValidationRule();
   public static final String VALID_LEADER = "01706ccm\\a2200361\\\\\\4500";

@@ -12,7 +12,7 @@ import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 
-public class CommonLeaderValidationRuleTest {
+class CommonLeaderValidationRuleTest {
   private LeaderValidationRule rule = new HoldingsLeaderValidationRule();
   public static final String WRONG_RECORD_LENGTH = "00241cx\\\\a2200109zn\\45000";
   public static final String LEADER_RECORD_LENGTH_WITH_CHARS = "0a241cx\\\\a2200109zn\\4500";

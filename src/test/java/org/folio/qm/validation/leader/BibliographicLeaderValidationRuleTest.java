@@ -27,54 +27,54 @@ class BibliographicLeaderValidationRuleTest {
 
 
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithOutErrors() {
     assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnRecordStatus() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_RECORD_STATUS);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bib record status"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnRecordType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_RECORD_TYPE);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bib type of record"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnBibliographicLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIBLIOGRAPHIC_LEVEL);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bibliographic level"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnControlType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CONTROL_TYPE);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Type of control"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnEncodingLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_BIB_ENCODING_LEVEL);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bib encoding level"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnCatalogingForm() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CATALOGING_FORM);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Descriptive cataloging form"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnResourceRecordLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RESOURCE_RECORD_LEVEL);
     assertTrue(validationError.isPresent());

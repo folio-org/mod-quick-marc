@@ -24,63 +24,63 @@ class CommonLeaderValidationRuleTest {
   public static final String WRONG_ENTRY_MAP_22 = "00241cx\\\\a2200109zn\\4510";
   public static final String WRONG_ENTRY_MAP_23 = "00241cx\\\\a2200109zn\\4501";
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithWrongLengthError() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_LENGTH);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getMessage(), Is.is("Wrong leader length"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnRecordLength() {
     Optional<ValidationError> validationError = rule.validate(LEADER_RECORD_LENGTH_WITH_CHARS);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getMessage(), Is.is("0-5 positions must be a number"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnCodingScheme() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CODING_SCHEME);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Character coding scheme"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnIndicatorCount() {
     Optional<ValidationError> validationError = rule.validate(WRONG_INDICATOR_COUNT);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Indicator count"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnSubfieldCodeLength() {
     Optional<ValidationError> validationError = rule.validate(WRONG_SUBFIELD_CODE_LENGTH);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Subfield code length"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnEntryMap20() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_20);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Entry map"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnEntryMap21() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_21);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Entry map"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnEntryMap22() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_22);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Entry map"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnEntryMap23() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_23);
     assertTrue(validationError.isPresent());

@@ -24,40 +24,40 @@ class HoldingsLeaderValidationRuleTest {
   public static final String WRONG_ITEM_INFORMATION = "00241cx\\\\a2200109za\\4500";
 
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithOutErrors() {
     assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnRecordLength() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_STATUS);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Holdings record status"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnRecordType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_TYPE);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Holdings type of record"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnUndefinedCharacter() {
     Optional<ValidationError> validationError = rule.validate(WRONG_UNDEFINED_CHARACTER);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Undefined character position"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnEncodingLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENCODING_LEVEL);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Holdings encoding level"));
   }
 
-  @Test()
+  @Test
   void shouldValidateHoldingsLeaderWithErrorOnItemInformation() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ITEM_INFORMATION);
     assertTrue(validationError.isPresent());

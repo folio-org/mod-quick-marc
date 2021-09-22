@@ -28,54 +28,54 @@ class BibliographicLeaderValidationRuleTest {
 
 
   @Test
-  void shouldValidateHoldingsLeaderWithOutErrors() {
+  void shouldValidateBibliographicLeaderWithOutErrors() {
     assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnRecordStatus() {
+  void shouldValidateBibliographicLeaderWithErrorOnRecordStatus() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_RECORD_STATUS);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bib record status"));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnRecordType() {
+  void shouldValidateBibliographicLeaderWithErrorOnRecordType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_RECORD_TYPE);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bib type of record"));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnBibliographicLevel() {
+  void shouldValidateBibliographicLeaderWithErrorOnBibliographicLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIBLIOGRAPHIC_LEVEL);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bibliographic level"));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnControlType() {
+  void shouldValidateBibliographicLeaderWithErrorOnControlType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CONTROL_TYPE);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Type of control"));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnEncodingLevel() {
+  void shouldValidateBibliographicLeaderWithErrorOnEncodingLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_BIB_ENCODING_LEVEL);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Bib encoding level"));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnCatalogingForm() {
+  void shouldValidateBibliographicLeaderWithErrorOnCatalogingForm() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CATALOGING_FORM);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Descriptive cataloging form"));
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnResourceRecordLevel() {
+  void shouldValidateBibliographicLeaderWithErrorOnResourceRecordLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RESOURCE_RECORD_LEVEL);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Multipart resource record level"));

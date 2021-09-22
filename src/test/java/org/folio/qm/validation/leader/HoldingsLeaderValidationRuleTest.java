@@ -30,7 +30,7 @@ class HoldingsLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldValidateHoldingsLeaderWithErrorOnRecordLength() {
+  void shouldValidateHoldingsLeaderWithErrorOnRecordStatus() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_STATUS);
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("Holdings record status"));

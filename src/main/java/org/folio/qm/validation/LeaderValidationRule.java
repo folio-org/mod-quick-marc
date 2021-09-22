@@ -13,6 +13,7 @@ import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.LeaderItem;
@@ -25,24 +26,19 @@ public interface LeaderValidationRule {
   Optional<ValidationError> validate(String leader);
 
   default Optional<ValidationError> commonLeaderValidation(String leader) {
-    Optional<ValidationError> error = validateLeaderLength(leader);
-    if (error.isPresent()) {
-      return error;
-    }
-    error = validateLeaderNumberFields(leader, RECORD_LENGTH.getPosition(), RECORD_LENGTH.getLength());
-    if (error.isPresent()) {
-      return error;
-    }
-    error = validateLeaderNumberFields(leader, BASE_ADDRESS.getPosition(), BASE_ADDRESS.getLength());
-    if (error.isPresent()) {
-      return error;
-    }
-    return validateLeaderFieldsRestrictions(leader, List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
-      ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23));
+    return Stream.of(
+        validateLeaderLength(leader),
+        validateLeaderNumberFields(leader, RECORD_LENGTH.getPosition(), RECORD_LENGTH.getLength()),
+        validateLeaderNumberFields(leader, BASE_ADDRESS.getPosition(), BASE_ADDRESS.getLength()),
+        validateLeaderFieldsRestrictions(leader, List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
+          ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23)))
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .findFirst();
   }
 
   private Optional<ValidationError> validateLeaderLength(String leader) {
-    return leader.length() == Constants.LEADER_LENGTH ? Optional.empty() : Optional.of(createValidationError(leader, "Wrong leader length"));
+    return Constants.LEADER_LENGTH == leader.length() ? Optional.empty() : Optional.of(createValidationError(leader, "Wrong leader length"));
   }
 
   private Optional<ValidationError> validateLeaderNumberFields(String leader, int start, int length) {

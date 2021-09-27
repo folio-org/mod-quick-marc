@@ -8,6 +8,7 @@ import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTI
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
+import static org.folio.rest.jaxrs.model.ParsedRecordDto.RecordType.MARC_HOLDING;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -26,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
-import org.marc4j.marc.Record;
 import org.springframework.lang.NonNull;
 
 import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
@@ -48,12 +48,13 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
 
     try (InputStream input = IOUtils
       .toInputStream(new ObjectMapper().writeValueAsString(parsedRecord), StandardCharsets.UTF_8)) {
-      Record marcRecord = new MarcJsonReader(input).next();
-      String leader = masqueradeBlanks(marcRecord.getLeader().marshal());
+      var marcRecord = new MarcJsonReader(input).next();
+      var leader = masqueradeBlanks(marcRecord.getLeader().marshal());
+      var recordType = source.getRecordType();
 
       List<FieldItem> fields = marcRecord.getControlFields()
         .stream()
-        .map(cf -> controlFieldToQuickMarcField(cf, leader))
+        .map(cf -> controlFieldToQuickMarcField(cf, leader, recordType))
         .collect(Collectors.toList());
 
       fields.addAll(marcRecord.getDataFields()
@@ -86,14 +87,16 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
     return updatedDate != null ? OffsetDateTime.ofInstant(updatedDate.toInstant(), ZoneId.systemDefault()) : null;
   }
 
-  private Object processControlField(ControlField controlField, String leader) {
+  private Object processControlField(ControlField controlField, String leader, ParsedRecordDto.RecordType recordType) {
     switch (controlField.getTag()) {
       case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
         return splitAdditionalCharacteristicsControlField(masqueradeBlanks(controlField.getData()));
       case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
         return splitPhysicalDescriptionsControlField(masqueradeBlanks(controlField.getData()));
       case GENERAL_INFORMATION_CONTROL_FIELD:
-        return splitGeneralInformationControlField(masqueradeBlanks(controlField.getData()), leader);
+        return recordType == MARC_HOLDING
+          ? controlField.getData()
+          : splitGeneralInformationControlField(masqueradeBlanks(controlField.getData()), leader);
       default:
         return controlField.getData();
     }
@@ -149,10 +152,10 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
         .collect(Collectors.joining(SPACE)));
   }
 
-  private FieldItem controlFieldToQuickMarcField(ControlField cf, String leader) {
+  private FieldItem controlFieldToQuickMarcField(ControlField cf, String leader, ParsedRecordDto.RecordType recordType) {
     return new FieldItem()
         .tag(cf.getTag())
-        .content(processControlField(cf, leader))
+        .content(processControlField(cf, leader, recordType))
         .indicators(Collections.emptyList());
   }
 

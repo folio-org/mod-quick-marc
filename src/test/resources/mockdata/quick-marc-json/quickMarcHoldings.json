@@ -69,25 +69,7 @@
     },
     {
       "tag": "008",
-      "content": {
-        "AcqStatus": "5",
-        "AcqMethod": "u",
-        "AcqEndDate": "\\\\\\\\",
-        "Compl": "0",
-        "Copies": "\\\\\\",
-        "Date Ent": "930123",
-        "Gen ret": "8",
-        "Lang": "\\\\\\",
-        "Lend": "u",
-        "Repro": "u",
-        "Rept date": "\\\\\\\\\\\\",
-        "Sep/comp": "\\",
-        "Spec ret": [
-          "\\",
-          "\\",
-          "\\"
-        ]
-      },
+      "content": "9301235u    8   0   uu          ",
       "indicators": []
     },
     {

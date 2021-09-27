@@ -35,6 +35,8 @@ import static org.folio.qm.converter.elements.Constants.TERMINATOR_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
 import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
 import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
+import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
+import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
@@ -67,6 +69,7 @@ import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
 import org.folio.rest.jaxrs.model.AdditionalInfo;
@@ -103,11 +106,12 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
   private Record quickMarcJsonToMarcRecord(QuickMarc quickMarcJson) {
     Record marcRecord = factory.newRecord();
 
+    var marcFormat = quickMarcJson.getMarcFormat();
     leaderString = quickMarcJson.getLeader();
     materialTypeConfiguration = MaterialTypeConfiguration.resolveContentType(leaderString);
 
-    quickMarcJson.getFields()
-      .stream().map(this::toVariableField)
+    quickMarcJson.getFields().stream()
+      .map(field -> toVariableField(field, marcFormat))
       .forEach(marcRecord::addVariableField);
 
     Leader leader = factory.newLeader(restoreBlanks(leaderString));
@@ -116,11 +120,11 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
     return marcRecord;
   }
 
-  private VariableField toVariableField(FieldItem field) {
+  private VariableField toVariableField(FieldItem field, MarcFormat marcFormat) {
     String tag = field.getTag();
     VariableField variableField;
     if (isControlField(field)) {
-      variableField = factory.newControlField(tag, restoreControlFieldContent(tag, field.getContent()));
+      variableField = factory.newControlField(tag, restoreControlFieldContent(tag, field.getContent(), marcFormat));
     } else {
       List<String> indicators = verifyAndGetIndicators(field);
       var dataField = factory.newDataField(tag, indicators.get(0).charAt(0), indicators.get(1).charAt(0));
@@ -131,14 +135,16 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
   }
 
   @SuppressWarnings("unchecked")
-  private String restoreControlFieldContent(String tag, Object content) {
+  private String restoreControlFieldContent(String tag, Object content, MarcFormat marcFormat) {
     switch (tag) {
       case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
         return restoreBlanks(restoreAdditionalCharacteristicsControlField((Map<String, Object>) content));
       case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
         return restoreBlanks(restorePhysicalDescriptionsControlField((Map<String, Object>) content));
       case GENERAL_INFORMATION_CONTROL_FIELD:
-        return restoreBlanks(restoreGeneralInformationControlField((Map<String, Object>) content));
+        return marcFormat == HOLDINGS
+          ? content.toString()
+          : restoreBlanks(restoreGeneralInformationControlField((Map<String, Object>) content));
       default:
         return content.toString();
     }

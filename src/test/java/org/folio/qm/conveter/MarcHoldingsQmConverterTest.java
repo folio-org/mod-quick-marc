@@ -81,38 +81,6 @@ class MarcHoldingsQmConverterTest {
   }
 
   @Test
-  void testHoldingsGeneralCharacteristicsControlFieldUnknownFieldAdded() {
-    logger.info("Testing Holdings General Information wrong element added - unknown property should be ignored");
-    QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
-    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
-        .stream()
-        .filter(fieldItem -> fieldItem.getTag().equals("008"))
-        .collect(Collectors.toList())
-        .get(0)
-        .getContent();
-    content.put("invalid_key", "invalid_value");
-    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
-    ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
-    assertThat(parsedRecordDto, notNullValue());
-    mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
-  }
-
-  @Test
-  void testHoldingsGeneralCharacteristicsControlFieldWrongLength() {
-    logger.info("Testing Holdings General Information wrong field length after editing - ConverterException expected");
-    QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
-    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
-        .stream()
-        .filter(fieldItem -> fieldItem.getTag().equals("008"))
-        .collect(Collectors.toList())
-        .get(0)
-        .getContent();
-    content.put("Copies", "1234");
-    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
-    assertThrows(ConverterException.class, () -> converter.convert(quickMarc));
-  }
-
-  @Test
   void testQuickMarcJsonToParsedRecordDtoConversion() {
     logger.info("Testing QuickMarcJson -> ParsedRecordDto conversion");
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();

@@ -35,7 +35,6 @@ import static org.folio.qm.converter.elements.Constants.TERMINATOR_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
 import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
 import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
-import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
 import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_FIXED_LENGTH_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorCodes.ILLEGAL_INDICATORS_NUMBER;

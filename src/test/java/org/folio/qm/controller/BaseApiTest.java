@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +44,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.folio.qm.extension.DatabaseExtension;
 import org.folio.qm.extension.WireMockInitializer;
-import org.folio.qm.util.ZIPArchiver;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
@@ -159,10 +159,11 @@ class BaseApiTest {
       .response();
   }
 
-  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) throws IOException {
-    String message = String.format("{"
-      + "\"eventPayload\": \"%s\""
-      + "}", ZIPArchiver.zip(readFile(eventPayloadFilePath)));
+  @SneakyThrows
+  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
+    var jsonObject = new JSONObject();
+    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
+    String message = jsonObject.toString();
     sendKafkaRecord(message, topicName);
   }
 

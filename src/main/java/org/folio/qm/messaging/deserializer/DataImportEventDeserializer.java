@@ -9,7 +9,6 @@ import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.util.ZIPArchiver;
 import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 @Component
@@ -22,7 +21,7 @@ public class DataImportEventDeserializer implements Deserializer<DataImportEvent
   public DataImportEventPayload deserialize(String topic, byte[] data) {
     try {
       var eventPayload = objectMapper.readTree(data).get("eventPayload").asText();
-      return objectMapper.readValue(ZIPArchiver.unzip(eventPayload), DataImportEventPayload.class);
+      return objectMapper.readValue(eventPayload, DataImportEventPayload.class);
     } catch (IOException e) {
       throw new SerializationException("Can't deserialize data [" + Arrays.toString(data) +
         "] from topic [" + topic + "]", e);

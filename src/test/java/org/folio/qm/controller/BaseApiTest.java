@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -158,10 +159,11 @@ class BaseApiTest {
       .response();
   }
 
+  @SneakyThrows
   protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
-    String message = String.format("{"
-      + "\"eventPayload\": %s"
-      + "}", readFile(eventPayloadFilePath));
+    var jsonObject = new JSONObject();
+    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
+    String message = jsonObject.toString();
     sendKafkaRecord(message, topicName);
   }
 

@@ -20,7 +20,7 @@ public class DataImportEventDeserializer implements Deserializer<DataImportEvent
   @Override
   public DataImportEventPayload deserialize(String topic, byte[] data) {
     try {
-      var eventPayload = objectMapper.readTree(data).get("eventPayload").toString();
+      var eventPayload = objectMapper.readTree(data).get("eventPayload").asText();
       return objectMapper.readValue(eventPayload, DataImportEventPayload.class);
     } catch (IOException e) {
       throw new SerializationException("Can't deserialize data [" + Arrays.toString(data) +

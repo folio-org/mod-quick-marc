@@ -43,7 +43,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.folio.qm.extension.DatabaseExtension;
 import org.folio.qm.extension.WireMockInitializer;
-import org.folio.qm.util.ZIPArchiver;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
@@ -159,10 +158,10 @@ class BaseApiTest {
       .response();
   }
 
-  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) throws IOException {
+  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
     String message = String.format("{"
-      + "\"eventPayload\": \"%s\""
-      + "}", ZIPArchiver.zip(readFile(eventPayloadFilePath)));
+      + "\"eventPayload\": %s"
+      + "}", readFile(eventPayloadFilePath));
     sendKafkaRecord(message, topicName);
   }
 

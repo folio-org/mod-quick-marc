@@ -18,7 +18,7 @@ public interface CreationStatusMapper {
 
   @Mappings({
     @Mapping(target = "qmRecordId", expression = "java(uuidToStringSafe(recordCreationStatus.getId()))"),
-    @Mapping(target = "instanceId", expression = "java(uuidToStringSafe(recordCreationStatus.getInstanceId()))"),
+    @Mapping(target = "externalId", expression = "java(uuidToStringSafe(recordCreationStatus.getExternalId()))"),
     @Mapping(target = "jobExecutionId", expression = "java(uuidToStringSafe(recordCreationStatus.getJobExecutionId()))"),
     @Mapping(target = "status", expression = "java(CreationStatus.StatusEnum.fromValue(recordCreationStatus.getStatus().toString()))"),
     @Mapping(target = "metadata.createdAt", source = "createdAt"),

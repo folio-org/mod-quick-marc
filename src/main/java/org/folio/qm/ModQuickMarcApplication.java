@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-@ConfigurationPropertiesScan("org.folio.qm.util")
+@ConfigurationPropertiesScan("org.folio.qm.config.properties")
 public class ModQuickMarcApplication {
 
   public static void main(String[] args) {

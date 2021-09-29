@@ -23,19 +23,19 @@ class CreationStatusMapperTest {
   private static final CreationStatusMapper MAPPER = Mappers.getMapper(CreationStatusMapper.class);
 
   @Test
-  void shouldConvertSuccessfullyWhenAllFieldsArePresent(@Random UUID id, @Random UUID instanceId,
+  void shouldConvertSuccessfullyWhenAllFieldsArePresent(@Random UUID id, @Random UUID externalId,
                                                         @Random UUID jobExecutionId, @Random Timestamp createdAt,
                                                         @Random Timestamp updatedAt) {
     var recordCreationStatus = new RecordCreationStatus();
     recordCreationStatus.setId(id);
     recordCreationStatus.setStatus(RecordCreationStatusEnum.NEW);
-    recordCreationStatus.setInstanceId(instanceId);
+    recordCreationStatus.setExternalId(externalId);
     recordCreationStatus.setJobExecutionId(jobExecutionId);
     recordCreationStatus.setCreatedAt(createdAt);
     recordCreationStatus.setUpdatedAt(updatedAt);
     var creationStatus = MAPPER.fromEntity(recordCreationStatus);
     assertThat(creationStatus)
-      .hasFieldOrPropertyWithValue("instanceId", instanceId.toString())
+      .hasFieldOrPropertyWithValue("externalId", externalId.toString())
       .hasFieldOrPropertyWithValue("qmRecordId", id.toString())
       .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId.toString())
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)
@@ -44,16 +44,16 @@ class CreationStatusMapperTest {
   }
 
   @Test
-  void shouldConvertSuccessfullyWhenTimestampFieldsAreNull(@Random UUID id, @Random UUID instanceId,
+  void shouldConvertSuccessfullyWhenTimestampFieldsAreNull(@Random UUID id, @Random UUID externalId,
                                                            @Random UUID jobExecutionId) {
     var recordCreationStatus = new RecordCreationStatus();
     recordCreationStatus.setId(id);
     recordCreationStatus.setStatus(RecordCreationStatusEnum.NEW);
-    recordCreationStatus.setInstanceId(instanceId);
+    recordCreationStatus.setExternalId(externalId);
     recordCreationStatus.setJobExecutionId(jobExecutionId);
     var creationStatus = MAPPER.fromEntity(recordCreationStatus);
     assertThat(creationStatus)
-      .hasFieldOrPropertyWithValue("instanceId", instanceId.toString())
+      .hasFieldOrPropertyWithValue("externalId", externalId.toString())
       .hasFieldOrPropertyWithValue("qmRecordId", id.toString())
       .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId.toString())
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)
@@ -69,7 +69,7 @@ class CreationStatusMapperTest {
     recordCreationStatus.setUpdatedAt(updatedAt);
     var creationStatus = MAPPER.fromEntity(recordCreationStatus);
     assertThat(creationStatus)
-      .hasFieldOrPropertyWithValue("instanceId", null)
+      .hasFieldOrPropertyWithValue("externalId", null)
       .hasFieldOrPropertyWithValue("qmRecordId", null)
       .hasFieldOrPropertyWithValue("jobExecutionId", null)
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)

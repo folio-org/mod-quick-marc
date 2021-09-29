@@ -46,6 +46,15 @@ folio:
       enabled: true
       # Possible values: none, basic, headers, full. Default: basic
       level: basic
+  job:
+    execution:
+      profile:
+        marc-bib:
+          id: 6409dcff-71fa-433a-bc6a-e70ad38a9604
+          name: QuickMarc Create MARC Bib and Inventory Instance
+        marc-holdings:
+          id: fa0262c7-5816-48d0-b9b3-7b7a862a5bc7
+          name: QuickMarc Create MARC Holdings and Inventory Holdings
 management:
   endpoints:
     web:
@@ -66,9 +75,3 @@ management:
       enabled: true
 server:
   port: 8081
-job:
-  execution:
-    profile:
-      default:
-        id: 6409dcff-71fa-433a-bc6a-e70ad38a9604
-        name: CLI Create MARC Bibs and Instances

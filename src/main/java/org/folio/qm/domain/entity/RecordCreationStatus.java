@@ -29,9 +29,9 @@ public class RecordCreationStatus {
 
   private String errorMessage;
 
-  private UUID instanceId;
+  private UUID externalId;
 
-  private UUID marcBibId;
+  private UUID marcId;
 
   @Column(nullable = false)
   private Timestamp createdAt;

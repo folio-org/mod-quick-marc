@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import lombok.experimental.UtilityClass;
 
+import org.folio.qm.config.properties.JobExecutionProfileProperties;
 import org.folio.rest.jaxrs.model.InitJobExecutionsRqDto;
 import org.folio.rest.jaxrs.model.InitialRecord;
 import org.folio.rest.jaxrs.model.JobProfileInfo;
@@ -17,16 +18,17 @@ import org.folio.rest.jaxrs.model.RecordsMetadata;
 @UtilityClass
 public class ChangeManagerPayloadUtils {
 
-  public static JobProfileInfo getDefaultJobProfile(JobExecutionProfileProperties profileProperties) {
+  public static JobProfileInfo getDefaultJobProfile(JobExecutionProfileProperties.ProfileOptions options) {
     return new JobProfileInfo()
-      .withId(profileProperties.getId())
-      .withName(profileProperties.getName())
+      .withId(options.getId())
+      .withName(options.getName())
       .withDataType(DataType.MARC);
   }
 
-  public static InitJobExecutionsRqDto getDefaultJodExecutionDto(String userId, JobExecutionProfileProperties profileProperties) {
+  public static InitJobExecutionsRqDto getDefaultJodExecutionDto(String userId,
+                                                                 JobExecutionProfileProperties.ProfileOptions options) {
     return new InitJobExecutionsRqDto()
-      .withJobProfileInfo(getDefaultJobProfile(profileProperties))
+      .withJobProfileInfo(getDefaultJobProfile(options))
       .withSourceType(InitJobExecutionsRqDto.SourceType.ONLINE)
       .withFiles(emptyList())
       .withUserId(userId);
@@ -35,7 +37,7 @@ public class ChangeManagerPayloadUtils {
   public static RawRecordsDto getRawRecordsBody(InitialRecord initialRecord, boolean isLast) {
     return new RawRecordsDto()
       .withId(UUID.randomUUID().toString())
-      .withInitialRecords(initialRecord == null ? emptyList(): singletonList(initialRecord))
+      .withInitialRecords(initialRecord == null ? emptyList() : singletonList(initialRecord))
       .withRecordsMetadata(
         new RecordsMetadata()
           .withLast(isLast)

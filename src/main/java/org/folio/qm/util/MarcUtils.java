@@ -1,5 +1,7 @@
 package org.folio.qm.util;
 
+import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -43,6 +45,15 @@ public final class MarcUtils {
    */
   public static LocalDateTime decodeFromMarcDateTime(String representation) {
     return LocalDateTime.parse(representation, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
+  }
+
+  public static QuickMarc updateRecordTimestamp(QuickMarc quickMarc) {
+    final var currentTime = encodeToMarcDateTime(LocalDateTime.now());
+    getFieldByTag(quickMarc, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD)
+      .ifPresentOrElse(field -> field.setContent(currentTime),
+        () -> quickMarc.addFieldsItem(new FieldItem().tag(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD).content(currentTime))
+      );
+    return quickMarc;
   }
 
 }

@@ -84,6 +84,7 @@ class MarcHoldingsQmConverterTest {
   void testHoldingsGeneralCharacteristicsControlFieldUnknownFieldAdded() {
     logger.info("Testing Holdings General Information wrong element added - unknown property should be ignored");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    @SuppressWarnings("unchecked")
     var content = (LinkedHashMap<String, String>)quickMarc.getFields()
         .stream()
         .filter(fieldItem -> fieldItem.getTag().equals("008"))
@@ -101,6 +102,7 @@ class MarcHoldingsQmConverterTest {
   void testHoldingsGeneralCharacteristicsControlFieldWrongLength() {
     logger.info("Testing Holdings General Information wrong field length after editing - ConverterException expected");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    @SuppressWarnings("unchecked")
     var content = (LinkedHashMap<String, String>)quickMarc.getFields()
         .stream()
         .filter(fieldItem -> fieldItem.getTag().equals("008"))

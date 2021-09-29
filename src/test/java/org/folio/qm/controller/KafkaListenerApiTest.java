@@ -9,7 +9,6 @@ import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_ID;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -21,12 +20,12 @@ class KafkaListenerApiTest extends BaseApiTest {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEvent() throws IOException {
+  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInstance() {
     var statusId = UUID.randomUUID();
-    var expectedInstanceId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
-    var expectedMarcBibId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
+    var expectedExternalId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
+    var expectedMarcId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/di-event/complete-event.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.CREATED)
@@ -37,23 +36,45 @@ class KafkaListenerApiTest extends BaseApiTest {
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
-      .hasFieldOrPropertyWithValue("instanceId", expectedInstanceId)
-      .hasFieldOrPropertyWithValue("marcBibId", expectedMarcBibId);
+      .hasFieldOrPropertyWithValue("externalId", expectedExternalId)
+      .hasFieldOrPropertyWithValue("marcId", expectedMarcId);
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithoutInstanceId() throws IOException {
+  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithHoldings() {
+    var statusId = UUID.randomUUID();
+    var expectedExternalId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
+    var expectedMarcId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
+    saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
+    sendDIKafkaRecord("mockdata/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
+    await().atMost(5, SECONDS)
+      .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
+        .isEqualTo(RecordCreationStatusEnum.CREATED)
+      );
+    var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
+    assertThat(creationStatus)
+      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
+      .hasFieldOrPropertyWithValue("id", statusId)
+      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
+      .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
+      .hasFieldOrPropertyWithValue("externalId", expectedExternalId)
+      .hasFieldOrPropertyWithValue("marcId", expectedMarcId);
+  }
+
+  @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithoutExternalId() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/di-event/complete-event-without-instance.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/complete-event-without-external-record.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.ERROR)
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("instanceId", "marcBibId")
+      .hasNoNullFieldsOrPropertiesExcept("externalId", "marcId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("errorMessage", "Instance ID is missed in event payload")
@@ -62,7 +83,7 @@ class KafkaListenerApiTest extends BaseApiTest {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInvalidJson() throws IOException {
+  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInvalidJson() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
     sendDIKafkaRecord("mockdata/di-event/complete-event-with-invalid-json.json", DI_COMPLETE_TOPIC_NAME);
@@ -72,7 +93,7 @@ class KafkaListenerApiTest extends BaseApiTest {
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("instanceId", "marcBibId")
+      .hasNoNullFieldsOrPropertiesExcept("externalId", "marcId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("jobExecutionId", JOB_EXECUTION_ID)
@@ -81,7 +102,7 @@ class KafkaListenerApiTest extends BaseApiTest {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() throws IOException {
+  void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, JOB_EXECUTION_ID, metadata, jdbcTemplate);
     sendDIKafkaRecord("mockdata/di-event/error-event.json", DI_ERROR_TOPIC_NAME);
@@ -91,7 +112,7 @@ class KafkaListenerApiTest extends BaseApiTest {
       );
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("instanceId", "marcBibId")
+      .hasNoNullFieldsOrPropertiesExcept("externalId", "marcId")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("errorMessage", "Instance was not created")

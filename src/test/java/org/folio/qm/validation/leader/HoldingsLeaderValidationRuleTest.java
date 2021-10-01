@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
@@ -27,6 +28,11 @@ class HoldingsLeaderValidationRuleTest {
   @Test
   void shouldValidateHoldingsLeaderWithOutErrors() {
     assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
+  }
+
+  @Test
+  void shouldSupportHoldingsFormat(){
+    assertTrue(rule.supportFormat(MarcFormat.HOLDINGS));
   }
 
   @Test

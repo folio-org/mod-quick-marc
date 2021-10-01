@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
@@ -27,6 +28,11 @@ class AuthorityLeaderValidationRuleTest {
   @Test
   void shouldValidateAuthorityLeaderWithOutErrors() {
     assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
+  }
+
+  @Test
+  void shouldSupportAuthorityFormat(){
+    assertTrue(rule.supportFormat(MarcFormat.AUTHORITY));
   }
 
   @Test

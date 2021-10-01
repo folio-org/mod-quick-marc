@@ -1,7 +1,6 @@
 package org.folio.qm.validation.leader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -15,7 +14,8 @@ import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationR
 
 class BibliographicLeaderValidationRuleTest {
 
-  private LeaderValidationRule rule = new BibliographicLeaderValidationRule();
+  private final LeaderValidationRule rule = new BibliographicLeaderValidationRule();
+
   public static final String VALID_LEADER = "01706ccm\\a2200361\\\\\\4500";
   public static final String WRONG_BIB_RECORD_STATUS = "01706xcm\\a2200361\\\\\\4500";
   public static final String WRONG_BIB_RECORD_TYPE = "01706cxm\\a2200361\\\\\\4500";
@@ -25,11 +25,10 @@ class BibliographicLeaderValidationRuleTest {
   public static final String WRONG_CATALOGING_FORM = "01706ccm\\a2200361\\x\\4500";
   public static final String WRONG_RESOURCE_RECORD_LEVEL = "01706ccm\\a2200361\\\\x4500";
 
-
-
   @Test
-  void shouldValidateBibliographicLeaderWithOutErrors() {
-    assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
+  void shouldValidateBibliographicLeaderWithoutErrors() {
+    var validationError = rule.validate(VALID_LEADER);
+    assertTrue(validationError.isEmpty());
   }
 
   @Test
@@ -61,10 +60,9 @@ class BibliographicLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldValidateBibliographicLeaderWithErrorOnEncodingLevel() {
+  void shouldValidateBibliographicLeaderWithoutErrorOnEncodingLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_BIB_ENCODING_LEVEL);
-    assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Bib encoding level"));
+    assertTrue(validationError.isEmpty());
   }
 
   @Test

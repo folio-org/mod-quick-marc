@@ -1,7 +1,6 @@
 package org.folio.qm.validation.impl.bibliographic;
 
 import static org.folio.qm.converter.elements.LeaderItem.BIBLIOGRAPHIC_LEVEL;
-import static org.folio.qm.converter.elements.LeaderItem.BIB_ENCODING_LEVEL;
 import static org.folio.qm.converter.elements.LeaderItem.BIB_RECORD_STATUS;
 import static org.folio.qm.converter.elements.LeaderItem.BIB_RECORD_TYPE;
 import static org.folio.qm.converter.elements.LeaderItem.CATALOGING_FORM;
@@ -31,7 +30,7 @@ public class BibliographicLeaderValidationRule implements LeaderValidationRule {
       return error;
     }
     return validateLeaderFieldsRestrictions(leader, List.of(BIB_RECORD_STATUS, BIB_RECORD_TYPE, BIBLIOGRAPHIC_LEVEL,
-      CONTROL_TYPE, BIB_ENCODING_LEVEL, CATALOGING_FORM, RESOURCE_RECORD_LEVEL));
+      CONTROL_TYPE, CATALOGING_FORM, RESOURCE_RECORD_LEVEL));
   }
 }
 

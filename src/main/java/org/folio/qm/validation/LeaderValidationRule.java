@@ -1,6 +1,5 @@
 package org.folio.qm.validation;
 
-
 import static org.folio.qm.converter.elements.LeaderItem.BASE_ADDRESS;
 import static org.folio.qm.converter.elements.LeaderItem.CODING_SCHEME;
 import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_20;
@@ -37,8 +36,22 @@ public interface LeaderValidationRule {
       .findFirst();
   }
 
+  default Optional<ValidationError> validateLeaderFieldsRestrictions(String leader, List<LeaderItem> leaderItems) {
+    return leaderItems.stream()
+      .filter(item -> !isValidLeaderValue(leader, item))
+      .findFirst()
+      .map(invalidItem -> {
+        var position = invalidItem.getPosition();
+        var message = String.format("Wrong value '%s', on position %d. Allowed only: %s",
+          leader.charAt(position), position, invalidItem.getPossibleValues());
+        return createValidationError(invalidItem.getName(), message);
+      });
+  }
+
   private Optional<ValidationError> validateLeaderLength(String leader) {
-    return Constants.LEADER_LENGTH == leader.length() ? Optional.empty() : Optional.of(createValidationError(leader, "Wrong leader length"));
+    return Constants.LEADER_LENGTH == leader.length()
+      ? Optional.empty()
+      : Optional.of(createValidationError(leader, "Wrong leader length"));
   }
 
   private Optional<ValidationError> validateLeaderNumberFields(String leader, int start, int length) {
@@ -46,21 +59,13 @@ public interface LeaderValidationRule {
       Integer.parseInt(leader.substring(start, start + length));
       return Optional.empty();
     } catch (NumberFormatException ex) {
-      return Optional.of(createValidationError(leader, String.format("%d-%d positions must be a number", start, start + length)));
+      var message = String.format("%d-%d positions must be a number", start, start + length);
+      return Optional.of(createValidationError(leader, message));
     }
   }
 
-  default Optional<ValidationError> validateLeaderFieldsRestrictions(String leader, List<LeaderItem> leaderFields) {
-    Optional<LeaderItem> wrongField = leaderFields.stream()
-      .filter(f -> !f.getPossibleValues().contains(leader.charAt(f.getPosition())))
-      .findFirst();
-
-    if (wrongField.isPresent()) {
-      int position = wrongField.get().getPosition();
-      return Optional.of(createValidationError(wrongField.get().getName(),
-        String.format("Wrong value '%s', on position %d. Allowed only: %s",leader.charAt(position), position, wrongField.get().getPossibleValues())));
-    }
-    return Optional.empty();
+  private boolean isValidLeaderValue(String leader, LeaderItem item) {
+    return item.getPossibleValues().contains(leader.charAt(item.getPosition()));
   }
 
   private ValidationError createValidationError(String fieldName, String message) {

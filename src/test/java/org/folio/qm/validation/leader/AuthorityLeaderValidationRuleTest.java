@@ -17,12 +17,12 @@ import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
 class AuthorityLeaderValidationRuleTest {
 
   private LeaderValidationRule rule = new AuthorityLeaderValidationRule();
-  public static final String VALID_LEADER = "00241xz\\\\a2200109nu\\4500";
-  public static final String WRONG_RECORD_STATUS = "00241zz\\\\a2200109nu\\4500";
-  public static final String WRONG_RECORD_TYPE = "00241xx\\\\a2200109nu\\4500";
-  public static final String WRONG_UNDEFINED_CHARACTER = "00241xzz\\a2200109nu\\4500";
-  public static final String WRONG_ENCODING_LEVEL = "00241xz\\\\a2200109au\\4500";
-  public static final String WRONG_PUNCTUATION_POLICY = "00241xz\\\\a2200109nz\\4500";
+  private static final String VALID_LEADER = "00241xz\\\\a2200109nu\\4500";
+  private static final String WRONG_RECORD_STATUS = "00241zz\\\\a2200109nu\\4500";
+  private static final String WRONG_RECORD_TYPE = "00241xx\\\\a2200109nu\\4500";
+  private static final String WRONG_UNDEFINED_CHARACTER = "00241xzz\\a2200109nu\\4500";
+  private static final String WRONG_ENCODING_LEVEL = "00241xz\\\\a2200109au\\4500";
+  private static final String WRONG_PUNCTUATION_POLICY = "00241xz\\\\a2200109nz\\4500";
 
 
   @Test

@@ -17,12 +17,12 @@ import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 class HoldingsLeaderValidationRuleTest {
 
   private LeaderValidationRule rule = new HoldingsLeaderValidationRule();
-  public static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
-  public static final String WRONG_RECORD_STATUS = "00241ex\\\\a2200109zn\\4500";
-  public static final String WRONG_RECORD_TYPE = "00241ca\\\\a2200109zn\\4500";
-  public static final String WRONG_UNDEFINED_CHARACTER = "00241cx0\\a2200109zn\\4500";
-  public static final String WRONG_ENCODING_LEVEL = "00241cx\\\\a2200109an\\4500";
-  public static final String WRONG_ITEM_INFORMATION = "00241cx\\\\a2200109za\\4500";
+  private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
+  private static final String WRONG_RECORD_STATUS = "00241ex\\\\a2200109zn\\4500";
+  private static final String WRONG_RECORD_TYPE = "00241ca\\\\a2200109zn\\4500";
+  private static final String WRONG_UNDEFINED_CHARACTER = "00241cx0\\a2200109zn\\4500";
+  private static final String WRONG_ENCODING_LEVEL = "00241cx\\\\a2200109an\\4500";
+  private static final String WRONG_ITEM_INFORMATION = "00241cx\\\\a2200109za\\4500";
 
 
   @Test

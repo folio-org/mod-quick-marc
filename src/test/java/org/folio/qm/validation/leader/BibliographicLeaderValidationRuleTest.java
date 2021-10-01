@@ -17,14 +17,14 @@ import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationR
 class BibliographicLeaderValidationRuleTest {
 
   private LeaderValidationRule rule = new BibliographicLeaderValidationRule();
-  public static final String VALID_LEADER = "01706ccm\\a2200361\\\\\\4500";
-  public static final String WRONG_BIB_RECORD_STATUS = "01706xcm\\a2200361\\\\\\4500";
-  public static final String WRONG_BIB_RECORD_TYPE = "01706cxm\\a2200361\\\\\\4500";
-  public static final String WRONG_BIBLIOGRAPHIC_LEVEL = "01706ccx\\a2200361\\\\\\4500";
-  public static final String WRONG_CONTROL_TYPE = "01706ccmxa2200361\\\\\\4500";
-  public static final String WRONG_BIB_BIB_ENCODING_LEVEL = "01706ccm\\a2200361x\\\\4500";
-  public static final String WRONG_CATALOGING_FORM = "01706ccm\\a2200361\\x\\4500";
-  public static final String WRONG_RESOURCE_RECORD_LEVEL = "01706ccm\\a2200361\\\\x4500";
+  private static final String VALID_LEADER = "01706ccm\\a2200361\\\\\\4500";
+  private static final String WRONG_BIB_RECORD_STATUS = "01706xcm\\a2200361\\\\\\4500";
+  private static final String WRONG_BIB_RECORD_TYPE = "01706cxm\\a2200361\\\\\\4500";
+  private static final String WRONG_BIBLIOGRAPHIC_LEVEL = "01706ccx\\a2200361\\\\\\4500";
+  private static final String WRONG_CONTROL_TYPE = "01706ccmxa2200361\\\\\\4500";
+  private static final String WRONG_BIB_BIB_ENCODING_LEVEL = "01706ccm\\a2200361x\\\\4500";
+  private static final String WRONG_CATALOGING_FORM = "01706ccm\\a2200361\\x\\4500";
+  private static final String WRONG_RESOURCE_RECORD_LEVEL = "01706ccm\\a2200361\\\\x4500";
 
 
   @Test

@@ -65,7 +65,8 @@ public interface LeaderValidationRule {
   }
 
   private boolean isValidLeaderValue(String leader, LeaderItem item) {
-    return item.getPossibleValues().contains(leader.charAt(item.getPosition()));
+    return item.getPossibleValues().contains(leader.charAt(item.getPosition()))
+      || item.getPossibleValues().contains(Character.toLowerCase(leader.charAt(item.getPosition())));
   }
 
   private ValidationError createValidationError(String fieldName, String message) {

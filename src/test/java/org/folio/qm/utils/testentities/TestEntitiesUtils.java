@@ -76,6 +76,7 @@ public class TestEntitiesUtils {
       .withParsedRecord(parsedRecord)
       .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false))
       .withRecordType(recordType)
+      .withQmRecordVersion("1")
       .withRecordState(ParsedRecordDto.RecordState.ACTUAL)
       .withMetadata(new Metadata()
         .withUpdatedDate(new Date(1594901616879L))

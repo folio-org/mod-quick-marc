@@ -1,3 +1,8 @@
+## 2.3.0 2021-11-xx
+
+### Changes
+* [MODQM-167](https://issues.folio.org/browse/MODQM-167) - Optimistic locking: mod-quick-marc modifications
+
 ## 2.2.0 - Released 
 
 ### Changes

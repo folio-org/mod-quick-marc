@@ -69,6 +69,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
         .externalHrid(getExternalHrId(source))
         .marcFormat(supportedType())
         .suppressDiscovery(source.getAdditionalInfo().getSuppressDiscovery())
+        .qmRecordVersion(source.getQmRecordVersion())
         .updateInfo(new UpdateInfo()
           .recordState(UpdateInfo.RecordStateEnum.fromValue(source.getRecordState().value()))
           .updateDate(convertDate(source)));

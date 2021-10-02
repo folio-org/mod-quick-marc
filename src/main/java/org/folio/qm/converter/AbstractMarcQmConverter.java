@@ -67,6 +67,7 @@ import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
 import org.folio.rest.jaxrs.model.AdditionalInfo;
@@ -91,6 +92,7 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
         .withParsedRecord(new ParsedRecord().withId(source.getParsedRecordId()).withContent(contentMap))
         .withRecordType(supportedType())
         .withId(source.getParsedRecordDtoId())
+        .withQmRecordVersion(source.getQmRecordVersion())
         .withExternalIdsHolder(constructExternalIdsHolder(source))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(source.getSuppressDiscovery()));
     } catch (Exception e) {

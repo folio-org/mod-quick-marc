@@ -101,13 +101,13 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>mod-source-record-manager-server</artifactId>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/mod-source-record-manager-server-fat.jar</systemPath>
-      <version>${mod-srm-client.version}</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.folio</groupId>-->
+<!--      <artifactId>mod-source-record-manager-server</artifactId>-->
+<!--      <scope>system</scope>-->
+<!--      <systemPath>${basedir}/lib/mod-source-record-manager-server-fat.jar</systemPath>-->
+<!--      <version>${mod-srm-client.version}</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.marc4j</groupId>
       <artifactId>marc4j</artifactId>
@@ -245,7 +245,7 @@
                   <manifestEntries>
                     <Main-Class>${start-class}</Main-Class>
                     <Multi-Release>true</Multi-Release>
-                    <Class-Path>lib/mod-source-record-manager-client-3.2.0-SNAPSHOT.jar lib/mod-source-record-manager-server-fat.jar</Class-Path>
+                    <Class-Path>lib/mod-source-record-manager-client-3.2.0-SNAPSHOT.jar</Class-Path>
                   </manifestEntries>
                 </transformer>
               </transformers>

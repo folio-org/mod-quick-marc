@@ -2,6 +2,8 @@ FROM folioci/alpine-jre-openjdk11:latest
 
 # Copy your fat jar to the container
 ENV APP_FILE mod-quick-marc-fat.jar
+# Set the location of the verticles
+ENV VERTICLE_HOME /usr/verticles
 # - should be a single jar file
 ARG JAR_FILE=./target/mod-quick-marc.jar
 # - copy

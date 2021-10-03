@@ -1,7 +1,6 @@
 package org.folio.qm.validation.leader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -16,7 +15,8 @@ import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
 
 class AuthorityLeaderValidationRuleTest {
 
-  private LeaderValidationRule rule = new AuthorityLeaderValidationRule();
+  private final LeaderValidationRule rule = new AuthorityLeaderValidationRule();
+
   private static final String VALID_LEADER = "00241xz\\\\a2200109nu\\4500";
   private static final String WRONG_RECORD_STATUS = "00241zz\\\\a2200109nu\\4500";
   private static final String WRONG_RECORD_TYPE = "00241xx\\\\a2200109nu\\4500";
@@ -27,7 +27,8 @@ class AuthorityLeaderValidationRuleTest {
 
   @Test
   void shouldValidateAuthorityLeaderWithOutErrors() {
-    assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
+    var validationError = rule.validate(VALID_LEADER);
+    assertTrue(validationError.isEmpty());
   }
 
   @Test

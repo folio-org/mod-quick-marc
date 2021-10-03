@@ -13,7 +13,9 @@ import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 
 class CommonLeaderValidationRuleTest {
-  private LeaderValidationRule rule = new HoldingsLeaderValidationRule();
+
+  private final LeaderValidationRule rule = new HoldingsLeaderValidationRule();
+
   private static final String WRONG_RECORD_LENGTH = "00241cx\\\\a2200109zn\\45000";
   private static final String LEADER_RECORD_LENGTH_WITH_CHARS = "0a241cx\\\\a2200109zn\\4500";
   private static final String WRONG_CODING_SCHEME = "00241cx\\\\b2200109zn\\4500";

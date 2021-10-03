@@ -1,7 +1,6 @@
 package org.folio.qm.validation.leader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -16,7 +15,8 @@ import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 
 class HoldingsLeaderValidationRuleTest {
 
-  private LeaderValidationRule rule = new HoldingsLeaderValidationRule();
+  private final LeaderValidationRule rule = new HoldingsLeaderValidationRule();
+
   private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
   private static final String WRONG_RECORD_STATUS = "00241ex\\\\a2200109zn\\4500";
   private static final String WRONG_RECORD_TYPE = "00241ca\\\\a2200109zn\\4500";
@@ -27,7 +27,8 @@ class HoldingsLeaderValidationRuleTest {
 
   @Test
   void shouldValidateHoldingsLeaderWithOutErrors() {
-    assertDoesNotThrow(() -> rule.validate(VALID_LEADER));
+    var validationError = rule.validate(VALID_LEADER);
+    assertTrue(validationError.isEmpty());
   }
 
   @Test

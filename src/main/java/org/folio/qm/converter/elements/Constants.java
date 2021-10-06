@@ -9,6 +9,7 @@ public class Constants {
   public static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
   public static final int BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
   public static final int HOLDINGS_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 32;
+  public static final int AUTHORITY_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
   public static final int TAG_LENGTH = 4;
   public static final int TERMINATOR_LENGTH = 1;
   public static final int TOKEN_MIN_LENGTH = 3;

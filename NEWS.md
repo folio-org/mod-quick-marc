@@ -10,6 +10,7 @@
 * [MODQM-150](https://issues.folio.org/browse/MODQM-150) - MARC holdings - 008 rules
 * [MODQM-151](https://issues.folio.org/browse/MODQM-151) - MARC holdings - Leader rules
 * [MODQM-154](https://issues.folio.org/browse/MODQM-154) - MARC authority - Leader rules
+* [MODQM-155](https://issues.folio.org/browse/MODQM-155) - MARC authority - 008 rules
 
 ## 2.1.0 - Released
 

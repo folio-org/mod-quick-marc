@@ -124,7 +124,32 @@ public enum ControlFieldItem {
   REPRO("Repro", 21, 1, false),
   REPT_DATE("Rept date", 26, 6, false),
   SEP_COMP("Sep/comp", 25, 1, false),
-  SPEC_RET("Spec ret", 13, 3, true);
+  SPEC_RET("Spec ret", 13, 3, true),
+
+//  MARC AUTHORITY
+//  008 field
+  GEO_SUBD("Geo Subd", 6, 1, false),
+  ROMAN("Roman", 7, 1, false),
+  LANG_AUTHORITY("Lang", 8, 1, false),
+  KIND_REC("Kind rec", 9, 1, false),
+  CAT_RULES("Cat Rules", 10, 1, false),
+  SH_SYS("SH Sys", 11, 1, false),
+  SERIES("Series", 12, 1, false),
+  NUMB_SERIES("Numb Series", 13, 1, false),
+  MAIN_USE("Main use", 14, 1, false),
+  SUBJ_USE("Subj use", 15, 1, false),
+  SERIES_USE("Series use", 16, 1, false),
+  TYPE_SUBD("Type Subd", 17, 1, false),
+  UNDEF_18("Undef_18", 18, 10, false),
+  GOVT_AG("Govt Ag", 28, 1, false),
+  REF_EVAL("RefEval", 29, 1, false),
+  UNDEF_30("Undef_30", 30, 1, false),
+  REC_UPD("RecUpd", 31, 1, false),
+  PERS_NAME("Pers Name", 32, 1, false),
+  LEVEL_EST("Level Est", 33, 1, false),
+  UNDEF_34("Undef_34", 34, 4, false),
+  MOD_REC_EST("Mod Rec Est", 38, 1, false),
+  SOURCE("Source", 39, 1, false);
 
   private final String name;
   private final int position;

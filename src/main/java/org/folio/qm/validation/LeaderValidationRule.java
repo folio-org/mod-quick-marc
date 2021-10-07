@@ -10,6 +10,7 @@ import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
 import static org.folio.qm.converter.elements.LeaderItem.RECORD_LENGTH;
 import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -20,17 +21,21 @@ import org.folio.qm.domain.dto.MarcFormat;
 
 public interface LeaderValidationRule {
 
+  List<LeaderItem> COMMON_LEADER_ITEMS = List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
+    ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
+
   boolean supportFormat(MarcFormat marcFormat);
 
   Optional<ValidationError> validate(String leader);
 
-  default Optional<ValidationError> commonLeaderValidation(String leader) {
+  default Optional<ValidationError> commonLeaderValidation(String leader, List<LeaderItem> leaderItems) {
+    List<LeaderItem> summaryLeaderItems = new ArrayList<>(COMMON_LEADER_ITEMS);
+    summaryLeaderItems.addAll(leaderItems);
     return Stream.of(
         validateLeaderLength(leader),
         validateLeaderNumberFields(leader, RECORD_LENGTH.getPosition(), RECORD_LENGTH.getLength()),
         validateLeaderNumberFields(leader, BASE_ADDRESS.getPosition(), BASE_ADDRESS.getLength()),
-        validateLeaderFieldsRestrictions(leader, List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
-          ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23)))
+        validateLeaderFieldsRestrictions(leader, summaryLeaderItems))
       .filter(Optional::isPresent)
       .map(Optional::get)
       .findFirst();

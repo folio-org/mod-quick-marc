@@ -84,6 +84,7 @@ class MarcAuthorityQmConverterTest {
   void testAuthorityGeneralCharacteristicsControlFieldUnknownFieldAdded() {
     logger.info("Testing Authority General Information wrong element added - unknown property should be ignored");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_AUTHORITY_PATH, QuickMarc.class);
+    @SuppressWarnings("unchecked")
     var content = (LinkedHashMap<String, String>)quickMarc.getFields()
         .stream()
         .filter(fieldItem -> fieldItem.getTag().equals("008"))
@@ -101,6 +102,7 @@ class MarcAuthorityQmConverterTest {
   void testAuthorityGeneralCharacteristicsControlFieldWrongLength() {
     logger.info("Testing Authority General Information wrong field length after editing - ConverterException expected");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_AUTHORITY_PATH, QuickMarc.class);
+    @SuppressWarnings("unchecked")
     LinkedHashMap<String, String> content = (LinkedHashMap<String, String>)quickMarc.getFields()
         .stream()
         .filter(fieldItem -> fieldItem.getTag().equals("008"))

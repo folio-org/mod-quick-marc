@@ -17,14 +17,19 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto.RecordType;
 public class TestEntitiesUtils {
 
   public static final String QM_JSON_DIR = "mockdata/change-manager";
+  public static final String RESTORED_PARSED_RECORD_AUTHORITY_DTO_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDtoRestored.json";
   public static final String RESTORED_PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDtoRestored.json";
   public static final String RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDtoRestored.json";
+  public static final String PARSED_RECORD_AUTHORITY_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDtoMissingWhitespaces.json";
   public static final String PARSED_RECORD_BIB_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordBibDtoMissingWhitespaces.json";
   public static final String PARSED_RECORD_HOLDINGS_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDtoMissingWhitespaces.json";
   public static final String USER_JOHN_PATH = "mockdata/users/userJohn.json";
   public static final String PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO2_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto2.json";
+  public static final String PARSED_RECORD_AUTHORITY_DTO_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDto.json";
+  public static final String PARSED_RECORD_AUTHORITY_DTO2_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDto2.json";
+  public static final String PARSED_RECORD_AUTHORITY_DTO_INVALID_008_LENGTH = QM_JSON_DIR + "/parsedRecordAuthorityDto_invalid_008_field_length.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH = QM_JSON_DIR + "/parsedRecordHoldingsDto_invalid_008_field_length.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
   public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
@@ -33,12 +38,15 @@ public class TestEntitiesUtils {
   public static final String QM_LEADER_MISMATCH1 = PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchValueMismatch.json";
   public static final String QM_RECORD_BIB_EDGE_CASES_PATH = PARSED_RECORDS_DIR + "/quickMarcBibMissingWhitespaces.json";
   public static final String QM_RECORD_HOLDINGS_EDGE_CASES_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsMissingWhitespaces.json";
+  public static final String QM_RECORD_AUTHORITY_EDGE_CASES_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthorityMissingWhitespaces.json";
   public static final String QM_EDITED_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib_edited.json";
   public static final String QM_EDITED_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings_edited.json";
   public static final String QM_RECORD_HOLDINGS = PARSED_RECORDS_DIR + "/qiuckMarcHoldings.json";
   public static final String QM_RECORD_WITH_INCORRECT_TAG_PATH = PARSED_RECORDS_DIR + "/quickMarcJson_withIncorrectTag.json";
   public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
+  public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";
+  public static final String QM_EDITED_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority_edited.json";
 
   public static final String TESTED_TAG_NAME = "333";
   public static final String VALID_PARSED_RECORD_DTO_ID = "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c";
@@ -80,6 +88,9 @@ public class TestEntitiesUtils {
     } else if (RecordType.MARC_HOLDING == recordType) {
       return parsedRecordDto
         .withExternalIdsHolder(new ExternalIdsHolder().withHoldingsId(EXISTED_EXTERNAL_ID).withHoldingsHrid("393893"));
+    } else if (RecordType.MARC_AUTHORITY == recordType)
+    {
+      return parsedRecordDto.withExternalIdsHolder(null);
     }
     return parsedRecordDto;
   }

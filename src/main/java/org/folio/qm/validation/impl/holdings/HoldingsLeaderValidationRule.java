@@ -13,12 +13,17 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.converter.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 
 @Component
 public class HoldingsLeaderValidationRule implements LeaderValidationRule {
+
+  private static final List<LeaderItem> HOLDINGS_LEADER_ITEMS = List.of(HOLDINGS_RECORD_STATUS, HOLDINGS_RECORD_TYPE,
+    HOLDINGS_ENCODING_LEVEL, ITEM_INFORMATION, UNDEFINED_CHARACTER_POSITION_7, UNDEFINED_CHARACTER_POSITION_8,
+    UNDEFINED_CHARACTER_POSITION_19);
 
   @Override
   public boolean supportFormat(MarcFormat marcFormat) {
@@ -27,12 +32,6 @@ public class HoldingsLeaderValidationRule implements LeaderValidationRule {
 
   @Override
   public Optional<ValidationError> validate(String leader) {
-    Optional<ValidationError> error = commonLeaderValidation(leader);
-    if (error.isPresent()) {
-      return error;
-    }
-    return validateLeaderFieldsRestrictions(leader, List.of(HOLDINGS_RECORD_STATUS, HOLDINGS_RECORD_TYPE,
-      HOLDINGS_ENCODING_LEVEL, ITEM_INFORMATION, UNDEFINED_CHARACTER_POSITION_7, UNDEFINED_CHARACTER_POSITION_8,
-      UNDEFINED_CHARACTER_POSITION_19));
+    return commonLeaderValidation(leader, HOLDINGS_LEADER_ITEMS);
   }
 }

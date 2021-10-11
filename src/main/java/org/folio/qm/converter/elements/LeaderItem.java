@@ -26,9 +26,11 @@ public enum LeaderItem {
   BIB_RECORD_TYPE("Bib type of record", 6, 1, 'a', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'm', 'o', 'p', 'r', 't'),
   BIBLIOGRAPHIC_LEVEL("Bibliographic level", 7, 1, 'a', 'b', 'c', 'd', 'i', 'm', 's'),
   CONTROL_TYPE("Type of control", 8, 1, '\\', ' ', '\u00A0', 'a'),
-  BIB_ENCODING_LEVEL("Bib encoding level", 17, 1, '\\', ' ', '\u00A0', '1', '2', '3', '4', '5', '7', '8', 'u', 'z'),
   CATALOGING_FORM("Descriptive cataloging form", 18, 1, '\\', ' ', '\u00A0', 'a', 'c', 'i', 'n', 'u'),
   RESOURCE_RECORD_LEVEL("Multipart resource record level", 19, 1, '\\', ' ', '\u00A0', 'a'),
+
+  // Deprecated in MODQM-164
+  BIB_ENCODING_LEVEL("Bib encoding level", 17, 1, '\\', ' ', '\u00A0', '1', '2', '3', '4', '5', '7', '8', 'i', 'j', 'k', 'm','u', 'z'),
 
   //HOLDINGS FIELDS
   HOLDINGS_RECORD_STATUS("Holdings record status", 5, 1, 'c', 'd', 'n'),

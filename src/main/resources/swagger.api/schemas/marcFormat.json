@@ -6,6 +6,7 @@
   "additionalProperties": false,
   "enum": [
     "BIBLIOGRAPHIC",
-    "HOLDINGS"
+    "HOLDINGS",
+    "AUTHORITY"
   ]
 }

@@ -5,11 +5,13 @@ import static java.util.Objects.requireNonNull;
 import static org.folio.qm.util.ChangeManagerPayloadUtils.getDefaultJobProfile;
 import static org.folio.qm.util.ChangeManagerPayloadUtils.getDefaultJodExecutionDto;
 import static org.folio.qm.util.ChangeManagerPayloadUtils.getRawRecordsBody;
+import static org.folio.qm.util.ErrorUtils.buildError;
 import static org.folio.qm.util.JsonUtils.objectToJsonString;
 import static org.folio.qm.util.MarcUtils.updateRecordTimestamp;
 import static org.folio.qm.util.StatusUtils.getStatusInProgress;
 import static org.folio.qm.util.StatusUtils.getStatusNew;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -24,15 +26,19 @@ import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.exception.ValidationException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.RecordCreationService;
+import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.InitialRecord;
 import org.folio.spring.FolioExecutionContext;
 
 @Component
 @RequiredArgsConstructor
 public class RecordCreationServiceImpl implements RecordCreationService {
+
+  private static final String FORMAT_NOT_SUPPORTED_MSG = "Creating record with this format is not supported";
 
   private final SRMChangeManagerClient srmClient;
   private final CreationStatusService statusService;
@@ -45,12 +51,8 @@ public class RecordCreationServiceImpl implements RecordCreationService {
   public CreationStatus createRecord(QuickMarc quickMarc) {
     final var userId = folioExecutionContext.getUserId().toString();
 
-    JobExecutionProfileProperties.ProfileOptions options = null;
-    if (MarcFormat.BIBLIOGRAPHIC == quickMarc.getMarcFormat()) {
-      options = jobExecutionProfileProperties.getMarcBib();
-    } else if (MarcFormat.HOLDINGS == quickMarc.getMarcFormat()) {
-      options = jobExecutionProfileProperties.getMarcHoldings();
-    }
+    var options = getProfileOptions(quickMarc)
+      .orElseThrow(() -> new ValidationException(buildError(ErrorUtils.ErrorType.INTERNAL, FORMAT_NOT_SUPPORTED_MSG)));
 
     var jobExecutionId = createJobExecution(userId, options);
     var creationStatus = saveStatus(jobExecutionId);
@@ -60,6 +62,16 @@ public class RecordCreationServiceImpl implements RecordCreationService {
     completeImport(jobExecutionId, null, true);
 
     return creationStatus;
+  }
+
+  private Optional<JobExecutionProfileProperties.ProfileOptions> getProfileOptions(QuickMarc quickMarc) {
+    JobExecutionProfileProperties.ProfileOptions options = null;
+    if (MarcFormat.BIBLIOGRAPHIC == quickMarc.getMarcFormat()) {
+      options = jobExecutionProfileProperties.getMarcBib();
+    } else if (MarcFormat.HOLDINGS == quickMarc.getMarcFormat()) {
+      options = jobExecutionProfileProperties.getMarcHoldings();
+    }
+    return Optional.ofNullable(options);
   }
 
   private String createJobExecution(String userId, JobExecutionProfileProperties.ProfileOptions options) {

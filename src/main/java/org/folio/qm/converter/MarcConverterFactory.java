@@ -3,6 +3,8 @@ package org.folio.qm.converter;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.converter.impl.MarcAuthorityDtoConverter;
+import org.folio.qm.converter.impl.MarcAuthorityQmConverter;
 import org.folio.qm.converter.impl.MarcBibliographicDtoConverter;
 import org.folio.qm.converter.impl.MarcBibliographicQmConverter;
 import org.folio.qm.converter.impl.MarcHoldingsDtoConverter;
@@ -19,6 +21,8 @@ public class MarcConverterFactory {
         return new MarcBibliographicQmConverter();
       case HOLDINGS:
         return new MarcHoldingsQmConverter();
+      case AUTHORITY:
+        return new MarcAuthorityQmConverter();
       default:
         throw new IllegalStateException("Unexpected value: " + marcFormat);
     }
@@ -30,6 +34,8 @@ public class MarcConverterFactory {
         return new MarcBibliographicDtoConverter();
       case MARC_HOLDING:
         return new MarcHoldingsDtoConverter();
+      case MARC_AUTHORITY:
+        return new MarcAuthorityDtoConverter();
       default:
         throw new IllegalStateException("Unexpected value: " + recordType);
     }

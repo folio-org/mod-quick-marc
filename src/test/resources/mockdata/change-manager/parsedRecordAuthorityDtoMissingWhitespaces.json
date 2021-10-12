@@ -1,0 +1,54 @@
+{
+  "id": "a5f283d6-665b-4482-8b29-07140495a7f0",
+  "recordType": "MARC_AUTHORITY",
+  "parsedRecord": {
+    "id": "a5f283d6-665b-4482-8b29-07140495a7f0",
+    "content": {
+      "leader": "06059cz  a2201201n  45 0",
+      "fields": [
+        {
+          "001": "ak00005012492"
+        },
+        {
+          "003": "NhCcYBP"
+        },
+        {
+          "005": "20130220102526.4"
+        },
+        {
+          "006": "m||||||||d|||||||"
+        },
+        {
+          "007": "cr |n|"
+        },
+        {
+          "008": "810824n| azannaabn          |b aaa      "
+        },
+        {
+          "999": {
+            "subfields": [
+              {
+                "s": "a5f283d6-665b-4482-8b29-07140495a7f0"
+              },
+              {
+                "i": "02df6658-c639-41f2-8587-1ec44dd43d8e"
+              }
+            ],
+            "ind1": "f",
+            "ind2": "f"
+          }
+        }
+      ]
+    }
+  },
+  "recordState": "ACTUAL",
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "metadata": {
+    "createdDate": "2020-07-02T08:39:14.795+0000",
+    "createdByUserId": "3ac1c635-1558-4d57-b188-bd0d1c630d3d",
+    "updatedDate": "2020-07-16T15:13:36.879+03:00",
+    "updatedByUserId": "3ac1c635-1558-4d57-b188-bd0d1c630d3d"
+  }
+}

@@ -37,6 +37,6 @@ public interface MarcRecordsService {
    * @param quickMarc  QuickMarc object
    * @return {@link UUID} qmParsedRecordId of record
    */
-  CreationStatus createNewInstance(QuickMarc quickMarc);
+  CreationStatus createNewRecord(QuickMarc quickMarc);
 }
 

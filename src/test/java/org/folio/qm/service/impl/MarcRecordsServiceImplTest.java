@@ -32,6 +32,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.client.SRMChangeManagerClient;
+import org.folio.qm.config.properties.JobExecutionProfileProperties;
 import org.folio.qm.converter.MarcConverterFactory;
 import org.folio.qm.converter.impl.MarcBibliographicQmConverter;
 import org.folio.qm.domain.dto.CreationStatus;
@@ -41,9 +42,7 @@ import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.service.CreationStatusService;
-import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ChangeManagerPayloadUtils;
-import org.folio.qm.util.JobExecutionProfileProperties;
 import org.folio.rest.jaxrs.model.InitJobExecutionsRqDto;
 import org.folio.rest.jaxrs.model.InitJobExecutionsRsDto;
 import org.folio.rest.jaxrs.model.JobExecution;
@@ -56,10 +55,6 @@ import org.folio.spring.FolioExecutionContext;
 })
 class MarcRecordsServiceImplTest {
 
-  @InjectMocks
-  private MarcRecordsServiceImpl service;
-  @Mock
-  private ValidationService validationService;
   @Mock
   private FolioExecutionContext context;
   @Mock
@@ -76,17 +71,23 @@ class MarcRecordsServiceImplTest {
   @Spy
   private MarcBibliographicQmConverter converter;
 
+  @InjectMocks
+  private RecordCreationServiceImpl recordCreationService;
+
   @Test
   void shouldRemoveFieldsWhenEmptyContent(@Random JobProfileInfo profile) {
-    doNothing().when(validationService).validateUserId(any(FolioExecutionContext.class));
     when(context.getUserId()).thenReturn(UUID.randomUUID());
-    when(props.getId()).thenReturn(VALID_JOB_EXECUTION_ID);
-    when(props.getName()).thenReturn("test");
+    var profileOptions = new JobExecutionProfileProperties.ProfileOptions();
+    profileOptions.setId(VALID_JOB_EXECUTION_ID);
+    profileOptions.setName("test");
+    when(props.getMarcBib()).thenReturn(profileOptions);
 
     try (MockedStatic<ChangeManagerPayloadUtils> utils = Mockito.mockStatic(ChangeManagerPayloadUtils.class)) {
-      utils.when(() -> ChangeManagerPayloadUtils.getDefaultJodExecutionDto(any(), any(JobExecutionProfileProperties.class)))
+      utils.when(() -> ChangeManagerPayloadUtils.getDefaultJodExecutionDto(any(),
+          any(JobExecutionProfileProperties.ProfileOptions.class)))
         .thenReturn(new InitJobExecutionsRqDto());
-      utils.when(() -> ChangeManagerPayloadUtils.getDefaultJobProfile(any(JobExecutionProfileProperties.class)))
+      utils.when(
+          () -> ChangeManagerPayloadUtils.getDefaultJobProfile(any(JobExecutionProfileProperties.ProfileOptions.class)))
         .thenReturn(profile);
     }
 
@@ -120,7 +121,7 @@ class MarcRecordsServiceImplTest {
     doNothing().when(srmClient).postRawRecordsByJobExecutionId(any(),
       argThat(rawRecordsDto -> Objects.nonNull(rawRecordsDto.getId())));
 
-    var actual = service.createNewInstance(quickMarcJson);
+    var actual = recordCreationService.createRecord(quickMarcJson);
     assertThat(actual).isNotNull();
   }
 }

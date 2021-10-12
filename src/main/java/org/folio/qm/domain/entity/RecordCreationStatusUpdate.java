@@ -13,7 +13,7 @@ public class RecordCreationStatusUpdate {
 
   String errorMessage;
 
-  UUID instanceId;
+  UUID externalId;
 
-  UUID marcBibId;
+  UUID marcId;
 }

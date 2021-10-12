@@ -32,8 +32,8 @@ public class DBTestUtils {
       var recordCreationStatus = new RecordCreationStatus();
       recordCreationStatus.setId(getUuid("id", rs));
       recordCreationStatus.setJobExecutionId(UUID.fromString(rs.getString("job_execution_id")));
-      recordCreationStatus.setInstanceId(getUuid("instance_id", rs));
-      recordCreationStatus.setMarcBibId(getUuid("marc_bib_id", rs));
+      recordCreationStatus.setExternalId(getUuid("external_id", rs));
+      recordCreationStatus.setMarcId(getUuid("marc_id", rs));
       recordCreationStatus.setStatus(RecordCreationStatusEnum.valueOf(rs.getString("status")));
       recordCreationStatus.setErrorMessage(rs.getString("error_message"));
       recordCreationStatus.setCreatedAt(rs.getTimestamp("created_at"));

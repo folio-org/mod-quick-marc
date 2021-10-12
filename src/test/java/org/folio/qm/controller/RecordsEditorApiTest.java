@@ -45,12 +45,12 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_HOLDINGS_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
 
-import java.io.IOException;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -228,8 +228,8 @@ class RecordsEditorApiTest extends BaseApiTest {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testPostQuickMarcValidRecordCreated() throws IOException {
-    log.info("===== Verify POST record: Successful =====");
+  void testPostQuickMarcValidBibRecordCreated() {
+    log.info("===== Verify POST bib record: Successful =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
@@ -252,7 +252,46 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     final var qmRecordId = UUID.fromString(response.getQmRecordId());
 
-    sendDIKafkaRecord("mockdata/di-event/complete-event.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
+    await().atMost(5, SECONDS)
+      .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
+        .isEqualTo(RecordCreationStatusEnum.CREATED)
+      );
+    var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
+    Assertions.assertThat(creationStatus)
+      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
+      .hasFieldOrPropertyWithValue("id", qmRecordId)
+      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
+      .hasFieldOrPropertyWithValue("jobExecutionId", UUID.fromString(VALID_JOB_EXECUTION_ID));
+  }
+
+  @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  void testPostQuickMarcValidHoldingsRecordCreated() {
+    log.info("===== Verify POST holdings record: Successful =====");
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_HOLDINGS_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    String jobExecution = "mockdata/change-manager/job-execution/jobExecutionCreated.json";
+    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, wireMockServer);
+
+    final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
+    mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
+
+    final var postRecordsPath = String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, VALID_JOB_EXECUTION_ID);
+    mockPost(postRecordsPath, "", wireMockServer);
+    mockPost(postRecordsPath, "", wireMockServer);
+
+    CreationStatus response =
+      verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_USER_ID_HEADER).as(CreationStatus.class);
+    assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
+    assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
+
+    final var qmRecordId = UUID.fromString(response.getQmRecordId());
+
+    sendDIKafkaRecord("mockdata/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.CREATED)

@@ -5,15 +5,13 @@ import org.springframework.stereotype.Component;
 
 import org.folio.qm.messaging.domain.QmEventTypes;
 import org.folio.rest.jaxrs.model.DataImportEventTypes;
-import org.folio.spring.FolioModuleMetadata;
 
 @Component("groupIdProvider")
 @RequiredArgsConstructor
 public class GroupIdProviderImpl implements GroupIdProvider {
 
   private static final String GROUP_ID_TEMPLATE = "%s.%s";
-
-  private final FolioModuleMetadata metadata;
+  private static final String GROUP_PREFIX = "QUICK_MARC";
 
   @Override
   public String diCompletedGroupId() {
@@ -31,6 +29,6 @@ public class GroupIdProviderImpl implements GroupIdProvider {
   }
 
   private String getGroupId(String eventName) {
-    return String.format(GROUP_ID_TEMPLATE, eventName, metadata.getModuleName());
+    return String.format(GROUP_ID_TEMPLATE, eventName, GROUP_PREFIX);
   }
 }

@@ -1,3 +1,8 @@
+## 2.2.1 - xxxx-xx-xx
+
+### Changes
+* [MODQM-170](https://issues.folio.org/browse/MODQM-170) - Fix unexpected assignment strategy for kafka groups
+
 ## 2.2.0 - Released 
 
 ### Changes

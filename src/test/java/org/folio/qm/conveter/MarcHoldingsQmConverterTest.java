@@ -238,7 +238,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
-    assertEquals(parsedRecordDto.getRelatedRecordVersion(), "1");
+    assertEquals("1", parsedRecordDto.getRelatedRecordVersion());
   }
 
 }

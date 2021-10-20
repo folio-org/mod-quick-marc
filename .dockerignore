@@ -1,4 +1,0 @@
-#*
-!Dockerfile
-!docker*
-!mod-quick-marc/target/*.jar

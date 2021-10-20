@@ -21,7 +21,6 @@
   </licenses>
 
   <properties>
-    <start-class>org.folio.qm.ModQuickMarcApplication</start-class>
     <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -29,7 +28,7 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
     <folio-spring-base.version>1.0.5</folio-spring-base.version>
-    <mod-srm-client.version>3.2.0</mod-srm-client.version>
+    <mod-srm-client.version>3.3.0-SNAPSHOT</mod-srm-client.version>
     <openapi-generator.version>4.3.1</openapi-generator.version>
     <mockito.version>3.7.7</mockito.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
@@ -87,8 +86,6 @@
     <dependency>
       <groupId>org.folio</groupId>
       <artifactId>mod-source-record-manager-client</artifactId>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/mod-source-record-manager-client-3.2.0-SNAPSHOT.jar</systemPath>
       <version>${mod-srm-client.version}</version>
       <exclusions>
         <exclusion>
@@ -101,13 +98,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.folio</groupId>-->
-<!--      <artifactId>mod-source-record-manager-server</artifactId>-->
-<!--      <scope>system</scope>-->
-<!--      <systemPath>${basedir}/lib/mod-source-record-manager-server-fat.jar</systemPath>-->
-<!--      <version>${mod-srm-client.version}</version>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>org.marc4j</groupId>
       <artifactId>marc4j</artifactId>
@@ -215,46 +205,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/spring.handlers</resource>
-                </transformer>
-                <transformer
-                  implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
-                  <resource>META-INF/spring.factories</resource>
-                </transformer>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/spring.schemas</resource>
-                </transformer>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <manifestEntries>
-                    <Main-Class>${start-class}</Main-Class>
-                    <Multi-Release>true</Multi-Release>
-                    <Class-Path>lib/mod-source-record-manager-client-3.2.0-SNAPSHOT.jar</Class-Path>
-                  </manifestEntries>
-                </transformer>
-              </transformers>
-              <artifactSet />
-              <outputFile>${project.build.directory}/${project.artifactId}.jar</outputFile>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

@@ -67,7 +67,7 @@
       },
       "minItems" : 3
     },
-    "qmRecordVersion": {
+    "relatedRecordVersion": {
       "type": "string",
       "description": "Information related to version of the record"
     },
@@ -99,6 +99,6 @@
     "instanceId",
     "leader",
     "fields",
-    "qmRecordVersion"
+    "relatedRecordVersion"
   ]
 }

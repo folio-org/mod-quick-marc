@@ -62,7 +62,7 @@
       "$ref": "updateInfo.json",
       "readOnly": true
     },
-    "qmRecordVersion": {
+    "relatedRecordVersion": {
       "type": "string",
       "description": "Information related to version of the record"
     }
@@ -71,7 +71,7 @@
     "parsedRecordDtoId",
     "suppressDiscovery",
     "externalId",
-    "qmRecordVersion",
+    "relatedRecordVersion",
     "leader",
     "fields",
     "recordType"

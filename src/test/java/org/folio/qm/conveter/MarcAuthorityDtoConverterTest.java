@@ -15,6 +15,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHOR
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
@@ -57,6 +58,7 @@ class MarcAuthorityDtoConverterTest {
     expected.setMarcFormat(MarcFormat.AUTHORITY);
     expected.setExternalHrid(null);
     expected.setExternalId(null);
+    Objects.requireNonNull(expected).setRelatedRecordVersion(null);
     JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(actual), true);
   }
 

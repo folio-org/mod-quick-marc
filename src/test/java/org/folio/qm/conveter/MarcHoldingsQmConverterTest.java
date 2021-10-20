@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -77,6 +78,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
+    parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
   }
 
@@ -95,6 +97,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
     assertThat(parsedRecordDto, notNullValue());
+    parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
   }
 
@@ -120,6 +123,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     QuickMarc quickMarcJson = getMockAsObject(QM_EDITED_RECORD_HOLDINGS_PATH, QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    Objects.requireNonNull(parsedRecordDto).withRelatedRecordVersion(null);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, parsedRecordDto);
   }
 

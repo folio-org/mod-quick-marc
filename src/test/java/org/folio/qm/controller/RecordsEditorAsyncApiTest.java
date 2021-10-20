@@ -219,7 +219,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
     QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID()
         .toString())
       .marcFormat(MarcFormat.BIBLIOGRAPHIC)
-      .qmRecordVersion("1")
+      .relatedRecordVersion("1")
       .parsedRecordId(VALID_PARSED_RECORD_ID)
       .externalId(UUID.randomUUID().toString());
 

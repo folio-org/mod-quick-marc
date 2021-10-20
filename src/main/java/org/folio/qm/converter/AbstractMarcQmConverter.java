@@ -91,7 +91,7 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
         .withParsedRecord(new ParsedRecord().withId(source.getParsedRecordId()).withContent(contentMap))
         .withRecordType(supportedType())
         .withId(source.getParsedRecordDtoId())
-        .withQmRecordVersion(source.getQmRecordVersion())
+        .withRelatedRecordVersion(source.getRelatedRecordVersion())
         .withExternalIdsHolder(constructExternalIdsHolder(source))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(source.getSuppressDiscovery()));
     } catch (Exception e) {

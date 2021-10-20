@@ -29,6 +29,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJson
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -87,6 +88,7 @@ class MarcBibliographicQmConverterTest {
     MarcBibliographicQmConverter converter = new MarcBibliographicQmConverter();
     QuickMarc quickMarcJson = getMockAsObject(QM_EDITED_RECORD_BIB_PATH, QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    Objects.requireNonNull(parsedRecordDto).withRelatedRecordVersion(null);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_BIB_DTO_PATH, parsedRecordDto);
   }
 

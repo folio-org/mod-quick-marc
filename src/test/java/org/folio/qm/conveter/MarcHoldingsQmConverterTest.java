@@ -78,7 +78,6 @@ class MarcHoldingsQmConverterTest {
     QuickMarc quickMarcJson = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    assertEquals(parsedRecordDto != null ? parsedRecordDto.getRelatedRecordVersion() : null, "1");
     assertThat(parsedRecordDto, notNullValue());
     parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
@@ -234,15 +233,12 @@ class MarcHoldingsQmConverterTest {
 
   @Test
   void testRecordPopulateRelatedRecordVersion() {
-    logger.info("Source record and converted/restored one should be equal");
-    MarcHoldingsQmConverter qmConverter = new MarcHoldingsQmConverter();
-    MarcHoldingsDtoConverter dtoConverter = new MarcHoldingsDtoConverter();
-    ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_HOLDINGS_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
-    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
-      ParsedRecordDto.RecordType.MARC_HOLDING));
-    assertThat(quickMarcJson, notNullValue());
-    ParsedRecordDto restoredParsedRecordDto = qmConverter.convert(quickMarcJson);
-    mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, restoredParsedRecordDto);
+    logger.info("Testing related record version for optimistic locking");
+    QuickMarc quickMarcJson = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
+    ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    assertThat(parsedRecordDto, notNullValue());
+    assertEquals(parsedRecordDto.getRelatedRecordVersion(), "1");
   }
 
 }

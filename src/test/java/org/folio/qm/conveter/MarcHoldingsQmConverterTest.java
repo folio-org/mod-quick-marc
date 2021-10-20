@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
@@ -77,6 +78,7 @@ class MarcHoldingsQmConverterTest {
     QuickMarc quickMarcJson = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    assertEquals(parsedRecordDto != null ? parsedRecordDto.getRelatedRecordVersion() : null, "1");
     assertThat(parsedRecordDto, notNullValue());
     parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
@@ -229,5 +231,19 @@ class MarcHoldingsQmConverterTest {
     QuickMarc quickMarcJson = getMockAsObject(lccnField.getFilename(), QuickMarc.class);
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
   }
+
+  @Test
+  void testRecordPopulateRelatedRecordVersion() {
+    logger.info("Source record and converted/restored one should be equal");
+    MarcHoldingsQmConverter qmConverter = new MarcHoldingsQmConverter();
+    MarcHoldingsDtoConverter dtoConverter = new MarcHoldingsDtoConverter();
+    ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_HOLDINGS_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
+    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
+      ParsedRecordDto.RecordType.MARC_HOLDING));
+    assertThat(quickMarcJson, notNullValue());
+    ParsedRecordDto restoredParsedRecordDto = qmConverter.convert(quickMarcJson);
+    mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, restoredParsedRecordDto);
+  }
+
 }
 

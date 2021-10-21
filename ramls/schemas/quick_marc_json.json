@@ -67,6 +67,10 @@
       },
       "minItems" : 3
     },
+    "relatedRecordVersion": {
+      "type": "string",
+      "description": "Information related to version of the record"
+    },
     "updateInfo": {
       "description": "Information related to record update",
       "type": "object",
@@ -94,6 +98,7 @@
     "suppressDiscovery",
     "instanceId",
     "leader",
-    "fields"
+    "fields",
+    "relatedRecordVersion"
   ]
 }

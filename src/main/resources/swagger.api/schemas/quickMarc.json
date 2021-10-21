@@ -61,12 +61,17 @@
       "type": "object",
       "$ref": "updateInfo.json",
       "readOnly": true
+    },
+    "relatedRecordVersion": {
+      "type": "string",
+      "description": "Information related to version of the record"
     }
   },
   "required": [
     "parsedRecordDtoId",
     "suppressDiscovery",
     "externalId",
+    "relatedRecordVersion",
     "leader",
     "fields",
     "recordType"

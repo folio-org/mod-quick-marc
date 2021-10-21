@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -77,6 +79,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
+    parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
   }
 
@@ -95,6 +98,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
     assertThat(parsedRecordDto, notNullValue());
+    parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
   }
 
@@ -120,6 +124,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     QuickMarc quickMarcJson = getMockAsObject(QM_EDITED_RECORD_HOLDINGS_PATH, QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    Objects.requireNonNull(parsedRecordDto).withRelatedRecordVersion(null);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, parsedRecordDto);
   }
 
@@ -225,5 +230,16 @@ class MarcHoldingsQmConverterTest {
     QuickMarc quickMarcJson = getMockAsObject(lccnField.getFilename(), QuickMarc.class);
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
   }
+
+  @Test
+  void testRecordPopulateRelatedRecordVersion() {
+    logger.info("Testing related record version for optimistic locking");
+    QuickMarc quickMarcJson = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
+    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
+    ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
+    assertThat(parsedRecordDto, notNullValue());
+    assertEquals("1", parsedRecordDto.getRelatedRecordVersion());
+  }
+
 }
 

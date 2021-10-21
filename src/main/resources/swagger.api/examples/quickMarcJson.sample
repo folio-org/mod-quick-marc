@@ -185,6 +185,7 @@
       "indicators": ["2", " "]
     }
   ],
+  "relatedRecordVersion": "1",
   "updateInfo": {
     "recordState": "ACTUAL",
     "updateDate": "2020-07-14T12:20:10.000"

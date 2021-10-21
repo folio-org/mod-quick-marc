@@ -15,6 +15,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDIN
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
@@ -55,6 +56,7 @@ class MarcHoldingsDtoConverterTest {
 
     var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
     expected.setMarcFormat(MarcFormat.HOLDINGS);
+    Objects.requireNonNull(expected).setRelatedRecordVersion(null);
     JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(actual), true);
   }
 
@@ -63,13 +65,16 @@ class MarcHoldingsDtoConverterTest {
     PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_HOLDINGS_PATH,
     PARSED_RECORD_HOLDINGS_EDGE_CASES_PATH + "," + QM_RECORD_HOLDINGS_EDGE_CASES_PATH,
   })
-  void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) {
+  void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) throws JSONException {
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");
     var converter = new MarcHoldingsDtoConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
     parsedRecordDto.setRecordType(ParsedRecordDto.RecordType.MARC_HOLDING);
     QuickMarc quickMarcJson = converter.convert(parsedRecordDto);
-    mockIsEqualToObject(quickMarcJsonPath, quickMarcJson);
+
+    var expected = readQuickMarc(quickMarcJsonPath);
+    Objects.requireNonNull(expected).setRelatedRecordVersion(null);
+    JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(quickMarcJson), true);
   }
 
   @Test

@@ -1,5 +1,7 @@
 package org.folio.qm.config.properties;
 
+import java.util.UUID;
+
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -13,7 +15,7 @@ public class JobExecutionProfileProperties {
   @Data
   public static class ProfileOptions {
 
-    private String id;
+    private UUID id;
     private String name;
   }
 }

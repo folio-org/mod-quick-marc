@@ -60,7 +60,7 @@ public class ValidationServiceImpl implements ValidationService {
 
   @Override
   public void validateIdsMatch(QuickMarc quickMarc, UUID parsedRecordId) {
-    if (!quickMarc.getParsedRecordId().equals(parsedRecordId.toString())) {
+    if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
       var error = buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
       throw new ValidationException(error);
     }

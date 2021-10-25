@@ -91,7 +91,7 @@ class MarcRecordsServiceImplTest {
         .thenReturn(profile);
     }
 
-    var jobExecutions = Collections.singletonList(new JobExecution().withId(VALID_JOB_EXECUTION_ID));
+    var jobExecutions = Collections.singletonList(new JobExecution().withId(String.valueOf(VALID_JOB_EXECUTION_ID)));
     when(srmClient.postJobExecution(any())).thenReturn(new InitJobExecutionsRsDto().withJobExecutions(jobExecutions));
 
     when(statusService.save(any(RecordCreationStatus.class))).thenReturn(new RecordCreationStatus());

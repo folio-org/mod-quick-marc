@@ -86,11 +86,11 @@ class RecordsEditorApiTest extends BaseApiTest {
     assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
     assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
     assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
-    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(JOHN_USER_ID));
+    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));
 
     var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
     ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(quickMarcJson.getParsedRecordDtoId()));
+    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(quickMarcJson.getParsedRecordDtoId())));
   }
 
   @Test
@@ -109,18 +109,18 @@ class RecordsEditorApiTest extends BaseApiTest {
     assertThat(quickMarcJson.getExternalHrid(), equalTo(EXISTED_EXTERNAL_HRID));
     assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
     assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
-    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(JOHN_USER_ID));
+    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));
 
     var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
     ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(quickMarcJson.getParsedRecordDtoId()));
+    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(quickMarcJson.getParsedRecordDtoId())));
   }
 
   @Test
   void testGetQuickMarcRecordNotFound() {
     log.info("===== Verify GET record: Record Not Found =====");
 
-    String recordNotFoundId = UUID.randomUUID().toString();
+    UUID recordNotFoundId = UUID.randomUUID();
 
     mockGet(changeManagerPath(EXTERNAL_ID, recordNotFoundId), "Not found", SC_NOT_FOUND, wireMockServer);
 
@@ -134,7 +134,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testGetQuickMarcRecordConverterError() {
     log.info("===== Verify GET record: Converter (quickMARC internal exception) =====");
 
-    String instanceId = UUID.randomUUID().toString();
+    UUID instanceId = UUID.randomUUID();
 
     mockGet(changeManagerPath(EXTERNAL_ID, instanceId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
 
@@ -148,7 +148,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testGetQuickMarcRecordWithoutInstanceIdParameter() {
     log.info("===== Verify GET record: Request without instanceId =====");
 
-    String id = UUID.randomUUID().toString();
+    UUID id = UUID.randomUUID();
 
     Error error = verifyGet(recordsEditorPath("X", id), SC_BAD_REQUEST).as(Error.class);
     assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
@@ -166,7 +166,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     var status = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, id.toString()), SC_OK).as(CreationStatus.class);
 
     assertThat(status, allOf(
-      hasProperty(QM_RECORD_ID, equalTo(id.toString())),
+      hasProperty(QM_RECORD_ID, equalTo(id)),
       hasProperty("status", equalTo(CreationStatus.StatusEnum.NEW))
     ));
     assertThat(status.getMetadata(), allOf(
@@ -223,7 +223,7 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, ""), SC_BAD_REQUEST).as(Error.class);
 
-    assertThat(error.getMessage(), containsString("Parameter getRecordCreationStatus.qmRecordId: must not be null"));
+    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' is required"));
   }
 
   @Test
@@ -250,7 +250,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
     assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
 
-    final var qmRecordId = UUID.fromString(response.getQmRecordId());
+    final var qmRecordId = response.getQmRecordId();
 
     sendDIKafkaRecord("mockdata/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
@@ -262,7 +262,7 @@ class RecordsEditorApiTest extends BaseApiTest {
       .hasNoNullFieldsOrPropertiesExcept("errorMessage")
       .hasFieldOrPropertyWithValue("id", qmRecordId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
-      .hasFieldOrPropertyWithValue("jobExecutionId", UUID.fromString(VALID_JOB_EXECUTION_ID));
+      .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
   }
 
   @Test
@@ -289,7 +289,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
     assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
 
-    final var qmRecordId = UUID.fromString(response.getQmRecordId());
+    final var qmRecordId = response.getQmRecordId();
 
     sendDIKafkaRecord("mockdata/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
@@ -301,7 +301,7 @@ class RecordsEditorApiTest extends BaseApiTest {
       .hasNoNullFieldsOrPropertiesExcept("errorMessage")
       .hasFieldOrPropertyWithValue("id", qmRecordId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
-      .hasFieldOrPropertyWithValue("jobExecutionId", UUID.fromString(VALID_JOB_EXECUTION_ID));
+      .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
   }
 
   @Test

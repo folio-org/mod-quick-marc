@@ -34,8 +34,7 @@ folio:
       enabled: true
   logging:
     request:
-      enabled: true
-      level: full
+      enabled: false
     feign:
       enabled: true
       level: full

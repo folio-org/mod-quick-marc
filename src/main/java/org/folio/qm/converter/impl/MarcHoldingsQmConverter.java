@@ -20,7 +20,7 @@ public class MarcHoldingsQmConverter extends AbstractMarcQmConverter {
   @Override
   protected ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
     return new ExternalIdsHolder()
-      .withHoldingsId(quickMarc.getExternalId())
+      .withHoldingsId(String.valueOf(quickMarc.getExternalId()))
       .withHoldingsHrid(quickMarc.getExternalHrid());
   }
 

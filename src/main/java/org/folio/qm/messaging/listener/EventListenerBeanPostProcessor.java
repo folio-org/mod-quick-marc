@@ -67,10 +67,6 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
         return token;
       }
 
-      @Override public String getUserName() {
-        return null;
-      }
-
       @Override public Map<String, Collection<String>> getAllHeaders() {
         return null;
       }

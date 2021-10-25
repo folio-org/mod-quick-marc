@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,10 +62,10 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
         .map(this::dataFieldToQuickMarcField)
         .collect(Collectors.toList()));
 
-      return new QuickMarc().parsedRecordId(parsedRecord.getId())
+      return new QuickMarc().parsedRecordId(UUID.fromString(parsedRecord.getId()))
         .leader(leader)
         .fields(fields)
-        .parsedRecordDtoId(source.getId())
+        .parsedRecordDtoId(UUID.fromString(source.getId()))
         .externalId(getExternalId(source))
         .externalHrid(getExternalHrId(source))
         .marcFormat(supportedType())
@@ -77,7 +78,7 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
     }
   }
 
-  protected abstract String getExternalId(ParsedRecordDto source);
+  protected abstract UUID getExternalId(ParsedRecordDto source);
   protected abstract String getExternalHrId(ParsedRecordDto source);
   protected abstract Map<String, Object> splitGeneralInformationControlField(String content, String leader);
 

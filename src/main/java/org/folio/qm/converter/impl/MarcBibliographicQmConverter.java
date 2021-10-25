@@ -15,7 +15,7 @@ public class MarcBibliographicQmConverter extends AbstractMarcQmConverter {
   @Override
   protected ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
     return new ExternalIdsHolder()
-      .withInstanceId(quickMarc.getExternalId())
+      .withInstanceId(String.valueOf(quickMarc.getExternalId()))
       .withInstanceHrid(quickMarc.getExternalHrid());
   }
 }

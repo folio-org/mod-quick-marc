@@ -39,12 +39,9 @@ folio:
       enabled: true
   logging:
     request:
-      enabled: true
-      # Possible values: none, basic, headers, full. Default: basic
-      level: full
+      enabled: false
     feign:
       enabled: true
-      # Possible values: none, basic, headers, full. Default: basic
       level: basic
   job:
     execution:

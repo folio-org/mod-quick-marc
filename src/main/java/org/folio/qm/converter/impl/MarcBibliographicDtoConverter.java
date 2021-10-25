@@ -13,6 +13,7 @@ import static org.folio.qm.converter.elements.Constants.TYPE_OF_RECORD_LEADER_PO
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
@@ -22,8 +23,8 @@ import org.folio.rest.jaxrs.model.ParsedRecordDto;
 public class MarcBibliographicDtoConverter extends AbstractMarcDtoConverter {
 
   @Override
-  protected String getExternalId(ParsedRecordDto source) {
-    return source.getExternalIdsHolder().getInstanceId();
+  protected UUID getExternalId(ParsedRecordDto source) {
+    return UUID.fromString(source.getExternalIdsHolder().getInstanceId());
   }
 
   @Override

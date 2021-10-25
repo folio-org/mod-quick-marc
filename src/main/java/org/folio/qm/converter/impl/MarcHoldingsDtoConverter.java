@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
@@ -41,8 +42,8 @@ public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
   }
 
   @Override
-  protected String getExternalId(ParsedRecordDto source) {
-    return source.getExternalIdsHolder().getHoldingsId();
+  protected UUID getExternalId(ParsedRecordDto source) {
+    return UUID.fromString(source.getExternalIdsHolder().getHoldingsId());
   }
 
   @Override

@@ -49,12 +49,11 @@ public class TestEntitiesUtils {
   public static final String QM_EDITED_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority_edited.json";
 
   public static final String TESTED_TAG_NAME = "333";
-  public static final String VALID_PARSED_RECORD_DTO_ID = "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c";
-  public static final String EXISTED_EXTERNAL_ID = "b9a5f035-de63-4e2c-92c2-07240c89b817";
+  public static final UUID VALID_PARSED_RECORD_DTO_ID = UUID.fromString("c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c");
+  public static final UUID EXISTED_EXTERNAL_ID = UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817");
   public static final String EXISTED_EXTERNAL_HRID = "hold0001";
-  public static final String VALID_PARSED_RECORD_ID = "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1";
-  public static final String VALID_JOB_EXECUTION_ID = "a7fb1c32-1ffb-4a22-a76a-4067284fe68d";
-  public static final UUID JOB_EXECUTION_ID = UUID.fromString(VALID_JOB_EXECUTION_ID);
+  public static final UUID VALID_PARSED_RECORD_ID = UUID.fromString("c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1");
+  public static final UUID VALID_JOB_EXECUTION_ID = UUID.fromString("a7fb1c32-1ffb-4a22-a76a-4067284fe68d");
   public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";
   public static final String JOHN_USER_NAME = "john-doe";
 
@@ -72,7 +71,7 @@ public class TestEntitiesUtils {
 
   public static ParsedRecordDto getParsedRecordDtoWithMinContent(ParsedRecord parsedRecord, RecordType recordType) {
     var parsedRecordDto = new ParsedRecordDto()
-      .withId(VALID_PARSED_RECORD_DTO_ID)
+      .withId(String.valueOf(VALID_PARSED_RECORD_DTO_ID))
       .withParsedRecord(parsedRecord)
       .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false))
       .withRecordType(recordType)
@@ -84,10 +83,10 @@ public class TestEntitiesUtils {
       );
     if (RecordType.MARC_BIB == recordType) {
       return parsedRecordDto
-        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(EXISTED_EXTERNAL_ID).withInstanceHrid("393893"));
+        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(String.valueOf(EXISTED_EXTERNAL_ID)).withInstanceHrid("393893"));
     } else if (RecordType.MARC_HOLDING == recordType) {
       return parsedRecordDto
-        .withExternalIdsHolder(new ExternalIdsHolder().withHoldingsId(EXISTED_EXTERNAL_ID).withHoldingsHrid("393893"));
+        .withExternalIdsHolder(new ExternalIdsHolder().withHoldingsId(String.valueOf(EXISTED_EXTERNAL_ID)).withHoldingsHrid("393893"));
     } else if (RecordType.MARC_AUTHORITY == recordType)
     {
       return parsedRecordDto.withExternalIdsHolder(null);

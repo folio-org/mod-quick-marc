@@ -35,9 +35,9 @@ class CreationStatusMapperTest {
     recordCreationStatus.setUpdatedAt(updatedAt);
     var creationStatus = MAPPER.fromEntity(recordCreationStatus);
     assertThat(creationStatus)
-      .hasFieldOrPropertyWithValue("externalId", externalId.toString())
-      .hasFieldOrPropertyWithValue("qmRecordId", id.toString())
-      .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId.toString())
+      .hasFieldOrPropertyWithValue("externalId", externalId)
+      .hasFieldOrPropertyWithValue("qmRecordId", id)
+      .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId)
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)
       .hasFieldOrPropertyWithValue("metadata.createdAt", getFrom(createdAt))
       .hasFieldOrPropertyWithValue("metadata.updatedAt", getFrom(updatedAt));
@@ -53,9 +53,9 @@ class CreationStatusMapperTest {
     recordCreationStatus.setJobExecutionId(jobExecutionId);
     var creationStatus = MAPPER.fromEntity(recordCreationStatus);
     assertThat(creationStatus)
-      .hasFieldOrPropertyWithValue("externalId", externalId.toString())
-      .hasFieldOrPropertyWithValue("qmRecordId", id.toString())
-      .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId.toString())
+      .hasFieldOrPropertyWithValue("externalId", externalId)
+      .hasFieldOrPropertyWithValue("qmRecordId", id)
+      .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId)
       .hasFieldOrPropertyWithValue("status", CreationStatus.StatusEnum.NEW)
       .hasFieldOrPropertyWithValue("metadata.createdAt", null)
       .hasFieldOrPropertyWithValue("metadata.updatedAt", null);

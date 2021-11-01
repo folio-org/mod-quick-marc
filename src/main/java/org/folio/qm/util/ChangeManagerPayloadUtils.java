@@ -20,7 +20,7 @@ public class ChangeManagerPayloadUtils {
 
   public static JobProfileInfo getDefaultJobProfile(JobExecutionProfileProperties.ProfileOptions options) {
     return new JobProfileInfo()
-      .withId(options.getId())
+      .withId(String.valueOf(options.getId()))
       .withName(options.getName())
       .withDataType(DataType.MARC);
   }

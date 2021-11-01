@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
@@ -55,7 +56,7 @@ public class MarcAuthorityDtoConverter extends AbstractMarcDtoConverter {
   }
 
   @Override
-  protected String getExternalId(ParsedRecordDto source) {
+  protected UUID getExternalId(ParsedRecordDto source) {
     return null;
   }
 

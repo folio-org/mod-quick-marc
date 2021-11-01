@@ -13,6 +13,7 @@ import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.concurrent.CompletionException;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -58,8 +59,8 @@ public class APITestUtils {
     return RECORDS_EDITOR_RECORDS_PATH;
   }
 
-  public static String recordsEditorPath(String parameter, String value) {
-    return recordsEditorPath() + buildQuery(parameter, value);
+  public static String recordsEditorPath(String parameter, UUID value) {
+    return recordsEditorPath() + buildQuery(parameter, String.valueOf(value));
   }
 
   public static String recordsEditorStatusPath() {
@@ -70,7 +71,7 @@ public class APITestUtils {
     return recordsEditorStatusPath() + buildQuery(parameter, value);
   }
 
-  public static String recordsEditorResourceByIdPath(String id) {
+  public static String recordsEditorResourceByIdPath(UUID id) {
     return recordsEditorPath() + "/" + id;
   }
 
@@ -78,12 +79,12 @@ public class APITestUtils {
     return CHANGE_MANAGER_PARSED_RECORDS_PATH;
   }
 
-  public static String changeManagerPath(String parameter, String value) {
-    return changeManagerPath() + buildQuery(parameter, value);
+  public static String changeManagerPath(String parameter, UUID value) {
+    return changeManagerPath() + buildQuery(parameter, String.valueOf(value));
   }
 
 
-  public static String changeManagerResourceByIdPath(String id) {
+  public static String changeManagerResourceByIdPath(UUID id) {
     return changeManagerPath() + "/" + id;
   }
 

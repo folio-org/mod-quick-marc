@@ -88,9 +88,9 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       contentMap.put(FIELDS, convertMarcFieldsToObjects(marcRecord));
       contentMap.put(LEADER, marcRecord.getLeader().marshal());
       return new ParsedRecordDto()
-        .withParsedRecord(new ParsedRecord().withId(source.getParsedRecordId()).withContent(contentMap))
+        .withParsedRecord(new ParsedRecord().withId(String.valueOf(source.getParsedRecordId())).withContent(contentMap))
         .withRecordType(supportedType())
-        .withId(source.getParsedRecordDtoId())
+        .withId(String.valueOf(source.getParsedRecordDtoId()))
         .withRelatedRecordVersion(source.getRelatedRecordVersion())
         .withExternalIdsHolder(constructExternalIdsHolder(source))
         .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(source.getSuppressDiscovery()));

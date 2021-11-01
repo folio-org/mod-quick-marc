@@ -137,7 +137,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
   @Test
   void testUpdateQuickMarcRecordWrongUuid() throws Exception {
     RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Not found =====");
-    String wrongUUID = UUID.randomUUID().toString();
+    UUID wrongUUID = UUID.randomUUID();
 
     mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
 
@@ -216,12 +216,11 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     var field = getFieldWithIndicators(Collections.singletonList(" "));
     var titleField = getFieldWithValue("245", "title");
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID()
-        .toString())
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
       .marcFormat(MarcFormat.BIBLIOGRAPHIC)
       .relatedRecordVersion("1")
       .parsedRecordId(VALID_PARSED_RECORD_ID)
-      .externalId(UUID.randomUUID().toString());
+      .externalId(UUID.randomUUID());
 
     mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
         .headers(defaultHeaders())

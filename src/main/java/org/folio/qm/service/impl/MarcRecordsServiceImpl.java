@@ -63,7 +63,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
     var parsedRecordDto =
       marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
-    srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
+    srmClient.putParsedRecordByInstanceId(String.valueOf(quickMarc.getParsedRecordDtoId()), parsedRecordDto);
   }
 
   @Override

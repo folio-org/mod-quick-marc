@@ -25,7 +25,7 @@ public class QuickMarcEventListener {
   public void qmCompletedListener(QmCompletedEventPayload data) {
     var recordId = data.getRecordId();
     log.info("QM_COMPLETED received for record id [{}]", recordId);
-    DeferredResult deferredResult = cacheService.getFromCache(recordId);
+    DeferredResult deferredResult = cacheService.getFromCache(String.valueOf(recordId));
     if (deferredResult != null) {
       if (data.isSucceed()) {
         deferredResult.setResult(ResponseEntity.accepted().build());
@@ -33,7 +33,7 @@ public class QuickMarcEventListener {
         var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, data.getErrorMessage());
         deferredResult.setErrorResult(ResponseEntity.badRequest().body(error));
       }
-      cacheService.invalidate(recordId);
+      cacheService.invalidate(String.valueOf(recordId));
     }
   }
 }

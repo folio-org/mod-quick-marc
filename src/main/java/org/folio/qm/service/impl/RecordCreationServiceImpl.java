@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.ap.internal.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.client.SRMChangeManagerClient;
@@ -110,7 +110,7 @@ public class RecordCreationServiceImpl implements RecordCreationService {
     final Predicate<FieldItem> field999Predicate = qmFields -> qmFields.getTag().equals("999");
     final Predicate<FieldItem> emptyContentPredicate = qmFields -> {
       final var content = qmFields.getContent();
-      return content instanceof String && Strings.isEmpty((String) content);
+      return content instanceof String && StringUtils.isEmpty((String) content);
     };
     quickMarc.getFields().removeIf(field999Predicate.or(emptyContentPredicate));
     quickMarc.setParsedRecordId(null);

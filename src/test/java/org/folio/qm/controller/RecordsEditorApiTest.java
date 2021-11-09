@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
@@ -42,6 +43,7 @@ import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
@@ -107,6 +109,29 @@ class RecordsEditorApiTest extends BaseApiTest {
     assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
     assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
     assertThat(quickMarcJson.getExternalHrid(), equalTo(EXISTED_EXTERNAL_HRID));
+    assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
+    assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
+    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));
+
+    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
+    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
+    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(quickMarcJson.getParsedRecordDtoId())));
+  }
+
+  @Test
+  void testGetQuickMarcAuthorityRecord() {
+    log.info("===== Verify GET Holdings record: Successful =====");
+
+    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_AUTHORITY_DTO_PATH), SC_OK,
+      wireMockServer);
+    mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
+
+    var quickMarcJson = verifyGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+
+    assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.AUTHORITY));
+    assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
+    assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
+    assertNull(quickMarcJson.getExternalHrid());
     assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
     assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
     assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));

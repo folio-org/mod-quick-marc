@@ -25,6 +25,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_WITH_INCORRECT_TAG_PATH;
@@ -59,52 +60,17 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @Test
   void testUpdateQuickMarcBibRecord() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Successful =====");
-
-    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
-
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
-    MvcResult result = mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andExpect(request().asyncStarted())
-      .andReturn();
-
-    String eventPayload = createPayload(null);
-    sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
-    mockMvc
-      .perform(asyncDispatch(result))
-      .andDo(log())
-      .andExpect(status().isAccepted());
+    testUpdateQuickMarcRecord(QM_RECORD_BIB_PATH);
   }
 
   @Test
   void testUpdateQuickMarcHoldingsRecord() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Successful =====");
+    testUpdateQuickMarcRecord(QM_RECORD_HOLDINGS_PATH);
+  }
 
-    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
-
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
-    MvcResult result = mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andExpect(request().asyncStarted())
-      .andReturn();
-
-    String eventPayload = createPayload(null);
-    sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
-    mockMvc
-      .perform(asyncDispatch(result))
-      .andDo(log())
-      .andExpect(status().isAccepted());
+  @Test
+  void testUpdateQuickMarcAuthorityRecord() throws Exception {
+    testUpdateQuickMarcRecord(QM_RECORD_AUTHORITY_PATH);
   }
 
   @Test
@@ -271,6 +237,30 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(errorMessageMatch(equalTo("The Leader and 008 do not match")));
 
     wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+  }
+
+  private void testUpdateQuickMarcRecord(String qmRecordMockPath) throws Exception {
+    log.info("===== Verify PUT record: Successful =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(qmRecordMockPath)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    MvcResult result = mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(getObjectAsJson(quickMarcJson)))
+      .andExpect(request().asyncStarted())
+      .andReturn();
+
+    String eventPayload = createPayload(null);
+    sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
+    mockMvc
+      .perform(asyncDispatch(result))
+      .andDo(log())
+      .andExpect(status().isAccepted());
   }
 
   private String createPayload(String errorMessage) throws JsonProcessingException {

@@ -1,4 +1,4 @@
-package org.folio.qm.validation;
+package org.folio.qm.validation.impl.holdings;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.validation.impl.holdings.OnlyOne008ControlFieldValidationRule;
+import org.folio.qm.validation.ValidationError;
 
 class OnlyOne008ControlFieldValidationRuleTest {
   private static final Logger logger = LogManager.getLogger(OnlyOne008ControlFieldValidationRuleTest.class);

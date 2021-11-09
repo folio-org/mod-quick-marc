@@ -3,6 +3,7 @@ package org.folio.qm.validation;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,13 @@ public interface FieldValidationRule {
   default List<FieldItem> filterFieldsByTagCode(List<FieldItem> fieldItems, String tagCode) {
     return fieldItems.stream()
       .filter(fieldItem -> tagCode.equals(fieldItem.getTag()))
+      .collect(Collectors.toList());
+  }
+
+  default List<FieldItem> filterFieldsByTagCodePattern(List<FieldItem> fieldItems, Pattern tagCodePattern) {
+    var matchPredicate = tagCodePattern.asMatchPredicate();
+    return fieldItems.stream()
+      .filter(fieldItem -> matchPredicate.test(fieldItem.getTag()))
       .collect(Collectors.toList());
   }
 

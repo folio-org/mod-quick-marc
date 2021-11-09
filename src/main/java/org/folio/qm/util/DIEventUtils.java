@@ -16,7 +16,8 @@ public class DIEventUtils {
 
   public static Optional<UUID> extractExternalId(DataImportEventPayload data, ObjectMapper mapper) {
     return extractRecordId(data, FolioRecord.INSTANCE, mapper)
-      .or(() -> extractRecordId(data, FolioRecord.HOLDINGS, mapper));
+      .or(() -> extractRecordId(data, FolioRecord.HOLDINGS, mapper))
+      .or(() -> extractRecordId(data, FolioRecord.AUTHORITY, mapper));
   }
 
   public static Optional<UUID> extractMarcId(DataImportEventPayload data, ObjectMapper mapper) {
@@ -46,6 +47,7 @@ public class DIEventUtils {
 
     INSTANCE("INSTANCE"),
     HOLDINGS("HOLDINGS"),
+    AUTHORITY("AUTHORITY"),
     MARC_BIBLIOGRAPHIC("MARC_BIBLIOGRAPHIC"),
     MARC_HOLDINGS("MARC_HOLDINGS"),
     MARC_AUTHORITY("MARC_AUTHORITY");

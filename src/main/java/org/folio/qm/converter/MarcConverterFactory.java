@@ -1,6 +1,5 @@
 package org.folio.qm.converter;
 
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.impl.MarcAuthorityDtoConverter;
@@ -39,15 +38,5 @@ public class MarcConverterFactory {
       default:
         throw new IllegalStateException("Unexpected value: " + recordType);
     }
-  }
-
-  @Lookup
-  public MarcDtoConverter getDtoConverter(ParsedRecordDto.RecordType recordType) {
-    return null;
-  }
-
-  @Lookup
-  public MarcQmConverter getQmConverter(MarcFormat marcFormat) {
-    return null;
   }
 }

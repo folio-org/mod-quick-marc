@@ -87,9 +87,9 @@ public class TestEntitiesUtils {
     } else if (RecordType.MARC_HOLDING == recordType) {
       return parsedRecordDto
         .withExternalIdsHolder(new ExternalIdsHolder().withHoldingsId(String.valueOf(EXISTED_EXTERNAL_ID)).withHoldingsHrid("393893"));
-    } else if (RecordType.MARC_AUTHORITY == recordType)
-    {
-      return parsedRecordDto.withExternalIdsHolder(null);
+    } else if (RecordType.MARC_AUTHORITY == recordType){
+      return parsedRecordDto
+        .withExternalIdsHolder(new ExternalIdsHolder().withAuthorityId(String.valueOf(EXISTED_EXTERNAL_ID)));
     }
     return parsedRecordDto;
   }

@@ -57,12 +57,12 @@ public class MarcAuthorityDtoConverter extends AbstractMarcDtoConverter {
 
   @Override
   protected UUID getExternalId(ParsedRecordDto source) {
-    return null;
+    return source.getExternalIdsHolder() != null ? UUID.fromString(source.getExternalIdsHolder().getAuthorityId()) : null;
   }
 
   @Override
   protected String getExternalHrId(ParsedRecordDto source) {
-    return null;
+    return source.getExternalIdsHolder() != null ? source.getExternalIdsHolder().getAuthorityHrid() : null;
   }
 
   @Override

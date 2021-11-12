@@ -19,7 +19,9 @@ public class MarcAuthorityQmConverter extends AbstractMarcQmConverter {
 
   @Override
   protected ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
-    return null;
+    return new ExternalIdsHolder()
+      .withAuthorityId(String.valueOf(quickMarc.getExternalId()))
+      .withAuthorityHrid(quickMarc.getExternalHrid());
   }
 
   @Override

@@ -77,6 +77,7 @@ class MarcAuthorityQmConverterTest {
     var converter = new MarcAuthorityQmConverter();
     var parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
+    parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_AUTHORITY_DTO2_PATH, parsedRecordDto);
   }
 
@@ -95,6 +96,7 @@ class MarcAuthorityQmConverterTest {
     var converter = new MarcAuthorityQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
     assertThat(parsedRecordDto, notNullValue());
+    parsedRecordDto.withRelatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_AUTHORITY_DTO2_PATH, parsedRecordDto);
   }
 

@@ -3,7 +3,6 @@ package org.folio.qm.conveter;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
-import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
@@ -57,7 +56,6 @@ class MarcAuthorityDtoConverterTest {
     var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
     expected.setMarcFormat(MarcFormat.AUTHORITY);
     expected.setExternalHrid(null);
-    expected.setExternalId(null);
     Objects.requireNonNull(expected).setRelatedRecordVersion(null);
     JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(actual), true);
   }
@@ -67,13 +65,15 @@ class MarcAuthorityDtoConverterTest {
     PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH,
     PARSED_RECORD_AUTHORITY_EDGE_CASES_PATH + "," + QM_RECORD_AUTHORITY_EDGE_CASES_PATH,
   })
-  void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) {
+  void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) throws JSONException {
     logger.info("Testing Authority ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");
     var converter = new MarcAuthorityDtoConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
     parsedRecordDto.setRecordType(ParsedRecordDto.RecordType.MARC_AUTHORITY);
     QuickMarc quickMarcJson = converter.convert(parsedRecordDto);
-    mockIsEqualToObject(quickMarcJsonPath, quickMarcJson);
+    var expected = readQuickMarc(quickMarcJsonPath);
+    Objects.requireNonNull(expected).setRelatedRecordVersion(null);
+    JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(quickMarcJson), true);
   }
 
   @Test

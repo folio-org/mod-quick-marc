@@ -120,7 +120,7 @@ class RecordsEditorApiTest extends BaseApiTest {
 
   @Test
   void testGetQuickMarcAuthorityRecord() {
-    log.info("===== Verify GET Holdings record: Successful =====");
+    log.info("===== Verify GET Authority record: Successful =====");
 
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_AUTHORITY_DTO_PATH), SC_OK,
       wireMockServer);

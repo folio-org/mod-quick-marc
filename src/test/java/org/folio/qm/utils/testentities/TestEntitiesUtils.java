@@ -66,7 +66,7 @@ public class TestEntitiesUtils {
   }
 
   public static QuickMarc getQuickMarcJsonWithMinContent(FieldItem... fields) {
-    return new QuickMarc().leader("01542ccm a2200361   4500").fields(Arrays.asList(fields));
+    return new QuickMarc().leader("01542ccm a22002533  4500").fields(Arrays.asList(fields));
   }
 
   public static ParsedRecordDto getParsedRecordDtoWithMinContent(ParsedRecord parsedRecord, RecordType recordType) {

@@ -6,7 +6,6 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH;
-import static org.folio.qm.converter.elements.Constants.ADDRESS_LENGTH;
 import static org.folio.qm.converter.elements.Constants.BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.CONCAT_CONDITION_PATTERN;
@@ -23,15 +22,12 @@ import static org.folio.qm.converter.elements.Constants.LCCN_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.LCCN_NEW_PREFIX_LENGTH;
 import static org.folio.qm.converter.elements.Constants.LCCN_OLD_PREFIX_LENGTH;
 import static org.folio.qm.converter.elements.Constants.LEADER;
-import static org.folio.qm.converter.elements.Constants.LEADER_LENGTH;
 import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.SPACE_CHARACTER;
 import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_INDEX;
 import static org.folio.qm.converter.elements.Constants.SPLIT_PATTERN;
 import static org.folio.qm.converter.elements.Constants.SUBFIELDS;
-import static org.folio.qm.converter.elements.Constants.TAG_LENGTH;
-import static org.folio.qm.converter.elements.Constants.TERMINATOR_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
 import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
 import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
@@ -41,6 +37,7 @@ import static org.folio.qm.util.ErrorCodes.ILLEGAL_SIZE_OF_INDICATOR;
 import static org.folio.qm.util.ErrorCodes.LEADER_AND_008_MISMATCHING;
 import static org.folio.qm.util.ErrorUtils.buildInternalError;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +49,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.marc4j.MarcStreamWriter;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
@@ -101,6 +99,40 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
 
   protected abstract ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc);
 
+  protected String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
+    if (isLeaderMatches(contentMap)) {
+      String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH - 1,
+        materialTypeConfiguration.getControlFieldItems(), contentMap, -1);
+      return new StringBuilder(
+        restoreFixedLengthField(BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH,
+          MaterialTypeConfiguration.getCommonItems(),
+          contentMap, -1))
+        .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
+    }
+    throw new ConverterException(buildInternalError(LEADER_AND_008_MISMATCHING, "The Leader and 008 do not match"));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected String restoreFixedLengthField(int length, List<ControlFieldItem> items, Map<String, Object> map, int delta) {
+    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
+    items.forEach(item -> {
+      String value;
+      if (Objects.isNull(map.get(item.getName()))) {
+        value = StringUtils.repeat(SPACE_CHARACTER, item.getLength());
+      } else {
+        value = item.isArray()
+          ? String.join(EMPTY, ((List<String>) map.get(item.getName())))
+          : map.get(item.getName()).toString();
+        if (value.length() != item.getLength()) {
+          throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD,
+            String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));
+        }
+      }
+      stringBuilder.replace(item.getPosition() + delta, item.getPosition() + delta + item.getLength(), value);
+    });
+    return stringBuilder.toString();
+  }
+
   private Record quickMarcJsonToMarcRecord(QuickMarc quickMarcJson) {
     Record marcRecord = factory.newRecord();
 
@@ -112,9 +144,15 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       .forEach(marcRecord::addVariableField);
 
     Leader leader = factory.newLeader(restoreBlanks(leaderString));
-    leader.setRecordLength(calculateRecordLength(marcRecord));
     marcRecord.setLeader(leader);
+
+    recalculateLeaderValues(marcRecord);
     return marcRecord;
+  }
+
+  private void recalculateLeaderValues(Record marcRecord) {
+    var marcStreamWriter = new MarcStreamWriter(new ByteArrayOutputStream());
+    marcStreamWriter.write(marcRecord);
   }
 
   private VariableField toVariableField(FieldItem field) {
@@ -165,44 +203,11 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
     }
   }
 
-  protected String restoreGeneralInformationControlField(Map<String, Object> contentMap) {
-    if (isLeaderMatches(contentMap)) {
-      String specificItemsString = restoreFixedLengthField(ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH - 1,
-        materialTypeConfiguration.getControlFieldItems(), contentMap, -1);
-      return new StringBuilder(
-        restoreFixedLengthField(BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH, MaterialTypeConfiguration.getCommonItems(),
-          contentMap, -1))
-        .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
-    }
-    throw new ConverterException(buildInternalError(LEADER_AND_008_MISMATCHING, "The Leader and 008 do not match"));
-  }
-
   private boolean isLeaderMatches(Map<String, Object> contentMap) {
     return nonNull(contentMap) &&
       nonNull(contentMap.get(ELVL)) && nonNull(contentMap.get(DESC)) &&
       contentMap.get(ELVL).toString().equals(Character.toString(leaderString.charAt(ELVL_LEADER_POS))) &&
       contentMap.get(DESC).toString().equals(Character.toString(leaderString.charAt(DESC_LEADER_POS)));
-  }
-
-  @SuppressWarnings("unchecked")
-  protected String restoreFixedLengthField(int length, List<ControlFieldItem> items, Map<String, Object> map, int delta) {
-    StringBuilder stringBuilder = new StringBuilder(StringUtils.repeat(SPACE_CHARACTER, length));
-    items.forEach(item -> {
-      String value;
-      if (Objects.isNull(map.get(item.getName()))) {
-        value = StringUtils.repeat(SPACE_CHARACTER, item.getLength());
-      } else {
-        value = item.isArray()
-          ? String.join(EMPTY, ((List<String>) map.get(item.getName())))
-          : map.get(item.getName()).toString();
-        if (value.length() != item.getLength()) {
-          throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD,
-            String.format("Invalid %s field length, must be %d characters", item.getName(), item.getLength())));
-        }
-      }
-      stringBuilder.replace(item.getPosition() + delta, item.getPosition() + delta + item.getLength(), value);
-    });
-    return stringBuilder.toString();
   }
 
   private List<Subfield> extractSubfields(FieldItem field) {
@@ -276,19 +281,6 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       .map(sf -> Collections.singletonMap(Character.toString(sf.getCode()), sf.getData()))
       .collect(Collectors.toList()));
     return fieldMap;
-  }
-
-  private int calculateRecordLength(Record marcRecord) {
-    int addressesLength = marcRecord.getVariableFields().size() * ADDRESS_LENGTH;
-    int controlFieldsLength = marcRecord.getControlFields()
-      .stream()
-      .mapToInt(controlField -> controlField.getData().length() + TERMINATOR_LENGTH)
-      .sum();
-    int dataFieldsLength = marcRecord.getDataFields()
-      .stream()
-      .mapToInt(dataField -> dataField.toString().length() - TAG_LENGTH + TERMINATOR_LENGTH)
-      .sum();
-    return LEADER_LENGTH + addressesLength + controlFieldsLength + dataFieldsLength + TERMINATOR_LENGTH;
   }
 
   /**

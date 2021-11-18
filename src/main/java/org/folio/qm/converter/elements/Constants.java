@@ -10,10 +10,7 @@ public class Constants {
   public static final int BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
   public static final int HOLDINGS_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 32;
   public static final int AUTHORITY_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
-  public static final int TAG_LENGTH = 4;
-  public static final int TERMINATOR_LENGTH = 1;
   public static final int TOKEN_MIN_LENGTH = 3;
-  public static final int ADDRESS_LENGTH = 12;
   public static final int LEADER_LENGTH = 24;
   public static final int TYPE_OF_RECORD_LEADER_POS = 6;
   public static final int BLVL_LEADER_POS = 7;

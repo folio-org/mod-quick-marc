@@ -2,6 +2,7 @@
 
 ### Changes
 * [MODQM-167](https://issues.folio.org/browse/MODQM-167) - Optimistic locking: mod-quick-marc modifications
+* [MODQM-178](https://issues.folio.org/browse/MODQM-178) - Optimistic locking: Update return 409 if optimistic locking error
 
 ## 2.2.0 - Released 
 

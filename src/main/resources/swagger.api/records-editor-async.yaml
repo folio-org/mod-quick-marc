@@ -21,6 +21,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/error"
+        "409":
+          description: Update failed due to optimistic locking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
         "500":
           description: Internal server error, e.g. due to misconfiguration
           content:

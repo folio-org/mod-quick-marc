@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 import feign.FeignException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -29,6 +30,7 @@ import org.folio.spring.exception.NotFoundException;
 import org.folio.tenant.domain.dto.Error;
 import org.folio.tenant.domain.dto.Errors;
 
+@Log4j2
 @RestControllerAdvice
 public class ErrorHandling {
 
@@ -114,6 +116,7 @@ public class ErrorHandling {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public Error handleGlobalException(Exception e) {
+    log.error("Unexpected error occurred: ", e);
     return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
   }
 

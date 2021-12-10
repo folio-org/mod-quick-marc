@@ -302,13 +302,13 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
    */
   private List<String> verifyAndGetIndicators(FieldItem field) {
     List<String> indicators = field.getIndicators();
-    if (indicators.size() == 2) {
+    if (indicators == null || indicators.isEmpty()) {
+      return Arrays.asList(SPACE, SPACE);
+    } else if (indicators.size() == 2) {
       List<String> list = new ArrayList<>();
       list.add(retrieveIndicatorValue(field.getIndicators().get(0)));
       list.add(retrieveIndicatorValue(field.getIndicators().get(1)));
       return list;
-    } else if (indicators.isEmpty()) {
-      return Arrays.asList(SPACE, SPACE);
     } else {
       throw new ConverterException(buildInternalError(ILLEGAL_INDICATORS_NUMBER,
         String.format("Illegal indicators number for field: %s", field.getTag())));

@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
@@ -207,6 +208,19 @@ class MarcHoldingsQmConverterTest {
 
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     assertThrows(ConverterException.class, () -> converter.convert(quickMarcJson));
+  }
+
+  @Test
+  void testIndicatorIsNullForDataField() {
+    logger.info("Test null indicators in Data field - no exception");
+
+    FieldItem testField = getFieldWithIndicators(null);
+    FieldItem field001 = getFieldWithValue("001", "value");
+    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field001, testField);
+
+    MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
+    var result = converter.convert(quickMarcJson);
+    assertDoesNotThrow(() -> converter.convert(quickMarcJson));
   }
 
   @ParameterizedTest

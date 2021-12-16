@@ -1,4 +1,5 @@
 ## 2.3.0 2021-11-xx
+* [MODQM-181](https://issues.folio.org/browse/MODQM-181) - Kiwi R3 2021 - Log4j vulnerability verification and correction
 
 ### Changes
 * [MODQM-167](https://issues.folio.org/browse/MODQM-167) - Optimistic locking: mod-quick-marc modifications

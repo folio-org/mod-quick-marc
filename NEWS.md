@@ -1,3 +1,6 @@
+## 2.2.2 Released
+* [MODQM-181](https://issues.folio.org/browse/MODQM-181) - Kiwi R3 2021 - Log4j vulnerability verification and correction
+
 ## 2.2.0 - Released 
 
 ### Changes

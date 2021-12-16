@@ -33,6 +33,8 @@
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
     <groovy.version>3.0.7</groovy.version>
+    <log4j2.version>2.16.0</log4j2.version>
+
     <sonar.exclusions>
       src/main/java/org/folio/qm/domain/entity/**,
       src/main/java/org/folio/qm/client/**,

@@ -1,3 +1,7 @@
+## 2.1.2 - Released
+* [MODQM-183](https://issues.folio.org/browse/MODQM-183) - Juniper R2 2021 - Log4j vulnerability verification and correction
+
+
 ## 2.1.1 - Released
 
 ### Changes

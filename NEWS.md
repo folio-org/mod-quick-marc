@@ -1,4 +1,11 @@
-## 2.2.2 Released
+## 2.2.3 - Released
+
+### Changes
+* [MODQM-170](https://issues.folio.org/browse/MODQM-170) - Fix unexpected assignment strategy for kafka groups
+
+## 2.2.2 - Released
+
+### Changes
 * [MODQM-181](https://issues.folio.org/browse/MODQM-181) - Kiwi R3 2021 - Log4j vulnerability verification and correction
 
 ## 2.2.1 - Released

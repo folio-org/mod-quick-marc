@@ -13,11 +13,11 @@ import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletionException;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import io.restassured.http.Header;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ public class APITestUtils {
   public static final String EXTERNAL_ID = "externalId";
   public static final String QM_RECORD_ID = "qmRecordId";
 
-  public static final Header JOHN_USER_ID_HEADER = new Header(USER_ID, JOHN_USER_ID);
+  public static final Map<String, String> JOHN_USER_ID_HEADER = Map.of(USER_ID, JOHN_USER_ID);
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));

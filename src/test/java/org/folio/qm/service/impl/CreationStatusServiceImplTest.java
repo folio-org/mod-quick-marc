@@ -2,8 +2,10 @@ package org.folio.qm.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,6 +48,15 @@ class CreationStatusServiceImplTest {
     var actual = service.findById(notExistedId);
 
     assertThat(actual).isEmpty();
+  }
+
+  @Test
+  void shouldDeleteOutdated() {
+    var currentTime = new Timestamp(System.currentTimeMillis());
+
+    service.removeOlderThan(currentTime);
+
+    verify(statusRepository).deleteByUpdatedAtBefore(currentTime);
   }
 
 }

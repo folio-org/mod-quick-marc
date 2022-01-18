@@ -1,5 +1,6 @@
 package org.folio.qm.service;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,4 +16,6 @@ public interface CreationStatusService {
   boolean updateByJobExecutionId(UUID jobExecutionId, RecordCreationStatusUpdate statusUpdate);
 
   RecordCreationStatus save(RecordCreationStatus status);
+
+  void removeOlderThan(Timestamp timestamp);
 }

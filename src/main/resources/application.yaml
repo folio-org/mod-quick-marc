@@ -21,7 +21,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         format_sql: true
-    show-sql: true
+    show-sql: false
   liquibase:
     changeLog: classpath:db/changelog/changelog-master.xml
     enabled: true
@@ -34,6 +34,10 @@ folio:
         max-size: 1000
         duration:
           min: 10
+    creation-status:
+      clear:
+        initial-delay-ms: 3_600_000
+        fixed-delay-ms: 86_400_000
   tenant:
     validation:
       enabled: true

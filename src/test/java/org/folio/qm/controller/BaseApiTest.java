@@ -2,24 +2,26 @@ package org.folio.qm.controller;
 
 import static org.folio.qm.utils.APITestUtils.TENANT_ID;
 import static org.folio.qm.utils.IOTestUtils.readFile;
+import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import io.restassured.RestAssured;
-import io.restassured.http.Header;
-import io.restassured.http.Headers;
-import io.restassured.response.Response;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +32,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -47,6 +49,7 @@ import org.folio.qm.extension.WireMockInitializer;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
+import org.springframework.test.web.servlet.ResultActions;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -86,9 +89,11 @@ class BaseApiTest {
   private Integer port;
 
   @BeforeEach
-  void before() {
+  void before() throws Exception {
     if (!dbInitialized) {
-      verifyPost("/_/tenant", new TenantAttributes().moduleTo(""), HttpStatus.SC_OK);
+      postResultActions("/_/tenant",new TenantAttributes().moduleTo(""))
+      .andExpect(status().isOk());
+
       dbInitialized = true;
     }
     if (!kafkaInitialized) {
@@ -104,59 +109,43 @@ class BaseApiTest {
     this.wireMockServer.resetAll();
   }
 
-  protected Response verifyGet(String path, int code) {
-    return RestAssured.with()
-      .header(new Header(XOkapiHeaders.URL, okapiUrl))
-      .header(new Header(XOkapiHeaders.TENANT, TENANT_ID))
-      .get(getRequestUrl(path))
-      .then()
-      .statusCode(code)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .extract()
-      .response();
+  protected ResultActions getResultActions(String uri) throws Exception {
+    return mockMvc.perform(get(uri)
+      .headers(getHeaders())
+      .contentType(APPLICATION_JSON_VALUE))
+      .andDo(log());
   }
 
-  protected Response verifyPut(String path, Object body, int code) {
-    return RestAssured.with()
-      .header(new Header(XOkapiHeaders.URL, okapiUrl))
-      .header(new Header(XOkapiHeaders.TENANT, TENANT_ID))
-      .body(body)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .put(getRequestUrl(path))
-      .then()
-      .statusCode(code)
-      .contentType(StringUtils.EMPTY)
-      .extract()
-      .response();
+  protected ResultActions postResultActions(String uri, Object body) throws Exception {
+    return mockMvc.perform(post(uri)
+      .headers(getHeaders())
+      .contentType(APPLICATION_JSON_VALUE)
+      .content(getObjectAsJson(body)))
+      .andDo(log());
   }
 
-  protected Response verifyPost(String path, Object body, int code) {
-    return RestAssured.with()
-      .header(new Header(XOkapiHeaders.URL, okapiUrl))
-      .header(new Header(XOkapiHeaders.TENANT, TENANT_ID))
-      .body(body)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .post(getRequestUrl(path))
-      .then()
-      .statusCode(code)
-      .contentType(StringUtils.EMPTY)
-      .extract()
-      .response();
+  protected ResultActions postResultActions(String uri, Object body, Map<String, String> headers) throws Exception {
+    return mockMvc.perform(post(uri)
+      .headers(getCustomHeaders(headers))
+      .contentType(APPLICATION_JSON_VALUE)
+      .content(getObjectAsJson(body)))
+      .andDo(log());
   }
 
-  protected Response verifyPost(String path, Object body, int code, Header... headers) {
-    return RestAssured.with()
-      .header(new Header(XOkapiHeaders.URL, okapiUrl))
-      .header(new Header(XOkapiHeaders.TENANT, TENANT_ID))
-      .headers(new Headers(headers))
-      .body(body)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .post(getRequestUrl(path))
-      .then()
-      .statusCode(code)
-      .contentType(StringUtils.EMPTY)
-      .extract()
-      .response();
+  protected ResultActions putResultActions(String uri, Object body) throws Exception {
+    return mockMvc.perform(put(uri)
+      .headers(defaultHeaders())
+      .contentType(APPLICATION_JSON)
+      .content(getObjectAsJson(body)))
+      .andDo(log());
+  }
+
+  protected ResultActions putResultActions(String uri) throws Exception {
+    return mockMvc.perform(put(uri)
+      .headers(defaultHeaders())
+      .contentType(APPLICATION_JSON)
+      .content(""))
+      .andDo(log());
   }
 
   @SneakyThrows
@@ -187,11 +176,33 @@ class BaseApiTest {
     return okapiUrl;
   }
 
-  private String getRequestUrl(String path) {
-    return "http://localhost:" + port + path;
-  }
-
   private RecordHeader createKafkaHeader(String headerName, String headerValue) {
     return new RecordHeader(headerName, headerValue.getBytes(StandardCharsets.UTF_8));
+  }
+
+  private HttpHeaders getHeaders() {
+    final HttpHeaders httpHeaders = new HttpHeaders();
+
+    httpHeaders.add(XOkapiHeaders.TENANT, TENANT_ID);
+    httpHeaders.add(XOkapiHeaders.URL, getOkapiUrl());
+
+    return httpHeaders;
+  }
+
+  private HttpHeaders getCustomHeaders(Map<String, String> headers) {
+    final HttpHeaders httpHeaders = getHeaders();
+
+    headers.forEach(httpHeaders::add);
+
+    return httpHeaders;
+  }
+
+  private HttpHeaders defaultHeaders() {
+    final HttpHeaders httpHeaders = getHeaders();
+
+    httpHeaders.setContentType(APPLICATION_JSON);
+    httpHeaders.add(XOkapiHeaders.USER_ID, JOHN_USER_ID);
+
+    return httpHeaders;
   }
 }

@@ -42,7 +42,6 @@
     </sonar.exclusions>
 
     <!-- Test properties-->
-    <rest-assured.version>4.4.0</rest-assured.version>
     <wiremock.version>2.31.0</wiremock.version>
     <marc4j.version>2.9.2</marc4j.version>
     <jsonpath.version>2.6.0</jsonpath.version>
@@ -141,12 +140,6 @@
           <artifactId>spring-boot-starter-logging</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <version>${rest-assured.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.github.tomakehurst</groupId>

@@ -5,22 +5,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
 import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
@@ -34,12 +22,21 @@ import static org.folio.qm.utils.APITestUtils.mockPut;
 import static org.folio.qm.utils.APITestUtils.recordsEditorPath;
 import static org.folio.qm.utils.APITestUtils.recordsEditorStatusPath;
 import static org.folio.qm.utils.APITestUtils.usersByIdPath;
+import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
+import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
 import static org.folio.qm.utils.IOTestUtils.readFile;
-import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
-import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
@@ -68,192 +65,189 @@ import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.extension.ClearTable;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
-import org.folio.tenant.domain.dto.Error;
+import org.springframework.test.web.servlet.MvcResult;
 
 @Log4j2
 class RecordsEditorApiTest extends BaseApiTest {
 
   @Test
-  void testGetQuickMarcBibRecord() {
+  void testGetQuickMarcBibRecord() throws Exception {
     log.info("===== Verify GET Bibliographic record: Successful =====");
 
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
 
-    var quickMarcJson = verifyGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+    getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.marcFormat").value(MarcFormat.BIBLIOGRAPHIC.getValue()))
+      .andExpect(jsonPath("$.parsedRecordDtoId").value(VALID_PARSED_RECORD_DTO_ID.toString()))
+      .andExpect(jsonPath("$.externalId").value(EXISTED_EXTERNAL_ID.toString()))
+      .andExpect(jsonPath("$.suppressDiscovery").value(Boolean.FALSE))
+      .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
+      .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID));
 
-    assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.BIBLIOGRAPHIC));
-    assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
-    assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
-    assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
-    assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
-    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));
-
-    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
-    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(quickMarcJson.getParsedRecordDtoId())));
+    checkParseRecordDtoId();
   }
 
   @Test
-  void testGetQuickMarcHoldingsRecord() {
+  void testGetQuickMarcHoldingsRecord() throws Exception {
     log.info("===== Verify GET Holdings record: Successful =====");
 
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
 
-    var quickMarcJson = verifyGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+    getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.marcFormat").value(MarcFormat.HOLDINGS.getValue()))
+      .andExpect(jsonPath("$.parsedRecordDtoId").value(VALID_PARSED_RECORD_DTO_ID.toString()))
+      .andExpect(jsonPath("$.externalId").value(EXISTED_EXTERNAL_ID.toString()))
+      .andExpect(jsonPath("$.externalHrid").value(EXISTED_EXTERNAL_HRID))
+      .andExpect(jsonPath("$.suppressDiscovery").value(Boolean.FALSE))
+      .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
+      .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID));
 
-    assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.HOLDINGS));
-    assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
-    assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
-    assertThat(quickMarcJson.getExternalHrid(), equalTo(EXISTED_EXTERNAL_HRID));
-    assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
-    assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
-    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));
-
-    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
-    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(quickMarcJson.getParsedRecordDtoId())));
+    checkParseRecordDtoId();
   }
 
   @Test
-  void testGetQuickMarcAuthorityRecord() {
+  void testGetQuickMarcAuthorityRecord() throws Exception {
     log.info("===== Verify GET Authority record: Successful =====");
 
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_AUTHORITY_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
 
-    var quickMarcJson = verifyGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), SC_OK).as(QuickMarc.class);
+    getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.marcFormat").value(MarcFormat.AUTHORITY.getValue()))
+      .andExpect(jsonPath("$.parsedRecordDtoId").value(VALID_PARSED_RECORD_DTO_ID.toString()))
+      .andExpect(jsonPath("$.externalId").value(EXISTED_EXTERNAL_ID.toString()))
+      .andExpect(jsonPath("$.externalHrid").doesNotExist())
+      .andExpect(jsonPath("$.suppressDiscovery").value(Boolean.FALSE))
+      .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
+      .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID));
 
-    assertThat(quickMarcJson.getMarcFormat(), equalTo(MarcFormat.AUTHORITY));
-    assertThat(quickMarcJson.getParsedRecordDtoId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
-    assertThat(quickMarcJson.getExternalId(), equalTo(EXISTED_EXTERNAL_ID));
-    assertNull(quickMarcJson.getExternalHrid());
-    assertThat(quickMarcJson.getSuppressDiscovery(), equalTo(Boolean.FALSE));
-    assertThat(quickMarcJson.getParsedRecordId(), equalTo(VALID_PARSED_RECORD_ID));
-    assertThat(quickMarcJson.getUpdateInfo().getUpdatedBy().getUserId(), equalTo(UUID.fromString(JOHN_USER_ID)));
-
-    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
-    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(quickMarcJson.getParsedRecordDtoId())));
+    checkParseRecordDtoId();
   }
 
   @Test
-  void testGetQuickMarcRecordNotFound() {
+  void testGetQuickMarcRecordNotFound() throws Exception {
     log.info("===== Verify GET record: Record Not Found =====");
 
     UUID recordNotFoundId = UUID.randomUUID();
 
     mockGet(changeManagerPath(EXTERNAL_ID, recordNotFoundId), "Not found", SC_NOT_FOUND, wireMockServer);
 
-    Error error = verifyGet(recordsEditorPath(EXTERNAL_ID, recordNotFoundId), SC_NOT_FOUND).as(Error.class);
+    getResultActions(recordsEditorPath(EXTERNAL_ID, recordNotFoundId))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
 
-    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
   @Test
-  void testGetQuickMarcRecordConverterError() {
+  void testGetQuickMarcRecordConverterError() throws Exception {
     log.info("===== Verify GET record: Converter (quickMARC internal exception) =====");
 
     UUID instanceId = UUID.randomUUID();
 
     mockGet(changeManagerPath(EXTERNAL_ID, instanceId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
 
-    Error error = verifyGet(recordsEditorPath(EXTERNAL_ID, instanceId), SC_UNPROCESSABLE_ENTITY).as(Error.class);
-    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
+    getResultActions(recordsEditorPath(EXTERNAL_ID, instanceId))
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
   @Test
-  void testGetQuickMarcRecordWithoutInstanceIdParameter() {
+  void testGetQuickMarcRecordWithoutInstanceIdParameter() throws Exception {
     log.info("===== Verify GET record: Request without instanceId =====");
 
     UUID id = UUID.randomUUID();
 
-    Error error = verifyGet(recordsEditorPath("X", id), SC_BAD_REQUEST).as(Error.class);
-    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
+    getResultActions(recordsEditorPath("X", id))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
     assertThat(wireMockServer.getAllServeEvents(), hasSize(0));
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testGetCreationStatus() {
+  void testGetCreationStatus() throws Exception {
     log.info("===== Verify GET record status: Successful =====");
 
     var id = UUID.randomUUID();
     saveCreationStatus(id, id, metadata, jdbcTemplate);
-    var status = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, id.toString()), SC_OK).as(CreationStatus.class);
 
-    assertThat(status, allOf(
-      hasProperty(QM_RECORD_ID, equalTo(id)),
-      hasProperty("status", equalTo(CreationStatus.StatusEnum.NEW))
-    ));
-    assertThat(status.getMetadata(), allOf(
-      notNullValue(),
-      hasProperty("createdAt", notNullValue())
-    ));
+    getResultActions(recordsEditorStatusPath(QM_RECORD_ID, id.toString()))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.qmRecordId").value(id.toString()))
+      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
+      .andExpect(jsonPath("$.metadata").value(notNullValue()))
+      .andExpect(jsonPath("$.metadata.createdAt").value(notNullValue()));
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testGetCreationStatusHasProperlyFormattedDate() {
+  void testGetCreationStatusHasProperlyFormattedDate() throws Exception {
     log.info("===== Verify GET record status: Successful =====");
 
     var id = UUID.randomUUID();
     saveCreationStatus(id, id, metadata, jdbcTemplate);
-    var response = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, id.toString()), SC_OK).asString();
 
     var expectedDatePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+");
-    assertThat(response, hasJsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern)));
+    getResultActions(recordsEditorStatusPath(QM_RECORD_ID, id.toString()))
+      .andExpect(status().isOk())
+      .andExpect(content().string(hasJsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern))));
   }
 
   @Test
-  void testReturn404IfStatusNotFound() {
+  void testReturn404IfStatusNotFound() throws Exception {
     log.info("===== Verify GET record status: Not found =====");
 
     var notExistedId = UUID.randomUUID().toString();
-    var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, notExistedId), SC_NOT_FOUND).as(Error.class);
 
-    assertThat(error.getMessage(), containsString("not found"));
+    getResultActions(recordsEditorStatusPath(QM_RECORD_ID, notExistedId))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message").value(containsString("not found")));
   }
 
   @Test
-  void testReturn400IfQmRecordIdIsInvalid() {
+  void testReturn400IfQmRecordIdIsInvalid() throws Exception {
     log.info("===== Verify GET record status: Parameter invalid =====");
 
     var invalidId = "invalid";
-    var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, invalidId), SC_BAD_REQUEST).as(Error.class);
 
-    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' is invalid"));
+    getResultActions(recordsEditorStatusPath(QM_RECORD_ID, invalidId))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is invalid")));
   }
 
   @Test
-  void testReturn400IfQmRecordIdIsMissing() {
+  void testReturn400IfQmRecordIdIsMissing() throws Exception {
     log.info("===== Verify GET record status: Parameter missing =====");
 
-    var error = verifyGet(recordsEditorStatusPath(), SC_BAD_REQUEST).as(Error.class);
-
-    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' is required"));
+    getResultActions(recordsEditorStatusPath())
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is required")));
   }
 
   @Test
-  void testReturn400IfQmRecordIdIsEmpty() {
+  void testReturn400IfQmRecordIdIsEmpty() throws Exception {
     log.info("===== Verify GET record status: Parameter empty =====");
 
-    var error = verifyGet(recordsEditorStatusPath(QM_RECORD_ID, ""), SC_BAD_REQUEST).as(Error.class);
-
-    assertThat(error.getMessage(), containsString("Parameter 'qmRecordId' is required"));
+    getResultActions(recordsEditorStatusPath(QM_RECORD_ID, ""))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is required")));
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testPostQuickMarcValidBibRecordCreated() {
+  void testPostQuickMarcValidBibRecordCreated() throws Exception {
     log.info("===== Verify POST bib record: Successful =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
@@ -270,10 +264,14 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
 
-    CreationStatus response =
-      verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_USER_ID_HEADER).as(CreationStatus.class);
-    assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
-    assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
+    MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
+      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
+      .andReturn();
+
+    String resultResponse = result.getResponse().getContentAsString();
+    CreationStatus response = getObjectFromJson(resultResponse, CreationStatus.class);
 
     final var qmRecordId = response.getQmRecordId();
 
@@ -292,7 +290,7 @@ class RecordsEditorApiTest extends BaseApiTest {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testPostQuickMarcValidHoldingsRecordCreated() {
+  void testPostQuickMarcValidHoldingsRecordCreated() throws Exception {
     log.info("===== Verify POST holdings record: Successful =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_HOLDINGS_PATH)
@@ -309,10 +307,14 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
 
-    CreationStatus response =
-      verifyPost(recordsEditorPath(), quickMarcJson, SC_CREATED, JOHN_USER_ID_HEADER).as(CreationStatus.class);
-    assertThat(response.getJobExecutionId(), equalTo(VALID_JOB_EXECUTION_ID));
-    assertThat(response.getStatus(), equalTo(CreationStatus.StatusEnum.NEW));
+    MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
+      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
+      .andReturn();
+
+    String resultResponse = result.getResponse().getContentAsString();
+    CreationStatus response = getObjectFromJson(resultResponse, CreationStatus.class);
 
     final var qmRecordId = response.getQmRecordId();
 
@@ -330,7 +332,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   }
 
   @Test
-  void testReturn401WhenInvalidUserId() {
+  void testReturn401WhenInvalidUserId() throws Exception {
     log.info("===== Verify POST record: User Id Invalid =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
@@ -340,26 +342,27 @@ class RecordsEditorApiTest extends BaseApiTest {
     String jobExecution = "mockdata/change-manager/job-execution/jobExecution_invalid_user_id.json";
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
 
-    final var error =
-      verifyPost(recordsEditorPath(), quickMarcJson, SC_UNPROCESSABLE_ENTITY, JOHN_USER_ID_HEADER).as(Error.class);
-    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
-    assertThat(error.getCode(), equalTo("UNPROCESSABLE_ENTITY"));
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
+      .andExpect(jsonPath("$.code").value("UNPROCESSABLE_ENTITY"));
   }
 
   @Test
-  void testReturn401WhenNoHeader() {
+  void testReturn401WhenNoHeader() throws Exception {
     log.info("===== Verify POST record: Bad request =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    final var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST).as(Error.class);
-    assertThat(error.getMessage(), equalTo("X-Okapi-User-Id header is missing"));
+    postResultActions(recordsEditorPath(), quickMarcJson)
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message").value("X-Okapi-User-Id header is missing"));
   }
 
   @Test
-  void testReturn400WhenConnectionReset() {
+  void testReturn400WhenConnectionReset() throws Exception {
     log.info("===== Verify POST record: Connection reset =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
@@ -372,11 +375,16 @@ class RecordsEditorApiTest extends BaseApiTest {
         .withFault(Fault.CONNECTION_RESET_BY_PEER)
       ));
 
-    var error = verifyPost(recordsEditorPath(), quickMarcJson, SC_BAD_REQUEST, JOHN_USER_ID_HEADER).as(Error.class);
-
-    assertThat(error.getType(), equalTo(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
-    assertThat(error.getCode(), equalTo("BAD_REQUEST"));
-    assertThat(error.getMessage(), containsString("Connection reset executing"));
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
+      .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+      .andExpect(jsonPath("$.message").value(containsString("Connection reset executing")));
   }
 
+  private void checkParseRecordDtoId() {
+    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
+    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
+    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(VALID_PARSED_RECORD_DTO_ID)));
+  }
 }

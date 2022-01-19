@@ -7,22 +7,17 @@ import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.folio.qm.utils.APITestUtils.TENANT_ID;
 import static org.folio.qm.utils.APITestUtils.changeManagerResourceByIdPath;
 import static org.folio.qm.utils.APITestUtils.mockPut;
 import static org.folio.qm.utils.APITestUtils.recordsEditorResourceByIdPath;
-import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
@@ -46,14 +41,12 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
-import org.folio.spring.integration.XOkapiHeaders;
 
 @Log4j2
 public class RecordsEditorAsyncApiTest extends BaseApiTest {
@@ -83,10 +76,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    MvcResult result = mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
+    MvcResult result = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(request().asyncStarted())
       .andReturn();
 
@@ -110,10 +100,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    MvcResult result = mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
+    MvcResult result = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(request().asyncStarted())
       .andReturn();
 
@@ -146,11 +133,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(wrongUUID))));
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isNotFound());
   }
 
@@ -162,11 +145,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_DTO_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), quickMarcJson)
       .andExpect(status().isBadRequest())
       .andExpect(errorMessageMatch(equalTo("Request id and entity id are not equal")));
 
@@ -182,11 +161,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isBadRequest())
       .andExpect(errorMessageMatch(equalTo("Parameter 'fields[0].tag' must match \"^[0-9]{3}$\"")));
 
@@ -198,11 +173,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordWithEmptyBody() throws Exception {
     log.info("===== Verify PUT record: Request with empty body =====");
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
       .andExpect(status().isBadRequest())
       .andExpect(errorMessageMatch(containsString("Required request body is missing")));
 
@@ -221,11 +192,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordId(VALID_PARSED_RECORD_ID)
       .externalId(UUID.randomUUID());
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.errors[0].message", containsString("Should have exactly 2 indicators")));
 
@@ -240,11 +207,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(errorMessageMatch(equalTo("Invalid Date1 field length, must be 4 characters")));
 
@@ -261,11 +224,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
-      .andDo(log())
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(errorMessageMatch(equalTo("The Leader and 008 do not match")));
 
@@ -281,10 +240,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    MvcResult result = mockMvc.perform(put(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(quickMarcJson)))
+    MvcResult result = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(request().asyncStarted())
       .andReturn();
 
@@ -301,17 +257,6 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
     payload.setRecordId(VALID_PARSED_RECORD_DTO_ID);
     payload.setErrorMessage(errorMessage);
     return new ObjectMapper().writeValueAsString(payload);
-  }
-
-  private HttpHeaders defaultHeaders() {
-    final HttpHeaders httpHeaders = new HttpHeaders();
-
-    httpHeaders.setContentType(APPLICATION_JSON);
-    httpHeaders.add(XOkapiHeaders.TENANT, TENANT_ID);
-    httpHeaders.add(XOkapiHeaders.USER_ID, JOHN_USER_ID);
-    httpHeaders.add(XOkapiHeaders.URL, getOkapiUrl());
-
-    return httpHeaders;
   }
 
   private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {

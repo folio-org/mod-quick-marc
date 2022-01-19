@@ -7,13 +7,12 @@ import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import java.sql.Timestamp;
-import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.service.CleanupService;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.spring.FolioExecutionContext;
@@ -22,7 +21,7 @@ import org.folio.spring.FolioExecutionContext;
 @RequiredArgsConstructor
 public class CleanupServiceImpl implements CleanupService {
 
-  @Qualifier("tenants") private final Set<String> tenants;
+  private final TenantsHolder tenantsHolder;
   private final FolioExecutionContext context;
   private final CreationStatusService creationStatusService;
 
@@ -33,7 +32,7 @@ public class CleanupServiceImpl implements CleanupService {
     var yesterdayTimestamp = new Timestamp(System.currentTimeMillis() - MILLIS_PER_DAY);
     endFolioExecutionContext();
 
-    for (var tenant : tenants) {
+    for (var tenant : tenantsHolder.getAll()) {
       beginFolioExecutionContext(getFolioExecutionContextCopyForTenant(context, tenant));
       try {
         creationStatusService.removeOlderThan(yesterdayTimestamp);

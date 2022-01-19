@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.sql.Timestamp;
-import java.util.Set;
 
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.folio.qm.holder.TenantsHolder;
+import org.folio.qm.holder.impl.TenantsHolderImpl;
 import org.folio.qm.util.TenantUtils;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
@@ -35,7 +37,7 @@ class CleanupServiceImplTest {
     .getEmptyFolioExecutionContext();
 
   @Spy
-  private Set<String> tenants = Set.of("tenant1", "tenant2");
+  private TenantsHolder tenantsHolder = new TenantsHolderImpl();
 
   @Mock
   private CreationStatusServiceImpl creationStatusService;
@@ -45,6 +47,12 @@ class CleanupServiceImplTest {
 
   @Captor
   private ArgumentCaptor<Timestamp> timestampCaptor;
+
+  @BeforeEach
+  public void setUpTenants() {
+    tenantsHolder.add("tenant1");
+    tenantsHolder.add("tenant2");
+  }
 
   @Test
   void shouldClearDataForAllTenants() {
@@ -58,14 +66,14 @@ class CleanupServiceImplTest {
       cleanupService.clearCreationStatusesForAllTenants();
 
       tenantUtils.verify(() -> TenantUtils.getFolioExecutionContextCopyForTenant(any(), any()),
-        times(tenants.size()));
+        times(tenantsHolder.count()));
       contextManager.verify(() -> FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext(context),
-        times(tenants.size()));
+        times(tenantsHolder.count()));
       contextManager.verify(FolioExecutionScopeExecutionContextManager::endFolioExecutionContext,
-        times(tenants.size() + 1));
+        times(tenantsHolder.count() + 1));
     }
 
-    verify(creationStatusService, times(tenants.size()))
+    verify(creationStatusService, times(tenantsHolder.count()))
       .removeOlderThan(timestampCaptor.capture());
 
     var yesterdayTime = System.currentTimeMillis() - MILLIS_PER_DAY;

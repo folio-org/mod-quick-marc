@@ -25,7 +25,7 @@ public class QmTenantController extends TenantController {
   }
 
   @Override
-  public ResponseEntity<String> postTenant(@Valid TenantAttributes tenantAttributes) {
+  public ResponseEntity<Void> postTenant(@Valid TenantAttributes tenantAttributes) {
     var responseEntity = super.postTenant(tenantAttributes);
     if (responseEntity.getStatusCode() == HttpStatus.OK) {
       kafkaTopicsInitializer.createTopics();

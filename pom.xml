@@ -27,9 +27,9 @@
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
-    <folio-spring-base.version>2.0.0</folio-spring-base.version>
+    <folio-spring-base.version>3.0.0</folio-spring-base.version>
     <mod-srm-client.version>3.3.0-SNAPSHOT</mod-srm-client.version>
-    <openapi-generator.version>5.2.0</openapi-generator.version>
+    <openapi-generator.version>5.3.1</openapi-generator.version>
     <mockito.version>4.0.0</mockito.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>

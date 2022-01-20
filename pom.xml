@@ -361,7 +361,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M5</version>
         <configuration>
-          <skipTests>true</skipTests>
           <useSystemClassLoader>false</useSystemClassLoader>
           <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
         </configuration>
@@ -414,19 +413,5 @@
       <layout>default</layout>
     </snapshotRepository>
   </distributionManagement>
-
-  <profiles>
-    <profile>
-      <id>embedded-kafka-workaround</id>
-      <activation>
-        <os>
-          <family>Windows</family><!-- super hacky workaround for https://stackoverflow.com/questions/19023109/values-for-os-family-in-maven-profile-activation-condition until kafka 3.0.1 is released -->
-        </os>
-      </activation>
-      <properties>
-        <kafka.version>2.8.1</kafka.version><!-- only locally and when in windows, kafka 3.0.0 fails to start embedded kafka -->
-      </properties>
-    </profile>
-  </profiles>
 
 </project>

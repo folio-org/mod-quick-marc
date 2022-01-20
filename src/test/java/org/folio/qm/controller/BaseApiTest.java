@@ -92,7 +92,7 @@ class BaseApiTest {
   void before() throws Exception {
     if (!dbInitialized) {
       postResultActions("/_/tenant",new TenantAttributes().moduleTo("mod-quick-marc"))
-      .andExpect(status().isOk());
+      .andExpect(status().isNoContent());
 
       dbInitialized = true;
     }

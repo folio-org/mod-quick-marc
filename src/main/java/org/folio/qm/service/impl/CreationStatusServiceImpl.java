@@ -1,5 +1,6 @@
 package org.folio.qm.service.impl;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,5 +45,11 @@ public class CreationStatusServiceImpl implements CreationStatusService {
   @Override
   public RecordCreationStatus save(RecordCreationStatus status) {
     return statusRepository.saveAndFlush(status);
+  }
+
+  @Override
+  @Transactional
+  public void removeOlderThan(Timestamp timestamp) {
+    statusRepository.deleteByUpdatedAtBefore(timestamp);
   }
 }

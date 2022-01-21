@@ -1,5 +1,6 @@
 package org.folio.qm.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.folio.qm.holder.TenantsHolder;
@@ -30,5 +31,12 @@ public class QmTenantController extends TenantController {
     super.upgradeTenant();
     kafkaTopicsInitializer.createTopics();
     tenantsHolder.add(context.getTenantId());
+  }
+
+  @Override
+  public ResponseEntity<Void> deleteTenant(String operationId) {
+    ResponseEntity<Void> voidResponseEntity = super.deleteTenant(operationId);
+    tenantsHolder.remove(context.getTenantId());
+    return voidResponseEntity;
   }
 }

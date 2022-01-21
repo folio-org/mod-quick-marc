@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
+import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.controller.TenantController;
 import org.folio.spring.service.TenantService;
 import org.folio.tenant.domain.dto.TenantAttributes;
@@ -17,11 +19,17 @@ import org.folio.tenant.domain.dto.TenantAttributes;
 public class QmTenantController extends TenantController {
 
   private final KafkaTopicsInitializer kafkaTopicsInitializer;
+  private final TenantsHolder tenantsHolder;
+  private final FolioExecutionContext context;
 
   public QmTenantController(TenantService tenantService,
-                            KafkaTopicsInitializer kafkaTopicsInitializer) {
+                            KafkaTopicsInitializer kafkaTopicsInitializer,
+                            TenantsHolder tenantsHolder,
+                            FolioExecutionContext context) {
     super(tenantService);
     this.kafkaTopicsInitializer = kafkaTopicsInitializer;
+    this.tenantsHolder = tenantsHolder;
+    this.context = context;
   }
 
   @Override
@@ -29,6 +37,7 @@ public class QmTenantController extends TenantController {
     var responseEntity = super.postTenant(tenantAttributes);
     if (responseEntity.getStatusCode() == HttpStatus.OK) {
       kafkaTopicsInitializer.createTopics();
+      tenantsHolder.add(context.getTenantId());
     }
     return responseEntity;
   }

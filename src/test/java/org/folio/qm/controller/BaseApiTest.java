@@ -91,8 +91,8 @@ class BaseApiTest {
   @BeforeEach
   void before() throws Exception {
     if (!dbInitialized) {
-      postResultActions("/_/tenant",new TenantAttributes().moduleTo(""))
-      .andExpect(status().isOk());
+      postResultActions("/_/tenant",new TenantAttributes().moduleTo("mod-quick-marc"))
+      .andExpect(status().isNoContent());
 
       dbInitialized = true;
     }

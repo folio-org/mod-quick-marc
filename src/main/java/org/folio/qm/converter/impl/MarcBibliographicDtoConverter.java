@@ -18,9 +18,14 @@ import java.util.UUID;
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcBibliographicDtoConverter extends AbstractMarcDtoConverter {
+
+  public MarcBibliographicDtoConverter(MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc) {
+    super(fieldProtectionSettingsMarc);
+  }
 
   @Override
   protected UUID getExternalId(ParsedRecordDto source) {

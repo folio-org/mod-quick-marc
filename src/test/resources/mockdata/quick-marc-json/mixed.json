@@ -10,12 +10,14 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "protect": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     },
     {
       "tag": "006",
@@ -23,7 +25,8 @@
         "Type": "p",
         "Form": "a"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     },
     {
       "tag": "008",
@@ -42,7 +45,8 @@
         "Srce": "w",
         "Form": "a"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     }
   ],
   "updateInfo": {

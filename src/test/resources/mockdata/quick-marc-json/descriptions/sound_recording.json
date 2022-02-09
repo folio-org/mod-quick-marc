@@ -10,7 +10,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "protect": "true"
     },
     {
       "tag": "007",
@@ -30,7 +31,8 @@
         "Special playback characteristics": "k",
         "Kind of disc, cylinder, or tape": "h"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     }
   ],
   "updateInfo": {

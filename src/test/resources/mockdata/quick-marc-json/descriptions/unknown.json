@@ -10,7 +10,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "protect": "true"
     },
     {
       "tag": "007",
@@ -19,7 +20,8 @@
         "Category": "p",
         "Value": "pabcdefghijklmnopqrstuvwxyz"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     }
   ],
   "updateInfo": {

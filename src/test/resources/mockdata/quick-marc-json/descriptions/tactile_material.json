@@ -10,7 +10,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "protect": "true"
     },
     {
       "tag": "007",
@@ -23,7 +24,8 @@
         "Braille music format": "efg",
         "Special physical characteristics": "h"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     }
   ],
   "updateInfo": {

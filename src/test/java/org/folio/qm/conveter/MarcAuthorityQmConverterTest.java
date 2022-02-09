@@ -20,6 +20,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
@@ -36,6 +37,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -129,7 +131,9 @@ class MarcAuthorityQmConverterTest {
   void testRecordsAreEqual() {
     logger.info("Source record and converted/restored one should be equal");
     var qmConverter = new MarcAuthorityQmConverter();
-    var dtoConverter = new MarcAuthorityDtoConverter();
+    MarcFieldProtectionSettingsCollection settingsCollection =
+      getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
+    var dtoConverter = new MarcAuthorityDtoConverter(settingsCollection);
     ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_AUTHORITY_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
     QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
       ParsedRecordDto.RecordType.MARC_AUTHORITY));

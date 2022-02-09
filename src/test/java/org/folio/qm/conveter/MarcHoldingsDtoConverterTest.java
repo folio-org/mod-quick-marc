@@ -3,7 +3,6 @@ package org.folio.qm.conveter;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
-import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
@@ -12,6 +11,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HO
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
 import java.time.ZoneOffset;
@@ -20,6 +20,7 @@ import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class MarcHoldingsDtoConverterTest {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.name());
     var parsedRecord = getMockAsObject(testEntity.getParsedRecordPath(), ParsedRecord.class);
     var parsedRecordDto = getParsedRecordDtoWithMinContent(parsedRecord, ParsedRecordDto.RecordType.MARC_HOLDING);
-    var converter = new MarcHoldingsDtoConverter();
+    var converter = getConverter();
     QuickMarc actual = converter.convert(parsedRecordDto);
 
     var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
@@ -67,7 +68,7 @@ class MarcHoldingsDtoConverterTest {
   })
   void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) throws JSONException {
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");
-    var converter = new MarcHoldingsDtoConverter();
+    var converter = getConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
     parsedRecordDto.setRecordType(ParsedRecordDto.RecordType.MARC_HOLDING);
     QuickMarc quickMarcJson = converter.convert(parsedRecordDto);
@@ -80,9 +81,16 @@ class MarcHoldingsDtoConverterTest {
   @Test
   void testHoldingsGeneralCharacteristicsControlFieldWrongLength() {
     logger.info("Testing Holdings General Information wrong length after editing - ConverterException expected");
-    var converter = new MarcHoldingsDtoConverter();
+    var converter = getConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH, ParsedRecordDto.class);
     parsedRecordDto.setRecordType(ParsedRecordDto.RecordType.MARC_HOLDING);
     assertThrows(ConverterException.class, () -> converter.convert(parsedRecordDto));
   }
+
+  private MarcHoldingsDtoConverter getConverter(){
+    MarcFieldProtectionSettingsCollection settingsCollection =
+      getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
+    return new MarcHoldingsDtoConverter(settingsCollection);
+  }
+
 }

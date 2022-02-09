@@ -10,7 +10,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "protect": "true"
     },
     {
       "tag": "007",
@@ -34,7 +35,8 @@
         "Configuration of playback channels": "g",
         "Positive/negative aspect": "i"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     }
   ],
   "updateInfo": {

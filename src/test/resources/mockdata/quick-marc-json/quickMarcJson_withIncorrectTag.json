@@ -9,12 +9,14 @@
     {
       "tag": "001test",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "protect": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     },
     {
       "tag": "006",
@@ -39,7 +41,8 @@
         ],
         "TrAr": "o"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     },
     {
       "tag": "007",
@@ -59,7 +62,8 @@
         "Capture and storage technique": "l",
         "Special playback characteristics": "k"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     },
     {
       "tag": "008",
@@ -95,7 +99,8 @@
         ],
         "TrAr": "o"
       },
-      "indicators": []
+      "indicators": [],
+      "protect": "false"
     },
     {
       "tag": "010",
@@ -103,7 +108,8 @@
       "indicators": [
         " ",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "035",
@@ -111,7 +117,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "035",
@@ -119,7 +126,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "040",
@@ -127,7 +135,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "041",
@@ -135,7 +144,8 @@
       "indicators": [
         "0",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "045",
@@ -143,7 +153,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "047",
@@ -151,7 +162,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "050",
@@ -159,7 +171,8 @@
       "indicators": [
         "0",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "066",
@@ -167,7 +180,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "100",
@@ -175,7 +189,8 @@
       "indicators": [
         "1",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "240",
@@ -183,7 +198,8 @@
       "indicators": [
         "1",
         "0"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "245",
@@ -191,7 +207,8 @@
       "indicators": [
         "1",
         "0"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "246",
@@ -199,7 +216,8 @@
       "indicators": [
         "3",
         "3"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "260",
@@ -207,7 +225,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "300",
@@ -215,7 +234,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "505",
@@ -223,7 +243,8 @@
       "indicators": [
         "0",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "590",
@@ -231,7 +252,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "650",
@@ -239,7 +261,8 @@
       "indicators": [
         "\\",
         "0"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "650",
@@ -247,7 +270,8 @@
       "indicators": [
         "\\",
         "0"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "650",
@@ -255,7 +279,8 @@
       "indicators": [
         "\\",
         "7"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "650",
@@ -263,7 +288,8 @@
       "indicators": [
         "\\",
         "7"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "880",
@@ -271,7 +297,8 @@
       "indicators": [
         "0",
         "0"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "902",
@@ -279,7 +306,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "905",
@@ -287,7 +315,8 @@
       "indicators": [
         "\\",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "948",
@@ -295,7 +324,8 @@
       "indicators": [
         "1",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "948",
@@ -303,7 +333,8 @@
       "indicators": [
         "0",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "948",
@@ -311,7 +342,8 @@
       "indicators": [
         "2",
         "\\"
-      ]
+      ],
+      "protect": "false"
     },
     {
       "tag": "948",
@@ -319,7 +351,8 @@
       "indicators": [
         "2",
         "\\"
-      ]
+      ],
+      "protect": "false"
     }
   ],
   "updateInfo": {

@@ -27,6 +27,7 @@ import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.exception.ConverterException;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
@@ -35,6 +36,10 @@ public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
       ACQ_ENDDATE, COMPL, COPIES,
       DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
       REPT_DATE, SEP_COMP, SPEC_RET);
+
+  public MarcHoldingsDtoConverter(MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc) {
+    super(fieldProtectionSettingsMarc);
+  }
 
   @Override
   public MarcFormat supportedType() {

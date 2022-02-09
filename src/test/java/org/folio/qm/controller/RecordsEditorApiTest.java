@@ -15,6 +15,7 @@ import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
 import static org.folio.qm.utils.APITestUtils.EXTERNAL_ID;
 import static org.folio.qm.utils.APITestUtils.JOHN_USER_ID_HEADER;
 import static org.folio.qm.utils.APITestUtils.QM_RECORD_ID;
+import static org.folio.qm.utils.APITestUtils.FIELD_PROTECTION_SETTINGS_PATH;
 import static org.folio.qm.utils.APITestUtils.changeManagerPath;
 import static org.folio.qm.utils.APITestUtils.mockGet;
 import static org.folio.qm.utils.APITestUtils.mockPost;
@@ -49,6 +50,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -77,6 +79,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -97,6 +100,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -118,6 +122,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_AUTHORITY_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -154,12 +159,13 @@ class RecordsEditorApiTest extends BaseApiTest {
     UUID instanceId = UUID.randomUUID();
 
     mockGet(changeManagerPath(EXTERNAL_ID, instanceId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, instanceId))
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
-    assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
+    assertThat(wireMockServer.getAllServeEvents(), hasSize(2));
   }
 
   @Test
@@ -383,7 +389,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   }
 
   private void checkParseRecordDtoId() {
-    var changeManagerResponse = wireMockServer.getAllServeEvents().get(1).getResponse().getBodyAsString();
+    var changeManagerResponse = wireMockServer.getAllServeEvents().get(2).getResponse().getBodyAsString();
     ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
     assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(VALID_PARSED_RECORD_DTO_ID)));
   }

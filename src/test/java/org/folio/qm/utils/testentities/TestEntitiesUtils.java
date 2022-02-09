@@ -31,6 +31,7 @@ public class TestEntitiesUtils {
   public static final String PARSED_RECORD_AUTHORITY_DTO2_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDto2.json";
   public static final String PARSED_RECORD_AUTHORITY_DTO_INVALID_008_LENGTH = QM_JSON_DIR + "/parsedRecordAuthorityDto_invalid_008_field_length.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH = QM_JSON_DIR + "/parsedRecordHoldingsDto_invalid_008_field_length.json";
+  public static final String PARSED_RECORDS_PROTECTION_SETTINGS = "mockdata/parsed-records/protected-field/recordMarcProtectionSettings.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
   public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
   public static final String QM_WRONG_ITEM_LENGTH = PARSED_RECORDS_DIR + "/quickMarcJsonWrongItemLength.json";
@@ -47,7 +48,10 @@ public class TestEntitiesUtils {
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
   public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";
   public static final String QM_EDITED_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority_edited.json";
-  public static final String FIELD_PROTECTION_SETTINGS_COLLECTION_PATH = "mockdata/protection-settings-collection/fieldProtectionSettingsCollection.json";
+  public static final String QM_PROTECTION_SETTINGS = PARSED_RECORDS_DIR + "/protection_settings/quickMarcProtectionSettings.json";
+  public static final String PROTECTION_SETTINGS_COLLECTION_PATH = "mockdata/protection-settings-collection";
+  public static final String FIELD_PROTECTION_SETTINGS_COLLECTION_PATH = PROTECTION_SETTINGS_COLLECTION_PATH + "/fieldProtectionSettingsCollection.json";
+  public static final String FIELD_PROTECTION_SETTINGS_COLLECTION_FULL_PATH = PROTECTION_SETTINGS_COLLECTION_PATH + "/fieldProtectionSettingsCollectionFull.json";
 
   public static final String TESTED_TAG_NAME = "333";
   public static final UUID VALID_PARSED_RECORD_DTO_ID = UUID.fromString("c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c");

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(value = "field-protection-settings")
 public interface DICSFieldProtectionSettingsClient {
 
-  @GetMapping(value = "/marc", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+  @GetMapping(value = "/marc?limit=1000", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
   MarcFieldProtectionSettingsCollection getFieldProtectionSettingsMarc();
 
 }

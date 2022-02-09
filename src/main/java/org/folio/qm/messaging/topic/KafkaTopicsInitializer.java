@@ -14,6 +14,7 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.config.properties.FolioKafkaProperties;
 import org.folio.qm.messaging.domain.QmEventTypes;
 import org.folio.rest.jaxrs.model.DataImportEventTypes;
 import org.folio.spring.FolioExecutionContext;
@@ -27,11 +28,12 @@ public class KafkaTopicsInitializer {
   private final BeanFactory beanFactory;
   private final FolioExecutionContext folioExecutionContext;
   private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+  private final FolioKafkaProperties folioKafkaProperties;
   private final String kafkaEnvId;
 
   public void createTopics() {
     if (folioExecutionContext == null) {
-      throw new IllegalStateException("Could be executed on in Folio-request scope");
+      throw new IllegalStateException("Could be executed only in Folio-request scope");
     }
     var tenantId = folioExecutionContext.getTenantId();
     var topicList = tenantSpecificTopics(tenantId);
@@ -45,10 +47,16 @@ public class KafkaTopicsInitializer {
       }
     });
     kafkaAdmin.initialize();
-    kafkaListenerEndpointRegistry.getListenerContainers().forEach(messageListenerContainer -> {
-      messageListenerContainer.stop();
-      messageListenerContainer.start();
-    });
+    restartEventListeners();
+  }
+
+  public void restartEventListeners() {
+    kafkaListenerEndpointRegistry.getAllListenerContainers().forEach(container -> {
+        log.info("Restarting kafka consumer to start listening created topics [ids: {}]", container.getListenerId());
+        container.stop();
+        container.start();
+      }
+    );
   }
 
   private List<NewTopic> tenantSpecificTopics(String tenant) {
@@ -66,7 +74,10 @@ public class KafkaTopicsInitializer {
   }
 
   private NewTopic toKafkaTopic(String topic) {
-    return TopicBuilder.name(topic).build();
+    return TopicBuilder.name(topic)
+      .replicas(folioKafkaProperties.getReplicationFactor())
+      .partitions(folioKafkaProperties.getNumberOfPartitions())
+      .build();
   }
 
   private String getTenantTopicName(String topicName, String tenantId) {

@@ -17,10 +17,15 @@ import org.folio.qm.util.ErrorUtils;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class QuickMarcEventListener {
 
+  public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
+
   private final CacheService<DeferredResult> cacheService;
 
-  @KafkaListener(groupId = "#{@groupIdProvider.qmCompletedGroupId()}",
-    topicPattern = "#{@topicPatternProvider.qmCompletedTopicName()}",
+  @KafkaListener(
+    id = QM_COMPLETED_LISTENER_ID,
+    groupId = "#{folioKafkaProperties.listener['qm-completed'].groupId}",
+    topicPattern = "#{folioKafkaProperties.listener['qm-completed'].topicPattern}",
+    concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data) {
     var recordId = data.getRecordId();

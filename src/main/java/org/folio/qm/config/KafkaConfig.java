@@ -1,7 +1,11 @@
 package org.folio.qm.config;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.RoundRobinAssignor;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +32,9 @@ public class KafkaConfig {
   @Bean
   public ConsumerFactory<String, DataImportEventPayload> dataImportConsumerFactory(KafkaProperties kafkaProperties,
                                                                          Deserializer<DataImportEventPayload> deserializer) {
-    var consumerProperties = kafkaProperties.buildConsumerProperties();
-    consumerProperties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
+    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties());
+    consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
     return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);
   }
 
@@ -37,7 +42,6 @@ public class KafkaConfig {
   public ConcurrentKafkaListenerContainerFactory<String, DataImportEventPayload> dataImportKafkaListenerContainerFactory(
     ConsumerFactory<String, DataImportEventPayload> consumerFactory) {
     var factory = new ConcurrentKafkaListenerContainerFactory<String, DataImportEventPayload>();
-    factory.setConcurrency(3);
     factory.setConsumerFactory(consumerFactory);
     return factory;
   }
@@ -45,8 +49,9 @@ public class KafkaConfig {
   @Bean
   public ConsumerFactory<String, QmCompletedEventPayload> quickMarcConsumerFactory(KafkaProperties kafkaProperties,
                                                                                    Deserializer<QmCompletedEventPayload> deserializer) {
-    var consumerProperties = kafkaProperties.buildConsumerProperties();
-    consumerProperties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
+    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties());
+    consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
     return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);
   }
 
@@ -54,7 +59,6 @@ public class KafkaConfig {
   public ConcurrentKafkaListenerContainerFactory<String, QmCompletedEventPayload> quickMarcKafkaListenerContainerFactory(
     ConsumerFactory<String, QmCompletedEventPayload> consumerFactory) {
     var factory = new ConcurrentKafkaListenerContainerFactory<String, QmCompletedEventPayload>();
-    factory.setConcurrency(3);
     factory.setConsumerFactory(consumerFactory);
     return factory;
   }

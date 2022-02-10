@@ -1,10 +1,11 @@
 package org.folio.qm.messaging.listener;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import javax.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -22,11 +23,16 @@ import org.folio.tenant.domain.dto.Error;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class QuickMarcEventListener {
 
+  public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
+
   private final CacheService<DeferredResult> cacheService;
   private final ObjectMapper objectMapper;
 
-  @KafkaListener(groupId = "#{@groupIdProvider.qmCompletedGroupId()}",
-    topicPattern = "#{@topicPatternProvider.qmCompletedTopicName()}",
+  @KafkaListener(
+    id = QM_COMPLETED_LISTENER_ID,
+    groupId = "#{folioKafkaProperties.listener['qm-completed'].groupId}",
+    topicPattern = "#{folioKafkaProperties.listener['qm-completed'].topicPattern}",
+    concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data) throws JsonProcessingException {
     var recordId = data.getRecordId();

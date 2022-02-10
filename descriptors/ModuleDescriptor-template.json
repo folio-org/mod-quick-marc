@@ -180,6 +180,14 @@
         "value": "9092"
       },
       {
+        "name": "REPLICATION_FACTOR",
+        "value": "1"
+      },
+      {
+        "name": "NUMBER_OF_PARTITIONS",
+        "value": "1"
+      },
+      {
         "name": "ENV",
         "value": "folio"
       }

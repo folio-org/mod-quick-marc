@@ -11,13 +11,13 @@
       "tag": "001",
       "content": "393893",
       "indicators": [],
-      "protect": "true"
+      "isProtected": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -26,7 +26,7 @@
         "Form": "a"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -46,7 +46,7 @@
         "Form": "a"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

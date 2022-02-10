@@ -11,7 +11,7 @@
       "tag": "001",
       "content": "393893",
       "indicators": [],
-      "protect": "true"
+      "isProtected": "true"
     },
     {
       "tag": "007",
@@ -27,7 +27,7 @@
         "Medium for sound": "e"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

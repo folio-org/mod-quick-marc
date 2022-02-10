@@ -11,13 +11,13 @@
       "tag": "001",
       "content": "1430000",
       "indicators": [],
-      "protect": "true"
+      "isProtected": "true"
     },
     {
       "tag": "004",
       "content": "1165205",
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -41,7 +41,7 @@
         ]
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "014",
@@ -58,7 +58,7 @@
         "0",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "035",
@@ -67,7 +67,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "852",
@@ -76,7 +76,7 @@
         "0",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -85,7 +85,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -94,7 +94,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -103,7 +103,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -112,7 +112,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -121,7 +121,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -130,7 +130,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -139,7 +139,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -148,7 +148,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -157,7 +157,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "866",
@@ -166,7 +166,7 @@
         "\\",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "867",
@@ -175,7 +175,7 @@
         "4",
         "1"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "999",
@@ -184,7 +184,7 @@
         "f",
         "f"
       ],
-      "protect": "true"
+      "isProtected": "true"
     }
   ],
   "updateInfo": {

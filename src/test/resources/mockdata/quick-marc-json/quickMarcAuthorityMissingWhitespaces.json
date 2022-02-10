@@ -9,19 +9,19 @@
       "tag": "001",
       "content": "ak00005012492",
       "indicators": [],
-      "protect": "true"
+      "isProtected": "true"
     },
     {
       "tag": "003",
       "content": "NhCcYBP",
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "005",
       "content": "20130220102526.4",
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -33,7 +33,7 @@
         "GPub": "|"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "007",
@@ -52,7 +52,7 @@
         "Image bit depth": ""
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -82,7 +82,7 @@
         "Source": "\\"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "999",
@@ -91,7 +91,7 @@
         "f",
         "f"
       ],
-      "protect": "true"
+      "isProtected": "true"
     }
   ],
   "updateInfo": {

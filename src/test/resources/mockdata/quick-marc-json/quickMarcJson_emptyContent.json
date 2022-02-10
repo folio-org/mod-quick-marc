@@ -10,13 +10,13 @@
       "tag": "001",
       "content": "20141107001016",
       "indicators": [],
-      "protect": "true"
+      "isProtected": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -42,7 +42,7 @@
         "Comp": " b"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "007",
@@ -62,7 +62,7 @@
         "Kind of disc, cylinder, or tape": "h"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -99,7 +99,7 @@
         "Comp": " b"
       },
       "indicators": [],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "010",
@@ -108,7 +108,7 @@
         " ",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "035",
@@ -117,7 +117,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "035",
@@ -126,7 +126,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "040",
@@ -135,7 +135,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "041",
@@ -144,7 +144,7 @@
         "0",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "045",
@@ -153,7 +153,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "047",
@@ -162,7 +162,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "050",
@@ -171,7 +171,7 @@
         "0",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "066",
@@ -180,7 +180,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "100",
@@ -189,7 +189,7 @@
         "1",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "240",
@@ -198,7 +198,7 @@
         "1",
         "0"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "245",
@@ -207,7 +207,7 @@
         "1",
         "0"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "246",
@@ -216,7 +216,7 @@
         "3",
         "3"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "260",
@@ -225,7 +225,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "300",
@@ -234,7 +234,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "505",
@@ -243,7 +243,7 @@
         "0",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "590",
@@ -252,7 +252,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -261,7 +261,7 @@
         "\\",
         "0"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -270,7 +270,7 @@
         "\\",
         "0"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -279,7 +279,7 @@
         "\\",
         "7"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -288,7 +288,7 @@
         "\\",
         "7"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "880",
@@ -297,7 +297,7 @@
         "0",
         "0"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "902",
@@ -306,7 +306,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "905",
@@ -315,7 +315,7 @@
         "\\",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -324,7 +324,7 @@
         "1",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -333,7 +333,7 @@
         "0",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -342,7 +342,7 @@
         "2",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -351,7 +351,7 @@
         "2",
         "\\"
       ],
-      "protect": "false"
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

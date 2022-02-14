@@ -3,7 +3,8 @@ package org.folio.qm.converter;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
-
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
@@ -22,8 +23,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
@@ -41,7 +45,12 @@ import org.folio.qm.exception.ConverterException;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
+@AllArgsConstructor
 public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
+  private static final String ANY_STRING = "*";
+  private static final char BLANK_SUBFIELD_CODE = ' ';
+
+  private MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc;
 
   @Override
   public QuickMarc convert(@NonNull ParsedRecordDto source) {
@@ -138,11 +147,13 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       .substring(content, element.getPosition() + delta, element.getPosition() + delta + element.getLength());
   }
 
-  private FieldItem dataFieldToQuickMarcField(DataField dataField) {
-    return new FieldItem().tag(dataField.getTag())
-      .indicators(Arrays.asList(masqueradeBlanks(Character.toString(dataField.getIndicator1())),
-        masqueradeBlanks(Character.toString(dataField.getIndicator2()))))
-      .content(dataField.getSubfields()
+  private FieldItem dataFieldToQuickMarcField(DataField field) {
+    return new FieldItem()
+      .isProtected(isProtected(field))
+      .tag(field.getTag())
+      .indicators(Arrays.asList(masqueradeBlanks(Character.toString(field.getIndicator1())),
+        masqueradeBlanks(Character.toString(field.getIndicator2()))))
+      .content(field.getSubfields()
         .stream()
         .map(subfield -> new StringBuilder("$").append(subfield.getCode())
           .append(SPACE)
@@ -150,15 +161,65 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
         .collect(Collectors.joining(SPACE)));
   }
 
-  private FieldItem controlFieldToQuickMarcField(ControlField cf, String leader) {
+  private FieldItem controlFieldToQuickMarcField(ControlField field, String leader) {
     return new FieldItem()
-        .tag(cf.getTag())
-        .content(processControlField(cf, leader))
-        .indicators(Collections.emptyList());
+      .isProtected(isProtected(field))
+      .tag(field.getTag())
+      .content(processControlField(field, leader))
+      .indicators(Collections.emptyList());
   }
 
   private String masqueradeBlanks(String sourceString) {
     return sourceString.replace(SPACE, BLANK_REPLACEMENT);
+  }
+
+  private boolean isProtected(ControlField field) {
+    return fieldProtectionSettingsMarc.getMarcFieldProtectionSettings().stream()
+      .filter(setting -> isAnyValueInSettingOrTagMatch(setting, field))
+      .anyMatch(setting -> isAnyDataInSettingOrDataMatch(setting, field));
+  }
+
+  private boolean isProtected(DataField field) {
+    return fieldProtectionSettingsMarc.getMarcFieldProtectionSettings().stream()
+      .filter(setting -> isAnyFieldInSettingOrFieldMatch(setting, field))
+      .filter(setting -> isAnyIndicator1InSettingOrIndicator1Match(setting, field))
+      .filter(setting -> isAnyIndicator2InSettingOrIndicator2Match(setting, field))
+      .filter(setting -> isAnySubFieldInSettingOrSubFieldMatch(setting, field))
+      .anyMatch(setting -> isAnyDataInSettingOrDataMatch(setting, field));
+  }
+
+  private boolean isAnyValueInSettingOrTagMatch(MarcFieldProtectionSetting setting, ControlField field) {
+    return (isBlank(setting.getIndicator1()) && isBlank(setting.getIndicator2()) && isBlank(setting.getSubfield()))
+      && setting.getField().equals(ANY_STRING) || setting.getField().equals(field.getTag());
+  }
+
+  private boolean isAnyDataInSettingOrDataMatch(MarcFieldProtectionSetting setting, ControlField field) {
+    return setting.getData().equals(ANY_STRING) || setting.getData().equals(field.getData());
+  }
+
+  private boolean isAnyFieldInSettingOrFieldMatch(MarcFieldProtectionSetting setting, DataField field) {
+    return setting.getField().equals(ANY_STRING) || setting.getField().equals(field.getTag());
+  }
+
+  private boolean isAnyIndicator1InSettingOrIndicator1Match(MarcFieldProtectionSetting setting, DataField field) {
+    return setting.getIndicator1().equals(ANY_STRING)
+      || (isNotEmpty(setting.getIndicator1()) ? setting.getIndicator1().charAt(0) : BLANK_SUBFIELD_CODE)
+      == field.getIndicator1();
+  }
+
+  private boolean isAnyIndicator2InSettingOrIndicator2Match(MarcFieldProtectionSetting setting, DataField field) {
+    return setting.getIndicator2().equals(ANY_STRING)
+      || (isNotEmpty(setting.getIndicator2()) ? setting.getIndicator2().charAt(0) : BLANK_SUBFIELD_CODE)
+      == field.getIndicator2();
+  }
+
+  private boolean isAnySubFieldInSettingOrSubFieldMatch(MarcFieldProtectionSetting setting, DataField field) {
+    return setting.getSubfield().equals(ANY_STRING) || field.getSubfield(setting.getSubfield().charAt(0)) != null;
+  }
+
+  private boolean isAnyDataInSettingOrDataMatch(MarcFieldProtectionSetting setting, DataField field) {
+    return setting.getData().equals(ANY_STRING) || setting.getData()
+      .equals(field.getSubfield(setting.getSubfield().charAt(0)).getData());
   }
 
 }

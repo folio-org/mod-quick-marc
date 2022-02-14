@@ -37,6 +37,7 @@ import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.exception.ConverterException;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcAuthorityDtoConverter extends AbstractMarcDtoConverter {
@@ -49,6 +50,10 @@ public class MarcAuthorityDtoConverter extends AbstractMarcDtoConverter {
     SERIES_USE, TYPE_SUBD, UNDEF_18, GOVT_AG,
     REF_EVAL, UNDEF_30, REC_UPD, PERS_NAME,
     LEVEL_EST, UNDEF_34, MOD_REC_EST, SOURCE);
+
+  public MarcAuthorityDtoConverter(MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc) {
+    super(fieldProtectionSettingsMarc);
+  }
 
   @Override
   public MarcFormat supportedType() {

@@ -1,0 +1,393 @@
+{
+  "marcFieldProtectionSettings": [
+    {
+      "id": "2d706874-8a10-4d3e-a190-33c301d157e3",
+      "field": "001",
+      "indicator1": "",
+      "indicator2": "",
+      "subfield": "",
+      "data": "*",
+      "source": "SYSTEM",
+      "override": false,
+      "metadata": {
+        "createdDate": "2020-08-13T14:44:00.000+00:00",
+        "createdByUserId": "00000000-0000-0000-0000-000000000000",
+        "createdByUsername": "System",
+        "updatedDate": "2020-08-13T14:44:00.000+00:00",
+        "updatedByUserId": "00000000-0000-0000-0000-000000000000",
+        "updatedByUsername": "System"
+      }
+    },
+    {
+      "id": "82d0b904-f8b0-4cc2-b238-7d8cddef7b7e",
+      "field": "999",
+      "indicator1": "f",
+      "indicator2": "f",
+      "subfield": "*",
+      "data": "*",
+      "source": "SYSTEM",
+      "override": false,
+      "metadata": {
+        "createdDate": "2020-08-13T14:44:00.000+00:00",
+        "createdByUserId": "00000000-0000-0000-0000-000000000000",
+        "createdByUsername": "System",
+        "updatedDate": "2020-08-13T14:44:00.000+00:00",
+        "updatedByUserId": "00000000-0000-0000-0000-000000000000",
+        "updatedByUsername": "System"
+      }
+    },
+    {
+      "id": "a5c42486-2614-4932-b27b-8853049d19bf",
+      "field": "006",
+      "indicator1": "",
+      "indicator2": "",
+      "subfield": "",
+      "data": "bcdefghijklmn",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T09:56:21.358+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T09:56:21.358+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "7b862671-3b12-4c89-b6c6-8c0d4543f59e",
+      "field": "007",
+      "indicator1": "",
+      "indicator2": "",
+      "subfield": "",
+      "data": "bcdefghijkl",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T09:57:16.424+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T09:57:16.424+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "a93ad161-b48a-4f0e-a361-0e732bfd4c23",
+      "field": "008",
+      "indicator1": "",
+      "indicator2": "",
+      "subfield": "",
+      "data": "abcdefghijklmnopqr",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T09:57:37.501+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T09:57:37.501+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "c15c0f0a-e281-4438-8841-70c705463dd5",
+      "field": "010",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T09:58:26.302+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T09:58:26.302+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "174cc7a0-ed08-40f0-9bb7-9cb16d7c821a",
+      "field": "035",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "(OCoLC)63611770",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T09:59:06.922+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T09:59:06.922+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "73cf5a34-14ac-494e-be02-e3e346588960",
+      "field": "040",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "c",
+      "data": "UPB",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T09:59:43.402+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T09:59:43.402+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "80cfa33a-9e43-42fe-8bbb-cee37c02143d",
+      "field": "041",
+      "indicator1": "0",
+      "indicator2": "*",
+      "subfield": "*",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:00:05.141+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:00:05.141+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "c784ecd4-90c1-4d6d-8e71-00c919c62c60",
+      "field": "045",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "c",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:00:22.391+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:00:22.391+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "9a897e52-bc17-41f2-bece-cf4d0e7d2c95",
+      "field": "047",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "cn",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:01:03.797+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:01:03.797+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "9d0c9c1e-416d-4ec1-a1a5-b5d1179dcd92",
+      "field": "050",
+      "indicator1": "0",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "M3",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:01:30.431+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:01:30.431+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "bc724e7e-1cb1-4a64-92e0-d81dd2db5b91",
+      "field": "066",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "c",
+      "data": "$1",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:01:57.406+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:01:57.406+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "5d46e651-b0d4-4123-8d71-f8fdf3807c86",
+      "field": "100",
+      "indicator1": "2",
+      "indicator2": "*",
+      "subfield": "*",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:02:13.360+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:02:13.360+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "7bd0aa05-60a4-4619-a8d7-73f14b4980c9",
+      "field": "240",
+      "indicator1": "*",
+      "indicator2": "0",
+      "subfield": "*",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:02:30.056+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:02:30.056+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "ca65a23e-9b7d-4bc3-876e-916f24465715",
+      "field": "245",
+      "indicator1": "1",
+      "indicator2": "0",
+      "subfield": "a",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:02:47.691+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:02:47.691+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "8c65ef0f-b8c7-482f-b7f0-6bcc054a2d87",
+      "field": "246",
+      "indicator1": "3",
+      "indicator2": "0",
+      "subfield": "a",
+      "data": "Neue Mozart-Ausgabe",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:03:15.045+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:03:15.045+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "5a7b1b27-3a46-43d1-93ac-2a5daac87268",
+      "field": "260",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "Barenreiter,",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:03:35.191+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:03:35.191+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "3fcfa016-70eb-4f61-838d-1747bbd3939b",
+      "field": "300",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "v.",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:03:58.061+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:03:58.061+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "000f3b59-4ab6-4d27-8607-ed43e55365f2",
+      "field": "505",
+      "indicator1": "0",
+      "indicator2": "*",
+      "subfield": "*",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:04:22.742+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:04:22.742+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "d82e14f5-6287-4f88-84d4-c016d9642d45",
+      "field": "590",
+      "indicator1": "*",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "Purchase price: $325.00, 1980 August.",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:04:47.105+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:04:47.105+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "1f59f802-6e8d-41d4-a894-b3981234ddd2",
+      "field": "650",
+      "indicator1": "*",
+      "indicator2": "0",
+      "subfield": "a",
+      "data": "Vocal music",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:05:11.370+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:05:11.370+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "f15ad15c-2a86-429c-93b6-2f52dce8b35e",
+      "field": "880",
+      "indicator1": "0",
+      "indicator2": "0",
+      "subfield": "*",
+      "data": "*",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:05:37.938+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:05:37.938+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    },
+    {
+      "id": "5885a1de-6e05-47f6-9e6a-0f0e36898053",
+      "field": "948",
+      "indicator1": "1",
+      "indicator2": "*",
+      "subfield": "a",
+      "data": "20100622",
+      "source": "USER",
+      "override": false,
+      "metadata": {
+        "createdDate": "2022-02-09T10:06:02.167+00:00",
+        "createdByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7",
+        "updatedDate": "2022-02-09T10:06:02.167+00:00",
+        "updatedByUserId": "2c799506-13eb-5ec6-ae6c-9ab3f11e58b7"
+      }
+    }
+  ],
+  "totalRecords": 24
+}

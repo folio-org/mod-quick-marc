@@ -10,7 +10,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "007",
@@ -26,7 +27,8 @@
         "Level of compression": "k",
         "Reformatting quality": "l"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     }
   ],
   "relatedRecordVersion": "1"

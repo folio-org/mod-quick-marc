@@ -10,12 +10,14 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -35,7 +37,8 @@
         "LitF": "o",
         "Biog": "p"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -66,7 +69,8 @@
         "LitF": "o",
         "Biog": "p"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     }
   ],
   "relatedRecordVersion": "1"

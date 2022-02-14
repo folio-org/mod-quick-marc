@@ -9,7 +9,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "010",
@@ -17,7 +18,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

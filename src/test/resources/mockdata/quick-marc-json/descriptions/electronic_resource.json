@@ -10,7 +10,8 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "007",
@@ -28,7 +29,8 @@
         "Reformatting quality": "l",
         "Image bit depth": "efg"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

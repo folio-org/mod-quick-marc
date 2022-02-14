@@ -2,7 +2,6 @@ package org.folio.qm.conveter;
 
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
-import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
@@ -10,6 +9,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BI
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
 import java.time.ZoneOffset;
@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,7 +47,7 @@ class MarcBibliographicDtoConverterTest {
   void testSplitFixedLengthControlField(GeneralTestEntities testEntity) throws JSONException {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.getMaterialTypeConfiguration().getName());
     ParsedRecord parsedRecord = getMockAsObject(testEntity.getParsedRecordPath(), ParsedRecord.class);
-    MarcBibliographicDtoConverter converter = new MarcBibliographicDtoConverter();
+    MarcBibliographicDtoConverter converter = getConverter();
     QuickMarc actual = converter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
       ParsedRecordDto.RecordType.MARC_BIB));
     var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
@@ -59,7 +60,7 @@ class MarcBibliographicDtoConverterTest {
   void testSplitFixedLengthControlField(PhysicalDescriptionsTestEntities testEntity) throws JSONException {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.name());
     ParsedRecord parsedRecord = getMockAsObject(testEntity.getParsedRecordPath(), ParsedRecord.class);
-    MarcBibliographicDtoConverter converter = new MarcBibliographicDtoConverter();
+    MarcBibliographicDtoConverter converter = getConverter();
     QuickMarc quickMarcJson = converter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
       ParsedRecordDto.RecordType.MARC_BIB));
     var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
@@ -74,13 +75,18 @@ class MarcBibliographicDtoConverterTest {
   })
   void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) throws JSONException {
     logger.info("Testing ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");
-    MarcBibliographicDtoConverter converter = new MarcBibliographicDtoConverter();
+    MarcBibliographicDtoConverter converter = getConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
     QuickMarc quickMarcJson = converter.convert(parsedRecordDto);
 
     var expected = readQuickMarc(quickMarcJsonPath);
     Objects.requireNonNull(expected).setRelatedRecordVersion(null);
     JSONAssert.assertEquals(getObjectAsJson(expected), getObjectAsJson(quickMarcJson), true);
+  }
 
+  private MarcBibliographicDtoConverter getConverter(){
+    MarcFieldProtectionSettingsCollection settingsCollection =
+      getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
+    return new MarcBibliographicDtoConverter(settingsCollection);
   }
 }

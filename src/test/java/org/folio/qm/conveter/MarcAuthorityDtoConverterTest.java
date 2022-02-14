@@ -11,6 +11,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AU
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_EDGE_CASES_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
 import java.time.ZoneOffset;
@@ -19,6 +20,7 @@ import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -50,7 +52,7 @@ class MarcAuthorityDtoConverterTest {
     logger.info("Testing FixedLengthControlField splitting for {}", testEntity.name());
     var parsedRecord = getMockAsObject(testEntity.getParsedRecordPath(), ParsedRecord.class);
     var parsedRecordDto = getParsedRecordDtoWithMinContent(parsedRecord, ParsedRecordDto.RecordType.MARC_AUTHORITY);
-    var converter = new MarcAuthorityDtoConverter();
+    var converter = getConverter();
     var actual = converter.convert(parsedRecordDto);
 
     var expected = readQuickMarc(testEntity.getQuickMarcJsonPath());
@@ -67,7 +69,7 @@ class MarcAuthorityDtoConverterTest {
   })
   void testParsedRecordToQuickMarcJsonConversion(String parsedRecordDtoPath, String quickMarcJsonPath) throws JSONException {
     logger.info("Testing Authority ParsedRecord -> QuickMarcJson conversion (expected flow + edge cases)");
-    var converter = new MarcAuthorityDtoConverter();
+    var converter = getConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
     parsedRecordDto.setRecordType(ParsedRecordDto.RecordType.MARC_AUTHORITY);
     QuickMarc quickMarcJson = converter.convert(parsedRecordDto);
@@ -79,9 +81,15 @@ class MarcAuthorityDtoConverterTest {
   @Test
   void testAuthorityGeneralCharacteristicsControlFieldWrongLength() {
     logger.info("Testing Authority General Information wrong length after editing - ConverterException expected");
-    var converter = new MarcAuthorityDtoConverter();
+    var converter = getConverter();
     ParsedRecordDto parsedRecordDto = getMockAsObject(PARSED_RECORD_AUTHORITY_DTO_INVALID_008_LENGTH, ParsedRecordDto.class);
     parsedRecordDto.setRecordType(ParsedRecordDto.RecordType.MARC_AUTHORITY);
     assertThrows(ConverterException.class, () -> converter.convert(parsedRecordDto));
+  }
+
+  private MarcAuthorityDtoConverter getConverter(){
+    MarcFieldProtectionSettingsCollection settingsCollection =
+      getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
+    return new MarcAuthorityDtoConverter(settingsCollection);
   }
 }

@@ -8,17 +8,20 @@
     {
       "tag": "001",
       "content": "ak00005012492",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "003",
       "content": "NhCcYBP",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "005",
       "content": "20130220102526.4",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -29,7 +32,8 @@
         "File": "d",
         "GPub": "|"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "007",
@@ -47,7 +51,8 @@
         "Reformatting quality": "",
         "Image bit depth": ""
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -76,7 +81,8 @@
         "Mod Rec Est": "\\",
         "Source": "\\"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "999",
@@ -84,7 +90,8 @@
       "indicators": [
         "f",
         "f"
-      ]
+      ],
+      "isProtected": "true"
     }
   ],
   "updateInfo": {

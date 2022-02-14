@@ -24,6 +24,13 @@
       },
       "minItems": 0,
       "maxItems": 2
+    },
+    "isProtected": {
+      "description": "Flag indicates if the field data is protected",
+      "type": "boolean",
+      "readOnly": true,
+      "default": false,
+      "example": true
     }
   },
   "required": [

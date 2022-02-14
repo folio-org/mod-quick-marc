@@ -32,6 +32,7 @@ public class APITestUtils {
   public static final String CHANGE_MANAGER_JOB_EXECUTION_PATH = "/change-manager/jobExecutions";
   public static final String CHANGE_MANAGER_JOB_PROFILE_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/jobProfile";
   public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
+  public static final String FIELD_PROTECTION_SETTINGS_PATH = "/field-protection-settings/marc?limit=1000";
   public static final String USERS_PATH = "/users";
 
   public static final String EXTERNAL_ID = "externalId";

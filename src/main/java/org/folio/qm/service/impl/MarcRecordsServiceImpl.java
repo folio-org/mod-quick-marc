@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
+import org.folio.qm.client.DICSFieldProtectionSettingsClient;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.springframework.stereotype.Service;
 
 import org.folio.qm.client.SRMChangeManagerClient;
@@ -30,6 +32,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private static final String RECORD_NOT_FOUND_MESSAGE = "Record with id [%s] was not found";
 
   private final SRMChangeManagerClient srmClient;
+  private final DICSFieldProtectionSettingsClient discClient;
   private final RecordCreationService recordCreationService;
   private final UsersClient usersClient;
   private final ValidationService validationService;
@@ -43,7 +46,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public QuickMarc findByExternalId(UUID externalId) {
     var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
-    var quickMarc = marcConverterFactory.findConverter(parsedRecordDto.getRecordType()).convert(parsedRecordDto);
+    MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc = discClient.getFieldProtectionSettingsMarc();
+    var quickMarc = marcConverterFactory.findConverter(parsedRecordDto.getRecordType(), fieldProtectionSettingsMarc).convert(parsedRecordDto);
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {

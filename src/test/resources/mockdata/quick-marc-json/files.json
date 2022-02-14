@@ -10,12 +10,14 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -26,7 +28,8 @@
         "File": "c",
         "GPub": "d"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -48,7 +51,8 @@
         "File": "c",
         "GPub": "d"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

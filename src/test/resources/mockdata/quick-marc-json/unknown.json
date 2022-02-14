@@ -10,12 +10,14 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -23,7 +25,8 @@
         "Type": "b",
         "Value": "abcdefghijklmnopq"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -42,7 +45,8 @@
         "Srce": "w",
         "Value": "abcdefghijklmnopq"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     }
   ],
   "updateInfo": {

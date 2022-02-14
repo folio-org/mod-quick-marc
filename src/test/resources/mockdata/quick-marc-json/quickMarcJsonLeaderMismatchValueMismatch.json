@@ -9,12 +9,14 @@
     {
       "tag": "001",
       "content": "393893",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "005",
       "content": "20141107001016.0",
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "006",
@@ -39,7 +41,8 @@
         ],
         "TrAr": "o"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "007",
@@ -58,7 +61,8 @@
         "Special playback characteristics": "k",
         "Capture and storage technique": "l"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "008",
@@ -94,7 +98,8 @@
         ],
         "TrAr": "o"
       },
-      "indicators": []
+      "indicators": [],
+      "isProtected": "false"
     },
     {
       "tag": "010",
@@ -102,7 +107,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "035",
@@ -110,7 +116,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "035",
@@ -118,7 +125,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "040",
@@ -126,7 +134,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "041",
@@ -134,7 +143,8 @@
       "indicators": [
         "0",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "045",
@@ -142,7 +152,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "047",
@@ -150,7 +161,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "050",
@@ -158,7 +170,8 @@
       "indicators": [
         "0",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "100",
@@ -166,7 +179,8 @@
       "indicators": [
         "1",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "240",
@@ -174,7 +188,8 @@
       "indicators": [
         "1",
         "0"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "245",
@@ -182,7 +197,8 @@
       "indicators": [
         "1",
         "0"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "246",
@@ -190,7 +206,8 @@
       "indicators": [
         "3",
         "3"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "260",
@@ -198,7 +215,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "300",
@@ -206,7 +224,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "505",
@@ -214,7 +233,8 @@
       "indicators": [
         "0",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -222,7 +242,8 @@
       "indicators": [
         " ",
         "0"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -230,7 +251,8 @@
       "indicators": [
         " ",
         "0"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -238,7 +260,8 @@
       "indicators": [
         " ",
         "7"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "650",
@@ -246,7 +269,8 @@
       "indicators": [
         " ",
         "7"
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "902",
@@ -254,7 +278,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "905",
@@ -262,7 +287,8 @@
       "indicators": [
         " ",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -270,7 +296,8 @@
       "indicators": [
         "1",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -278,7 +305,8 @@
       "indicators": [
         "0",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -286,7 +314,8 @@
       "indicators": [
         "2",
         " "
-      ]
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "948",
@@ -294,7 +323,8 @@
       "indicators": [
         "2",
         " "
-      ]
+      ],
+      "isProtected": "false"
     }
   ],
   "relatedRecordVersion": "1"

@@ -1,10 +1,10 @@
 ## 2.3.0 2021-11-xx
-* [MODQM-181](https://issues.folio.org/browse/MODQM-181) - Kiwi R3 2021 - Log4j vulnerability verification and correction
 
 ### Changes
 * [MODQM-167](https://issues.folio.org/browse/MODQM-167) - Optimistic locking: mod-quick-marc modifications
 * [MODQM-178](https://issues.folio.org/browse/MODQM-178) - Optimistic locking: Update return 409 if optimistic locking error
 * [MODQM-179](https://issues.folio.org/browse/MODQM-179) - Remove ramls from the module
+* [MODQM-181](https://issues.folio.org/browse/MODQM-181) - Log4j vulnerability verification and correction
 
 ## 2.2.0 - Released 
 

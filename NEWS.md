@@ -1,3 +1,8 @@
+## 2.2.4 - Released
+
+### Changes
+* [MODQM-170](https://issues.folio.org/browse/MODQM-197) - Fix Kafka configuration
+
 ## 2.2.3 - Released
 
 ### Changes

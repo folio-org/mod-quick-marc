@@ -17,6 +17,10 @@
     {
       "id": "users",
       "version": "15.0"
+    },
+    {
+      "id": "field-protection-settings",
+      "version": "1.0"
     }
   ],
   "provides": [
@@ -30,7 +34,8 @@
           "permissionsRequired": ["records-editor.records.item.get"],
           "modulePermissions": [
             "change-manager.parsedrecords.get",
-            "users.item.get"
+            "users.item.get",
+            "converter-storage.field-protection-settings.get"
           ]
         },
         {

@@ -1,10 +1,21 @@
-## 2.3.0 2021-11-xx
+## 2.3.0 - Released
 
 ### Changes
+* [MODQM-58](https://issues.folio.org/browse/MODQM-58) - Adjust the quickMarcJson payload to provide field protection status
+* [MODQM-155](https://issues.folio.org/browse/MODQM-155) - MARC authority - 008 rules
+* [MODQM-156](https://issues.folio.org/browse/MODQM-156) - Create a MARC Holdings Record
+* [MODQM-159](https://issues.folio.org/browse/MODQM-159) - Support Authority record editing
 * [MODQM-167](https://issues.folio.org/browse/MODQM-167) - Optimistic locking: mod-quick-marc modifications
+* [MODQM-173](https://issues.folio.org/browse/MODQM-173) - Calculate leader values
 * [MODQM-178](https://issues.folio.org/browse/MODQM-178) - Optimistic locking: Update return 409 if optimistic locking error
 * [MODQM-179](https://issues.folio.org/browse/MODQM-179) - Remove ramls from the module
+* [MODQM-179](https://issues.folio.org/browse/MODQM-179) - Remove ramls from the module
 * [MODQM-181](https://issues.folio.org/browse/MODQM-181) - Log4j vulnerability verification and correction
+* [MODQM-187](https://issues.folio.org/browse/MODQM-187) - Rewrite tests from RestAssured to Spring MockMVC
+* [MODQM-188](https://issues.folio.org/browse/MODQM-188) - Create periodic job for cleanup database
+* [MODQM-189](https://issues.folio.org/browse/MODQM-189) - Update folio-spring to v3.0
+* [MODQM-197](https://issues.folio.org/browse/MODQM-197) - Fix Kafka configuration
+* [MODQM-201](https://issues.folio.org/browse/MODQM-201) - Fix permissions on GET /record endpoint
 
 ## 2.2.0 - Released 
 

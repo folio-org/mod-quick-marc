@@ -7,6 +7,7 @@ import static org.awaitility.Awaitility.await;
 import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 
 import java.util.UUID;
@@ -15,6 +16,9 @@ import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.extension.ClearTable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.async.DeferredResult;
 
 class KafkaListenerApiTest extends BaseApiTest {
 
@@ -33,7 +37,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithAuthority() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent("mockdata/di-event/complete-event-with-autority.json");
+    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(DI_COMPLETE_AUTHORITY);
   }
 
   @Test
@@ -112,4 +116,33 @@ class KafkaListenerApiTest extends BaseApiTest {
       .hasFieldOrPropertyWithValue("externalId", expectedExternalId)
       .hasFieldOrPropertyWithValue("marcId", expectedMarcId);
   }
+
+  @Test
+  void shouldDeleteRecordWhenReceivedDICompletedEvent() {
+    var deferredResult = new DeferredResult<>();
+    cacheService.getDeleteCache().putToCache(String.valueOf(VALID_JOB_EXECUTION_ID), deferredResult);
+
+    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_COMPLETE_TOPIC_NAME);
+    await().atMost(5, SECONDS)
+      .untilAsserted(() -> assertThat(deferredResult.getResult()).isNotNull());
+    var result = deferredResult.getResult();
+
+    HttpStatus statusCode = ((ResponseEntity) result).getStatusCode();
+    assertThat(statusCode).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Test
+  void shouldDeleteRecordWhenReceivedDIErrorEvent() {
+    var deferredResult = new DeferredResult<>();
+    cacheService.getDeleteCache().putToCache(String.valueOf(VALID_JOB_EXECUTION_ID), deferredResult);
+
+    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_ERROR_TOPIC_NAME);
+    await().atMost(5, SECONDS)
+      .untilAsserted(() -> assertThat(deferredResult.getResult()).isNotNull());
+    var result = deferredResult.getResult();
+
+    HttpStatus statusCode = ((ResponseEntity) result).getStatusCode();
+    assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
 }

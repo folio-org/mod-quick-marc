@@ -8,6 +8,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.DICSFieldProtectionSettingsClient;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.folio.qm.client.SRMChangeManagerClient;
@@ -20,10 +21,11 @@ import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.MarcRecordsService;
-import org.folio.qm.service.RecordCreationService;
+import org.folio.qm.service.RecordActionService;
 import org.folio.qm.service.ValidationService;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private final SRMChangeManagerClient srmClient;
   private final DICSFieldProtectionSettingsClient discClient;
-  private final RecordCreationService recordCreationService;
+  private final RecordActionService recordActionService;
   private final UsersClient usersClient;
   private final ValidationService validationService;
   private final CreationStatusService statusService;
@@ -80,7 +82,14 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
     validationService.validateUserId(folioExecutionContext);
-    return recordCreationService.createRecord(quickMarc);
+    return recordActionService.createRecord(quickMarc);
+  }
+
+  @Override
+  public DeferredResult<ResponseEntity<Void>> deleteByExternalId(UUID externalId) {
+    validationService.validateUserId(folioExecutionContext);
+    var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
+    return recordActionService.deleteRecord(parsedRecordDto);
   }
 
 }

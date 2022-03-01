@@ -58,6 +58,9 @@ folio:
         marc-holdings:
           id: fa0262c7-5816-48d0-b9b3-7b7a862a5bc7
           name: QuickMarc Create MARC Holdings and Inventory Holdings
+        marc-authority:
+          id: 1a338fcd-3efc-4a03-b007-394eeb0d5fb9
+          name: QuickMarc Delete MARC Authority
   kafka:
     numberOfPartitions: ${NUMBER_OF_PARTITIONS:5}
     replicationFactor: ${REPLICATION_FACTOR:1}

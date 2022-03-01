@@ -17,6 +17,10 @@ import java.util.function.Predicate;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.service.CacheService;
+import org.folio.qm.util.DeferredResultCache;
+import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.client.SRMChangeManagerClient;
@@ -29,14 +33,15 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.service.CreationStatusService;
-import org.folio.qm.service.RecordCreationService;
+import org.folio.qm.service.RecordActionService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.InitialRecord;
 import org.folio.spring.FolioExecutionContext;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @Component
 @RequiredArgsConstructor
-public class RecordCreationServiceImpl implements RecordCreationService {
+public class RecordActionServiceImpl implements RecordActionService {
 
   private static final String FORMAT_NOT_SUPPORTED_MSG = "Creating record with this format is not supported";
 
@@ -46,6 +51,7 @@ public class RecordCreationServiceImpl implements RecordCreationService {
   private final FolioExecutionContext folioExecutionContext;
   private final CreationStatusMapper statusMapper;
   private final MarcConverterFactory marcConverterFactory;
+  private final CacheService<DeferredResultCache> cacheService;
 
   @Override
   public CreationStatus createRecord(QuickMarc quickMarc) {
@@ -62,6 +68,27 @@ public class RecordCreationServiceImpl implements RecordCreationService {
     completeImport(jobExecutionId, null, true);
 
     return creationStatus;
+  }
+
+  @Override
+  public DeferredResult<ResponseEntity<Void>> deleteRecord(ParsedRecordDto recordDto) {
+    final var userId = folioExecutionContext.getUserId().toString();
+    var deferredResult = new DeferredResult<ResponseEntity<Void>>();
+
+    if (ParsedRecordDto.RecordType.MARC_AUTHORITY == recordDto.getRecordType()) {
+      JobExecutionProfileProperties.ProfileOptions options = jobExecutionProfileProperties.getMarcAuthority();
+
+      var jobExecutionId = createJobExecution(userId, options);
+      cacheService.getDeleteCache().putToCache(jobExecutionId, deferredResult);
+
+      updateJobExecutionWithProfile(jobExecutionId, options);
+      postRecordsToParse(recordDto, jobExecutionId);
+      completeImport(jobExecutionId, null, true);
+    } else {
+      throw new ValidationException(buildError(ErrorUtils.ErrorType.INTERNAL, FORMAT_NOT_SUPPORTED_MSG));
+    }
+
+    return deferredResult;
   }
 
   private Optional<JobExecutionProfileProperties.ProfileOptions> getProfileOptions(QuickMarc quickMarc) {
@@ -96,6 +123,10 @@ public class RecordCreationServiceImpl implements RecordCreationService {
     clearFields(quickMarc);
     var converter = marcConverterFactory.findConverter(quickMarc.getMarcFormat());
     var parsedRecordDto = converter.convert(updateRecordTimestamp(quickMarc));
+    postRecordsToParse(parsedRecordDto, jobExecutionId);
+  }
+
+  private void postRecordsToParse(ParsedRecordDto parsedRecordDto, String jobExecutionId) {
     var jsonString = objectToJsonString(requireNonNull(parsedRecordDto).getParsedRecord().getContent());
     var initialRecord = new InitialRecord().withRecord(jsonString);
     completeImport(jobExecutionId, initialRecord, Boolean.FALSE);

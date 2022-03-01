@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.async.DeferredResult;
 
 public interface MarcRecordsService {
 
@@ -14,6 +16,13 @@ public interface MarcRecordsService {
    * @return {@link QuickMarc} record
    */
   QuickMarc findByExternalId(UUID externalId);
+
+  /**
+   *
+   * @param externalId external id
+   * @return {@link DeferredResult} response
+   */
+  DeferredResult<ResponseEntity<Void>> deleteByExternalId(UUID externalId);
 
   /**
    * This method updates QuickMarc record

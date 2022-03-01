@@ -55,6 +55,11 @@
           "modulePermissions": ["change-manager.parsedrecords.put"]
         },
         {
+          "methods": ["DELETE"],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": ["records-editor.records.item.delete"]
+        },
+        {
           "methods": ["GET"],
           "pathPattern": "/records-editor/records/status",
           "permissionsRequired": ["records-editor.records.status.item.get"]
@@ -108,6 +113,11 @@
       "description": "Update a record"
     },
     {
+      "permissionName": "records-editor.records.item.delete",
+      "displayName": "records-editor - delete a record",
+      "description": "Delete a record"
+    },
+    {
       "permissionName": "records-editor.records.status.item.get",
       "displayName": "records-editor - get record creation status",
       "description": "Get record creation status"
@@ -120,6 +130,7 @@
         "records-editor.records.item.get",
         "records-editor.records.item.post",
         "records-editor.records.item.put",
+        "records-editor.records.item.delete",
         "records-editor.records.status.item.get"
       ]
     }

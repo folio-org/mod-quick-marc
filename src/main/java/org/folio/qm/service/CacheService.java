@@ -2,9 +2,8 @@ package org.folio.qm.service;
 
 public interface CacheService<T> {
 
-  void putToCache(String key, T object);
+  T getDeleteCache();
 
-  T getFromCache(String key);
+  T getUpdateCache();
 
-  void invalidate(String key);
 }

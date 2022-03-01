@@ -23,6 +23,8 @@ public class TestEntitiesUtils {
   public static final String PARSED_RECORD_AUTHORITY_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDtoMissingWhitespaces.json";
   public static final String PARSED_RECORD_BIB_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordBibDtoMissingWhitespaces.json";
   public static final String PARSED_RECORD_HOLDINGS_EDGE_CASES_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDtoMissingWhitespaces.json";
+  public static final String JOB_DIR = QM_JSON_DIR + "/job-execution";
+  public static final String JOB_EXECUTION_CREATED = JOB_DIR + "/jobExecutionCreated.json";
   public static final String USER_JOHN_PATH = "mockdata/users/userJohn.json";
   public static final String PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto.json";
@@ -33,6 +35,8 @@ public class TestEntitiesUtils {
   public static final String PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH = QM_JSON_DIR + "/parsedRecordHoldingsDto_invalid_008_field_length.json";
   public static final String PARSED_RECORDS_PROTECTION_SETTINGS = "mockdata/parsed-records/protected-field/recordMarcProtectionSettings.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
+  public static final String DI_EVENT_DIR = "mockdata/di-event";
+  public static final String DI_COMPLETE_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-autority.json";
   public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
   public static final String QM_WRONG_ITEM_LENGTH = PARSED_RECORDS_DIR + "/quickMarcJsonWrongItemLength.json";
   public static final String QM_LEADER_MISMATCH2 = PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchMissing008Value.json";

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
+import org.folio.qm.util.DeferredResultCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -25,7 +27,7 @@ public class QuickMarcEventListener {
 
   public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
 
-  private final CacheService<DeferredResult> cacheService;
+  private final CacheService<DeferredResultCache> cacheService;
   private final ObjectMapper objectMapper;
 
   @KafkaListener(
@@ -35,9 +37,10 @@ public class QuickMarcEventListener {
     concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data) throws JsonProcessingException {
+    DeferredResultCache updateCache = cacheService.getUpdateCache();
     var recordId = data.getRecordId();
     log.info("QM_COMPLETED received for record id [{}]", recordId);
-    DeferredResult deferredResult = cacheService.getFromCache(String.valueOf(recordId));
+    DeferredResult deferredResult = updateCache.getFromCache(String.valueOf(recordId));
     if (deferredResult != null) {
       if (data.isSucceed()) {
         deferredResult.setResult(ResponseEntity.accepted().build());
@@ -50,7 +53,7 @@ public class QuickMarcEventListener {
           deferredResult.setErrorResult(body);
         }
       }
-      cacheService.invalidate(String.valueOf(recordId));
+      updateCache.invalidate(String.valueOf(recordId));
     }
   }
 

@@ -11,6 +11,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,6 +23,8 @@ import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.folio.qm.service.CacheService;
+import org.folio.qm.util.DeferredResultCache;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,6 +81,8 @@ class BaseApiTest {
   protected KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
   protected MockMvc mockMvc;
+  @Autowired
+  protected CacheService<DeferredResultCache> cacheService;
 
   @Autowired
   private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
@@ -145,6 +150,14 @@ class BaseApiTest {
       .headers(defaultHeaders())
       .contentType(APPLICATION_JSON)
       .content(""))
+      .andDo(log());
+  }
+
+  protected ResultActions deleteResultActions(String uri) throws Exception {
+    return mockMvc.perform(delete(uri)
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(""))
       .andDo(log());
   }
 

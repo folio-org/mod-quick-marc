@@ -11,6 +11,7 @@ public class JobExecutionProfileProperties {
 
   private ProfileOptions marcBib;
   private ProfileOptions marcHoldings;
+  private ProfileOptions marcAuthority;
 
   @Data
   public static class ProfileOptions {

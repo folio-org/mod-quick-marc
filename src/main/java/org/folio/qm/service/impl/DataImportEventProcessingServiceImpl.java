@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.service.CreationStatusService;
-import org.folio.qm.service.DataImportEventProcessingService;
+import org.folio.qm.service.EventProcessingService;
 import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 @Log4j2
-@Component
+@Component(value = "importEventProcessingService")
 @RequiredArgsConstructor
-public class DataImportEventProcessingServiceImpl implements DataImportEventProcessingService {
+public class DataImportEventProcessingServiceImpl implements EventProcessingService {
 
   private static final String INSTANCE_ID_MISSED_MESSAGE = "Instance ID is missed in event payload";
   private static final String ERROR_MISSED_MESSAGE = "Error message is missed in event payload";
@@ -29,7 +29,8 @@ public class DataImportEventProcessingServiceImpl implements DataImportEventProc
   private final ObjectMapper objectMapper;
 
   @Override
-  public void processDICompleted(DataImportEventPayload data) {
+  public boolean processDICompleted(DataImportEventPayload data) {
+    var result = false;
     var updateBuilder = RecordCreationStatusUpdate.builder();
     try {
       extractMarcId(data, objectMapper).ifPresent(updateBuilder::marcId);
@@ -40,19 +41,23 @@ public class DataImportEventProcessingServiceImpl implements DataImportEventProc
             updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(errorMessage);
           }
         );
+      result = true;
     } catch (IllegalStateException e) {
       updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(e.getMessage());
     }
     processDIEvent(data, updateBuilder.build());
+    return result;
   }
 
   @Override
-  public void processDIError(DataImportEventPayload data) {
+  public boolean processDIError(DataImportEventPayload data) {
     var errorMessage = extractErrorMessage(data).orElse(ERROR_MISSED_MESSAGE);
     var updateBuilder = RecordCreationStatusUpdate.builder()
       .status(RecordCreationStatusEnum.ERROR)
       .errorMessage(errorMessage);
     processDIEvent(data, updateBuilder.build());
+
+    return true;
   }
 
   private void processDIEvent(DataImportEventPayload data, RecordCreationStatusUpdate statusUpdate) {

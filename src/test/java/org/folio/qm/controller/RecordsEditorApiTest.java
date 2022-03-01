@@ -51,6 +51,7 @@ import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUT
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -260,8 +261,7 @@ class RecordsEditorApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    String jobExecution = "mockdata/change-manager/job-execution/jobExecutionCreated.json";
-    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, wireMockServer);
+    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
     mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
@@ -303,8 +303,7 @@ class RecordsEditorApiTest extends BaseApiTest {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    String jobExecution = "mockdata/change-manager/job-execution/jobExecutionCreated.json";
-    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, wireMockServer);
+    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
     mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);

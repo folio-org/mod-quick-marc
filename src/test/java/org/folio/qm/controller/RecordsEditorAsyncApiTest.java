@@ -3,8 +3,10 @@ package org.folio.qm.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.apache.http.HttpStatus.SC_ACCEPTED;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.*;
+import static org.folio.qm.utils.APITestUtils.*;
+import static org.folio.qm.utils.IOTestUtils.readFile;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
@@ -12,24 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.folio.qm.utils.APITestUtils.changeManagerResourceByIdPath;
-import static org.folio.qm.utils.APITestUtils.mockPut;
-import static org.folio.qm.utils.APITestUtils.recordsEditorResourceByIdPath;
 import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_WITH_INCORRECT_TAG_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_WRONG_ITEM_LENGTH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithValue;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -229,6 +214,59 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(errorMessageMatch(equalTo("The Leader and 008 do not match")));
 
     wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+  }
+
+  @Test
+  void testDeleteQuickMarcAuthorityRecord() throws Exception {
+    log.info("===== Verify DELETE authority record: No Content");
+
+    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_AUTHORITY_DTO_PATH), SC_OK,
+      wireMockServer);
+
+    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
+
+    final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
+    mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
+
+    final var postRecordsPath = String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, VALID_JOB_EXECUTION_ID);
+    mockPost(postRecordsPath, "", wireMockServer);
+
+    MvcResult result = deleteResultActions(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
+      .andExpect(request().asyncStarted())
+      .andReturn();
+
+    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_COMPLETE_TOPIC_NAME);
+
+    mockMvc
+      .perform(asyncDispatch(result))
+      .andDo(log())
+      .andExpect(status().isNoContent());
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {PARSED_RECORD_BIB_DTO_PATH, PARSED_RECORD_HOLDINGS_DTO_PATH})
+  void testDeleteQuickMarcNoAuthorityRecord(String filename) throws Exception {
+    log.info("===== Verify DELETE no authority record: Bad Request");
+
+    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(filename), SC_OK,
+      wireMockServer);
+
+    deleteResultActions(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message").value("Creating record with this format is not supported"));
+  }
+
+  @Test
+  void testDeleteQuickMarcRecordWrongUuid() throws Exception {
+    RecordsEditorAsyncApiTest.log.info("===== Verify DELETE record: Not found =====");
+    UUID wrongUUID = UUID.randomUUID();
+
+    mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(wrongUUID))));
+
+    deleteResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
+      .andExpect(status().isNotFound());
   }
 
   private void testUpdateQuickMarcRecord(String qmRecordMockPath) throws Exception {

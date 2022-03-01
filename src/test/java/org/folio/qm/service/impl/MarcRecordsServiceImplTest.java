@@ -72,7 +72,7 @@ class MarcRecordsServiceImplTest {
   private MarcBibliographicQmConverter converter;
 
   @InjectMocks
-  private RecordCreationServiceImpl recordCreationService;
+  private RecordActionServiceImpl recordActionService;
 
   @Test
   void shouldRemoveFieldsWhenEmptyContent(@Random JobProfileInfo profile) {
@@ -121,7 +121,7 @@ class MarcRecordsServiceImplTest {
     doNothing().when(srmClient).postRawRecordsByJobExecutionId(any(),
       argThat(rawRecordsDto -> Objects.nonNull(rawRecordsDto.getId())));
 
-    var actual = recordCreationService.createRecord(quickMarcJson);
+    var actual = recordActionService.createRecord(quickMarcJson);
     assertThat(actual).isNotNull();
   }
 }

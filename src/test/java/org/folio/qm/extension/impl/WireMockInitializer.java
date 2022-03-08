@@ -1,4 +1,4 @@
-package org.folio.qm.extension;
+package org.folio.qm.extension.impl;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;

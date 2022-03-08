@@ -18,10 +18,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.folio.qm.extension.EnableKafka;
+import org.folio.qm.extension.EnablePostgres;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,34 +32,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.MessageListenerContainer;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.folio.qm.extension.DatabaseExtension;
-import org.folio.qm.extension.WireMockInitializer;
+import org.folio.qm.extension.impl.DatabaseCleanupExtension;
+import org.folio.qm.extension.impl.WireMockInitializer;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.springframework.test.web.servlet.ResultActions;
 
-@ActiveProfiles("test")
+@EnableKafka
+@EnablePostgres
+@ExtendWith(DatabaseCleanupExtension.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureEmbeddedDatabase
-@ExtendWith(DatabaseExtension.class)
-@ConfigurationPropertiesScan("org.folio.qm.util")
+@ActiveProfiles("test")
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-@EmbeddedKafka(partitions = 1)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BaseApiTest {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
@@ -66,7 +60,6 @@ class BaseApiTest {
   protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
 
   private static boolean dbInitialized = false;
-  private static boolean kafkaInitialized = false;
 
   @Autowired
   protected WireMockServer wireMockServer;
@@ -79,28 +72,16 @@ class BaseApiTest {
   @Autowired
   protected MockMvc mockMvc;
 
-  @Autowired
-  private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
-  @Autowired
-  private EmbeddedKafkaBroker broker;
   @Value("${x-okapi-url}")
   private String okapiUrl;
-  @LocalServerPort
-  private Integer port;
 
   @BeforeEach
   void before() throws Exception {
     if (!dbInitialized) {
-      postResultActions("/_/tenant",new TenantAttributes().moduleTo("mod-quick-marc"))
-      .andExpect(status().isNoContent());
+      postResultActions("/_/tenant", new TenantAttributes().moduleTo("mod-quick-marc"))
+        .andExpect(status().isNoContent());
 
       dbInitialized = true;
-    }
-    if (!kafkaInitialized) {
-      for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry.getListenerContainers()) {
-        ContainerTestUtils.waitForAssignment(messageListenerContainer, broker.getPartitionsPerTopic());
-      }
-      kafkaInitialized = true;
     }
   }
 
@@ -111,40 +92,40 @@ class BaseApiTest {
 
   protected ResultActions getResultActions(String uri) throws Exception {
     return mockMvc.perform(get(uri)
-      .headers(getHeaders())
-      .contentType(APPLICATION_JSON_VALUE))
+        .headers(getHeaders())
+        .contentType(APPLICATION_JSON_VALUE))
       .andDo(log());
   }
 
   protected ResultActions postResultActions(String uri, Object body) throws Exception {
     return mockMvc.perform(post(uri)
-      .headers(getHeaders())
-      .contentType(APPLICATION_JSON_VALUE)
-      .content(getObjectAsJson(body)))
+        .headers(getHeaders())
+        .contentType(APPLICATION_JSON_VALUE)
+        .content(getObjectAsJson(body)))
       .andDo(log());
   }
 
   protected ResultActions postResultActions(String uri, Object body, Map<String, String> headers) throws Exception {
     return mockMvc.perform(post(uri)
-      .headers(getCustomHeaders(headers))
-      .contentType(APPLICATION_JSON_VALUE)
-      .content(getObjectAsJson(body)))
+        .headers(getCustomHeaders(headers))
+        .contentType(APPLICATION_JSON_VALUE)
+        .content(getObjectAsJson(body)))
       .andDo(log());
   }
 
   protected ResultActions putResultActions(String uri, Object body) throws Exception {
     return mockMvc.perform(put(uri)
-      .headers(defaultHeaders())
-      .contentType(APPLICATION_JSON)
-      .content(getObjectAsJson(body)))
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(getObjectAsJson(body)))
       .andDo(log());
   }
 
   protected ResultActions putResultActions(String uri) throws Exception {
     return mockMvc.perform(put(uri)
-      .headers(defaultHeaders())
-      .contentType(APPLICATION_JSON)
-      .content(""))
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(""))
       .andDo(log());
   }
 

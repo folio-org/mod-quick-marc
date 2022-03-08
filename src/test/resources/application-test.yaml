@@ -1,6 +1,9 @@
 spring:
   application:
     name: mod-quick-marc
+  datasource:
+    username: folio_admin
+    password: password
   liquibase:
     changeLog: classpath:db/changelog/changelog-master.xml
     enabled: true
@@ -9,8 +12,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
+#  kafka:
+#    producer:
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 logging:
@@ -22,7 +26,7 @@ folio:
     request:
       enabled: false
     feign:
-      enabled: true
+      enabled: false
       level: full
   job:
     execution:
@@ -34,18 +38,18 @@ folio:
           id: fa0262c7-5816-48d0-b9b3-7b7a862a5bc7
           name: QuickMarc Create MARC Holdings and Inventory Holdings
   kafka:
-    numberOfPartitions: ${NUMBER_OF_PARTITIONS:1}
-    replicationFactor: ${REPLICATION_FACTOR:1}
+    numberOfPartitions: 1
+    replicationFactor: 1
     listener:
       di-completed:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
+        concurrency: 1
         topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.DI_COMPLETED}
-        group-id: ${folio.environment}-mod-quick-marc-di-group
+        group-id: ${folio.environment}-mod-quick-marc-di-completed-group
       di-error:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
+        concurrency: 1
         topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.DI_ERROR}
-        group-id: ${folio.environment}-mod-quick-marc-di-group
+        group-id: ${folio.environment}-mod-quick-marc-di-error-group
       qm-completed:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
+        concurrency: 1
         topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.QM_COMPLETED}
         group-id: ${folio.environment}-mod-quick-marc-qm-group

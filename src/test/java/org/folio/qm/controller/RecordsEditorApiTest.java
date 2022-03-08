@@ -357,7 +357,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   }
 
   @Test
-  void testReturn400WhenCreateHoldingsWithMultiply852() throws Exception {
+  void testReturn422WhenCreateHoldingsWithMultiply852() throws Exception {
     log.info("===== Verify POST record: Multiply 852 =====");
 
     QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
@@ -367,8 +367,9 @@ class RecordsEditorApiTest extends BaseApiTest {
     quickMarcJson.getFields().add(new FieldItem().tag("852").content("$b content"));
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
-      .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message").value("X-Okapi-User-Id header is missing"));
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.errors[0].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.errors[0].message").value("Is unique tag"));
   }
 
   @Test

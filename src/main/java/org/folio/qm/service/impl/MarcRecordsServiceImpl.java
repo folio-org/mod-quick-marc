@@ -61,10 +61,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
-    var validationResult = validationService.validate(quickMarc);
-    if (!validationResult.isValid()) {
-      throw new FieldsValidationException(validationResult);
-    }
+    validateMarcFields(quickMarc);
     var parsedRecordDto =
       marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
     srmClient.putParsedRecordByInstanceId(String.valueOf(quickMarc.getParsedRecordDtoId()), parsedRecordDto);
@@ -80,7 +77,15 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
     validationService.validateUserId(folioExecutionContext);
+    validateMarcFields(quickMarc);
     return recordCreationService.createRecord(quickMarc);
+  }
+
+  private void validateMarcFields(QuickMarc quickMarc) {
+    var validationResult = validationService.validate(quickMarc);
+    if (!validationResult.isValid()) {
+      throw new FieldsValidationException(validationResult);
+    }
   }
 
 }

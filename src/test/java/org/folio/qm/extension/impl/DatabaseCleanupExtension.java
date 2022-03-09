@@ -1,10 +1,11 @@
-package org.folio.qm.extension;
+package org.folio.qm.extension.impl;
 
 import static org.folio.qm.utils.APITestUtils.TENANT_ID;
 import static org.folio.qm.utils.DBTestUtils.getTableName;
 
 import java.util.Optional;
 
+import org.folio.qm.extension.ClearTable;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +14,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import org.folio.spring.FolioModuleMetadata;
 
-public class DatabaseExtension implements AfterEachCallback {
+public class DatabaseCleanupExtension implements AfterEachCallback {
 
   @Override
   public void afterEach(ExtensionContext context) {

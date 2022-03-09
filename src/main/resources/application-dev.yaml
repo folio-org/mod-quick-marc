@@ -28,6 +28,11 @@ spring:
     enabled: true
   jackson:
     default-property-inclusion: NON_EMPTY
+  cache:
+    cache-names:
+      - job-profiles
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=3600s
 folio:
   environment: ${ENV:folio}
   tenant:
@@ -39,18 +44,6 @@ folio:
     feign:
       enabled: true
       level: full
-  job:
-    execution:
-      profile:
-        marc-bib:
-          id: 6409dcff-71fa-433a-bc6a-e70ad38a9604
-          name: QuickMarc Create MARC Bib and Inventory Instance
-        marc-holdings:
-          id: fa0262c7-5816-48d0-b9b3-7b7a862a5bc7
-          name: QuickMarc Create MARC Holdings and Inventory Holdings
-        marc-authority:
-          id: 1a338fcd-3efc-4a03-b007-394eeb0d5fb9
-          name: QuickMarc Delete MARC Authority
   kafka:
     numberOfPartitions: ${NUMBER_OF_PARTITIONS:5}
     replicationFactor: ${REPLICATION_FACTOR:1}

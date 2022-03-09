@@ -22,7 +22,7 @@ public interface MarcRecordsService {
    * @param externalId external id
    * @return {@link DeferredResult} response
    */
-  DeferredResult<ResponseEntity<Void>> deleteByExternalId(UUID externalId);
+  CreationStatus deleteByExternalId(UUID externalId);
 
   /**
    * This method updates QuickMarc record

@@ -28,7 +28,7 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
     <folio-spring-base.version>3.0.1</folio-spring-base.version>
-    <mod-srm-client.version>3.3.0-SNAPSHOT</mod-srm-client.version>
+    <mod-srm-client.version>3.4.0-SNAPSHOT</mod-srm-client.version>
     <openapi-generator.version>5.3.1</openapi-generator.version>
     <mockito.version>4.0.0</mockito.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
@@ -70,6 +70,10 @@
           <artifactId>spring-boot-starter-logging</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>

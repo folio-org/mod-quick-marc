@@ -1,48 +1,34 @@
 package org.folio.qm.util;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Objects.requireNonNull;
 
 import java.util.UUID;
 
 import lombok.experimental.UtilityClass;
 
-import org.folio.qm.config.properties.JobExecutionProfileProperties;
+import org.folio.qm.domain.entity.JobProfile;
 import org.folio.rest.jaxrs.model.InitJobExecutionsRqDto;
-import org.folio.rest.jaxrs.model.InitialRecord;
 import org.folio.rest.jaxrs.model.JobProfileInfo;
 import org.folio.rest.jaxrs.model.JobProfileInfo.DataType;
-import org.folio.rest.jaxrs.model.RawRecordsDto;
-import org.folio.rest.jaxrs.model.RecordsMetadata;
 
 @UtilityClass
 public class ChangeManagerPayloadUtils {
 
-  public static JobProfileInfo getDefaultJobProfile(JobExecutionProfileProperties.ProfileOptions options) {
+  public static JobProfileInfo getDefaultJobProfile(JobProfile jobProfile) {
     return new JobProfileInfo()
-      .withId(String.valueOf(options.getId()))
-      .withName(options.getName())
+      .withId(String.valueOf(jobProfile.getProfileId()))
+      .withName(jobProfile.getProfileName())
+      .withHidden(true)
       .withDataType(DataType.MARC);
   }
 
-  public static InitJobExecutionsRqDto getDefaultJodExecutionDto(String userId,
-                                                                 JobExecutionProfileProperties.ProfileOptions options) {
+  public static InitJobExecutionsRqDto getDefaultJodExecutionDto(UUID userId, JobProfile jobProfile) {
     return new InitJobExecutionsRqDto()
-      .withJobProfileInfo(getDefaultJobProfile(options))
+      .withJobProfileInfo(getDefaultJobProfile(jobProfile))
       .withSourceType(InitJobExecutionsRqDto.SourceType.ONLINE)
       .withFiles(emptyList())
-      .withUserId(userId);
+      .withUserId(userId.toString());
   }
 
-  public static RawRecordsDto getRawRecordsBody(InitialRecord initialRecord, boolean isLast) {
-    return new RawRecordsDto()
-      .withId(UUID.randomUUID().toString())
-      .withInitialRecords(initialRecord == null ? emptyList() : singletonList(initialRecord))
-      .withRecordsMetadata(
-        new RecordsMetadata()
-          .withLast(isLast)
-          .withCounter(1)
-          .withTotal(1)
-          .withContentType(RecordsMetadata.ContentType.MARC_JSON));
-  }
 }

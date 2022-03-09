@@ -9,6 +9,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  cache:
+    cache-names:
+      - job-profiles
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=3600s
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}
   autoconfigure:
@@ -24,18 +29,6 @@ folio:
     feign:
       enabled: true
       level: full
-  job:
-    execution:
-      profile:
-        marc-bib:
-          id: 6409dcff-71fa-433a-bc6a-e70ad38a9604
-          name: QuickMarc Create MARC Bib and Inventory Instance
-        marc-holdings:
-          id: fa0262c7-5816-48d0-b9b3-7b7a862a5bc7
-          name: QuickMarc Create MARC Holdings and Inventory Holdings
-        marc-authority:
-          id: 1a338fcd-3efc-4a03-b007-394eeb0d5fb9
-          name: QuickMarc Delete MARC Authority
   kafka:
     numberOfPartitions: ${NUMBER_OF_PARTITIONS:1}
     replicationFactor: ${REPLICATION_FACTOR:1}

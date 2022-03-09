@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="MODQM-195@@create-job-profile-table" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="job_profile"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="job_profile">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_jobprofile"/>
+            </column>
+            <column name="profile_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_action" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="record_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="MODQM-195@@add-create-marc-bibliographic-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = '6409dcff-71fa-433a-bc6a-e70ad38a9604';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="6409dcff-71fa-433a-bc6a-e70ad38a9604"/>
+            <column name="profile_name" value="QuickMarc Create MARC Bib and Inventory Instance"/>
+            <column name="profile_action" value="CREATE"/>
+            <column name="record_type" value="MARC_BIBLIOGRAPHIC"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="MODQM-195@@add-create-marc-holdings-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = 'fa0262c7-5816-48d0-b9b3-7b7a862a5bc7';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="fa0262c7-5816-48d0-b9b3-7b7a862a5bc7"/>
+            <column name="profile_name" value="QuickMarc Create MARC Holdings and Inventory Holdings"/>
+            <column name="profile_action" value="CREATE"/>
+            <column name="record_type" value="MARC_HOLDINGS"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="MODQM-195@@add-delete-marc-authority-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = '1a338fcd-3efc-4a03-b007-394eeb0d5fb9';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="1a338fcd-3efc-4a03-b007-394eeb0d5fb9"/>
+            <column name="profile_name" value="QuickMarc Delete MARC Authority"/>
+            <column name="profile_action" value="DELETE"/>
+            <column name="record_type" value="MARC_AUTHORITY"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

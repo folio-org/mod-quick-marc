@@ -9,22 +9,6 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.awaitility.Awaitility.await;
-import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
-import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
-import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
-import static org.folio.qm.utils.APITestUtils.EXTERNAL_ID;
-import static org.folio.qm.utils.APITestUtils.JOHN_USER_ID_HEADER;
-import static org.folio.qm.utils.APITestUtils.QM_RECORD_ID;
-import static org.folio.qm.utils.APITestUtils.FIELD_PROTECTION_SETTINGS_PATH;
-import static org.folio.qm.utils.APITestUtils.changeManagerPath;
-import static org.folio.qm.utils.APITestUtils.mockGet;
-import static org.folio.qm.utils.APITestUtils.mockPost;
-import static org.folio.qm.utils.APITestUtils.mockPut;
-import static org.folio.qm.utils.APITestUtils.recordsEditorPath;
-import static org.folio.qm.utils.APITestUtils.recordsEditorStatusPath;
-import static org.folio.qm.utils.APITestUtils.usersByIdPath;
-import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
-import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,26 +16,44 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
+import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
+import static org.folio.qm.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
+import static org.folio.qm.utils.APITestUtils.EXTERNAL_ID;
+import static org.folio.qm.utils.APITestUtils.FIELD_PROTECTION_SETTINGS_PATH;
+import static org.folio.qm.utils.APITestUtils.JOHN_USER_ID_HEADER;
+import static org.folio.qm.utils.APITestUtils.QM_RECORD_ID;
+import static org.folio.qm.utils.APITestUtils.changeManagerPath;
+import static org.folio.qm.utils.APITestUtils.mockGet;
+import static org.folio.qm.utils.APITestUtils.mockPost;
+import static org.folio.qm.utils.APITestUtils.mockPut;
+import static org.folio.qm.utils.APITestUtils.recordsEditorPath;
+import static org.folio.qm.utils.APITestUtils.recordsEditorStatusPath;
+import static org.folio.qm.utils.APITestUtils.usersByIdPath;
 import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
 import static org.folio.qm.utils.IOTestUtils.readFile;
+import static org.folio.qm.utils.JsonTestUtils.getObjectFromJson;
+import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -60,15 +62,16 @@ import com.github.tomakehurst.wiremock.http.Fault;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.MvcResult;
 
 import org.folio.qm.domain.dto.CreationStatus;
+import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.extension.ClearTable;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
-import org.springframework.test.web.servlet.MvcResult;
 
 @Log4j2
 class RecordsEditorApiTest extends BaseApiTest {
@@ -364,6 +367,22 @@ class RecordsEditorApiTest extends BaseApiTest {
     postResultActions(recordsEditorPath(), quickMarcJson)
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.message").value("X-Okapi-User-Id header is missing"));
+  }
+
+  @Test
+  void testReturn422WhenCreateHoldingsWithMultiply852() throws Exception {
+    log.info("===== Verify POST record: Multiply 852 =====");
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    quickMarcJson.getFields().add(new FieldItem().tag("852").content("$b content"));
+
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.errors[0].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.errors[0].message").value("Is unique tag"));
   }
 
   @Test

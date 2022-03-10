@@ -8,7 +8,7 @@
     },
     {
       "id": "source-manager-job-executions",
-      "version": "3.0"
+      "version": "3.1"
     },
     {
       "id": "source-manager-records",
@@ -26,7 +26,7 @@
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "3.0",
+      "version": "3.1",
       "handlers": [
         {
           "methods": ["GET"],

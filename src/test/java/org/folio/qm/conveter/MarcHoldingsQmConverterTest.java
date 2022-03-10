@@ -12,17 +12,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
+import static org.folio.qm.domain.dto.ParsedRecordDto.RecordTypeEnum.HOLDING;
 import static org.folio.qm.support.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJsonNode;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO2_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
@@ -40,9 +41,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.folio.qm.support.types.UnitTest;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,12 +49,14 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.folio.qm.converter.impl.MarcHoldingsDtoConverter;
 import org.folio.qm.converter.impl.MarcHoldingsQmConverter;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.support.utils.testentities.LccnFieldsTestEntities;
 import org.folio.qm.support.utils.testentities.PhysicalDescriptionsTestEntities;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 @UnitTest
 class MarcHoldingsQmConverterTest {
@@ -85,7 +85,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
-    parsedRecordDto.withRelatedRecordVersion(null);
+    parsedRecordDto.relatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
   }
 
@@ -94,17 +94,17 @@ class MarcHoldingsQmConverterTest {
     logger.info("Testing Holdings General Information wrong element added - unknown property should be ignored");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
     @SuppressWarnings("unchecked")
-    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
-        .stream()
-        .filter(fieldItem -> fieldItem.getTag().equals("008"))
-        .collect(Collectors.toList())
-        .get(0)
-        .getContent();
+    var content = (LinkedHashMap<String, String>) quickMarc.getFields()
+      .stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .collect(Collectors.toList())
+      .get(0)
+      .getContent();
     content.put("invalid_key", "invalid_value");
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
     assertThat(parsedRecordDto, notNullValue());
-    parsedRecordDto.withRelatedRecordVersion(null);
+    parsedRecordDto.relatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_HOLDINGS_DTO2_PATH, parsedRecordDto);
   }
 
@@ -113,12 +113,12 @@ class MarcHoldingsQmConverterTest {
     logger.info("Testing Holdings General Information wrong field length after editing - ConverterException expected");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_HOLDINGS, QuickMarc.class);
     @SuppressWarnings("unchecked")
-    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
-        .stream()
-        .filter(fieldItem -> fieldItem.getTag().equals("008"))
-        .collect(Collectors.toList())
-        .get(0)
-        .getContent();
+    var content = (LinkedHashMap<String, String>) quickMarc.getFields()
+      .stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .collect(Collectors.toList())
+      .get(0)
+      .getContent();
     content.put("Copies", "1234");
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     assertThrows(ConverterException.class, () -> converter.convert(quickMarc));
@@ -130,7 +130,7 @@ class MarcHoldingsQmConverterTest {
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
     QuickMarc quickMarcJson = getMockAsObject(QM_EDITED_RECORD_HOLDINGS_PATH, QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    Objects.requireNonNull(parsedRecordDto).withRelatedRecordVersion(null);
+    Objects.requireNonNull(parsedRecordDto).relatedRecordVersion(null);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, parsedRecordDto);
   }
 
@@ -138,12 +138,11 @@ class MarcHoldingsQmConverterTest {
   void testRecordsAreEqual() {
     logger.info("Source record and converted/restored one should be equal");
     MarcHoldingsQmConverter qmConverter = new MarcHoldingsQmConverter();
-    MarcFieldProtectionSettingsCollection settingsCollection =
+    var settingsCollection =
       getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
     MarcHoldingsDtoConverter dtoConverter = new MarcHoldingsDtoConverter(settingsCollection);
     ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_HOLDINGS_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
-    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
-      ParsedRecordDto.RecordType.MARC_HOLDING));
+    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord, HOLDING));
     assertThat(quickMarcJson, notNullValue());
     ParsedRecordDto restoredParsedRecordDto = qmConverter.convert(quickMarcJson);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_HOLDINGS_DTO_PATH, restoredParsedRecordDto);
@@ -226,7 +225,6 @@ class MarcHoldingsQmConverterTest {
     QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field001, testField);
 
     MarcHoldingsQmConverter converter = new MarcHoldingsQmConverter();
-    var result = converter.convert(quickMarcJson);
     assertDoesNotThrow(() -> converter.convert(quickMarcJson));
   }
 

@@ -110,7 +110,7 @@ public enum ControlFieldItem {
   VALUE("Value", 1, 17, false),
   VIDEORECORDING_FORMAT("Videorecording format", 4, 1, false),
 
-//  MARC HOLDINGS
+  //  MARC HOLDINGS
 //  008 field
   ACQ_STATUS("AcqStatus", 6, 1, false),
   ACQ_METHOD("AcqMethod", 7, 1, false),
@@ -126,7 +126,7 @@ public enum ControlFieldItem {
   SEP_COMP("Sep/comp", 25, 1, false),
   SPEC_RET("Spec ret", 13, 3, true),
 
-//  MARC AUTHORITY
+  //  MARC AUTHORITY
 //  008 field
   GEO_SUBD("Geo Subd", 6, 1, false),
   ROMAN("Roman", 7, 1, false),

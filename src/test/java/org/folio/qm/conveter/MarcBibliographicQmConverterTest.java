@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
+import static org.folio.qm.domain.dto.ParsedRecordDto.RecordTypeEnum.BIB;
 import static org.folio.qm.support.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsJsonNode;
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
@@ -17,11 +18,11 @@ import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJsonNode;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectFromJsonNode;
 import static org.folio.qm.support.utils.testentities.GeneralTestEntities.BOOKS;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
@@ -37,9 +38,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.folio.qm.support.types.UnitTest;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,13 +46,15 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.folio.qm.converter.impl.MarcBibliographicDtoConverter;
 import org.folio.qm.converter.impl.MarcBibliographicQmConverter;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.support.utils.testentities.GeneralTestEntities;
 import org.folio.qm.support.utils.testentities.LccnFieldsTestEntities;
 import org.folio.qm.support.utils.testentities.PhysicalDescriptionsTestEntities;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 @UnitTest
 class MarcBibliographicQmConverterTest {
@@ -93,7 +93,7 @@ class MarcBibliographicQmConverterTest {
     MarcBibliographicQmConverter converter = new MarcBibliographicQmConverter();
     QuickMarc quickMarcJson = getMockAsObject(QM_EDITED_RECORD_BIB_PATH, QuickMarc.class);
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarcJson);
-    Objects.requireNonNull(parsedRecordDto).withRelatedRecordVersion(null);
+    Objects.requireNonNull(parsedRecordDto).relatedRecordVersion(null);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_BIB_DTO_PATH, parsedRecordDto);
   }
 
@@ -101,12 +101,11 @@ class MarcBibliographicQmConverterTest {
   void testRecordsAreEqual() {
     logger.info("Source record and converted/restored one should be equal");
     MarcBibliographicQmConverter qmConverter = new MarcBibliographicQmConverter();
-    MarcFieldProtectionSettingsCollection settingsCollection =
+    var settingsCollection =
       getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
     MarcBibliographicDtoConverter dtoConverter = new MarcBibliographicDtoConverter(settingsCollection);
     ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_BIB_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
-    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
-      ParsedRecordDto.RecordType.MARC_BIB));
+    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord, BIB));
     assertThat(quickMarcJson, notNullValue());
     ParsedRecordDto restoredParsedRecordDto = qmConverter.convert(quickMarcJson);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_BIB_DTO_PATH, restoredParsedRecordDto);

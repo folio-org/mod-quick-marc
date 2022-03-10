@@ -17,9 +17,9 @@ import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 
 public class MarcBibliographicDtoConverter extends AbstractMarcDtoConverter {
 
@@ -29,7 +29,7 @@ public class MarcBibliographicDtoConverter extends AbstractMarcDtoConverter {
 
   @Override
   protected UUID getExternalId(ParsedRecordDto source) {
-    return UUID.fromString(source.getExternalIdsHolder().getInstanceId());
+    return source.getExternalIdsHolder().getInstanceId();
   }
 
   @Override
@@ -52,7 +52,7 @@ public class MarcBibliographicDtoConverter extends AbstractMarcDtoConverter {
     fieldItems.put(DESC, leader.charAt(DESC_LEADER_POS));
     fieldItems.putAll(fillContentMap(MaterialTypeConfiguration.getCommonItems(), content, -1));
     fieldItems.putAll(fillContentMap(materialTypeConfiguration.getControlFieldItems(),
-        content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX), -1));
+      content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX), -1));
     return fieldItems;
   }
 }

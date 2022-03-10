@@ -10,17 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
+import static org.folio.qm.domain.dto.ParsedRecordDto.RecordTypeEnum.AUTHORITY;
 import static org.folio.qm.support.utils.AssertionUtils.mockIsEqualToObject;
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJsonNode;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO2_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
@@ -37,9 +38,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.folio.qm.support.types.UnitTest;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,12 +46,14 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.folio.qm.converter.impl.MarcAuthorityDtoConverter;
 import org.folio.qm.converter.impl.MarcAuthorityQmConverter;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.support.utils.testentities.LccnFieldsTestEntities;
 import org.folio.qm.support.utils.testentities.PhysicalDescriptionsTestEntities;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 @UnitTest
 class MarcAuthorityQmConverterTest {
@@ -82,7 +82,7 @@ class MarcAuthorityQmConverterTest {
     var converter = new MarcAuthorityQmConverter();
     var parsedRecordDto = converter.convert(quickMarcJson);
     assertThat(parsedRecordDto, notNullValue());
-    parsedRecordDto.withRelatedRecordVersion(null);
+    parsedRecordDto.relatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_AUTHORITY_DTO2_PATH, parsedRecordDto);
   }
 
@@ -91,17 +91,17 @@ class MarcAuthorityQmConverterTest {
     logger.info("Testing Authority General Information wrong element added - unknown property should be ignored");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_AUTHORITY_PATH, QuickMarc.class);
     @SuppressWarnings("unchecked")
-    var content = (LinkedHashMap<String, String>)quickMarc.getFields()
-        .stream()
-        .filter(fieldItem -> fieldItem.getTag().equals("008"))
-        .collect(Collectors.toList())
-        .get(0)
-        .getContent();
+    var content = (LinkedHashMap<String, String>) quickMarc.getFields()
+      .stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .collect(Collectors.toList())
+      .get(0)
+      .getContent();
     content.put("invalid_key", "invalid_value");
     var converter = new MarcAuthorityQmConverter();
     ParsedRecordDto parsedRecordDto = converter.convert(quickMarc);
     assertThat(parsedRecordDto, notNullValue());
-    parsedRecordDto.withRelatedRecordVersion(null);
+    parsedRecordDto.relatedRecordVersion(null);
     mockIsEqualToObject(PARSED_RECORD_AUTHORITY_DTO2_PATH, parsedRecordDto);
   }
 
@@ -110,12 +110,12 @@ class MarcAuthorityQmConverterTest {
     logger.info("Testing Authority General Information wrong field length after editing - ConverterException expected");
     QuickMarc quickMarc = getMockAsObject(QM_RECORD_AUTHORITY_PATH, QuickMarc.class);
     @SuppressWarnings("unchecked")
-    LinkedHashMap<String, String> content = (LinkedHashMap<String, String>)quickMarc.getFields()
-        .stream()
-        .filter(fieldItem -> fieldItem.getTag().equals("008"))
-        .collect(Collectors.toList())
-        .get(0)
-        .getContent();
+    LinkedHashMap<String, String> content = (LinkedHashMap<String, String>) quickMarc.getFields()
+      .stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .collect(Collectors.toList())
+      .get(0)
+      .getContent();
     content.put("Lang", "1234");
     var converter = new MarcAuthorityQmConverter();
     assertThrows(ConverterException.class, () -> converter.convert(quickMarc));
@@ -134,12 +134,11 @@ class MarcAuthorityQmConverterTest {
   void testRecordsAreEqual() {
     logger.info("Source record and converted/restored one should be equal");
     var qmConverter = new MarcAuthorityQmConverter();
-    MarcFieldProtectionSettingsCollection settingsCollection =
+    var settingsCollection =
       getMockAsObject(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH, MarcFieldProtectionSettingsCollection.class);
     var dtoConverter = new MarcAuthorityDtoConverter(settingsCollection);
     ParsedRecord parsedRecord = getMockAsObject(PARSED_RECORD_AUTHORITY_DTO_PATH, ParsedRecordDto.class).getParsedRecord();
-    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord,
-      ParsedRecordDto.RecordType.MARC_AUTHORITY));
+    QuickMarc quickMarcJson = dtoConverter.convert(getParsedRecordDtoWithMinContent(parsedRecord, AUTHORITY));
     assertThat(quickMarcJson, notNullValue());
     ParsedRecordDto restoredParsedRecordDto = qmConverter.convert(quickMarcJson);
     mockIsEqualToObject(RESTORED_PARSED_RECORD_AUTHORITY_DTO_PATH, restoredParsedRecordDto);

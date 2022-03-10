@@ -87,7 +87,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andReturn();
 
     String eventPayload = createPayload(null);
-    sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
+    sendQMKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
       .andDo(log())
@@ -110,7 +110,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     var errorMessage = "Some error occurred";
     String eventPayload = createPayload(errorMessage);
-    sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
+    sendQMKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
       .andExpect(status().isBadRequest())
@@ -140,7 +140,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
     var expectedErrorMessage = "Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because"
       + " it has been changed (optimistic locking): Stored _version is 9, _version of request is 8";
     String eventPayload = createPayload(optimisticLockingErrorMessage);
-    sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
+    sendQMKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
       .andExpect(status().isConflict())

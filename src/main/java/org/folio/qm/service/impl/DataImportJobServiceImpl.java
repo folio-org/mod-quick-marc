@@ -14,23 +14,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.client.SRMChangeManagerClient;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.service.CreationStatusService;
-import org.folio.qm.service.JobProfileService;
 import org.folio.qm.service.DataImportJobService;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.qm.service.JobProfileService;
 import org.folio.spring.FolioExecutionContext;
 
 @Component
 @RequiredArgsConstructor
 public class DataImportJobServiceImpl implements DataImportJobService {
 
-  private static final Map<ParsedRecordDto.RecordType, RecordType> typeMap = Map.of(
-    ParsedRecordDto.RecordType.MARC_AUTHORITY, RecordType.MARC_AUTHORITY,
-    ParsedRecordDto.RecordType.MARC_BIB, RecordType.MARC_BIBLIOGRAPHIC,
-    ParsedRecordDto.RecordType.MARC_HOLDING, RecordType.MARC_HOLDINGS
+  private static final Map<ParsedRecordDto.RecordTypeEnum, RecordType> typeMap = Map.of(
+    ParsedRecordDto.RecordTypeEnum.AUTHORITY, RecordType.MARC_AUTHORITY,
+    ParsedRecordDto.RecordTypeEnum.BIB, RecordType.MARC_BIBLIOGRAPHIC,
+    ParsedRecordDto.RecordTypeEnum.HOLDING, RecordType.MARC_HOLDINGS
   );
 
   private final SRMChangeManagerClient srmClient;
@@ -49,10 +49,10 @@ public class DataImportJobServiceImpl implements DataImportJobService {
     sendRecord(recordDto, jobId);
     completeImport(jobId);
 
-    return UUID.fromString(jobId);
+    return jobId;
   }
 
-  private String initJob(JobProfile jobProfile, UUID userId) {
+  private UUID initJob(JobProfile jobProfile, UUID userId) {
     var jobExecutionDto = getDefaultJodExecutionDto(userId, jobProfile);
     var jobExecutionResponse = srmClient.postJobExecution(jobExecutionDto);
     var jobExecutionId = jobExecutionResponse.getJobExecutions().get(0).getId();
@@ -60,16 +60,16 @@ public class DataImportJobServiceImpl implements DataImportJobService {
     return jobExecutionId;
   }
 
-  private void updateJobProfile(String jobExecutionId, JobProfile jobProfile) {
+  private void updateJobProfile(UUID jobExecutionId, JobProfile jobProfile) {
     srmClient.putJobProfileByJobExecutionId(jobExecutionId, toJobProfileInfo(jobProfile));
     saveInProgressStatus(jobExecutionId);
   }
 
-  private void sendRecord(ParsedRecordDto parsedRecordDto, String jobExecutionId) {
+  private void sendRecord(ParsedRecordDto parsedRecordDto, UUID jobExecutionId) {
     srmClient.postRawRecordsByJobExecutionId(jobExecutionId, toRawRecordsDto(parsedRecordDto));
   }
 
-  private void completeImport(String jobExecutionId) {
+  private void completeImport(UUID jobExecutionId) {
     srmClient.postRawRecordsByJobExecutionId(jobExecutionId, toLastRawRecordsDto());
   }
 
@@ -77,13 +77,13 @@ public class DataImportJobServiceImpl implements DataImportJobService {
     return jobProfileService.getJobProfile(typeMap.get(recordDto.getRecordType()), action);
   }
 
-  private void saveNewStatus(String jobExecutionId) {
+  private void saveNewStatus(UUID jobExecutionId) {
     var status = getStatusNew(jobExecutionId);
     statusService.save(status);
   }
 
-  private void saveInProgressStatus(String jobExecutionId) {
+  private void saveInProgressStatus(UUID jobExecutionId) {
     final var status = getStatusInProgress();
-    statusService.updateByJobExecutionId(UUID.fromString(jobExecutionId), status);
+    statusService.updateByJobExecutionId(jobExecutionId, status);
   }
 }

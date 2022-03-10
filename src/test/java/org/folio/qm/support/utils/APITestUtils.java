@@ -85,7 +85,6 @@ public class APITestUtils {
     return changeManagerPath() + buildQuery(parameter, String.valueOf(value));
   }
 
-
   public static String changeManagerResourceByIdPath(UUID id) {
     return changeManagerPath() + "/" + id;
   }
@@ -109,7 +108,6 @@ public class APITestUtils {
         .withBody(IOTestUtils.readFile(filePath))));
   }
 
-
   public static void mockPut(String url, int status, WireMockServer mockServer) {
     mockPut(url, null, status, mockServer);
   }
@@ -121,6 +119,5 @@ public class APITestUtils {
     }
     mockServer.stubFor(put(urlEqualTo(url)).willReturn(responseDefinitionBuilder));
   }
-
 
 }

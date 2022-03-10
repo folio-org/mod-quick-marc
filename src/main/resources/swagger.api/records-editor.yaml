@@ -134,3 +134,15 @@ components:
     UUID:
       type: string
       format: uuid
+    parsedRecordDto:
+      $ref: schemas/external/parsedRecordDto.json
+    initJobExecutionsRqDto:
+      $ref: schemas/external/initJobExecutionsRqDto.json
+    initJobExecutionsRsDto:
+      $ref: schemas/external/initJobExecutionsRsDto.json
+    rawRecordsDto:
+      $ref: schemas/external/rawRecordsDto.json
+    marcFieldProtectionSettingsCollection:
+      $ref: schemas/external/marcFieldProtectionSettingsCollection.json
+    dataImportEventPayload:
+      $ref: schemas/external/dataImportEventPayload.json

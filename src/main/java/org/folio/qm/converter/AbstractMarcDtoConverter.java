@@ -3,8 +3,9 @@ package org.folio.qm.converter;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
@@ -26,8 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
@@ -39,11 +38,13 @@ import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 @AllArgsConstructor
 public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
@@ -71,16 +72,16 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
         .map(this::dataFieldToQuickMarcField)
         .collect(Collectors.toList()));
 
-      return new QuickMarc().parsedRecordId(UUID.fromString(parsedRecord.getId()))
+      return new QuickMarc().parsedRecordId(parsedRecord.getId())
         .leader(leader)
         .fields(fields)
-        .parsedRecordDtoId(UUID.fromString(source.getId()))
+        .parsedRecordDtoId(source.getId())
         .externalId(getExternalId(source))
         .externalHrid(getExternalHrId(source))
         .marcFormat(supportedType())
         .suppressDiscovery(source.getAdditionalInfo().getSuppressDiscovery())
         .updateInfo(new UpdateInfo()
-          .recordState(UpdateInfo.RecordStateEnum.fromValue(source.getRecordState().value()))
+          .recordState(UpdateInfo.RecordStateEnum.fromValue(source.getRecordState().getValue()))
           .updateDate(convertDate(source)));
     } catch (Exception e) {
       throw new ConverterException(e);
@@ -88,7 +89,9 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
   }
 
   protected abstract UUID getExternalId(ParsedRecordDto source);
+
   protected abstract String getExternalHrId(ParsedRecordDto source);
+
   protected abstract Map<String, Object> splitGeneralInformationControlField(String content, String leader);
 
   private OffsetDateTime convertDate(ParsedRecordDto parsedRecordDto) {

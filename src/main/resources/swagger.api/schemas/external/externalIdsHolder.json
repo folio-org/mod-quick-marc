@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Contains identifiers of external entities (instance, holdings, authority)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "instanceId": {
+      "description": "instance id",
+      "$ref": "../uuid.json"
+    },
+    "instanceHrid": {
+      "description": "instance hrid",
+      "type": "string"
+    },
+    "holdingsId": {
+      "description": "holdings id",
+      "$ref": "../uuid.json"
+    },
+    "holdingsHrid": {
+      "description": "holdings hrid",
+      "type": "string"
+    },
+    "authorityId": {
+      "description": "authority id",
+      "$ref": "../uuid.json"
+    },
+    "authorityHrid": {
+      "description": "authority hrid",
+      "type": "string"
+    }
+  }
+}

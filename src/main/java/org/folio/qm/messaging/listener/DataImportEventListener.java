@@ -6,8 +6,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.service.EventProcessingService;
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 @Log4j2
 @Component

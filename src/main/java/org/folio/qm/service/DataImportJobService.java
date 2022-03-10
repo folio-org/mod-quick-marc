@@ -8,53 +8,53 @@ import static org.folio.qm.util.JsonUtils.objectToJsonString;
 
 import java.util.UUID;
 
+import org.folio.qm.domain.dto.InitJobExecutionsRqDto;
+import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.domain.dto.ProfileInfo;
+import org.folio.qm.domain.dto.RawRecordDto;
+import org.folio.qm.domain.dto.RawRecordsDto;
+import org.folio.qm.domain.dto.RawRecordsMetadata;
 import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
-import org.folio.rest.jaxrs.model.InitJobExecutionsRqDto;
-import org.folio.rest.jaxrs.model.InitialRecord;
-import org.folio.rest.jaxrs.model.JobProfileInfo;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
-import org.folio.rest.jaxrs.model.RawRecordsDto;
-import org.folio.rest.jaxrs.model.RecordsMetadata;
 
 public interface DataImportJobService {
 
   UUID executeDataImportJob(ParsedRecordDto recordDto, JobProfileAction action);
 
-  static JobProfileInfo toJobProfileInfo(JobProfile jobProfile) {
-    return new JobProfileInfo()
-      .withId(String.valueOf(jobProfile.getProfileId()))
-      .withName(jobProfile.getProfileName())
-      .withHidden(true)
-      .withDataType(JobProfileInfo.DataType.MARC);
+  static ProfileInfo toJobProfileInfo(JobProfile jobProfile) {
+    return new ProfileInfo()
+      .id(jobProfile.getProfileId())
+      .name(jobProfile.getProfileName())
+      .hidden(true)
+      .dataType(ProfileInfo.DataTypeEnum.MARC);
   }
 
   static InitJobExecutionsRqDto getDefaultJodExecutionDto(UUID userId, JobProfile jobProfile) {
     return new InitJobExecutionsRqDto()
-      .withJobProfileInfo(toJobProfileInfo(jobProfile))
-      .withSourceType(InitJobExecutionsRqDto.SourceType.ONLINE)
-      .withFiles(emptyList())
-      .withUserId(userId.toString());
+      .jobProfileInfo(toJobProfileInfo(jobProfile))
+      .sourceType(InitJobExecutionsRqDto.SourceTypeEnum.ONLINE)
+      .files(emptyList())
+      .userId(userId);
   }
 
   static RawRecordsDto toRawRecordsDto(ParsedRecordDto parsedRecordDto) {
     var jsonString = objectToJsonString(requireNonNull(parsedRecordDto).getParsedRecord().getContent());
-    return getRawRecordsBody(new InitialRecord().withRecord(jsonString), false);
+    return getRawRecordsBody(new RawRecordDto().record(jsonString), false);
   }
 
   static RawRecordsDto toLastRawRecordsDto() {
     return getRawRecordsBody(null, true);
   }
 
-  private static RawRecordsDto getRawRecordsBody(InitialRecord initialRecord, boolean isLast) {
+  private static RawRecordsDto getRawRecordsBody(RawRecordDto initialRecord, boolean isLast) {
     return new RawRecordsDto()
-      .withId(UUID.randomUUID().toString())
-      .withInitialRecords(initialRecord == null ? emptyList() : singletonList(initialRecord))
-      .withRecordsMetadata(
-        new RecordsMetadata()
-          .withLast(isLast)
-          .withCounter(1)
-          .withTotal(1)
-          .withContentType(RecordsMetadata.ContentType.MARC_JSON));
+      .id(UUID.randomUUID())
+      .initialRecords(initialRecord == null ? emptyList() : singletonList(initialRecord))
+      .recordsMetadata(
+        new RawRecordsMetadata()
+          .last(isLast)
+          .counter(1)
+          .total(1)
+          .contentType(RawRecordsMetadata.ContentTypeEnum.JSON));
   }
 }

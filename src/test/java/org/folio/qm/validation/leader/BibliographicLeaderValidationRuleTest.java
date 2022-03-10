@@ -28,7 +28,6 @@ class BibliographicLeaderValidationRuleTest {
   private static final String WRONG_CATALOGING_FORM = "01706ccm\\a2200361\\x\\4500";
   private static final String WRONG_RESOURCE_RECORD_LEVEL = "01706ccm\\a2200361\\\\x4500";
 
-
   @Test
   void shouldValidateBibliographicLeaderWithoutErrors() {
     var validationError = rule.validate(VALID_LEADER);
@@ -36,7 +35,7 @@ class BibliographicLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldSupportBibliographicFormat(){
+  void shouldSupportBibliographicFormat() {
     assertTrue(rule.supportFormat(MarcFormat.BIBLIOGRAPHIC));
   }
 

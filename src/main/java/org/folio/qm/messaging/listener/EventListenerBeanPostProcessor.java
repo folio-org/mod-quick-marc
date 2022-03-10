@@ -58,15 +58,18 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
     var userId = getHeaderValue(headers, USER_ID);
     return new FolioExecutionContext() {
 
-      @Override public String getTenantId() {
+      @Override
+      public String getTenantId() {
         return tenantId;
       }
 
-      @Override public String getOkapiUrl() {
+      @Override
+      public String getOkapiUrl() {
         return okapiUrl;
       }
 
-      @Override public String getToken() {
+      @Override
+      public String getToken() {
         return token;
       }
 
@@ -75,15 +78,18 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
         return userId == null ? UUID.randomUUID() : UUID.fromString(userId);
       }
 
-      @Override public Map<String, Collection<String>> getAllHeaders() {
+      @Override
+      public Map<String, Collection<String>> getAllHeaders() {
         return null;
       }
 
-      @Override public Map<String, Collection<String>> getOkapiHeaders() {
+      @Override
+      public Map<String, Collection<String>> getOkapiHeaders() {
         return null;
       }
 
-      @Override public FolioModuleMetadata getFolioModuleMetadata() {
+      @Override
+      public FolioModuleMetadata getFolioModuleMetadata() {
         return folioModuleMetadata;
       }
     };

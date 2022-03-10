@@ -64,13 +64,13 @@ import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
 import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
+import org.folio.qm.domain.dto.AdditionalInfo;
+import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
-import org.folio.rest.jaxrs.model.AdditionalInfo;
-import org.folio.rest.jaxrs.model.ExternalIdsHolder;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public abstract class AbstractMarcQmConverter implements MarcQmConverter {
 
@@ -86,12 +86,12 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       contentMap.put(FIELDS, convertMarcFieldsToObjects(marcRecord));
       contentMap.put(LEADER, marcRecord.getLeader().marshal());
       return new ParsedRecordDto()
-        .withParsedRecord(new ParsedRecord().withId(String.valueOf(source.getParsedRecordId())).withContent(contentMap))
-        .withRecordType(supportedType())
-        .withId(String.valueOf(source.getParsedRecordDtoId()))
-        .withRelatedRecordVersion(source.getRelatedRecordVersion())
-        .withExternalIdsHolder(constructExternalIdsHolder(source))
-        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(source.getSuppressDiscovery()));
+        .id(source.getParsedRecordDtoId())
+        .recordType(supportedType())
+        .externalIdsHolder(constructExternalIdsHolder(source))
+        .relatedRecordVersion(source.getRelatedRecordVersion())
+        .parsedRecord(new ParsedRecord().id(source.getParsedRecordId()).content(contentMap))
+        .additionalInfo(new AdditionalInfo().suppressDiscovery(source.getSuppressDiscovery()));
     } catch (Exception e) {
       throw new ConverterException(e);
     }

@@ -6,22 +6,22 @@ import static org.folio.qm.converter.impl.MarcAuthorityDtoConverter.AUTHORITY_CO
 import java.util.Map;
 
 import org.folio.qm.converter.AbstractMarcQmConverter;
+import org.folio.qm.domain.dto.ExternalIdsHolder;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.rest.jaxrs.model.ExternalIdsHolder;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcAuthorityQmConverter extends AbstractMarcQmConverter {
 
   @Override
-  public ParsedRecordDto.RecordType supportedType() {
-    return ParsedRecordDto.RecordType.MARC_AUTHORITY;
+  public ParsedRecordDto.RecordTypeEnum supportedType() {
+    return ParsedRecordDto.RecordTypeEnum.AUTHORITY;
   }
 
   @Override
   protected ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
     return new ExternalIdsHolder()
-      .withAuthorityId(String.valueOf(quickMarc.getExternalId()))
-      .withAuthorityHrid(quickMarc.getExternalHrid());
+      .authorityId(quickMarc.getExternalId())
+      .authorityHrid(quickMarc.getExternalHrid());
   }
 
   @Override

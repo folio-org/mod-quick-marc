@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
@@ -25,7 +26,7 @@ public class DBTestUtils {
   public static RecordCreationStatus getCreationStatusById(UUID id, FolioModuleMetadata metadata,
                                                            JdbcTemplate jdbcTemplate) {
     var sql = "SELECT * FROM " + creationStatusTable(APITestUtils.TENANT_ID, metadata) + " WHERE id = ?";
-    return jdbcTemplate.query(sql, new Object[] {id}, rs -> {
+    return jdbcTemplate.query(sql, ps -> ps.setObject(1, id), rs -> {
       rs.next();
       var recordCreationStatus = new RecordCreationStatus();
       recordCreationStatus.setId(getUuid("id", rs));

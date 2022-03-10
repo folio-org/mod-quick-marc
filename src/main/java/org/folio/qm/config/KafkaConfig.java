@@ -17,8 +17,8 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
+import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 @Configuration
 @EnableKafka
@@ -31,7 +31,7 @@ public class KafkaConfig {
 
   @Bean
   public ConsumerFactory<String, DataImportEventPayload> dataImportConsumerFactory(KafkaProperties kafkaProperties,
-                                                                         Deserializer<DataImportEventPayload> deserializer) {
+                                                                                   Deserializer<DataImportEventPayload> deserializer) {
     Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties());
     consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);

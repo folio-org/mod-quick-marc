@@ -3,7 +3,6 @@ package org.folio.qm.controller;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import java.util.UUID;
-
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;

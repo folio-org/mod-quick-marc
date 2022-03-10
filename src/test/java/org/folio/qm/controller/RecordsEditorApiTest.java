@@ -71,12 +71,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 import org.folio.spring.integration.XOkapiHeaders;
 
 @Log4j2
@@ -419,6 +419,6 @@ class RecordsEditorApiTest extends BaseApiTest {
   private void checkParseRecordDtoId() {
     var changeManagerResponse = wireMockServer.getAllServeEvents().get(2).getResponse().getBodyAsString();
     ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(String.valueOf(VALID_PARSED_RECORD_DTO_ID)));
+    assertThat(parsedRecordDto.getId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
   }
 }

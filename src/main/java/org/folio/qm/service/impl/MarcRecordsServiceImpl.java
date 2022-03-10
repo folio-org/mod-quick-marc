@@ -18,6 +18,7 @@ import org.folio.qm.client.UsersClient;
 import org.folio.qm.converter.MarcConverterFactory;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
@@ -28,8 +29,6 @@ import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 import org.folio.spring.exception.NotFoundException;
 
 @Service
@@ -52,8 +51,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public QuickMarc findByExternalId(UUID externalId) {
     var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
-    MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc = discClient.getFieldProtectionSettingsMarc();
-    var quickMarc = marcConverterFactory.findConverter(parsedRecordDto.getRecordType(), fieldProtectionSettingsMarc).convert(parsedRecordDto);
+    var marcFieldProtectionSettings = discClient.getFieldProtectionSettingsMarc();
+    var quickMarc = marcConverterFactory
+      .findConverter(parsedRecordDto.getRecordType(), marcFieldProtectionSettings)
+      .convert(parsedRecordDto);
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {
@@ -70,7 +71,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     validateMarcFields(quickMarc);
     var parsedRecordDto =
       marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
-    srmClient.putParsedRecordByInstanceId(String.valueOf(quickMarc.getParsedRecordDtoId()), parsedRecordDto);
+    srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
   }
 
   @Override

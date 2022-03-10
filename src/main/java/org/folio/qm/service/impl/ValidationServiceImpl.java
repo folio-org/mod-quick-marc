@@ -47,7 +47,7 @@ public class ValidationServiceImpl implements ValidationService {
       .filter(Optional::isPresent)
       .map(Optional::get)
       .collect(Collectors.toList()));
-     
+
     if (validationErrors.isEmpty()) {
       return new ValidationResult(true, Collections.emptyList());
     } else {

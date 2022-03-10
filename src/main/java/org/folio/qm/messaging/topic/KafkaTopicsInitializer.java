@@ -15,8 +15,8 @@ import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.config.properties.FolioKafkaProperties;
+import org.folio.qm.messaging.domain.DataImportEventTypes;
 import org.folio.qm.messaging.domain.QmEventTypes;
-import org.folio.rest.jaxrs.model.DataImportEventTypes;
 import org.folio.spring.FolioExecutionContext;
 
 @Log4j2

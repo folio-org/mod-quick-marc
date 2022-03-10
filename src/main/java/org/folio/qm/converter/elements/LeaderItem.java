@@ -30,7 +30,7 @@ public enum LeaderItem {
   RESOURCE_RECORD_LEVEL("Multipart resource record level", 19, 1, '\\', ' ', '\u00A0', 'a'),
 
   // Deprecated in MODQM-164
-  BIB_ENCODING_LEVEL("Bib encoding level", 17, 1, '\\', ' ', '\u00A0', '1', '2', '3', '4', '5', '7', '8', 'i', 'j', 'k', 'm','u', 'z'),
+  BIB_ENCODING_LEVEL("Bib encoding level", 17, 1, '\\', ' ', '\u00A0', '1', '2', '3', '4', '5', '7', '8', 'i', 'j', 'k', 'm', 'u', 'z'),
 
   //HOLDINGS FIELDS
   HOLDINGS_RECORD_STATUS("Holdings record status", 5, 1, 'c', 'd', 'n'),
@@ -41,7 +41,7 @@ public enum LeaderItem {
   //AUTHORITY FIELDS
   AUTHORITY_RECORD_STATUS("Authority record status", 5, 1, 'a', 'c', 'd', 'n', 'o', 's', 'x'),
   AUTHORITY_RECORD_TYPE("Authority type of record", 6, 1, 'z'),
-  AUTHORITY_ENCODING_LEVEL("Authority encoding level", 17, 1,  'n', 'o'),
+  AUTHORITY_ENCODING_LEVEL("Authority encoding level", 17, 1, 'n', 'o'),
   PUNCTUATION_POLICY("Punctuation policy", 18, 1, '\\', ' ', '\u00A0', 'c', 'i', 'u');
 
   private final String name;
@@ -49,8 +49,7 @@ public enum LeaderItem {
   private final int length;
   private final List<Character> possibleValues;
 
-
-  LeaderItem(String name, int position, int length, Character ... possibleValues) {
+  LeaderItem(String name, int position, int length, Character... possibleValues) {
     this.name = name;
     this.position = position;
     this.length = length;

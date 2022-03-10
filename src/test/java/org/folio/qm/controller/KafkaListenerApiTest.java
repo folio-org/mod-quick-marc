@@ -2,8 +2,8 @@ package org.folio.qm.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-
 import static org.awaitility.Durations.ONE_MINUTE;
+
 import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.support.utils.DBTestUtils.saveCreationStatus;

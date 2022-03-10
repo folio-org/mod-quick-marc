@@ -1,21 +1,21 @@
 package org.folio.qm.controller;
 
+import static java.util.Objects.requireNonNull;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
 import static org.folio.qm.support.utils.IOTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
-
-import static java.util.Objects.requireNonNull;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -24,9 +24,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
-
-import org.folio.qm.support.extension.EnableKafka;
-import org.folio.qm.support.extension.EnablePostgres;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,14 +39,16 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
+import org.folio.qm.service.impl.DeferredResultCacheService;
+import org.folio.qm.support.extension.EnableKafka;
+import org.folio.qm.support.extension.EnablePostgres;
 import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;
 import org.folio.qm.support.extension.impl.WireMockInitializer;
-import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
-import org.springframework.test.web.servlet.ResultActions;
 
 @EnableKafka
 @EnablePostgres
@@ -77,8 +76,6 @@ class BaseApiTest {
   @Autowired
   protected MockMvc mockMvc;
   @Autowired
-  protected DeferredResultCacheService deferredResultCacheService;
-  @Autowired
   private CacheManager cacheManager;
 
   @Value("${x-okapi-url}")
@@ -87,7 +84,8 @@ class BaseApiTest {
   @BeforeEach
   void before() throws Exception {
     if (!dbInitialized) {
-      postResultActions("/_/tenant", new TenantAttributes().moduleTo("mod-quick-marc"))
+      var body = new TenantAttributes().moduleTo("mod-quick-marc");
+      postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
         .andExpect(status().isNoContent());
 
       dbInitialized = true;
@@ -104,14 +102,6 @@ class BaseApiTest {
     return mockMvc.perform(get(uri)
         .headers(getHeaders())
         .contentType(APPLICATION_JSON_VALUE))
-      .andDo(log());
-  }
-
-  protected ResultActions postResultActions(String uri, Object body) throws Exception {
-    return mockMvc.perform(post(uri)
-        .headers(getHeaders())
-        .contentType(APPLICATION_JSON_VALUE)
-        .content(getObjectAsJson(body)))
       .andDo(log());
   }
 
@@ -156,10 +146,10 @@ class BaseApiTest {
   }
 
   @SneakyThrows
-  protected void sendQMKafkaRecord(String eventPayload, String topicName) {
+  protected void sendQMKafkaRecord(String eventPayload) {
     var jsonObject = new JSONObject();
     jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), topicName);
+    sendKafkaRecord(jsonObject.toString(), BaseApiTest.QM_COMPLETE_TOPIC_NAME);
   }
 
   protected void sendKafkaRecord(String eventPayload, String topicName) {

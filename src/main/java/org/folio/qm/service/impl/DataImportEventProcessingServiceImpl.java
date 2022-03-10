@@ -4,20 +4,18 @@ import static org.folio.qm.util.DIEventUtils.extractErrorMessage;
 import static org.folio.qm.util.DIEventUtils.extractExternalId;
 import static org.folio.qm.util.DIEventUtils.extractMarcId;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.EventProcessingService;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
 import org.folio.tenant.domain.dto.Error;
 
 @Log4j2
@@ -62,10 +60,10 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
   private void processDIEvent(DataImportEventPayload data, RecordCreationStatusUpdate statusUpdate) {
     var jobExecutionId = data.getJobExecutionId();
     log.info("Process [{}] event for jobExecutionId [{}]", data.getEventType(), jobExecutionId);
-    var isUpdated = statusService.updateByJobExecutionId(UUID.fromString(jobExecutionId), statusUpdate);
+    var isUpdated = statusService.updateByJobExecutionId(jobExecutionId, statusUpdate);
     if (isUpdated) {
       log.info("Record creation status for jobExecutionId [{}] was updated with values [{}]", jobExecutionId, statusUpdate);
-      var importResult = cacheService.getDataImportActionResult(UUID.fromString(jobExecutionId));
+      var importResult = cacheService.getDataImportActionResult(jobExecutionId);
       if (importResult != null) {
         if (statusUpdate.getErrorMessage() == null) {
           importResult.setResult(ResponseEntity.noContent().build());

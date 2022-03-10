@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "MARC field protection setting schema",
+  "type": "object",
+  "javaType": "org.folio.rest.jaxrs.model.MarcFieldProtectionSetting",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "MARC field protection setting id",
+      "$ref": "../uuid.json"
+    },
+    "field": {
+      "description": "Field",
+      "type": "string"
+    },
+    "indicator1": {
+      "description": "Indicator 1",
+      "type": "string"
+    },
+    "indicator2": {
+      "description": "Indicator 2",
+      "type": "string"
+    },
+    "subfield": {
+      "description": "Subfield",
+      "type": "string"
+    },
+    "data": {
+      "description": "Data",
+      "type": "string"
+    },
+    "source": {
+      "description": "Source",
+      "type": "string",
+      "enum": [
+        "SYSTEM",
+        "USER"
+      ]
+    },
+    "override": {
+      "description": "Indicates whether field can be overridden or not, always false for SYSTEM protection settings",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "field"
+  ]
+}

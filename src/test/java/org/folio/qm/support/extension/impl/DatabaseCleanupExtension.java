@@ -5,13 +5,13 @@ import static org.folio.qm.support.utils.DBTestUtils.getTableName;
 
 import java.util.Optional;
 
-import org.folio.qm.support.extension.ClearTable;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
+import org.folio.qm.support.extension.ClearTable;
 import org.folio.spring.FolioModuleMetadata;
 
 public class DatabaseCleanupExtension implements AfterEachCallback {

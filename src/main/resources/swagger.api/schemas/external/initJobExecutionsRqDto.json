@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Request to initialize JobExecution entities",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "files": {
+      "description": "Information about files to upload",
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "sourceType": {
+      "description": "Raw records source type",
+      "type": "string",
+      "enum": [
+        "FILES",
+        "ONLINE"
+      ]
+    },
+    "jobProfileInfo": {
+      "description": "Related JobProfile information",
+      "type": "object",
+      "$ref": "profileInfo.json"
+    },
+    "userId": {
+      "description": "ID of the user initializing JobExecutions",
+      "$ref": "../uuid.json"
+    }
+  },
+  "required": [
+    "sourceType",
+    "userId"
+  ]
+}

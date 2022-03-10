@@ -1,6 +1,6 @@
 package org.folio.qm.service;
 
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
+import org.folio.qm.domain.dto.DataImportEventPayload;
 
 public interface EventProcessingService {
 

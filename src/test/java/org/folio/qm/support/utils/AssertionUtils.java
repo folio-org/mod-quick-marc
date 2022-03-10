@@ -13,7 +13,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 
 @UtilityClass
 public class AssertionUtils {

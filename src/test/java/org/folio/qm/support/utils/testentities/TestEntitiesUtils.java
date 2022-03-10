@@ -1,18 +1,23 @@
 package org.folio.qm.support.utils.testentities;
 
+import static org.folio.qm.domain.dto.ParsedRecordDto.RecordTypeEnum.AUTHORITY;
+import static org.folio.qm.domain.dto.ParsedRecordDto.RecordTypeEnum.BIB;
+import static org.folio.qm.domain.dto.ParsedRecordDto.RecordTypeEnum.HOLDING;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.folio.qm.domain.dto.AdditionalInfo;
+import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.Metadata;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.rest.jaxrs.model.AdditionalInfo;
-import org.folio.rest.jaxrs.model.ExternalIdsHolder;
-import org.folio.rest.jaxrs.model.Metadata;
-import org.folio.rest.jaxrs.model.ParsedRecord;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
-import org.folio.rest.jaxrs.model.ParsedRecordDto.RecordType;
 
 public class TestEntitiesUtils {
 
@@ -37,7 +42,6 @@ public class TestEntitiesUtils {
   public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
   public static final String DI_EVENT_DIR = "mockdata/di-event";
   public static final String DI_COMPLETE_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-autority.json";
-  public static final String QM_EMPTY_FIELDS = PARSED_RECORDS_DIR + "/quickMarcJson_emptyContent.json";
   public static final String QM_WRONG_ITEM_LENGTH = PARSED_RECORDS_DIR + "/quickMarcJsonWrongItemLength.json";
   public static final String QM_LEADER_MISMATCH2 = PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchMissing008Value.json";
   public static final String QM_LEADER_MISMATCH1 = PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchValueMismatch.json";
@@ -78,27 +82,27 @@ public class TestEntitiesUtils {
     return new QuickMarc().leader("01542ccm a22002533  4500").fields(Arrays.asList(fields));
   }
 
-  public static ParsedRecordDto getParsedRecordDtoWithMinContent(ParsedRecord parsedRecord, RecordType recordType) {
+  public static ParsedRecordDto getParsedRecordDtoWithMinContent(ParsedRecord parsedRecord, ParsedRecordDto.RecordTypeEnum recordType) {
     var parsedRecordDto = new ParsedRecordDto()
-      .withId(String.valueOf(VALID_PARSED_RECORD_DTO_ID))
-      .withParsedRecord(parsedRecord)
-      .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(false))
-      .withRecordType(recordType)
-      .withRecordState(ParsedRecordDto.RecordState.ACTUAL)
-      .withMetadata(new Metadata()
-        .withUpdatedDate(new Date(1594901616879L))
-        .withUpdatedByUserId(JOHN_USER_ID)
-        .withUpdatedByUsername(JOHN_USER_NAME)
+      .id(VALID_PARSED_RECORD_DTO_ID)
+      .parsedRecord(parsedRecord)
+      .additionalInfo(new AdditionalInfo().suppressDiscovery(false))
+      .recordType(recordType)
+      .recordState(ParsedRecordDto.RecordStateEnum.ACTUAL)
+      .metadata(new Metadata()
+        .updatedDate(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1594901616879L), ZoneId.systemDefault()))
+        .updatedByUserId(JOHN_USER_ID)
+        .updatedByUsername(JOHN_USER_NAME)
       );
-    if (RecordType.MARC_BIB == recordType) {
+    if (BIB == recordType) {
       return parsedRecordDto
-        .withExternalIdsHolder(new ExternalIdsHolder().withInstanceId(String.valueOf(EXISTED_EXTERNAL_ID)).withInstanceHrid("393893"));
-    } else if (RecordType.MARC_HOLDING == recordType) {
+        .externalIdsHolder(new ExternalIdsHolder().instanceId(EXISTED_EXTERNAL_ID).instanceHrid("393893"));
+    } else if (HOLDING == recordType) {
       return parsedRecordDto
-        .withExternalIdsHolder(new ExternalIdsHolder().withHoldingsId(String.valueOf(EXISTED_EXTERNAL_ID)).withHoldingsHrid("393893"));
-    } else if (RecordType.MARC_AUTHORITY == recordType){
+        .externalIdsHolder(new ExternalIdsHolder().holdingsId(EXISTED_EXTERNAL_ID).holdingsHrid("393893"));
+    } else if (AUTHORITY == recordType) {
       return parsedRecordDto
-        .withExternalIdsHolder(new ExternalIdsHolder().withAuthorityId(String.valueOf(EXISTED_EXTERNAL_ID)));
+        .externalIdsHolder(new ExternalIdsHolder().authorityId(EXISTED_EXTERNAL_ID));
     }
     return parsedRecordDto;
   }

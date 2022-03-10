@@ -33,7 +33,7 @@ class HoldingsLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldSupportHoldingsFormat(){
+  void shouldSupportHoldingsFormat() {
     assertTrue(rule.supportFormat(MarcFormat.HOLDINGS));
   }
 

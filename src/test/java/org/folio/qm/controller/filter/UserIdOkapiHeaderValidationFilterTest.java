@@ -1,6 +1,5 @@
 package org.folio.qm.controller.filter;
 
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.never;

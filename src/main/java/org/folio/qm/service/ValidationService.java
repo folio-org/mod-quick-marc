@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.validation.ValidationResult;
-import org.folio.spring.FolioExecutionContext;
 
 public interface ValidationService {
 

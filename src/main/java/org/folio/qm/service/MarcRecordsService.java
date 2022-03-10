@@ -2,10 +2,10 @@ package org.folio.qm.service;
 
 import java.util.UUID;
 
+import org.springframework.web.context.request.async.DeferredResult;
+
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.async.DeferredResult;
 
 public interface MarcRecordsService {
 
@@ -18,7 +18,6 @@ public interface MarcRecordsService {
   QuickMarc findByExternalId(UUID externalId);
 
   /**
-   *
    * @param externalId external id
    * @return {@link DeferredResult} response
    */
@@ -28,7 +27,7 @@ public interface MarcRecordsService {
    * This method updates QuickMarc record
    *
    * @param parsedRecordId DTO id
-   * @param quickMarc  QuickMarc object
+   * @param quickMarc      QuickMarc object
    */
   void updateById(UUID parsedRecordId, QuickMarc quickMarc);
 
@@ -43,7 +42,7 @@ public interface MarcRecordsService {
   /**
    * This method triggers the 'mod-source-record-manager' import process of QuickMarc record
    *
-   * @param quickMarc  QuickMarc object
+   * @param quickMarc QuickMarc object
    * @return {@link UUID} qmParsedRecordId of record
    */
   CreationStatus createNewRecord(QuickMarc quickMarc);

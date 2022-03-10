@@ -1,6 +1,7 @@
 package org.folio.qm.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
@@ -302,11 +303,9 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
   @Test
   void testDeleteQuickMarcRecordWrongUuid() throws Exception {
     RecordsEditorAsyncApiTest.log.info("===== Verify DELETE record: Not found =====");
-    UUID wrongUUID = UUID.randomUUID();
+    mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, wireMockServer);
 
-    mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
-
-    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(wrongUUID))));
+    wireMockServer.verify(exactly(0), getRequestedFor(urlEqualTo(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID))));
 
     deleteResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
       .andExpect(status().isNotFound());

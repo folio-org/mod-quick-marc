@@ -35,7 +35,7 @@ public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean impleme
       && isBlank(req.getHeader(XOkapiHeaders.USER_ID))) {
       HttpServletResponse res = (HttpServletResponse) response;
       res.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
-      res.setStatus(400);
+      res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       res.getWriter().println(ERROR_MSG);
       return;
     }
@@ -48,5 +48,9 @@ public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean impleme
 
   public void setOrder(int order) {
     this.order = order;
+  }
+
+  public void setManagementBasePath(String managementBasePath) {
+    this.managementBasePath = managementBasePath;
   }
 }

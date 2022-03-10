@@ -9,32 +9,28 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import lombok.RequiredArgsConstructor;
-import org.folio.qm.client.DICSFieldProtectionSettingsClient;
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.entity.JobProfileAction;
-import org.folio.qm.exception.UnexpectedException;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
-
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import org.folio.qm.client.DICSFieldProtectionSettingsClient;
 import org.folio.qm.client.SRMChangeManagerClient;
 import org.folio.qm.client.UsersClient;
 import org.folio.qm.converter.MarcConverterFactory;
 import org.folio.qm.domain.dto.CreationStatus;
+import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
+import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.CreationStatusService;
-import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.DataImportJobService;
+import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
-import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +47,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
-  private final FolioExecutionContext folioExecutionContext;
   private final MarcConverterFactory marcConverterFactory;
 
   @Override

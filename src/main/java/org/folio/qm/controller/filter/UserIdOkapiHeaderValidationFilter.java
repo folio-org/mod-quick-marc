@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import org.folio.spring.integration.XOkapiHeaders;
@@ -19,15 +20,15 @@ import org.folio.spring.integration.XOkapiHeaders;
 @Component
 public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean implements OrderedFilter {
 
-  public static final String ERROR_MSG = "x-okapi-user-id header must be provided";
-  private int order = 1;
+  private static final String ERROR_MSG = "x-okapi-user-id header must be provided";
+  private int order = 2;
 
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
     String requestURI = req.getRequestURI();
     if (!requestURI.startsWith("/_/") && isBlank(req.getHeader(XOkapiHeaders.USER_ID))) {
       HttpServletResponse res = (HttpServletResponse) response;
-      res.setContentType("text/plain");
+      res.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
       res.setStatus(400);
       res.getWriter().println(ERROR_MSG);
       return;

@@ -3,12 +3,14 @@ package org.folio.qm.messaging.listener;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
+import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -53,6 +55,7 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
     var tenantId = getHeaderValue(headers, TENANT);
     var okapiUrl = getHeaderValue(headers, URL);
     var token = getHeaderValue(headers, TOKEN);
+    var userId = getHeaderValue(headers, USER_ID);
     return new FolioExecutionContext() {
 
       @Override public String getTenantId() {
@@ -65,6 +68,11 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
 
       @Override public String getToken() {
         return token;
+      }
+
+      @Override
+      public UUID getUserId() {
+        return userId == null ? UUID.randomUUID() : UUID.fromString(userId);
       }
 
       @Override public Map<String, Collection<String>> getAllHeaders() {

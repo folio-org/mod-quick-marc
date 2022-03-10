@@ -6,29 +6,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
-import org.folio.qm.util.DeferredResultCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
-import org.folio.qm.service.CacheService;
+import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.tenant.domain.dto.Error;
 
 @Log4j2
 @Component
 @RequiredArgsConstructor
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class QuickMarcEventListener {
 
   public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
 
-  private final CacheService<DeferredResultCache> cacheService;
   private final ObjectMapper objectMapper;
+  private final DeferredResultCacheService deferredResultCacheService;
 
   @KafkaListener(
     id = QM_COMPLETED_LISTENER_ID,
@@ -37,10 +33,9 @@ public class QuickMarcEventListener {
     concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data) throws JsonProcessingException {
-    DeferredResultCache updateCache = cacheService.getUpdateCache();
     var recordId = data.getRecordId();
     log.info("QM_COMPLETED received for record id [{}]", recordId);
-    DeferredResult deferredResult = updateCache.getFromCache(String.valueOf(recordId));
+    var deferredResult = deferredResultCacheService.getUpdateActionResult(recordId);
     if (deferredResult != null) {
       if (data.isSucceed()) {
         deferredResult.setResult(ResponseEntity.accepted().build());
@@ -53,7 +48,6 @@ public class QuickMarcEventListener {
           deferredResult.setErrorResult(body);
         }
       }
-      updateCache.invalidate(String.valueOf(recordId));
     }
   }
 

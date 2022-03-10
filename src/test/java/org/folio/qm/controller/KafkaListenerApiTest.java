@@ -1,5 +1,6 @@
 package org.folio.qm.controller;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -21,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
 class KafkaListenerApiTest extends BaseApiTest {
+
+  private static final String DI_ERROR_EVENT = "mockdata/di-event/error-event.json";
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
@@ -77,7 +80,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/di-event/error-event.json", DI_ERROR_TOPIC_NAME);
+    sendDIKafkaRecord(DI_ERROR_EVENT, DI_ERROR_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
@@ -86,6 +89,36 @@ class KafkaListenerApiTest extends BaseApiTest {
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("errorMessage", "Instance was not created")
       .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
+  }
+
+  @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  void shouldDeleteRecordWhenReceivedDICompletedEvent() {
+    UUID statusId = UUID.randomUUID();
+    saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
+
+    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_COMPLETE_TOPIC_NAME);
+    awaitStatusChanged(statusId, RecordCreationStatusEnum.CREATED);
+
+    var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
+    assertThat(creationStatus)
+      .hasFieldOrPropertyWithValue("id", statusId)
+      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED);
+  }
+
+  @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  void shouldDeleteRecordWhenReceivedDIErrorEvent() {
+    UUID statusId = UUID.randomUUID();
+    saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
+
+    sendDIKafkaRecord(DI_ERROR_EVENT, DI_ERROR_TOPIC_NAME);
+    awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
+
+    var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
+    assertThat(creationStatus)
+      .hasFieldOrPropertyWithValue("id", statusId)
+      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR);
   }
 
   private void shouldUpdateExistingStatusWhenReceivedDICompletedEvent(String eventMockPath) {
@@ -110,34 +143,6 @@ class KafkaListenerApiTest extends BaseApiTest {
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(status)
       );
-  }
-
-  @Test
-  void shouldDeleteRecordWhenReceivedDICompletedEvent() {
-    var deferredResult = new DeferredResult<>();
-    cacheService.getDeleteCache().putToCache(String.valueOf(VALID_JOB_EXECUTION_ID), deferredResult);
-
-    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_COMPLETE_TOPIC_NAME);
-    await().atMost(5, SECONDS)
-      .untilAsserted(() -> assertThat(deferredResult.getResult()).isNotNull());
-    var result = deferredResult.getResult();
-
-    HttpStatus statusCode = ((ResponseEntity) result).getStatusCode();
-    assertThat(statusCode).isEqualTo(HttpStatus.NO_CONTENT);
-  }
-
-  @Test
-  void shouldDeleteRecordWhenReceivedDIErrorEvent() {
-    var deferredResult = new DeferredResult<>();
-    cacheService.getDeleteCache().putToCache(String.valueOf(VALID_JOB_EXECUTION_ID), deferredResult);
-
-    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_ERROR_TOPIC_NAME);
-    await().atMost(5, SECONDS)
-      .untilAsserted(() -> assertThat(deferredResult.getResult()).isNotNull());
-    var result = deferredResult.getResult();
-
-    HttpStatus statusCode = ((ResponseEntity) result).getStatusCode();
-    assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
 }

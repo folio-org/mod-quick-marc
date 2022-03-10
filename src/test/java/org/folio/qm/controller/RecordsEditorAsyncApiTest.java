@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.*;
 import static org.folio.qm.utils.APITestUtils.*;
+import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.utils.IOTestUtils.readFile;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.*;
 import static org.hamcrest.Matchers.containsString;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.extension.ClearTable;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 
 @Log4j2
@@ -217,6 +219,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
   }
 
   @Test
+  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
   void testDeleteQuickMarcAuthorityRecord() throws Exception {
     log.info("===== Verify DELETE authority record: No Content");
 
@@ -253,7 +256,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     deleteResultActions(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message").value("Creating record with this format is not supported"));
+      .andExpect(jsonPath("$.message").value(containsString("Job profile for [DELETE] action")));
   }
 
   @Test

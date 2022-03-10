@@ -273,7 +273,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
-      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
+      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
       .andReturn();
 
     String resultResponse = result.getResponse().getContentAsString();
@@ -315,7 +315,7 @@ class RecordsEditorApiTest extends BaseApiTest {
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
-      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
+      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
       .andReturn();
 
     String resultResponse = result.getResponse().getContentAsString();

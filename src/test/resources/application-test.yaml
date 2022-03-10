@@ -15,6 +15,8 @@ spring:
   cache:
     cache-names:
       - job-profiles
+      - qm-update-results
+      - data-import-results
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   kafka:

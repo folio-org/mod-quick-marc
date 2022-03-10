@@ -10,9 +10,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.rest.resource.RecordsEditorAsyncApi;
-import org.folio.qm.service.CacheService;
 import org.folio.qm.service.MarcRecordsService;
-import org.folio.qm.util.DeferredResultCache;
+import org.folio.qm.service.impl.DeferredResultCacheService;
 
 @RestController
 @RequestMapping(value = "/records-editor")
@@ -20,22 +19,17 @@ import org.folio.qm.util.DeferredResultCache;
 public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
 
   private final MarcRecordsService marcRecordsService;
-  private final CacheService<DeferredResultCache> cacheService;
+  private final DeferredResultCacheService deferredResultCacheService;
 
   @Override
   public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarc quickMarc) {
-    var deferredResult = new DeferredResult<ResponseEntity<Void>>();
-
-    cacheService.getUpdateCache().putToCache(String.valueOf(quickMarc.getParsedRecordDtoId()), deferredResult);
     marcRecordsService.updateById(id, quickMarc);
-    return deferredResult;
+    return deferredResultCacheService.getUpdateActionResult(quickMarc.getParsedRecordDtoId());
   }
 
   @Override
   public DeferredResult<ResponseEntity<Void>> deleteRecordByExternalId(UUID id) {
-    var deferredResult = new DeferredResult<ResponseEntity<Void>>();
     var status = marcRecordsService.deleteByExternalId(id);
-    cacheService.getUpdateCache().putToCache(String.valueOf(status.getJobExecutionId()), deferredResult);
-    return deferredResult;
+    return deferredResultCacheService.getDataImportActionResult(status.getJobExecutionId());
   }
 }

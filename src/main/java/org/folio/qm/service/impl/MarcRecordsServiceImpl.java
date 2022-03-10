@@ -90,7 +90,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
-    validationService.validateUserId(folioExecutionContext);
     var recordDto = marcConverterFactory.findConverter(quickMarc.getMarcFormat())
       .convert(prepareRecord(quickMarc));
     return runImportAndGetStatus(recordDto, CREATE);
@@ -98,7 +97,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public CreationStatus deleteByExternalId(UUID externalId) {
-    validationService.validateUserId(folioExecutionContext);
     var recordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
     return runImportAndGetStatus(recordDto, DELETE);
   }

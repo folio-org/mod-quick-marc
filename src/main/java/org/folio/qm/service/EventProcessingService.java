@@ -4,7 +4,7 @@ import org.folio.rest.jaxrs.model.DataImportEventPayload;
 
 public interface EventProcessingService {
 
-  boolean processDICompleted(DataImportEventPayload data);
+  void processDICompleted(DataImportEventPayload data);
 
-  boolean processDIError(DataImportEventPayload data);
+  void processDIError(DataImportEventPayload data);
 }

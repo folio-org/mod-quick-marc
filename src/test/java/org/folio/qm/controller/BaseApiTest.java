@@ -6,6 +6,8 @@ import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
+
+import static java.util.Objects.requireNonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,8 +24,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
-import org.folio.qm.service.CacheService;
-import org.folio.qm.util.DeferredResultCache;
+
 import org.folio.qm.extension.EnableKafka;
 import org.folio.qm.extension.EnablePostgres;
 import org.json.JSONObject;
@@ -32,9 +33,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -44,6 +45,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.folio.qm.extension.impl.DatabaseCleanupExtension;
 import org.folio.qm.extension.impl.WireMockInitializer;
+import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.tenant.domain.dto.TenantAttributes;
@@ -75,7 +77,9 @@ class BaseApiTest {
   @Autowired
   protected MockMvc mockMvc;
   @Autowired
-  protected CacheService<DeferredResultCache> cacheService;
+  protected DeferredResultCacheService deferredResultCacheService;
+  @Autowired
+  private CacheManager cacheManager;
 
   @Value("${x-okapi-url}")
   private String okapiUrl;
@@ -88,6 +92,7 @@ class BaseApiTest {
 
       dbInitialized = true;
     }
+    cacheManager.getCacheNames().forEach(name -> requireNonNull(cacheManager.getCache(name)).clear());
   }
 
   @AfterEach

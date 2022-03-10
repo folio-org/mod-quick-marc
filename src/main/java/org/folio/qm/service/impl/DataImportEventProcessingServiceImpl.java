@@ -9,16 +9,19 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.EventProcessingService;
+import org.folio.qm.util.ErrorUtils;
 import org.folio.rest.jaxrs.model.DataImportEventPayload;
+import org.folio.tenant.domain.dto.Error;
 
 @Log4j2
-@Component(value = "importEventProcessingService")
+@Component
 @RequiredArgsConstructor
 public class DataImportEventProcessingServiceImpl implements EventProcessingService {
 
@@ -27,10 +30,10 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
 
   private final CreationStatusService statusService;
   private final ObjectMapper objectMapper;
+  private final DeferredResultCacheService cacheService;
 
   @Override
-  public boolean processDICompleted(DataImportEventPayload data) {
-    var result = false;
+  public void processDICompleted(DataImportEventPayload data) {
     var updateBuilder = RecordCreationStatusUpdate.builder();
     try {
       extractMarcId(data, objectMapper).ifPresent(updateBuilder::marcId);
@@ -41,23 +44,19 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
             updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(errorMessage);
           }
         );
-      result = true;
     } catch (IllegalStateException e) {
       updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(e.getMessage());
     }
     processDIEvent(data, updateBuilder.build());
-    return result;
   }
 
   @Override
-  public boolean processDIError(DataImportEventPayload data) {
+  public void processDIError(DataImportEventPayload data) {
     var errorMessage = extractErrorMessage(data).orElse(ERROR_MISSED_MESSAGE);
     var updateBuilder = RecordCreationStatusUpdate.builder()
       .status(RecordCreationStatusEnum.ERROR)
       .errorMessage(errorMessage);
     processDIEvent(data, updateBuilder.build());
-
-    return true;
   }
 
   private void processDIEvent(DataImportEventPayload data, RecordCreationStatusUpdate statusUpdate) {
@@ -66,6 +65,19 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
     var isUpdated = statusService.updateByJobExecutionId(UUID.fromString(jobExecutionId), statusUpdate);
     if (isUpdated) {
       log.info("Record creation status for jobExecutionId [{}] was updated with values [{}]", jobExecutionId, statusUpdate);
+      var importResult = cacheService.getDataImportActionResult(UUID.fromString(jobExecutionId));
+      if (importResult != null) {
+        if (statusUpdate.getErrorMessage() == null) {
+          importResult.setResult(ResponseEntity.noContent().build());
+        } else {
+          importResult.setErrorResult(buildErrorResponse(statusUpdate.getErrorMessage()));
+        }
+      }
     }
+  }
+
+  private ResponseEntity<Error> buildErrorResponse(String errorMessage) {
+    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, errorMessage);
+    return ResponseEntity.badRequest().body(error);
   }
 }

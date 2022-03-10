@@ -10,22 +10,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
-import static org.folio.qm.utils.AssertionUtils.mockIsEqualToObject;
-import static org.folio.qm.utils.JsonTestUtils.getMockAsJsonNode;
-import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
-import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
-import static org.folio.qm.utils.JsonTestUtils.getObjectAsJsonNode;
-import static org.folio.qm.utils.JsonTestUtils.getObjectFromJsonNode;
-import static org.folio.qm.utils.testentities.GeneralTestEntities.BOOKS;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_BIB_DTO_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getFieldWithValue;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
+import static org.folio.qm.support.utils.AssertionUtils.mockIsEqualToObject;
+import static org.folio.qm.support.utils.JsonTestUtils.getMockAsJsonNode;
+import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
+import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
+import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJsonNode;
+import static org.folio.qm.support.utils.JsonTestUtils.getObjectFromJsonNode;
+import static org.folio.qm.support.utils.testentities.GeneralTestEntities.BOOKS;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.RESTORED_PARSED_RECORD_BIB_DTO_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.TESTED_TAG_NAME;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +37,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.folio.qm.support.types.UnitTest;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
@@ -48,12 +50,13 @@ import org.folio.qm.converter.impl.MarcBibliographicQmConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
-import org.folio.qm.utils.testentities.GeneralTestEntities;
-import org.folio.qm.utils.testentities.LccnFieldsTestEntities;
-import org.folio.qm.utils.testentities.PhysicalDescriptionsTestEntities;
+import org.folio.qm.support.utils.testentities.GeneralTestEntities;
+import org.folio.qm.support.utils.testentities.LccnFieldsTestEntities;
+import org.folio.qm.support.utils.testentities.PhysicalDescriptionsTestEntities;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
+@UnitTest
 class MarcBibliographicQmConverterTest {
 
   public static final String CONTENT = "content";

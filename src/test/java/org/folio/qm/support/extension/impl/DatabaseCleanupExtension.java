@@ -1,11 +1,11 @@
-package org.folio.qm.extension.impl;
+package org.folio.qm.support.extension.impl;
 
-import static org.folio.qm.utils.APITestUtils.TENANT_ID;
-import static org.folio.qm.utils.DBTestUtils.getTableName;
+import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.support.utils.DBTestUtils.getTableName;
 
 import java.util.Optional;
 
-import org.folio.qm.extension.ClearTable;
+import org.folio.qm.support.extension.ClearTable;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.jdbc.core.JdbcTemplate;

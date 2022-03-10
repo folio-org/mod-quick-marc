@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.folio.qm.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,9 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.holder.impl.TenantsHolderImpl;
+import org.folio.qm.support.types.UnitTest;
 
+@UnitTest
 @ExtendWith(MockitoExtension.class)
 class TenantsHolderImplTest {
 

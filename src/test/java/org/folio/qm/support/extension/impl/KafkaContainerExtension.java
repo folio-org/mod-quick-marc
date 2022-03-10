@@ -1,4 +1,4 @@
-package org.folio.qm.extension.impl;
+package org.folio.qm.support.extension.impl;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

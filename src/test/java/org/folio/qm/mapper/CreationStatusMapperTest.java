@@ -16,7 +16,9 @@ import org.mapstruct.factory.Mappers;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
+import org.folio.qm.support.types.UnitTest;
 
+@UnitTest
 @ExtendWith(RandomBeansExtension.class)
 class CreationStatusMapperTest {
 

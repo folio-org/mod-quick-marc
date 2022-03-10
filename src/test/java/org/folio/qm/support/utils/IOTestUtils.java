@@ -1,4 +1,4 @@
-package org.folio.qm.utils;
+package org.folio.qm.support.utils;
 
 import java.io.File;
 import java.io.IOException;

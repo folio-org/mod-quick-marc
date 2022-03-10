@@ -1,4 +1,4 @@
-package org.folio.qm.utils;
+package org.folio.qm.support.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

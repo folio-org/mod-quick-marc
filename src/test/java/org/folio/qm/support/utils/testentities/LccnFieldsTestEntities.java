@@ -1,4 +1,4 @@
-package org.folio.qm.utils.testentities;
+package org.folio.qm.support.utils.testentities;
 
 public enum LccnFieldsTestEntities {
 

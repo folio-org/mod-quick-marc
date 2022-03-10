@@ -3,16 +3,16 @@ package org.folio.qm.conveter;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
-import static org.folio.qm.utils.JsonTestUtils.getMockAsObject;
-import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
-import static org.folio.qm.utils.JsonTestUtils.readQuickMarc;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_EDGE_CASES_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_EDGE_CASES_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
+import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
+import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
+import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_INVALID_008_LENGTH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_EDGE_CASES_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_EDGE_CASES_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getParsedRecordDtoWithMinContent;
 
 import java.time.ZoneOffset;
 import java.util.Objects;
@@ -20,6 +20,8 @@ import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.folio.qm.support.types.UnitTest;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,10 +35,11 @@ import org.folio.qm.converter.impl.MarcHoldingsDtoConverter;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
-import org.folio.qm.utils.testentities.PhysicalDescriptionsTestEntities;
+import org.folio.qm.support.utils.testentities.PhysicalDescriptionsTestEntities;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
+@UnitTest
 class MarcHoldingsDtoConverterTest {
 
   private static final Logger logger = LogManager.getLogger(MarcHoldingsDtoConverterTest.class);

@@ -1,4 +1,4 @@
-package org.folio.qm.utils;
+package org.folio.qm.support.utils;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -7,7 +7,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.SC_OK;
 
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 
 import java.io.UnsupportedEncodingException;
@@ -21,6 +20,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+
+import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 
 @UtilityClass
 public class APITestUtils {
@@ -38,7 +39,7 @@ public class APITestUtils {
   public static final String EXTERNAL_ID = "externalId";
   public static final String QM_RECORD_ID = "qmRecordId";
 
-  public static final Map<String, String> JOHN_USER_ID_HEADER = Map.of(USER_ID, JOHN_USER_ID);
+  public static final Map<String, String> JOHN_USER_ID_HEADER = Map.of(USER_ID, TestEntitiesUtils.JOHN_USER_ID);
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));

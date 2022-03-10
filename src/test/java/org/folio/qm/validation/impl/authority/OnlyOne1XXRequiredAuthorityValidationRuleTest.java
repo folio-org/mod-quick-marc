@@ -14,7 +14,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.support.types.UnitTest;
 
+@UnitTest
 class OnlyOne1XXRequiredAuthorityValidationRuleTest {
 
   private final OnlyOne1XXRequiredAuthorityValidationRule rule = new OnlyOne1XXRequiredAuthorityValidationRule();

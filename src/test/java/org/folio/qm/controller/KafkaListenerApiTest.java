@@ -1,26 +1,24 @@
 package org.folio.qm.controller;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 import static org.awaitility.Durations.ONE_MINUTE;
-import static org.folio.qm.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.qm.utils.DBTestUtils.getCreationStatusById;
-import static org.folio.qm.utils.DBTestUtils.saveCreationStatus;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
+import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
+import static org.folio.qm.support.utils.DBTestUtils.saveCreationStatus;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
-import org.folio.qm.extension.ClearTable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.async.DeferredResult;
+import org.folio.qm.support.extension.ClearTable;
+import org.folio.qm.support.types.IntegrationTest;
 
+@IntegrationTest
 class KafkaListenerApiTest extends BaseApiTest {
 
   private static final String DI_ERROR_EVENT = "mockdata/di-event/error-event.json";

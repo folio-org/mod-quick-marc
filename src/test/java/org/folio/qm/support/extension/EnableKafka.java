@@ -1,6 +1,6 @@
-package org.folio.qm.extension;
+package org.folio.qm.support.extension;
 
-import org.folio.qm.extension.impl.PostgresContainerExtension;
+import org.folio.qm.support.extension.impl.KafkaContainerExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@ExtendWith(PostgresContainerExtension.class)
-public @interface EnablePostgres {}
+@ExtendWith(KafkaContainerExtension.class)
+public @interface EnableKafka {}

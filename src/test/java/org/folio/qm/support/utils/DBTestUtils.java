@@ -1,6 +1,4 @@
-package org.folio.qm.utils;
-
-import static org.folio.qm.utils.APITestUtils.TENANT_ID;
+package org.folio.qm.support.utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,13 +18,13 @@ public class DBTestUtils {
 
   public static void saveCreationStatus(UUID id, UUID jobExecutionId, FolioModuleMetadata metadata,
                                         JdbcTemplate jdbcTemplate) {
-    var sql = "INSERT INTO " + creationStatusTable(TENANT_ID, metadata) + " (id, job_execution_id) VALUES (?, ?)";
+    var sql = "INSERT INTO " + creationStatusTable(APITestUtils.TENANT_ID, metadata) + " (id, job_execution_id) VALUES (?, ?)";
     jdbcTemplate.update(sql, id, jobExecutionId);
   }
 
   public static RecordCreationStatus getCreationStatusById(UUID id, FolioModuleMetadata metadata,
                                                            JdbcTemplate jdbcTemplate) {
-    var sql = "SELECT * FROM " + creationStatusTable(TENANT_ID, metadata) + " WHERE id = ?";
+    var sql = "SELECT * FROM " + creationStatusTable(APITestUtils.TENANT_ID, metadata) + " WHERE id = ?";
     return jdbcTemplate.query(sql, new Object[] {id}, rs -> {
       rs.next();
       var recordCreationStatus = new RecordCreationStatus();

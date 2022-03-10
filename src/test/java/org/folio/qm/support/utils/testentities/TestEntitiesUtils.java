@@ -1,4 +1,4 @@
-package org.folio.qm.utils.testentities;
+package org.folio.qm.support.utils.testentities;
 
 import java.util.Arrays;
 import java.util.Date;

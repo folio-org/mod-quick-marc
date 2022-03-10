@@ -1,9 +1,9 @@
 package org.folio.qm.controller;
 
-import static org.folio.qm.utils.APITestUtils.TENANT_ID;
-import static org.folio.qm.utils.IOTestUtils.readFile;
-import static org.folio.qm.utils.JsonTestUtils.getObjectAsJson;
-import static org.folio.qm.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
+import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.support.utils.IOTestUtils.readFile;
+import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
 
@@ -25,8 +25,8 @@ import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
-import org.folio.qm.extension.EnableKafka;
-import org.folio.qm.extension.EnablePostgres;
+import org.folio.qm.support.extension.EnableKafka;
+import org.folio.qm.support.extension.EnablePostgres;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,8 +43,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.folio.qm.extension.impl.DatabaseCleanupExtension;
-import org.folio.qm.extension.impl.WireMockInitializer;
+import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;
+import org.folio.qm.support.extension.impl.WireMockInitializer;
 import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
@@ -183,6 +183,7 @@ class BaseApiTest {
     final HttpHeaders httpHeaders = new HttpHeaders();
 
     httpHeaders.add(XOkapiHeaders.TENANT, TENANT_ID);
+    httpHeaders.add(XOkapiHeaders.USER_ID, JOHN_USER_ID);
     httpHeaders.add(XOkapiHeaders.URL, getOkapiUrl());
 
     return httpHeaders;

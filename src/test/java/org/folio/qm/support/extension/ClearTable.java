@@ -1,4 +1,4 @@
-package org.folio.qm.extension;
+package org.folio.qm.support.extension;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

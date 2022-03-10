@@ -1,3 +1,8 @@
+## 2.3.1 - Released
+
+### Changes
+* [MODQM-204](https://issues.folio.org/browse/MODQM-204) - Change validation for holdings 852 tag
+
 ## 2.3.0 - Released
 
 ### Changes

@@ -8,10 +8,12 @@ import java.util.Optional;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 
+@UnitTest
 class CommonLeaderValidationRuleTest {
 
   private final LeaderValidationRule rule = new HoldingsLeaderValidationRule();

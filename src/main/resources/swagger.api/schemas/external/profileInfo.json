@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Related JobProfile information",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "Unique JobProfile identifier",
+      "$ref": "../uuid.json"
+    },
+    "name": {
+      "description": "Job Profile name",
+      "type": "string"
+    },
+    "dataType": {
+      "description": "Data type",
+      "type": "string",
+      "enum": [
+        "Delimited",
+        "EDIFACT",
+        "MARC"
+      ]
+    },
+    "hidden": {
+      "description": "Indicates that job should be hidden in data-import log",
+      "type": "boolean",
+      "default": false,
+      "example": false
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

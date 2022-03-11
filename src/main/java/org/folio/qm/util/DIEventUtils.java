@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
+import org.folio.qm.domain.dto.DataImportEventPayload;
 
 @Log4j2
 @UtilityClass

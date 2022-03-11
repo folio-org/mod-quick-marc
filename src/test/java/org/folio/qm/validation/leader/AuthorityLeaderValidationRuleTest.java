@@ -9,10 +9,12 @@ import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
 
+@UnitTest
 class AuthorityLeaderValidationRuleTest {
 
   private final LeaderValidationRule rule = new AuthorityLeaderValidationRule();
@@ -24,7 +26,6 @@ class AuthorityLeaderValidationRuleTest {
   private static final String WRONG_ENCODING_LEVEL = "00241xz\\\\a2200109au\\4500";
   private static final String WRONG_PUNCTUATION_POLICY = "00241xz\\\\a2200109nz\\4500";
 
-
   @Test
   void shouldValidateAuthorityLeaderWithOutErrors() {
     var validationError = rule.validate(VALID_LEADER);
@@ -32,7 +33,7 @@ class AuthorityLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldSupportAuthorityFormat(){
+  void shouldSupportAuthorityFormat() {
     assertTrue(rule.supportFormat(MarcFormat.AUTHORITY));
   }
 

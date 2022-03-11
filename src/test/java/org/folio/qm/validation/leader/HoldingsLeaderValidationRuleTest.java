@@ -9,10 +9,12 @@ import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 
+@UnitTest
 class HoldingsLeaderValidationRuleTest {
 
   private final LeaderValidationRule rule = new HoldingsLeaderValidationRule();
@@ -24,7 +26,6 @@ class HoldingsLeaderValidationRuleTest {
   private static final String WRONG_ENCODING_LEVEL = "00241cx\\\\a2200109an\\4500";
   private static final String WRONG_ITEM_INFORMATION = "00241cx\\\\a2200109za\\4500";
 
-
   @Test
   void shouldValidateHoldingsLeaderWithOutErrors() {
     var validationError = rule.validate(VALID_LEADER);
@@ -32,7 +33,7 @@ class HoldingsLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldSupportHoldingsFormat(){
+  void shouldSupportHoldingsFormat() {
     assertTrue(rule.supportFormat(MarcFormat.HOLDINGS));
   }
 

@@ -35,10 +35,10 @@ import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.exception.ConverterException;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcAuthorityDtoConverter extends AbstractMarcDtoConverter {
 
@@ -62,7 +62,7 @@ public class MarcAuthorityDtoConverter extends AbstractMarcDtoConverter {
 
   @Override
   protected UUID getExternalId(ParsedRecordDto source) {
-    return source.getExternalIdsHolder() != null ? UUID.fromString(source.getExternalIdsHolder().getAuthorityId()) : null;
+    return source.getExternalIdsHolder() != null ? source.getExternalIdsHolder().getAuthorityId() : null;
   }
 
   @Override

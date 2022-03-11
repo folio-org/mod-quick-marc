@@ -14,7 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import org.folio.qm.support.types.UnitTest;
 
+@UnitTest
 class JsonUtilsTest {
 
   @Test

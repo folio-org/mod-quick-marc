@@ -3,12 +3,14 @@ package org.folio.qm.messaging.listener;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
+import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -53,29 +55,41 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
     var tenantId = getHeaderValue(headers, TENANT);
     var okapiUrl = getHeaderValue(headers, URL);
     var token = getHeaderValue(headers, TOKEN);
+    var userId = getHeaderValue(headers, USER_ID);
     return new FolioExecutionContext() {
 
-      @Override public String getTenantId() {
+      @Override
+      public String getTenantId() {
         return tenantId;
       }
 
-      @Override public String getOkapiUrl() {
+      @Override
+      public String getOkapiUrl() {
         return okapiUrl;
       }
 
-      @Override public String getToken() {
+      @Override
+      public String getToken() {
         return token;
       }
 
-      @Override public Map<String, Collection<String>> getAllHeaders() {
+      @Override
+      public UUID getUserId() {
+        return userId == null ? UUID.randomUUID() : UUID.fromString(userId);
+      }
+
+      @Override
+      public Map<String, Collection<String>> getAllHeaders() {
         return null;
       }
 
-      @Override public Map<String, Collection<String>> getOkapiHeaders() {
+      @Override
+      public Map<String, Collection<String>> getOkapiHeaders() {
         return null;
       }
 
-      @Override public FolioModuleMetadata getFolioModuleMetadata() {
+      @Override
+      public FolioModuleMetadata getFolioModuleMetadata() {
         return folioModuleMetadata;
       }
     };

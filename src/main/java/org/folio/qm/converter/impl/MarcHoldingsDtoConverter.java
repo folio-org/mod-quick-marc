@@ -25,17 +25,17 @@ import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
 import org.folio.qm.converter.elements.ControlFieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.exception.ConverterException;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
 public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
 
   protected static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = Arrays.asList(ACQ_STATUS, ACQ_METHOD,
-      ACQ_ENDDATE, COMPL, COPIES,
-      DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
-      REPT_DATE, SEP_COMP, SPEC_RET);
+    ACQ_ENDDATE, COMPL, COPIES,
+    DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
+    REPT_DATE, SEP_COMP, SPEC_RET);
 
   public MarcHoldingsDtoConverter(MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc) {
     super(fieldProtectionSettingsMarc);
@@ -48,7 +48,7 @@ public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
 
   @Override
   protected UUID getExternalId(ParsedRecordDto source) {
-    return UUID.fromString(source.getExternalIdsHolder().getHoldingsId());
+    return source.getExternalIdsHolder().getHoldingsId();
   }
 
   @Override
@@ -57,7 +57,7 @@ public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
   }
 
   protected Map<String, Object> splitGeneralInformationControlField(String content, String leader) {
-    if(content.length() > HOLDINGS_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH) {
+    if (content.length() > HOLDINGS_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH) {
       throw new ConverterException(buildInternalError(ILLEGAL_FIXED_LENGTH_CONTROL_FIELD, "Content of 008 field has wrong length"));
     }
     return new LinkedHashMap<>(fillContentMap(HOLDINGS_CONTROL_FIELD_ITEMS, content, 0));

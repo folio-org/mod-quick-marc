@@ -1,6 +1,5 @@
 package org.folio.qm.converter;
 
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.impl.MarcAuthorityDtoConverter;
@@ -9,8 +8,9 @@ import org.folio.qm.converter.impl.MarcBibliographicDtoConverter;
 import org.folio.qm.converter.impl.MarcBibliographicQmConverter;
 import org.folio.qm.converter.impl.MarcHoldingsDtoConverter;
 import org.folio.qm.converter.impl.MarcHoldingsQmConverter;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 
 @Component
 public class MarcConverterFactory {
@@ -28,13 +28,14 @@ public class MarcConverterFactory {
     }
   }
 
-  public MarcDtoConverter findConverter(ParsedRecordDto.RecordType recordType, MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc) {
+  public MarcDtoConverter findConverter(ParsedRecordDto.RecordTypeEnum recordType,
+                                        MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc) {
     switch (recordType) {
-      case MARC_BIB:
+      case BIB:
         return new MarcBibliographicDtoConverter(fieldProtectionSettingsMarc);
-      case MARC_HOLDING:
+      case HOLDING:
         return new MarcHoldingsDtoConverter(fieldProtectionSettingsMarc);
-      case MARC_AUTHORITY:
+      case AUTHORITY:
         return new MarcAuthorityDtoConverter(fieldProtectionSettingsMarc);
       default:
         throw new IllegalStateException("Unexpected value: " + recordType);

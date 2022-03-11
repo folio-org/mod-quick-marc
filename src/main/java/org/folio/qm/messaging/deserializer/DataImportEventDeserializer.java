@@ -9,7 +9,7 @@ import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.springframework.stereotype.Component;
 
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
+import org.folio.qm.domain.dto.DataImportEventPayload;
 
 @Component
 @RequiredArgsConstructor

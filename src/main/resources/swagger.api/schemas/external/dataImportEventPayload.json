@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Payload for data-import process",
+  "type": "object",
+  "properties": {
+    "eventType": {
+      "description": "Unique Event type, human-readable String, not UUID",
+      "type": "string"
+    },
+    "currentNodePath": {
+      "description": "List of processed profile ids",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "eventsChain": {
+      "description": "List of processed event types",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "jobExecutionId": {
+      "description": "Corresponding jobExecution id",
+      "$ref": "../uuid.json"
+    },
+    "tenant": {
+      "description": "Tenant id",
+      "type": "string"
+    },
+    "token": {
+      "description": "Okapi token",
+      "type": "string"
+    },
+    "okapiUrl": {
+      "description": "Okapi URL",
+      "type": "string"
+    },
+    "context": {
+      "description": "HashMap with objects. Key - entity type, Value - object in json representation",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

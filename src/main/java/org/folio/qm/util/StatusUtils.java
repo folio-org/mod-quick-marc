@@ -12,9 +12,9 @@ import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 @UtilityClass
 public class StatusUtils {
 
-  public static RecordCreationStatus getStatusNew(String jobExecutionId) {
+  public static RecordCreationStatus getStatusNew(UUID jobExecutionId) {
     final RecordCreationStatus status = new RecordCreationStatus();
-    status.setJobExecutionId(UUID.fromString(jobExecutionId));
+    status.setJobExecutionId(jobExecutionId);
     status.setStatus(RecordCreationStatusEnum.NEW);
     status.setCreatedAt(new Timestamp(System.currentTimeMillis()));
     status.setUpdatedAt(new Timestamp(System.currentTimeMillis()));

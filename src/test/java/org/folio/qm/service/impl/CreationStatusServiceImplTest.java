@@ -19,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.repository.RecordCreationStatusRepository;
+import org.folio.qm.support.types.UnitTest;
 
+@UnitTest
 @ExtendWith({
   MockitoExtension.class,
   RandomBeansExtension.class

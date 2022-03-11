@@ -8,7 +8,7 @@
     },
     {
       "id": "source-manager-job-executions",
-      "version": "3.0"
+      "version": "3.1"
     },
     {
       "id": "source-manager-records",
@@ -26,7 +26,7 @@
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "3.0",
+      "version": "3.1",
       "handlers": [
         {
           "methods": ["GET"],
@@ -53,6 +53,11 @@
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["records-editor.records.item.put"],
           "modulePermissions": ["change-manager.parsedrecords.put"]
+        },
+        {
+          "methods": ["DELETE"],
+          "pathPattern": "/records-editor/records/{id}",
+          "permissionsRequired": ["records-editor.records.item.delete"]
         },
         {
           "methods": ["GET"],
@@ -108,6 +113,11 @@
       "description": "Update a record"
     },
     {
+      "permissionName": "records-editor.records.item.delete",
+      "displayName": "records-editor - delete a record",
+      "description": "Delete a record"
+    },
+    {
       "permissionName": "records-editor.records.status.item.get",
       "displayName": "records-editor - get record creation status",
       "description": "Get record creation status"
@@ -120,6 +130,7 @@
         "records-editor.records.item.get",
         "records-editor.records.item.post",
         "records-editor.records.item.put",
+        "records-editor.records.item.delete",
         "records-editor.records.status.item.get"
       ]
     }

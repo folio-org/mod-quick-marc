@@ -9,10 +9,12 @@ import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationRule;
 
+@UnitTest
 class BibliographicLeaderValidationRuleTest {
 
   private final LeaderValidationRule rule = new BibliographicLeaderValidationRule();
@@ -26,7 +28,6 @@ class BibliographicLeaderValidationRuleTest {
   private static final String WRONG_CATALOGING_FORM = "01706ccm\\a2200361\\x\\4500";
   private static final String WRONG_RESOURCE_RECORD_LEVEL = "01706ccm\\a2200361\\\\x4500";
 
-
   @Test
   void shouldValidateBibliographicLeaderWithoutErrors() {
     var validationError = rule.validate(VALID_LEADER);
@@ -34,7 +35,7 @@ class BibliographicLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldSupportBibliographicFormat(){
+  void shouldSupportBibliographicFormat() {
     assertTrue(rule.supportFormat(MarcFormat.BIBLIOGRAPHIC));
   }
 

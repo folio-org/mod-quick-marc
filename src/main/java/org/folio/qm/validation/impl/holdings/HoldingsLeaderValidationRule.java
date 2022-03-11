@@ -19,7 +19,7 @@ import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 
 @Component
-public class HoldingsLeaderValidationRule implements LeaderValidationRule {
+public class HoldingsLeaderValidationRule extends LeaderValidationRule {
 
   private static final List<LeaderItem> HOLDINGS_LEADER_ITEMS = List.of(HOLDINGS_RECORD_STATUS, HOLDINGS_RECORD_TYPE,
     HOLDINGS_ENCODING_LEVEL, ITEM_INFORMATION, UNDEFINED_CHARACTER_POSITION_7, UNDEFINED_CHARACTER_POSITION_8,

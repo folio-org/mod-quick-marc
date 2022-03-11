@@ -11,7 +11,7 @@ import org.folio.qm.validation.FieldValidationRule;
 import org.folio.qm.validation.ValidationError;
 
 @Component
-public class IndicatorsFieldValidationRule implements FieldValidationRule {
+public class IndicatorsFieldValidationRule extends FieldValidationRule {
 
   @Override
   public Optional<ValidationError> validate(List<FieldItem> fieldItems) {

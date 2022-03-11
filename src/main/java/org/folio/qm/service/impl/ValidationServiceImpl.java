@@ -17,9 +17,10 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.qm.validation.FieldValidationRule;
 import org.folio.qm.validation.LeaderValidationRule;
+import org.folio.qm.validation.RecordValidationRule;
 import org.folio.qm.validation.ValidationResult;
+import org.folio.qm.validation.ValidationRule;
 import org.folio.spring.FolioExecutionContext;
 
 @Service
@@ -30,27 +31,17 @@ public class ValidationServiceImpl implements ValidationService {
   public static final String QM_RECORD_ID_EMPTY_MESSAGE = "Parameter 'qmRecordId' should be not null";
   public static final String X_OKAPI_TOKEN_USER_ID_IS_MISSING_MESSAGE = "X-Okapi-User-Id header is missing";
 
-  private final List<FieldValidationRule> fieldValidationRules;
-  private final List<LeaderValidationRule> leaderValidationRules;
+  private final List<ValidationRule> validationRules;
 
   @Override
   public ValidationResult validate(QuickMarc quickMarc) {
-    var marcFormat = quickMarc.getMarcFormat();
-
-    var validationErrors = fieldValidationRules.stream()
-      .filter(rule -> rule.supportFormat(marcFormat))
-      .map(rule -> rule.validate(quickMarc.getFields()))
+    var validationErrors = validationRules.stream()
+      .filter(rule -> rule.supportFormat(quickMarc.getMarcFormat()))
+      .map(rule -> rule.validate(quickMarc))
       .filter(Optional::isPresent)
       .map(Optional::get)
       .collect(Collectors.toList());
 
-    validationErrors.addAll(leaderValidationRules.stream()
-      .filter(rule -> rule.supportFormat(marcFormat))
-      .map(rule -> rule.validate(quickMarc.getLeader()))
-      .filter(Optional::isPresent)
-      .map(Optional::get)
-      .collect(Collectors.toList()));
-     
     if (validationErrors.isEmpty()) {
       return new ValidationResult(true, Collections.emptyList());
     } else {

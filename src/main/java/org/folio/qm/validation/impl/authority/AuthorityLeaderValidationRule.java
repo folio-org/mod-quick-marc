@@ -19,7 +19,7 @@ import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 
 @Component
-public class AuthorityLeaderValidationRule implements LeaderValidationRule {
+public class AuthorityLeaderValidationRule extends LeaderValidationRule {
 
   private static final List<LeaderItem> AUTHORITY_LEADER_ITEMS = List.of(AUTHORITY_RECORD_STATUS, AUTHORITY_RECORD_TYPE,
     AUTHORITY_ENCODING_LEVEL, PUNCTUATION_POLICY, UNDEFINED_CHARACTER_POSITION_7, UNDEFINED_CHARACTER_POSITION_8,

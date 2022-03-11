@@ -73,9 +73,15 @@ public enum MaterialTypeConfiguration {
   }
 
   public static MaterialTypeConfiguration resolveContentType(String leader) {
-    switch (leader.charAt(TYPE_OF_RECORD_LEADER_POS)) {
+    var typeByte = leader.charAt(TYPE_OF_RECORD_LEADER_POS);
+    var blvlByte = leader.charAt(BLVL_LEADER_POS);
+    return resolveContentType(typeByte, blvlByte);
+  }
+
+  public static MaterialTypeConfiguration resolveContentType(char typeByte, char blvlByte) {
+    switch (typeByte) {
       case 'a':
-        return Arrays.asList('b', 'i', 's').contains(leader.charAt(BLVL_LEADER_POS)) ? CONTINUING : BOOKS;
+        return Arrays.asList('b', 'i', 's').contains(blvlByte) ? CONTINUING : BOOKS;
       case 't':
         return BOOKS;
       case 's':

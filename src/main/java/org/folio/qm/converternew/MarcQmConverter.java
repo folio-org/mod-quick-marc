@@ -1,8 +1,6 @@
-package org.folio.qm.converter;
+package org.folio.qm.converternew;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
-
-import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
+import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,41 +8,33 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.VariableField;
-import org.marc4j.marc.impl.MarcFactoryImpl;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
-import org.folio.qm.converternew.FieldItemConverter;
-import org.folio.qm.converternew.qm.AdditionalCharacteristicsFieldItemConverter;
-import org.folio.qm.converternew.qm.CommonFieldItemConverter;
-import org.folio.qm.converternew.qm.ControlFieldItemConverter;
-import org.folio.qm.converternew.qm.GeneralInformationAuthorityFieldItemConverter;
-import org.folio.qm.converternew.qm.GeneralInformationBibliographicFieldItemConverter;
-import org.folio.qm.converternew.qm.GeneralInformationHoldingsFieldItemConverter;
-import org.folio.qm.converternew.qm.LccnFieldItemConverter;
-import org.folio.qm.converternew.qm.PhysicalMaterialFieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.util.QmMarcJsonWriter;
 import org.folio.rest.jaxrs.model.AdditionalInfo;
 import org.folio.rest.jaxrs.model.ExternalIdsHolder;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
-public abstract class AbstractMarcQmConverter implements MarcQmConverter {
+@Component
+@RequiredArgsConstructor
+public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
 
-  private final MarcFactory factory = new MarcFactoryImpl();
-  private final List<FieldItemConverter> fieldItemConverters = List.of(
-    new CommonFieldItemConverter(), new LccnFieldItemConverter(), new AdditionalCharacteristicsFieldItemConverter(),
-    new ControlFieldItemConverter(), new GeneralInformationAuthorityFieldItemConverter(),
-    new GeneralInformationBibliographicFieldItemConverter(), new GeneralInformationHoldingsFieldItemConverter(),
-    new PhysicalMaterialFieldItemConverter()
-  );
+  private final MarcFactory factory;
+  private final List<FieldItemConverter> fieldItemConverters;
+  private final MarcTypeMapper typeMapper;
 
   @Override
   public ParsedRecordDto convert(@NonNull QuickMarc source) {
@@ -53,7 +43,7 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
 
       return new ParsedRecordDto()
         .withParsedRecord(new ParsedRecord().withId(String.valueOf(source.getParsedRecordId())).withContent(jsonNode))
-        .withRecordType(supportedType())
+        .withRecordType(typeMapper.toDto(source.getMarcFormat()))
         .withId(String.valueOf(source.getParsedRecordDtoId()))
         .withRelatedRecordVersion(source.getRelatedRecordVersion())
         .withExternalIdsHolder(constructExternalIdsHolder(source))
@@ -71,8 +61,6 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       return new ObjectMapper().readTree(os.toByteArray());
     }
   }
-
-  protected abstract ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc);
 
   private Record toMarcRecord(QuickMarc quickMarcJson) {
     Record marcRecord = factory.newRecord();
@@ -96,7 +84,23 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       .orElseThrow(() -> new IllegalArgumentException("Field converter not found"));
   }
 
-  private String restoreBlanks(String sourceString) {
-    return sourceString.replace(BLANK_REPLACEMENT, SPACE);
+  protected ExternalIdsHolder constructExternalIdsHolder(QuickMarc quickMarc) {
+    var externalIdsHolder = new ExternalIdsHolder();
+    switch (quickMarc.getMarcFormat()) {
+      case BIBLIOGRAPHIC:
+        externalIdsHolder.setInstanceId(quickMarc.getExternalId().toString());
+        externalIdsHolder.setInstanceHrid(quickMarc.getExternalHrid());
+        break;
+      case HOLDINGS:
+        externalIdsHolder.setHoldingsId(quickMarc.getExternalId().toString());
+        externalIdsHolder.setHoldingsId(quickMarc.getExternalHrid());
+        break;
+      case AUTHORITY:
+        externalIdsHolder.setAuthorityId(quickMarc.getExternalId().toString());
+        externalIdsHolder.setAuthorityHrid(quickMarc.getExternalHrid());
+        break;
+    }
+    return externalIdsHolder;
   }
+
 }

@@ -1,5 +1,8 @@
 package org.folio.qm.util;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
+import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
 
 import java.time.LocalDateTime;
@@ -54,6 +57,10 @@ public final class MarcUtils {
         () -> quickMarc.addFieldsItem(new FieldItem().tag(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD).content(currentTime))
       );
     return quickMarc;
+  }
+
+  public static String restoreBlanks(String sourceString) {
+    return sourceString.replace(BLANK_REPLACEMENT, SPACE);
   }
 
 }

@@ -1,5 +1,51 @@
 package org.folio.qm.converter.elements;
 
+import static org.folio.qm.converter.elements.ControlFieldItem.ACQ_ENDDATE;
+import static org.folio.qm.converter.elements.ControlFieldItem.ACQ_METHOD;
+import static org.folio.qm.converter.elements.ControlFieldItem.ACQ_STATUS;
+import static org.folio.qm.converter.elements.ControlFieldItem.CAT_RULES;
+import static org.folio.qm.converter.elements.ControlFieldItem.COMPL;
+import static org.folio.qm.converter.elements.ControlFieldItem.COPIES;
+import static org.folio.qm.converter.elements.ControlFieldItem.DATE_ENTERED;
+import static org.folio.qm.converter.elements.ControlFieldItem.GEN_RET;
+import static org.folio.qm.converter.elements.ControlFieldItem.GEO_SUBD;
+import static org.folio.qm.converter.elements.ControlFieldItem.GOVT_AG;
+import static org.folio.qm.converter.elements.ControlFieldItem.KIND_REC;
+import static org.folio.qm.converter.elements.ControlFieldItem.LANG_AUTHORITY;
+import static org.folio.qm.converter.elements.ControlFieldItem.LANG_HOLDINGS;
+import static org.folio.qm.converter.elements.ControlFieldItem.LEND;
+import static org.folio.qm.converter.elements.ControlFieldItem.LEVEL_EST;
+import static org.folio.qm.converter.elements.ControlFieldItem.MAIN_USE;
+import static org.folio.qm.converter.elements.ControlFieldItem.MOD_REC_EST;
+import static org.folio.qm.converter.elements.ControlFieldItem.NUMB_SERIES;
+import static org.folio.qm.converter.elements.ControlFieldItem.PERS_NAME;
+import static org.folio.qm.converter.elements.ControlFieldItem.REC_UPD;
+import static org.folio.qm.converter.elements.ControlFieldItem.REF_EVAL;
+import static org.folio.qm.converter.elements.ControlFieldItem.REPRO;
+import static org.folio.qm.converter.elements.ControlFieldItem.REPT_DATE;
+import static org.folio.qm.converter.elements.ControlFieldItem.ROMAN;
+import static org.folio.qm.converter.elements.ControlFieldItem.SEP_COMP;
+import static org.folio.qm.converter.elements.ControlFieldItem.SERIES;
+import static org.folio.qm.converter.elements.ControlFieldItem.SERIES_USE;
+import static org.folio.qm.converter.elements.ControlFieldItem.SH_SYS;
+import static org.folio.qm.converter.elements.ControlFieldItem.SOURCE;
+import static org.folio.qm.converter.elements.ControlFieldItem.SPEC_RET;
+import static org.folio.qm.converter.elements.ControlFieldItem.SUBJ_USE;
+import static org.folio.qm.converter.elements.ControlFieldItem.TYPE_SUBD;
+import static org.folio.qm.converter.elements.ControlFieldItem.UNDEF_18;
+import static org.folio.qm.converter.elements.ControlFieldItem.UNDEF_30;
+import static org.folio.qm.converter.elements.ControlFieldItem.UNDEF_34;
+import static org.folio.qm.converter.elements.LeaderItem.CODING_SCHEME;
+import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_20;
+import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_21;
+import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_22;
+import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
+import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
+import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Constants {
@@ -23,6 +69,7 @@ public class Constants {
 
   public static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
   public static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
+  Pattern d = Pattern.compile("(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$");
   public static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
 
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
@@ -44,6 +91,29 @@ public class Constants {
   public static final String POSITIVE_NEGATIVE_ASPECT = "Positive/negative aspect";
   public static final String SUBFIELDS = "subfields";
   public static final String TYPE = "Type";
+
+  public static final Set<String> COMPLEX_CONTROL_FIELD_TAGS = Set.of(
+    ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD,
+    PHYSICAL_DESCRIPTIONS_CONTROL_FIELD,
+    GENERAL_INFORMATION_CONTROL_FIELD
+  );
+
+  public static final List<ControlFieldItem> AUTHORITY_CONTROL_FIELD_ITEMS = Arrays.asList(
+    DATE_ENTERED,
+    GEO_SUBD, ROMAN,
+    LANG_AUTHORITY, KIND_REC, CAT_RULES, SH_SYS,
+    SERIES, NUMB_SERIES, MAIN_USE, SUBJ_USE,
+    SERIES_USE, TYPE_SUBD, UNDEF_18, GOVT_AG,
+    REF_EVAL, UNDEF_30, REC_UPD, PERS_NAME,
+    LEVEL_EST, UNDEF_34, MOD_REC_EST, SOURCE);
+
+  public static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = Arrays.asList(ACQ_STATUS, ACQ_METHOD,
+    ACQ_ENDDATE, COMPL, COPIES,
+    DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
+    REPT_DATE, SEP_COMP, SPEC_RET);
+
+  public static final List<LeaderItem> COMMON_LEADER_ITEMS = List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
+    ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
 
   private Constants() {
   }

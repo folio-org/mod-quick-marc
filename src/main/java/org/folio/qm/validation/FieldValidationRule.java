@@ -9,32 +9,25 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarc;
 
-public interface FieldValidationRule {
+public abstract class FieldValidationRule implements ValidationRule {
 
-  Optional<ValidationError> validate(List<FieldItem> fieldItems);
-
-  boolean supportFormat(MarcFormat marcFormat);
-
-  default ValidationError createValidationError(String tagCode, String message) {
-    return new ValidationError(tagCode, message);
+  @Override
+  public Optional<ValidationError> validate(QuickMarc record) {
+    return validate(record.getFields());
   }
 
-  default List<FieldItem> filterFieldsByTagCode(List<FieldItem> fieldItems, String tagCode) {
-    return fieldItems.stream()
-      .filter(fieldItem -> tagCode.equals(fieldItem.getTag()))
-      .collect(Collectors.toList());
-  }
+  protected abstract Optional<ValidationError> validate(List<FieldItem> fieldItems);
 
-  default List<FieldItem> filterFieldsByTagCodePattern(List<FieldItem> fieldItems, Pattern tagCodePattern) {
+  protected List<FieldItem> filterFieldsByTagCodePattern(List<FieldItem> fieldItems, Pattern tagCodePattern) {
     var matchPredicate = tagCodePattern.asMatchPredicate();
     return fieldItems.stream()
       .filter(fieldItem -> matchPredicate.test(fieldItem.getTag()))
       .collect(Collectors.toList());
   }
 
-  default BiFunction<String, List<FieldItem>, Optional<ValidationError>> onlyOneRequiredCondition() {
+  protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> onlyOneRequiredCondition() {
     return (tagCode, fields) -> {
       if (fields.isEmpty()) {
         return Optional.of(createValidationError(tagCode, "Is required tag"));
@@ -48,7 +41,7 @@ public interface FieldValidationRule {
     };
   }
 
-  default BiFunction<String, List<FieldItem>, Optional<ValidationError>> atLeastOneRequiredCondition() {
+  protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> atLeastOneRequiredCondition() {
     return (tagCode, fields) -> {
       if (fields.isEmpty()) {
         return Optional.of(createValidationError(tagCode, "Is required tag"));

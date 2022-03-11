@@ -5,10 +5,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD;
+
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
-import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
-import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -23,21 +21,29 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import org.folio.qm.converternew.VariableFieldConverter;
+import org.folio.qm.converternew.dto.AdditionalCharacteristicsControlFieldConverter;
+import org.folio.qm.converternew.dto.CommonControlFieldConverter;
+import org.folio.qm.converternew.dto.CommonDataFieldConverter;
+import org.folio.qm.converternew.dto.GeneralInformationAuthorityControlFieldConverter;
+import org.folio.qm.converternew.dto.GeneralInformationBibliographicControlFieldConverter;
+import org.folio.qm.converternew.dto.GeneralInformationHoldingsControlFieldConverter;
+import org.folio.qm.converternew.dto.PhysicalMaterialControlFieldConverter;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
+import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;
 import org.springframework.lang.NonNull;
 
-import org.folio.qm.converter.elements.AdditionalMaterialConfiguration;
-import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.ControlFieldItem;
-import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.UpdateInfo;
@@ -45,12 +51,21 @@ import org.folio.qm.exception.ConverterException;
 import org.folio.rest.jaxrs.model.ParsedRecord;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
   private static final String ANY_STRING = "*";
   private static final char BLANK_SUBFIELD_CODE = ' ';
 
-  private MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc;
+  private final MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc;
+  private List<VariableFieldConverter<DataField>> dataFieldConverters = List.of(
+    new CommonDataFieldConverter()
+  );
+  private List<VariableFieldConverter<ControlField>> controlFieldConverters = List.of(
+    new AdditionalCharacteristicsControlFieldConverter(),
+    new CommonControlFieldConverter(), new GeneralInformationAuthorityControlFieldConverter(),
+    new GeneralInformationHoldingsControlFieldConverter(), new GeneralInformationBibliographicControlFieldConverter(),
+    new PhysicalMaterialControlFieldConverter()
+  );
 
   @Override
   public QuickMarc convert(@NonNull ParsedRecordDto source) {
@@ -61,14 +76,29 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       Record marcRecord = new MarcJsonReader(input).next();
       String leader = masqueradeBlanks(marcRecord.getLeader().marshal());
 
+      MarcFormat marcFormat;
+      switch (source.getRecordType()) {
+        case MARC_BIB:
+          marcFormat = MarcFormat.BIBLIOGRAPHIC;
+          break;
+        case MARC_AUTHORITY:
+          marcFormat = MarcFormat.AUTHORITY;
+          break;
+        case MARC_HOLDING:
+          marcFormat = MarcFormat.HOLDINGS;
+          break;
+        default:
+          marcFormat = null;
+      }
+
       List<FieldItem> fields = marcRecord.getControlFields()
         .stream()
-        .map(cf -> controlFieldToQuickMarcField(cf, leader))
+        .map(cf -> controlFieldToQuickMarcField(cf, marcRecord.getLeader(), marcFormat))
         .collect(Collectors.toList());
 
       fields.addAll(marcRecord.getDataFields()
         .stream()
-        .map(this::dataFieldToQuickMarcField)
+        .map(field -> dataFieldToQuickMarcField(field, marcRecord.getLeader(), marcFormat))
         .collect(Collectors.toList()));
 
       return new QuickMarc().parsedRecordId(UUID.fromString(parsedRecord.getId()))
@@ -89,43 +119,10 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
 
   protected abstract UUID getExternalId(ParsedRecordDto source);
   protected abstract String getExternalHrId(ParsedRecordDto source);
-  protected abstract Map<String, Object> splitGeneralInformationControlField(String content, String leader);
 
   private OffsetDateTime convertDate(ParsedRecordDto parsedRecordDto) {
     var updatedDate = parsedRecordDto.getMetadata().getUpdatedDate();
     return updatedDate != null ? OffsetDateTime.ofInstant(updatedDate.toInstant(), ZoneId.systemDefault()) : null;
-  }
-
-  private Object processControlField(ControlField controlField, String leader) {
-    switch (controlField.getTag()) {
-      case ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD:
-        return splitAdditionalCharacteristicsControlField(masqueradeBlanks(controlField.getData()));
-      case PHYSICAL_DESCRIPTIONS_CONTROL_FIELD:
-        return splitPhysicalDescriptionsControlField(masqueradeBlanks(controlField.getData()));
-      case GENERAL_INFORMATION_CONTROL_FIELD:
-        return splitGeneralInformationControlField(masqueradeBlanks(controlField.getData()), leader);
-      default:
-        return controlField.getData();
-    }
-  }
-
-  private Map<String, Object> splitAdditionalCharacteristicsControlField(String content) {
-    return fillContentMap(AdditionalMaterialConfiguration.resolveByCode(content.charAt(0)).getControlFieldItems(), content,
-      0);
-  }
-
-  private Map<String, Object> splitPhysicalDescriptionsControlField(String content) {
-    var physicalDescription = PhysicalDescriptionFixedFieldElements
-      .resolveByCode(content.charAt(0));
-    Map<String, Object> contentMap = new LinkedHashMap<>();
-    contentMap.put(Constants.CATEGORY_NAME, physicalDescription.getName());
-    physicalDescription.getControlFieldItems()
-      .forEach(item -> contentMap.put(item.getName(), getControlFieldItemVal(content, item)));
-    return contentMap;
-  }
-
-  private String getControlFieldItemVal(String content, ControlFieldItem element) {
-    return element.getLength() != 0 ? extractElementFromContent(content, element, 0) : content;
   }
 
   protected Map<String, Object> fillContentMap(List<ControlFieldItem> items, String content, int delta) {
@@ -147,25 +144,22 @@ public abstract class AbstractMarcDtoConverter implements MarcDtoConverter {
       .substring(content, element.getPosition() + delta, element.getPosition() + delta + element.getLength());
   }
 
-  private FieldItem dataFieldToQuickMarcField(DataField field) {
-    return new FieldItem()
-      .isProtected(isProtected(field))
-      .tag(field.getTag())
-      .indicators(Arrays.asList(masqueradeBlanks(Character.toString(field.getIndicator1())),
-        masqueradeBlanks(Character.toString(field.getIndicator2()))))
-      .content(field.getSubfields()
-        .stream()
-        .map(subfield -> new StringBuilder("$").append(subfield.getCode())
-          .append(SPACE)
-          .append(subfield.getData()))
-        .collect(Collectors.joining(SPACE)));
+  private FieldItem dataFieldToQuickMarcField(DataField field, Leader leader, MarcFormat marcFormat) {
+    return dataFieldConverters.stream()
+      .filter(converter -> converter.canProcess(field, marcFormat))
+      .findFirst()
+      .map(converter -> converter.convert(field, leader))
+      .orElseThrow(() -> new IllegalArgumentException("No data field converter found"))
+      .isProtected(isProtected(field));
   }
 
-  private FieldItem controlFieldToQuickMarcField(ControlField field, String leader) {
-    return new FieldItem()
+  private FieldItem controlFieldToQuickMarcField(ControlField field, Leader leader, MarcFormat marcFormat) {
+    return controlFieldConverters.stream()
+      .filter(converter -> converter.canProcess(field, marcFormat))
+      .findFirst()
+      .map(converter -> converter.convert(field, leader))
+      .orElseThrow(() -> new IllegalArgumentException("No data field converter found"))
       .isProtected(isProtected(field))
-      .tag(field.getTag())
-      .content(processControlField(field, leader))
       .indicators(Collections.emptyList());
   }
 

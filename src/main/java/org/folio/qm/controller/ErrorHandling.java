@@ -42,7 +42,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(FeignException.class)
   public Error handleFeignStatusException(FeignException e, HttpServletResponse response) {
-    log.warn(e);
+    log.warn("Feign exception:", e);
     var status = e.status();
     if (status != -1) {
       var message = e.responseBody()
@@ -59,7 +59,7 @@ public class ErrorHandling {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-    log.warn(e);
+    log.warn("Invalid request:", e);
     FieldError fieldError = e.getBindingResult().getFieldError();
     if (fieldError != null) {
       var message = String.format(ARGUMENT_NOT_VALID_MSG_PATTERN,
@@ -72,7 +72,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(QuickMarcException.class)
   public Error handleConverterException(QuickMarcException e, HttpServletResponse response) {
-    log.warn(e);
+    log.warn("Internal exception:", e);
     var code = e.getStatus();
     response.setStatus(code);
     return e.getError();
@@ -81,21 +81,21 @@ public class ErrorHandling {
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public Error handleNotFoundException(NotFoundException e) {
-    log.warn(e);
+    log.warn("Invalid request:", e);
     return buildError(HttpStatus.NOT_FOUND, INTERNAL, e.getMessage());
   }
 
   @ExceptionHandler(FieldsValidationException.class)
   @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
   public Errors handleFieldsValidationException(FieldsValidationException e) {
-    log.warn(e);
+    log.warn("Validation failed:", e);
     return buildErrors(e.getValidationResult().getErrors());
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMissingParameterException(MissingServletRequestParameterException e) {
-    log.warn(e);
+    log.warn("Invalid request:",e);
     var message = String.format(MISSING_PARAMETER_MSG_PATTERN, e.getParameterName());
     return buildBadRequestResponse(message);
   }
@@ -103,14 +103,14 @@ public class ErrorHandling {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-    log.warn(e);
+    log.warn("Invalid request:",e);
     return buildBadRequestResponse(e.getMessage());
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-    log.warn(e);
+    log.warn("Invalid request:",e);
     var message = String.format(TYPE_MISMATCH_MSG_PATTERN, e.getParameter().getParameterName());
     return buildBadRequestResponse(message);
   }
@@ -118,14 +118,14 @@ public class ErrorHandling {
   @ExceptionHandler(JobProfileNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentTypeMismatchException(JobProfileNotFoundException e) {
-    log.warn(e);
+    log.warn("Invalid request:",e);
     return buildBadRequestResponse(e.getMessage());
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleConstraintViolationException(Exception e) {
-    log.warn(e);
+    log.warn("Validation fialed: ",e);
     var message = String.format(CONSTRAINT_VIOLATION_MSG_PATTERN, e.getMessage());
     return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
   }

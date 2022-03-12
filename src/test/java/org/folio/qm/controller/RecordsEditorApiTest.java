@@ -176,7 +176,7 @@ class RecordsEditorApiTest extends BaseApiTest {
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
-    assertThat(wireMockServer.getAllServeEvents(), hasSize(2));
+    assertThat(wireMockServer.getAllServeEvents(), hasSize(1));
   }
 
   @Test

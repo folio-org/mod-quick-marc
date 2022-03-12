@@ -31,7 +31,7 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
   public QuickMarc applyFieldProtection(QuickMarc record) {
     var fieldProtectionSettings = dicsClient.getFieldProtectionSettings();
     record.getFields().forEach(field -> setProtectedStatus(field, fieldProtectionSettings));
-    return null;
+    return record;
   }
 
   private void setProtectedStatus(FieldItem field, MarcFieldProtectionSettingsCollection settings) {

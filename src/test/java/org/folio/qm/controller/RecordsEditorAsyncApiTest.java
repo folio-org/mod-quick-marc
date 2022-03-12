@@ -254,7 +254,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
-      .andExpect(errorMessageMatch(equalTo("The Leader and 008 do not match")));
+      .andExpect(jsonPath("$.errors[0].message", equalTo("The Leader and 008 do not match")));
 
     wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
   }

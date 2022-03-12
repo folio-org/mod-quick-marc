@@ -12,11 +12,13 @@ import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
+import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 
+@Component
 public class CommonDataFieldConverter implements VariableFieldConverter<DataField> {
 
   @Override

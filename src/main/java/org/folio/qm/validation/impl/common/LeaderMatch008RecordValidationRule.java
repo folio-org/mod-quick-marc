@@ -29,7 +29,7 @@ public class LeaderMatch008RecordValidationRule extends RecordValidationRule {
     var fieldWith008Tag = filterFieldsByTagCode(fields, GENERAL_INFORMATION_CONTROL_FIELD);
     if (!fieldWith008Tag.isEmpty()) {
       for (FieldItem fieldItem : fieldWith008Tag) {
-        if (isLeaderMatches(fieldItem.getContent(), leader)) {
+        if (!isLeaderMatches(fieldItem.getContent(), leader)) {
           var validationError = createValidationError(GENERAL_INFORMATION_CONTROL_FIELD, VALIDATION_MESSAGE);
           return Optional.ofNullable(validationError);
         }
@@ -50,7 +50,7 @@ public class LeaderMatch008RecordValidationRule extends RecordValidationRule {
 
   @Override
   public boolean supportFormat(MarcFormat marcFormat) {
-    return true;
+    return marcFormat == MarcFormat.BIBLIOGRAPHIC;
   }
 
 }

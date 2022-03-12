@@ -47,6 +47,6 @@ public class LccnFieldItemConverter extends AbstractFieldItemConverter {
 
   @Override
   public boolean canProcess(FieldItem field, MarcFormat marcFormat) {
-    return field.getTag().equals(LCCN_CONTROL_FIELD) && !isControlField(field);
+    return field.getTag().equals(LCCN_CONTROL_FIELD);
   }
 }

@@ -3,9 +3,13 @@ package org.folio.qm.converter.impl;
 import java.util.UUID;
 
 import org.folio.qm.converter.AbstractMarcDtoConverter;
+import org.folio.qm.converter.elements.ControlFieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.folio.rest.jaxrs.model.ParsedRecordDto;
+import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.exception.ConverterException;
 
 public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
 
@@ -20,7 +24,7 @@ public class MarcHoldingsDtoConverter extends AbstractMarcDtoConverter {
 
   @Override
   protected UUID getExternalId(ParsedRecordDto source) {
-    return UUID.fromString(source.getExternalIdsHolder().getHoldingsId());
+    return source.getExternalIdsHolder().getHoldingsId();
   }
 
   @Override

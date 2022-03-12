@@ -52,12 +52,12 @@ public abstract class AbstractMarcQmConverter implements MarcQmConverter {
       JsonNode jsonNode = convertToJson(source);
 
       return new ParsedRecordDto()
-        .withParsedRecord(new ParsedRecord().withId(String.valueOf(source.getParsedRecordId())).withContent(jsonNode))
-        .withRecordType(supportedType())
-        .withId(String.valueOf(source.getParsedRecordDtoId()))
-        .withRelatedRecordVersion(source.getRelatedRecordVersion())
-        .withExternalIdsHolder(constructExternalIdsHolder(source))
-        .withAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(source.getSuppressDiscovery()));
+        .id(source.getParsedRecordDtoId())
+        .recordType(supportedType())
+        .externalIdsHolder(constructExternalIdsHolder(source))
+        .relatedRecordVersion(source.getRelatedRecordVersion())
+        .parsedRecord(new ParsedRecord().id(source.getParsedRecordId()).content(contentMap))
+        .additionalInfo(new AdditionalInfo().suppressDiscovery(source.getSuppressDiscovery()));
     } catch (Exception e) {
       throw new ConverterException(e);
     }

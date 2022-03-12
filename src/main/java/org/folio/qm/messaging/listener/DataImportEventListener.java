@@ -6,8 +6,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.service.DataImportEventProcessingService;
-import org.folio.rest.jaxrs.model.DataImportEventPayload;
+import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.service.EventProcessingService;
 
 @Log4j2
 @Component
@@ -17,7 +17,7 @@ public class DataImportEventListener {
   public static final String DI_COMPLETED_LISTENER_ID = "quick-marc-di-completed-listener";
   public static final String DI_ERROR_LISTENER_ID = "quick-marc-di-error-listener";
 
-  private final DataImportEventProcessingService processingService;
+  private final EventProcessingService eventProcessingService;
 
   @KafkaListener(
     id = DI_COMPLETED_LISTENER_ID,
@@ -26,7 +26,7 @@ public class DataImportEventListener {
     concurrency = "#{folioKafkaProperties.listener['di-completed'].concurrency}",
     containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diCompletedListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
-    processingService.processDICompleted(data);
+    eventProcessingService.processDICompleted(data);
   }
 
   @KafkaListener(
@@ -36,6 +36,6 @@ public class DataImportEventListener {
     concurrency = "#{folioKafkaProperties.listener['di-error'].concurrency}",
     containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diErrorListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
-    processingService.processDIError(data);
+    eventProcessingService.processDIError(data);
   }
 }

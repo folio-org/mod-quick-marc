@@ -4,7 +4,6 @@ import static org.folio.qm.util.ErrorUtils.buildError;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,7 +28,6 @@ public class ValidationServiceImpl implements ValidationService {
 
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
   public static final String QM_RECORD_ID_EMPTY_MESSAGE = "Parameter 'qmRecordId' should be not null";
-  public static final String X_OKAPI_TOKEN_USER_ID_IS_MISSING_MESSAGE = "X-Okapi-User-Id header is missing";
 
   private final List<ValidationRule> validationRules;
 
@@ -65,12 +63,4 @@ public class ValidationServiceImpl implements ValidationService {
     }
   }
 
-  @Override
-  public void validateUserId(FolioExecutionContext folioExecutionContext) {
-    if (Objects.isNull(folioExecutionContext.getUserId())) {
-      var error =
-        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, X_OKAPI_TOKEN_USER_ID_IS_MISSING_MESSAGE);
-      throw new ValidationException(error);
-    }
-  }
 }

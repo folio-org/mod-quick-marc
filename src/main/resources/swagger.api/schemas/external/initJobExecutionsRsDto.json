@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Initialized JobExecution entities",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "parentJobExecutionId": {
+      "description": "UUID of the JobExecution entity which is parent for all JobExecution entities in a scope of one file upload process",
+      "$ref": "../uuid.json"
+    },
+    "jobExecutions": {
+      "description": "Array of initialized JobExecution entities",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "jobExecution.json"
+      }
+    }
+  }
+}

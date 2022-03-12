@@ -22,11 +22,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.holder.impl.TenantsHolderImpl;
+import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.util.TenantUtils;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
 import org.folio.spring.scope.FolioExecutionScopeExecutionContextManager;
 
+@UnitTest
 @ExtendWith({
   MockitoExtension.class,
   RandomBeansExtension.class

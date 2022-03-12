@@ -1,9 +1,10 @@
 package org.folio.qm.client;
 
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 
 @FeignClient(value = "field-protection-settings")
 public interface DICSFieldProtectionSettingsClient {

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Schema that describes payload for receiving a chunk of raw records",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "UUID",
+      "$ref": "../uuid.json"
+    },
+    "initialRecords": {
+      "description": "List of raw records",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "rawRecordDto.json"
+      }
+    },
+    "recordsMetadata" : {
+      "description": "Metadata with info about records",
+      "type": "object",
+      "$ref": "./rawRecordsMetadata.json"
+    }
+  },
+  "required": [
+    "id",
+    "recordsMetadata",
+    "initialRecords"
+  ]
+}

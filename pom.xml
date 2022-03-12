@@ -23,8 +23,6 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
     <folio-spring-base.version>3.0.1</folio-spring-base.version>
-    <mod-srm-client.version>3.3.0</mod-srm-client.version>
-    <mod-data-import-converter-storage-client.version>1.13.0</mod-data-import-converter-storage-client.version>
     <openapi-generator.version>5.3.1</openapi-generator.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -61,6 +59,10 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jaxb-annotations</artifactId>
     </dependency>
@@ -76,36 +78,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>mod-source-record-manager-client</artifactId>
-      <version>${mod-srm-client.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.folio</groupId>
-          <artifactId>domain-models-runtime</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.folio</groupId>
-          <artifactId>domain-models-api-interfaces</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>mod-data-import-converter-storage-client</artifactId>
-      <version>${mod-data-import-converter-storage-client.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.folio</groupId>
-          <artifactId>domain-models-runtime</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.folio</groupId>
-          <artifactId>domain-models-api-interfaces</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.marc4j</groupId>
@@ -428,9 +400,27 @@
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
           <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
+          <groups>unit</groups>
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.0.0-M5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includes>*ApiTest.java</includes>
+          <groups>integration</groups>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

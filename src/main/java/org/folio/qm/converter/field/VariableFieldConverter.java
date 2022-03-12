@@ -1,4 +1,4 @@
-package org.folio.qm.converternew;
+package org.folio.qm.converter.field;
 
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

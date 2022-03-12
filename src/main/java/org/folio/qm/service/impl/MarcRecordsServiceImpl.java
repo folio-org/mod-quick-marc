@@ -10,12 +10,10 @@ import java.util.function.Predicate;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
-import org.folio.qm.client.DICSFieldProtectionSettingsClient;
-import org.folio.qm.client.SRMChangeManagerClient;
 import org.folio.qm.client.UsersClient;
-import org.folio.qm.converter.MarcConverterFactory;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.ParsedRecordDto;
@@ -25,8 +23,10 @@ import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.UserMapper;
+import org.folio.qm.service.ChangeManagerService;
 import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.DataImportJobService;
+import org.folio.qm.service.FieldProtectionSetterService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
 import org.folio.spring.exception.NotFoundException;
@@ -37,24 +37,22 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private static final String RECORD_NOT_FOUND_MESSAGE = "Record with id [%s] was not found";
 
-  private final SRMChangeManagerClient srmClient;
-  private final DICSFieldProtectionSettingsClient discClient;
+  private final ChangeManagerService changeManagerService;
   private final DataImportJobService dataImportJobService;
   private final UsersClient usersClient;
   private final ValidationService validationService;
   private final CreationStatusService statusService;
+  private final FieldProtectionSetterService protectionSetterService;
 
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
-  private final MarcConverterFactory marcConverterFactory;
+  private final Converter<QuickMarc, ParsedRecordDto> qmConverter;
+  private final Converter<ParsedRecordDto, QuickMarc> dtoConverter;
 
   @Override
   public QuickMarc findByExternalId(UUID externalId) {
-    var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
-    var marcFieldProtectionSettings = discClient.getFieldProtectionSettingsMarc();
-    var quickMarc = marcConverterFactory
-      .findConverter(parsedRecordDto.getRecordType(), marcFieldProtectionSettings)
-      .convert(parsedRecordDto);
+    var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
+    var quickMarc = protectionSetterService.applyFieldProtection(dtoConverter.convert(parsedRecordDto));
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {
@@ -69,9 +67,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcFields(quickMarc);
-    var parsedRecordDto =
-      marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
-    srmClient.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
+    var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
+    changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
   }
 
   @Override
@@ -84,14 +81,13 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
     validateMarcFields(quickMarc);
-    var recordDto = marcConverterFactory.findConverter(quickMarc.getMarcFormat())
-      .convert(prepareRecord(quickMarc));
+    var recordDto = qmConverter.convert(prepareRecord(quickMarc));
     return runImportAndGetStatus(recordDto, CREATE);
   }
 
   @Override
   public CreationStatus deleteByExternalId(UUID externalId) {
-    var recordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
+    var recordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
     return runImportAndGetStatus(recordDto, DELETE);
   }
 

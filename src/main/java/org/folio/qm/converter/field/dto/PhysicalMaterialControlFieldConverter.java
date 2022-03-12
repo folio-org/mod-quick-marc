@@ -1,4 +1,4 @@
-package org.folio.qm.converternew.dto;
+package org.folio.qm.converter.field.dto;
 
 import static org.folio.qm.converter.elements.Constants.PHYSICAL_DESCRIPTIONS_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements.resolveByCode;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.ControlFieldItem;
-import org.folio.qm.converternew.VariableFieldConverter;
+import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 

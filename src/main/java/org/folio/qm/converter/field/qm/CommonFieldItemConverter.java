@@ -1,4 +1,4 @@
-package org.folio.qm.converternew.qm;
+package org.folio.qm.converter.field.qm;
 
 import static org.folio.qm.converter.elements.Constants.LCCN_CONTROL_FIELD;
 

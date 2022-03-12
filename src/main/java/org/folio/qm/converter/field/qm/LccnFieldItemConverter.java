@@ -1,4 +1,4 @@
-package org.folio.qm.converternew.qm;
+package org.folio.qm.converter.field.qm;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.repeat;

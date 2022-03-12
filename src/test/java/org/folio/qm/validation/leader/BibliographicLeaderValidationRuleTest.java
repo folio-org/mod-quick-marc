@@ -17,7 +17,7 @@ import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationR
 @UnitTest
 class BibliographicLeaderValidationRuleTest {
 
-  private final LeaderValidationRule rule = new BibliographicLeaderValidationRule();
+  private final BibliographicLeaderValidationRule rule = new BibliographicLeaderValidationRule();
 
   private static final String VALID_LEADER = "01706ccm\\a2200361\\\\\\4500";
   private static final String WRONG_BIB_RECORD_STATUS = "01706xcm\\a2200361\\\\\\4500";

@@ -6,14 +6,10 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.marc4j.marc.DataField;
 import org.marc4j.marc.impl.DataFieldImpl;
-import org.marc4j.marc.impl.SubfieldImpl;
 
-import org.folio.qm.converternew.dto.CommonDataFieldConverter;
+import org.folio.qm.converter.field.dto.CommonDataFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 
 class CommonDataFieldConverterTest {

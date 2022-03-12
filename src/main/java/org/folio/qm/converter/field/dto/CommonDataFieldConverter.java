@@ -1,4 +1,4 @@
-package org.folio.qm.converternew.dto;
+package org.folio.qm.converter.field.dto;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
@@ -13,7 +13,7 @@ import org.marc4j.marc.Leader;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
 
-import org.folio.qm.converternew.VariableFieldConverter;
+import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 

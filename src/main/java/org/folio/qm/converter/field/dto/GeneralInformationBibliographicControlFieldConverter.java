@@ -1,4 +1,4 @@
-package org.folio.qm.converternew.dto;
+package org.folio.qm.converter.field.dto;
 
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.BLVL;
@@ -19,7 +19,7 @@ import org.marc4j.marc.VariableField;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
-import org.folio.qm.converternew.VariableFieldConverter;
+import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 

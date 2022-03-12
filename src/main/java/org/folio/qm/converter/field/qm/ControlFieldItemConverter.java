@@ -1,10 +1,10 @@
-package org.folio.qm.converternew.qm;
+package org.folio.qm.converter.field.qm;
 
 import org.marc4j.marc.VariableField;
 import org.marc4j.marc.impl.ControlFieldImpl;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.converternew.FieldItemConverter;
+import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 

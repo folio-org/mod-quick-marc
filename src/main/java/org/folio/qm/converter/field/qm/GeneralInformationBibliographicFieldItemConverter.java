@@ -1,4 +1,4 @@
-package org.folio.qm.converternew.qm;
+package org.folio.qm.converter.field.qm;
 
 import static org.folio.qm.converter.elements.Constants.ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.MaterialTypeConfiguration;
-import org.folio.qm.converternew.FieldItemConverter;
+import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 

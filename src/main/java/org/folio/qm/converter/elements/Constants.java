@@ -54,8 +54,9 @@ public class Constants {
 
   public static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
   public static final int BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
-  public static final int HOLDINGS_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 32;
-  public static final int AUTHORITY_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
+  public static final int TAG_008_HOLDINGS_CONTROL_FIELD_LENGTH = 32;
+  public static final int TAG_008_AUTHORITY_CONTROL_FIELD_LENGTH = 40;
+  public static final int TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH = 40;
   public static final int TOKEN_MIN_LENGTH = 3;
   public static final int LEADER_LENGTH = 24;
   public static final int TYPE_OF_RECORD_LEADER_POS = 6;
@@ -73,9 +74,9 @@ public class Constants {
   public static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
 
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
-  public static final String ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD = "006";
-  public static final String PHYSICAL_DESCRIPTIONS_CONTROL_FIELD = "007";
-  public static final String GENERAL_INFORMATION_CONTROL_FIELD = "008";
+  public static final String TAG_006_CONTROL_FIELD = "006";
+  public static final String TAG_007_CONTROL_FIELD = "007";
+  public static final String TAG_008_CONTROL_FIELD = "008";
   public static final String LCCN_CONTROL_FIELD = "010";
 
   public static final String BLANK_REPLACEMENT = "\\";
@@ -93,9 +94,9 @@ public class Constants {
   public static final String TYPE = "Type";
 
   public static final Set<String> COMPLEX_CONTROL_FIELD_TAGS = Set.of(
-    ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD,
-    PHYSICAL_DESCRIPTIONS_CONTROL_FIELD,
-    GENERAL_INFORMATION_CONTROL_FIELD
+    TAG_006_CONTROL_FIELD,
+    TAG_007_CONTROL_FIELD,
+    TAG_008_CONTROL_FIELD
   );
 
   public static final List<ControlFieldItem> AUTHORITY_CONTROL_FIELD_ITEMS = Arrays.asList(

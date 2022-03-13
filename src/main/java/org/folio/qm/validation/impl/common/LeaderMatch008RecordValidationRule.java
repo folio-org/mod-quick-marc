@@ -6,7 +6,7 @@ import static org.folio.qm.converter.elements.Constants.DESC;
 import static org.folio.qm.converter.elements.Constants.DESC_LEADER_POS;
 import static org.folio.qm.converter.elements.Constants.ELVL;
 import static org.folio.qm.converter.elements.Constants.ELVL_LEADER_POS;
-import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 
 import java.util.List;
 import java.util.Map;
@@ -26,11 +26,11 @@ public class LeaderMatch008RecordValidationRule extends RecordValidationRule {
 
   @Override
   public Optional<ValidationError> validate(List<FieldItem> fields, String leader) {
-    var fieldWith008Tag = filterFieldsByTagCode(fields, GENERAL_INFORMATION_CONTROL_FIELD);
+    var fieldWith008Tag = filterFieldsByTagCode(fields, TAG_008_CONTROL_FIELD);
     if (!fieldWith008Tag.isEmpty()) {
       for (FieldItem fieldItem : fieldWith008Tag) {
         if (!isLeaderMatches(fieldItem.getContent(), leader)) {
-          var validationError = createValidationError(GENERAL_INFORMATION_CONTROL_FIELD, VALIDATION_MESSAGE);
+          var validationError = createValidationError(TAG_008_CONTROL_FIELD, VALIDATION_MESSAGE);
           return Optional.ofNullable(validationError);
         }
       }

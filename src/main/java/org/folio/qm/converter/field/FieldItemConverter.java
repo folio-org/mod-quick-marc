@@ -29,10 +29,11 @@ public interface FieldItemConverter {
   boolean canProcess(FieldItem field, MarcFormat marcFormat);
 
   default char getIndicator(FieldItem field, int index) {
-    if (field.getIndicators().size() < index + 1) {
+    var indicators = field.getIndicators();
+    if (indicators == null || indicators.size() < index + 1) {
       return ' ';
     }
-    var ind = field.getIndicators().get(index);
+    var ind = indicators.get(index);
     if (ind.equals(BLANK_REPLACEMENT)) {
       return ' ';
     }

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
   @Bean
-  public MarcFactory marcFactory(){
+  public MarcFactory marcFactory() {
     return new MarcFactoryImpl();
   }
 }

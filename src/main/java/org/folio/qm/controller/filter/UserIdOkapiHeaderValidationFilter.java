@@ -27,7 +27,8 @@ public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean impleme
   @Value("${management.endpoints.web.base-path}")
   private String managementBasePath;
 
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
     String requestURI = req.getRequestURI();
     if (!requestURI.startsWith("/_/")

@@ -27,7 +27,7 @@ public class CleanupServiceImpl implements CleanupService {
 
   @Override
   @Scheduled(initialDelayString = "${folio.qm.creation-status.clear.initial-delay-ms}",
-    fixedDelayString = "${folio.qm.creation-status.clear.fixed-delay-ms}")
+             fixedDelayString = "${folio.qm.creation-status.clear.fixed-delay-ms}")
   public void clearCreationStatusesForAllTenants() {
     var yesterdayTimestamp = new Timestamp(System.currentTimeMillis() - MILLIS_PER_DAY);
     endFolioExecutionContext();

@@ -66,7 +66,7 @@ import static org.folio.qm.converter.elements.ControlFieldItem.VIDEORECORDING_FO
 
 import java.util.List;
 
-public enum PhysicalDescriptionFixedFieldElements {
+public enum Tag007Configuration {
 
   ELECTRONIC_RESOURCE("Electronic resource", 'c', 14, asList(CATEGORY, SMD, COLOR, DIMENSIONS, SOUND, IMAGE_BIT_DEPTH, FILE_FORMATS, QUALITY_ASSURANCE_TARGET, ANTECEDENT, LEVEL_OF_COMPRESSION, REFORMATTING_QUALITY)),
   GLOBE("Globe", 'd', 6, asList(CATEGORY, SMD, COLOR, PHYSICAL_MEDIUM, TYPE_OF_REPRODUCTION)),
@@ -90,17 +90,17 @@ public enum PhysicalDescriptionFixedFieldElements {
   private final int length;
   private final List<ControlFieldItem> controlFieldItems;
 
-  PhysicalDescriptionFixedFieldElements(String name, char code, int length, List<ControlFieldItem> controlFieldItems) {
+  Tag007Configuration(String name, char code, int length, List<ControlFieldItem> controlFieldItems) {
     this.name = name;
     this.code = code;
     this.length = length;
     this.controlFieldItems = controlFieldItems;
   }
 
-  public static PhysicalDescriptionFixedFieldElements resolveByCode(char code) {
-    for (PhysicalDescriptionFixedFieldElements physicalDescriptionFixedFieldElements : values()) {
-      if (physicalDescriptionFixedFieldElements.code == code) {
-        return physicalDescriptionFixedFieldElements;
+  public static Tag007Configuration resolveByCode(char code) {
+    for (Tag007Configuration config : values()) {
+      if (config.code == code) {
+        return config;
       }
     }
     return UNKNOWN;

@@ -30,7 +30,7 @@ public abstract class AbstractFieldItemConverter implements FieldItemConverter {
   }
 
   private List<Subfield> extractSubfields(FieldItem field) {
-    LinkedList<String> tokens = Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
+    var tokens = Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
       .collect(Collectors.toCollection(LinkedList::new));
 
     List<Subfield> subfields = new ArrayList<>();

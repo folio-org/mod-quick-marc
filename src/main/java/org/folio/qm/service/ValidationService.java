@@ -11,6 +11,4 @@ public interface ValidationService {
 
   void validateIdsMatch(QuickMarc quickMarc, UUID externalId);
 
-  void validateQmRecordId(UUID qmRecordId);
-
 }

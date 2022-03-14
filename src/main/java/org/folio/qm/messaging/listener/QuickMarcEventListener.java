@@ -58,7 +58,8 @@ public class QuickMarcEventListener {
   }
 
   @NotNull
-  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage) throws JsonProcessingException {
+  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage)
+    throws JsonProcessingException {
     var errorNode = objectMapper.readTree(errorMessage);
     var message = errorNode.get("message").asText();
     var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, message);

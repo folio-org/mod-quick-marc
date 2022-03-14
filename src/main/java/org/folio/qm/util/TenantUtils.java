@@ -13,13 +13,14 @@ import org.folio.spring.integration.XOkapiHeaders;
 @UtilityClass
 public class TenantUtils {
 
-  public static FolioExecutionContext getFolioExecutionContextCopyForTenant(FolioExecutionContext folioExecutionContext, String tenant) {
-    var headers = folioExecutionContext.getAllHeaders() != null
-      ? folioExecutionContext.getAllHeaders()
-      : new HashMap<String, Collection<String>>();
+  public static FolioExecutionContext getFolioExecutionContextCopyForTenant(FolioExecutionContext context,
+                                                                            String tenant) {
+    var headers = context.getAllHeaders() != null
+                  ? context.getAllHeaders()
+                  : new HashMap<String, Collection<String>>();
     headers.put(XOkapiHeaders.TENANT, Collections.singletonList(tenant));
 
-    return new DefaultFolioExecutionContext(folioExecutionContext.getFolioModuleMetadata(), headers);
+    return new DefaultFolioExecutionContext(context.getFolioModuleMetadata(), headers);
   }
 
 }

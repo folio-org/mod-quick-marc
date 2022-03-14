@@ -17,7 +17,8 @@ public interface CreationStatusMapper {
 
   @Mappings({
     @Mapping(target = "qmRecordId", source = "id"),
-    @Mapping(target = "status", expression = "java(CreationStatus.StatusEnum.fromValue(recordCreationStatus.getStatus().toString()))"),
+    @Mapping(target = "status",
+             expression = "java(CreationStatus.StatusEnum.fromValue(recordCreationStatus.getStatus().toString()))"),
     @Mapping(target = "metadata.createdAt", source = "createdAt"),
     @Mapping(target = "metadata.updatedAt", source = "updatedAt")
   })

@@ -43,7 +43,6 @@ import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
 import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
 import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -52,8 +51,7 @@ public class Constants {
 
   public static final char SPACE_CHARACTER = ' ';
 
-  public static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
-  public static final int BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
+  public static final int TAG_006_CONTROL_FIELD_LENGTH = 18;
   public static final int TAG_008_HOLDINGS_CONTROL_FIELD_LENGTH = 32;
   public static final int TAG_008_AUTHORITY_CONTROL_FIELD_LENGTH = 40;
   public static final int TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH = 40;
@@ -91,7 +89,7 @@ public class Constants {
     TAG_008_CONTROL_FIELD
   );
 
-  public static final List<ControlFieldItem> AUTHORITY_CONTROL_FIELD_ITEMS = Arrays.asList(
+  public static final List<ControlFieldItem> AUTHORITY_CONTROL_FIELD_ITEMS = List.of(
     DATE_ENTERED,
     GEO_SUBD, ROMAN,
     LANG_AUTHORITY, KIND_REC, CAT_RULES, SH_SYS,
@@ -100,13 +98,14 @@ public class Constants {
     REF_EVAL, UNDEF_30, REC_UPD, PERS_NAME,
     LEVEL_EST, UNDEF_34, MOD_REC_EST, SOURCE);
 
-  public static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = Arrays.asList(ACQ_STATUS, ACQ_METHOD,
+  public static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = List.of(ACQ_STATUS, ACQ_METHOD,
     ACQ_ENDDATE, COMPL, COPIES,
     DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
     REPT_DATE, SEP_COMP, SPEC_RET);
 
-  public static final List<LeaderItem> COMMON_LEADER_ITEMS = List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
-    ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
+  public static final List<LeaderItem> COMMON_LEADER_ITEMS =
+    List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
+      ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
 
   private Constants() {
   }

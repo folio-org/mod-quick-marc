@@ -2,14 +2,7 @@ package org.folio.qm.validation;
 
 import static org.folio.qm.converter.elements.Constants.COMMON_LEADER_ITEMS;
 import static org.folio.qm.converter.elements.LeaderItem.BASE_ADDRESS;
-import static org.folio.qm.converter.elements.LeaderItem.CODING_SCHEME;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_20;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_21;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_22;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
-import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
 import static org.folio.qm.converter.elements.LeaderItem.RECORD_LENGTH;
-import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +11,13 @@ import java.util.stream.Stream;
 
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.LeaderItem;
-import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 
 public abstract class LeaderValidationRule implements ValidationRule {
 
   @Override
-  public Optional<ValidationError> validate(QuickMarc record) {
-    return validate(record.getLeader());
+  public Optional<ValidationError> validate(QuickMarc qmRecord) {
+    return validate(qmRecord.getLeader());
   }
 
   protected abstract Optional<ValidationError> validate(String leader);
@@ -57,8 +49,8 @@ public abstract class LeaderValidationRule implements ValidationRule {
 
   private Optional<ValidationError> validateLeaderLength(String leader) {
     return Constants.LEADER_LENGTH == leader.length()
-      ? Optional.empty()
-      : Optional.of(createValidationError(leader, "Wrong leader length"));
+           ? Optional.empty()
+           : Optional.of(createValidationError(leader, "Wrong leader length"));
   }
 
   private Optional<ValidationError> validateLeaderNumberFields(String leader, int start, int length) {

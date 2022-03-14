@@ -4,5 +4,5 @@ import org.folio.qm.domain.dto.QuickMarc;
 
 public interface FieldProtectionSetterService {
 
-  QuickMarc applyFieldProtection(QuickMarc record);
+  QuickMarc applyFieldProtection(QuickMarc qmRecord);
 }

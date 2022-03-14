@@ -44,14 +44,12 @@ import static org.folio.qm.support.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_COLLECTION_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_EDITED_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
@@ -76,6 +74,7 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
+import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.integration.XOkapiHeaders;
 
@@ -90,7 +89,8 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
-    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
+      wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -104,6 +104,12 @@ class RecordsEditorApiTest extends BaseApiTest {
     checkParseRecordDtoId();
   }
 
+  private void checkParseRecordDtoId() {
+    var changeManagerResponse = wireMockServer.getAllServeEvents().get(2).getResponse().getBodyAsString();
+    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
+    assertThat(parsedRecordDto.getId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
+  }
+
   @Test
   void testGetQuickMarcHoldingsRecord() throws Exception {
     log.info("===== Verify GET Holdings record: Successful =====");
@@ -111,7 +117,8 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
-    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
+      wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -133,7 +140,8 @@ class RecordsEditorApiTest extends BaseApiTest {
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_AUTHORITY_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
-    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
+      wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -170,7 +178,8 @@ class RecordsEditorApiTest extends BaseApiTest {
     UUID instanceId = UUID.randomUUID();
 
     mockGet(changeManagerPath(EXTERNAL_ID, instanceId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
-    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(FIELD_PROTECTION_SETTINGS_COLLECTION_PATH), SC_OK, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
+      wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, instanceId))
       .andExpect(status().isUnprocessableEntity())
@@ -267,7 +276,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testPostQuickMarcValidBibRecordCreated() throws Exception {
     log.info("===== Verify POST bib record: Successful =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -291,7 +300,7 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     final var qmRecordId = response.getQmRecordId();
 
-    sendDIKafkaRecord("mockdata/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/request/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.CREATED)
@@ -309,7 +318,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testPostQuickMarcValidHoldingsRecordCreated() throws Exception {
     log.info("===== Verify POST holdings record: Successful =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_HOLDINGS_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -333,7 +342,7 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     final var qmRecordId = response.getQmRecordId();
 
-    sendDIKafkaRecord("mockdata/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/request/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.CREATED)
@@ -350,11 +359,11 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testReturn401WhenInvalidUserId() throws Exception {
     log.info("===== Verify POST record: User Id Invalid =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    String jobExecution = "mockdata/change-manager/job-execution/jobExecution_invalid_user_id.json";
+    String jobExecution = "mockdata/request/change-manager/job-execution/jobExecution_invalid_user_id.json";
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
@@ -367,7 +376,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testReturn400WhenNoHeader() throws Exception {
     log.info("===== Verify POST record: Bad request =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -399,7 +408,7 @@ class RecordsEditorApiTest extends BaseApiTest {
   void testReturn400WhenConnectionReset() throws Exception {
     log.info("===== Verify POST record: Connection reset =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_EDITED_RECORD_BIB_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -414,11 +423,5 @@ class RecordsEditorApiTest extends BaseApiTest {
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
       .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
       .andExpect(jsonPath("$.message").value(containsString("Connection reset executing")));
-  }
-
-  private void checkParseRecordDtoId() {
-    var changeManagerResponse = wireMockServer.getAllServeEvents().get(2).getResponse().getBodyAsString();
-    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
   }
 }

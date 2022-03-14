@@ -21,18 +21,20 @@ import org.folio.qm.support.types.IntegrationTest;
 @IntegrationTest
 class KafkaListenerApiTest extends BaseApiTest {
 
-  private static final String DI_ERROR_EVENT = "mockdata/di-event/error-event.json";
+  private static final String DI_ERROR_EVENT = "mockdata/request/di-event/error-event.json";
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInstance() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent("mockdata/di-event/complete-event-with-instance.json");
+    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(
+      "mockdata/request/di-event/complete-event-with-instance.json");
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithHoldings() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent("mockdata/di-event/complete-event-with-holdings.json");
+    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(
+      "mockdata/request/di-event/complete-event-with-holdings.json");
   }
 
   @Test
@@ -46,7 +48,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithoutExternalId() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/di-event/complete-event-without-external-record.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/request/di-event/complete-event-without-external-record.json", DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
@@ -62,7 +64,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInvalidJson() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/di-event/complete-event-with-invalid-json.json", DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord("mockdata/request/di-event/complete-event-with-invalid-json.json", DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)

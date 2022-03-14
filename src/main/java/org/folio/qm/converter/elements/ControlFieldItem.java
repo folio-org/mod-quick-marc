@@ -1,7 +1,5 @@
 package org.folio.qm.converter.elements;
 
-import static org.folio.qm.converter.elements.Constants.DIMENSIONS_CONST;
-import static org.folio.qm.converter.elements.Constants.POSITIVE_NEGATIVE_ASPECT;
 
 public enum ControlFieldItem {
 
@@ -9,9 +7,9 @@ public enum ControlFieldItem {
   ALPH("Alph", 16, 1, false),
   ALTITUDE("Altitude of sensor", 3, 1, false),
   ANTECEDENT("Antecedent/ Source", 11, 1, false),
-  ASPECT_MAP(POSITIVE_NEGATIVE_ASPECT, 7, 1, false),
-  ASPECT_MICROFORM(POSITIVE_NEGATIVE_ASPECT, 3, 1, false),
-  ASPECT_MOTION(POSITIVE_NEGATIVE_ASPECT, 10, 1, false),
+  ASPECT_MAP("Positive/negative aspect", 7, 1, false),
+  ASPECT_MICROFORM("Positive/negative aspect", 3, 1, false),
+  ASPECT_MOTION("Positive/negative aspect", 10, 1, false),
   ATTITUDE("Attitude of sensor", 4, 1, false),
   AUDN("Audn", 5, 1, false),
   BASE_OF_EMULSION("Base of emulsion", 4, 1, false),
@@ -37,9 +35,9 @@ public enum ControlFieldItem {
   DATE1("Date1", 8, 4, false),
   DATE2("Date2", 12, 4, false),
   DETERIORATION_STAGE("Deterioration stage", 15, 1, false),
-  DIMENSIONS(DIMENSIONS_CONST, 4, 1, false),
-  DIMENSIONS_MOTION(DIMENSIONS_CONST, 7, 1, false),
-  DIMENSIONS_SOUND(DIMENSIONS_CONST, 6, 1, false),
+  DIMENSIONS("Dimensions", 4, 1, false),
+  DIMENSIONS_MOTION("Dimensions", 7, 1, false),
+  DIMENSIONS_SOUND("Dimensions", 6, 1, false),
   DTST("DtSt", 7, 1, false),
   EMULSION_ON_FILM("Emulsion on film", 10, 1, false),
   ENTERED("Entered", 1, 6, false),

@@ -9,32 +9,23 @@ import org.folio.qm.domain.dto.QuickMarc;
 
 public class TestEntitiesUtils {
 
-  public static final String QM_JSON_DIR = "mockdata/change-manager";
+  public static final String QM_JSON_DIR = "mockdata/request/change-manager";
   public static final String JOB_DIR = QM_JSON_DIR + "/job-execution";
   public static final String JOB_EXECUTION_CREATED = JOB_DIR + "/jobExecutionCreated.json";
-  public static final String USER_JOHN_PATH = "mockdata/users/userJohn.json";
+  public static final String USER_JOHN_PATH = "mockdata/request/users/userJohn.json";
   public static final String PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto.json";
   public static final String PARSED_RECORD_AUTHORITY_DTO_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDto.json";
-  public static final String PARSED_RECORDS_DIR = "mockdata/quick-marc-json";
-  public static final String DI_EVENT_DIR = "mockdata/di-event";
+  public static final String PARSED_RECORDS_DIR = "mockdata/responce";
+  public static final String DI_EVENT_DIR = "mockdata/request/di-event";
   public static final String DI_COMPLETE_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-autority.json";
-  public static final String QM_WRONG_ITEM_LENGTH = PARSED_RECORDS_DIR + "/quickMarcJsonWrongItemLength.json";
-  public static final String QM_LEADER_MISMATCH2 =
-    PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchMissing008Value.json";
-  public static final String QM_LEADER_MISMATCH1 =
-    PARSED_RECORDS_DIR + "/quickMarcJsonLeaderMismatchValueMismatch.json";
-  public static final String QM_EDITED_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib_edited.json";
-  public static final String QM_EDITED_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings_edited.json";
-  public static final String QM_RECORD_HOLDINGS = PARSED_RECORDS_DIR + "/qiuckMarcHoldings.json";
-  public static final String QM_RECORD_WITH_INCORRECT_TAG_PATH =
-    PARSED_RECORDS_DIR + "/quickMarcJson_withIncorrectTag.json";
   public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
   public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";
-  public static final String PROTECTION_SETTINGS_COLLECTION_PATH = "mockdata/protection-settings-collection";
-  public static final String FIELD_PROTECTION_SETTINGS_COLLECTION_PATH =
-    PROTECTION_SETTINGS_COLLECTION_PATH + "/fieldProtectionSettingsCollection.json";
+  public static final String PROTECTION_SETTINGS_PATH =
+    "mockdata/request/change-manager/protection-settings";
+  public static final String FIELD_PROTECTION_SETTINGS_PATH =
+    PROTECTION_SETTINGS_PATH + "/fieldProtectionSettingsCollection.json";
 
   public static final String TESTED_TAG_NAME = "333";
   public static final UUID VALID_PARSED_RECORD_DTO_ID = UUID.fromString("c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c");

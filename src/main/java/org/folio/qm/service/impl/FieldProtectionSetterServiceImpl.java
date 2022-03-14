@@ -23,7 +23,7 @@ import org.folio.qm.service.FieldProtectionSetterService;
 public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterService {
 
   private static final String ANY_STRING = "*";
-  private static final char BLANK_SUBFIELD_CODE = ' ';
+  private static final String BLANK_SUBFIELD_CODE = "\\";
 
   private final DICSFieldProtectionSettingsClient dicsClient;
 
@@ -81,23 +81,26 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
 
   private boolean isAnyIndicator1InSettingOrIndicator1Match(MarcFieldProtectionSetting setting, FieldItem field) {
     return setting.getIndicator1().equals(ANY_STRING)
-      || (isNotEmpty(setting.getIndicator1()) ? setting.getIndicator1().charAt(0) : BLANK_SUBFIELD_CODE)
-      == field.getIndicators().get(0).charAt(0);
+      || (isNotEmpty(setting.getIndicator1()) ? setting.getIndicator1() : BLANK_SUBFIELD_CODE)
+      .equals(field.getIndicators().get(0));
   }
 
   private boolean isAnyIndicator2InSettingOrIndicator2Match(MarcFieldProtectionSetting setting, FieldItem field) {
     return setting.getIndicator2().equals(ANY_STRING)
-      || (isNotEmpty(setting.getIndicator2()) ? setting.getIndicator2().charAt(0) : BLANK_SUBFIELD_CODE)
-      == field.getIndicators().get(1).charAt(0);
+      || (isNotEmpty(setting.getIndicator2()) ? setting.getIndicator2() : BLANK_SUBFIELD_CODE)
+      .equals(field.getIndicators().get(1));
   }
 
   private boolean isAnySubFieldInSettingOrSubFieldMatch(MarcFieldProtectionSetting setting, FieldItem field) {
     return setting.getSubfield().equals(ANY_STRING)
-      || !Pattern.compile("[$]" + setting.getSubfield().charAt(0)).matcher(field.getContent().toString()).matches();
+      || !Pattern.compile("[$]" + setting.getSubfield()).matcher(field.getContent().toString()).matches();
   }
 
   private boolean isAnyDataInSettingOrDataMatchWithSubfield(MarcFieldProtectionSetting setting, FieldItem field) {
+    var subfieldRegex = setting.getSubfield().equals(ANY_STRING) ? "." : setting.getSubfield();
+    var dataPattern = Pattern.compile(".*\\$" + subfieldRegex + " " + Pattern.quote(setting.getData()) + ".*");
     return setting.getData().equals(ANY_STRING)
-      || field.getContent().toString().contains("$" + setting.getSubfield().charAt(0) + " " + setting.getData());
+      || dataPattern.matcher(field.getContent().toString()).matches();
   }
+
 }

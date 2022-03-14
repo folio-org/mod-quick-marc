@@ -70,8 +70,7 @@ public class Constants {
 
   public static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
   public static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
-  Pattern d = Pattern.compile("(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$");
-  public static final String CONCAT_CONDITION_PATTERN = "(?:[$][1]\\s*|[$]\\d+(?:[.,])[^\\\\]*)$";
+  public static final Pattern CONCAT_CONDITION_PATTERN = Pattern.compile("(?:[$][1]\\s*|[$]\\d+[.,][^\\\\]*)$");
 
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
   public static final String TAG_006_CONTROL_FIELD = "006";
@@ -80,17 +79,10 @@ public class Constants {
   public static final String LCCN_CONTROL_FIELD = "010";
 
   public static final String BLANK_REPLACEMENT = "\\";
-  public static final String BLVL = "BLvl";
   public static final String CATEGORY_NAME = "$categoryName";
+  public static final String BLVL = "BLvl";
   public static final String DESC = "Desc";
-  public static final String DIMENSIONS_CONST = "Dimensions";
   public static final String ELVL = "ELvl";
-  public static final String FIELDS = "fields";
-  public static final String INDICATOR1 = "ind1";
-  public static final String INDICATOR2 = "ind2";
-  public static final String LEADER = "leader";
-  public static final String POSITIVE_NEGATIVE_ASPECT = "Positive/negative aspect";
-  public static final String SUBFIELDS = "subfields";
   public static final String TYPE = "Type";
 
   public static final Set<String> COMPLEX_CONTROL_FIELD_TAGS = Set.of(

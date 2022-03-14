@@ -1,5 +1,6 @@
 package org.folio.qm.converter.field.qm;
 
+import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import static org.folio.qm.converter.elements.Constants.CONCAT_CONDITION_PATTERN;
@@ -46,9 +47,9 @@ public abstract class AbstractFieldItemConverter implements FieldItemConverter {
   }
 
   private String checkNextToken(LinkedList<String> tokens) {
-    return (!tokens.isEmpty() && tokens.peek().matches(CONCAT_CONDITION_PATTERN)) ?
-      tokens.poll().concat(checkNextToken(tokens)) :
-      EMPTY;
+    return !tokens.isEmpty() && CONCAT_CONDITION_PATTERN.matcher(tokens.peek()).matches()
+           ? requireNonNull(tokens.poll()).concat(checkNextToken(tokens))
+           : EMPTY;
   }
 
   protected abstract Subfield subfieldFromString(String string);

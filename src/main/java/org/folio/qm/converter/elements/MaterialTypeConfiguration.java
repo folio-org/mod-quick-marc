@@ -113,7 +113,7 @@ public enum MaterialTypeConfiguration {
     return name;
   }
 
-  public List<ControlFieldItem> getControlFieldItems() {
+  public List<ControlFieldItem> getSpecificItems() {
     return controlFieldItems;
   }
 }

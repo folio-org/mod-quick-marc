@@ -2,6 +2,7 @@ package org.folio.qm.converter.field.dto;
 
 import static org.folio.qm.converter.elements.Constants.TAG_007_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements.resolveByCode;
+import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
 
 import java.util.LinkedHashMap;
 

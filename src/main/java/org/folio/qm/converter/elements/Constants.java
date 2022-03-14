@@ -52,8 +52,7 @@ public class Constants {
 
   public static final char SPACE_CHARACTER = ' ';
 
-  public static final int ADDITIONAL_CHARACTERISTICS_CONTROL_FIELD_LENGTH = 18;
-  public static final int BIBLIOGRAPHIC_GENERAL_INFORMATION_CONTROL_FIELD_LENGTH = 40;
+  public static final int TAG_006_CONTROL_FIELD_LENGTH = 18;
   public static final int TAG_008_HOLDINGS_CONTROL_FIELD_LENGTH = 32;
   public static final int TAG_008_AUTHORITY_CONTROL_FIELD_LENGTH = 40;
   public static final int TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH = 40;

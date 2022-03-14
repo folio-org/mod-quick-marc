@@ -59,7 +59,7 @@ public enum AdditionalMaterialConfiguration {
   }
 
   public List<ControlFieldItem> getControlFieldItems() {
-    var controlFieldItems = new ArrayList<>(materialTypeConfiguration.getControlFieldItems());
+    var controlFieldItems = new ArrayList<>(materialTypeConfiguration.getSpecificItems());
     controlFieldItems.add(0, ControlFieldItem.TYPE);
     return controlFieldItems;
   }

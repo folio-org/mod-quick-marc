@@ -5,7 +5,7 @@
   "externalId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
   "externalHrid": "393893",
   "marcFormat": "BIBLIOGRAPHIC",
-  "leader": "01706ccm\\a2200361\\\\ 4500",
+  "leader": "01706ccm\\a2200361\\\\ 4500",
   "fields": [
     {
       "tag": "001",
@@ -40,7 +40,7 @@
           "n"
         ],
         "TrAr": "o",
-        "Comp": " b"
+        "Comp": " b"
       },
       "indicators": [],
       "isProtected": "false"
@@ -97,7 +97,7 @@
           "n"
         ],
         "TrAr": "o",
-        "Comp": " b"
+        "Comp": " b"
       },
       "indicators": [],
       "isProtected": "false"
@@ -106,7 +106,7 @@
       "tag": "010",
       "content": "$a   2001000234",
       "indicators": [
-        " ",
+        " ",
         "\\"
       ],
       "isProtected": "false"

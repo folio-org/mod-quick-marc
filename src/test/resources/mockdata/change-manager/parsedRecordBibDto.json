@@ -15,17 +15,17 @@
           "005": "20141107001016.0"
         },
         {
-          "006": "c bcdefghijklmn o "
+          "006": "c bcdefghijklmn o "
         },
         {
           "007": "sa bcdefghijkl"
         },
         {
-          "008": "abcdefghijklmnopqr bcdefghijklmn o stuvw"
+          "008": "abcdefghijklmnopqr bcdefghijklmn o stuvw"
         },
         {
           "010": {
-            "ind1": " ",
+            "ind1": " ",
             "ind2": " ",
             "subfields": [
               {
@@ -485,7 +485,7 @@
           }
         }
       ],
-      "leader": "01706ccm a2200361   4500"
+      "leader": "01706ccm a2200361   4500"
     }
   },
   "additionalInfo": {

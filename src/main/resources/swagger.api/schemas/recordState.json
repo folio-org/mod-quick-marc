@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "State Schema",
+  "description": "State of source record",
+  "type": "string",
+  "enum": [
+    "ACTUAL",
+    "IN_PROGRESS",
+    "ERROR"
+  ],
+  "default": "ACTUAL",
+  "example": "ERROR"
+}

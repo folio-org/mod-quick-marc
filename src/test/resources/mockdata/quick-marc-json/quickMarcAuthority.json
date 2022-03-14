@@ -28,7 +28,7 @@
       "tag": "006",
       "content": {
         "Type": "c",
-        "Comp": " b",
+        "Comp": " b",
         "FMus": "c",
         "Part": "d",
         "Audn": "e",
@@ -105,7 +105,7 @@
       "tag": "010",
       "content": "$a   2001000234",
       "indicators": [
-        " ",
+        " ",
         "\\"
       ],
       "isProtected": "false"

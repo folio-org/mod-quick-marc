@@ -29,12 +29,7 @@
     },
     "recordState": {
       "description": "State of source record in QM workflow",
-      "type": "string",
-      "enum": [
-        "ACTUAL",
-        "IN_PROGRESS",
-        "ERROR"
-      ],
+      "$ref": "../recordState.json",
       "default": "ACTUAL"
     },
     "additionalInfo": {

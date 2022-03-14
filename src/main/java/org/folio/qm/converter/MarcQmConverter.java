@@ -5,7 +5,6 @@ import static org.folio.qm.util.MarcUtils.restoreBlanks;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,12 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
-import org.marc4j.marc.VariableField;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.AdditionalInfo;
 import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.FieldItem;
@@ -37,7 +34,7 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
   private final MarcFactory factory;
   private final ObjectMapper objectMapper;
   private final MarcTypeMapper typeMapper;
-  private final List<FieldItemConverter> fieldItemConverters;
+  private final MarcFieldsConverter fieldsConverter;
 
   @Override
   public ParsedRecordDto convert(@NonNull QuickMarc source) {
@@ -53,7 +50,7 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
   }
 
   private JsonNode convertToParsedContent(QuickMarc source, MarcFormat format) {
-    Record marcRecord = toMarcRecord(source.getLeader(), source.getFields(), format);
+    var marcRecord = toMarcRecord(source.getLeader(), source.getFields(), format);
     try (ByteArrayOutputStream os = new ByteArrayOutputStream();
          QmMarcJsonWriter writer = new QmMarcJsonWriter(os)) {
       writer.write(marcRecord);
@@ -83,26 +80,15 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
   }
 
   private Record toMarcRecord(String leaderString, List<FieldItem> fields, MarcFormat format) {
-    Record record = factory.newRecord();
-    convertFields(fields, format).forEach(record::addVariableField);
+    var record = factory.newRecord();
+    fieldsConverter.convertQmFields(fields, format)
+      .forEach(record::addVariableField);
     record.setLeader(convertLeader(leaderString));
     return record;
-  }
-
-  private Stream<VariableField> convertFields(List<FieldItem> fields, MarcFormat format) {
-    return fields.stream()
-      .map(field -> toVariableField(field, format));
   }
 
   private Leader convertLeader(String leaderString) {
     return factory.newLeader(restoreBlanks(leaderString));
   }
 
-  private VariableField toVariableField(FieldItem field, MarcFormat marcFormat) {
-    return fieldItemConverters.stream()
-      .filter(fieldItemConverter -> fieldItemConverter.canProcess(field, marcFormat))
-      .findFirst()
-      .map(fieldItemConverter -> fieldItemConverter.convert(field))
-      .orElseThrow(() -> new IllegalArgumentException("Field converter not found"));
-  }
 }

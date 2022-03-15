@@ -2,10 +2,6 @@ package org.folio.qm.mapper;
 
 import static org.folio.qm.util.MarcUtils.TYPE_MAP;
 
-import java.util.Map;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import org.mapstruct.Mapper;
 
 import org.folio.qm.domain.dto.MarcFormat;

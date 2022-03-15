@@ -43,7 +43,6 @@ import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
 import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
 import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;

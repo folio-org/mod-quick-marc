@@ -400,8 +400,8 @@ class RecordsEditorApiTest extends BaseApiTest {
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
-      .andExpect(jsonPath("$.errors[0].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
-      .andExpect(jsonPath("$.errors[0].message").value("Is unique tag"));
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.message").value("Is unique tag"));
   }
 
   @Test

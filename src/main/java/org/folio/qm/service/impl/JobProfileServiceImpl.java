@@ -21,7 +21,7 @@ public class JobProfileServiceImpl implements JobProfileService {
 
   @Override
   @Cacheable(cacheNames = JOB_PROFILE_CACHE,
-    key = "@folioExecutionContext.tenantId + ':' + #recordType.name + '-' + #action.name")
+             key = "@folioExecutionContext.tenantId + ':' + #recordType.name + '-' + #action.name")
   public JobProfile getJobProfile(RecordType recordType, JobProfileAction action) {
     return repository.findByProfileActionAndRecordType(action, recordType)
       .orElseThrow(() -> new JobProfileNotFoundException(recordType, action));

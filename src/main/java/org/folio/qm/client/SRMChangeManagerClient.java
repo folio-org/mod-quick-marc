@@ -30,8 +30,11 @@ public interface SRMChangeManagerClient {
   InitJobExecutionsRsDto postJobExecution(@RequestBody InitJobExecutionsRqDto jobExecutionDto);
 
   @PutMapping(value = "/jobExecutions/{jobExecutionId}/jobProfile", produces = MediaType.APPLICATION_JSON_VALUE)
-  void putJobProfileByJobExecutionId(@PathVariable("jobExecutionId") UUID jobExecutionId, @RequestBody ProfileInfo jobProfile);
+  void putJobProfileByJobExecutionId(@PathVariable("jobExecutionId") UUID jobExecutionId,
+                                     @RequestBody ProfileInfo jobProfile);
 
-  @PostMapping(value = "/jobExecutions/{jobExecutionId}/records", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
-  void postRawRecordsByJobExecutionId(@PathVariable("jobExecutionId") UUID jobExecutionId, @RequestBody RawRecordsDto rawRecords);
+  @PostMapping(value = "/jobExecutions/{jobExecutionId}/records",
+               produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+  void postRawRecordsByJobExecutionId(@PathVariable("jobExecutionId") UUID jobExecutionId,
+                                      @RequestBody RawRecordsDto rawRecords);
 }

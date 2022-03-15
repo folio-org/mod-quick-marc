@@ -1,6 +1,5 @@
 package org.folio.qm.converter.elements;
 
-
 public enum ControlFieldItem {
 
   ACCM("AccM", 7, 6, true),

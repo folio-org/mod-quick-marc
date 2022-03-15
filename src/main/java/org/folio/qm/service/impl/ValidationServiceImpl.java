@@ -16,11 +16,8 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.qm.validation.LeaderValidationRule;
-import org.folio.qm.validation.RecordValidationRule;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.qm.validation.ValidationRule;
-import org.folio.spring.FolioExecutionContext;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +47,8 @@ public class ValidationServiceImpl implements ValidationService {
   @Override
   public void validateIdsMatch(QuickMarc quickMarc, UUID parsedRecordId) {
     if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
-      var error = buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
+      var error =
+        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
       throw new ValidationException(error);
     }
   }

@@ -2,10 +2,7 @@ package org.folio.qm.converter.field;
 
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.substring;
-
-import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;

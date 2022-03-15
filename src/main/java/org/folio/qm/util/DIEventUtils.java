@@ -30,7 +30,8 @@ public class DIEventUtils {
     return Optional.ofNullable(data.getContext().get("ERROR"));
   }
 
-  public static Optional<UUID> extractRecordId(DataImportEventPayload data, FolioRecord folioRecord, ObjectMapper mapper) {
+  public static Optional<UUID> extractRecordId(DataImportEventPayload data, FolioRecord folioRecord,
+                                               ObjectMapper mapper) {
     return Optional.ofNullable(data.getContext().get(folioRecord.getValue()))
       .map(recordInJson -> {
         try {

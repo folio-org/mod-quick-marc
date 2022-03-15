@@ -6,9 +6,9 @@ public enum ControlFieldItem {
   ALPH("Alph", 16, 1, false),
   ALTITUDE("Altitude of sensor", 3, 1, false),
   ANTECEDENT("Antecedent/ Source", 11, 1, false),
-  ASPECT_MAP("Positive/negative aspect", 7, 1, false),
-  ASPECT_MICROFORM("Positive/negative aspect", 3, 1, false),
-  ASPECT_MOTION("Positive/negative aspect", 10, 1, false),
+  ASPECT_MAP(Constants.POSITIVE_NEGATIVE_ASPECT, 7, 1, false),
+  ASPECT_MICROFORM(Constants.POSITIVE_NEGATIVE_ASPECT, 3, 1, false),
+  ASPECT_MOTION(Constants.POSITIVE_NEGATIVE_ASPECT, 10, 1, false),
   ATTITUDE("Attitude of sensor", 4, 1, false),
   AUDN("Audn", 5, 1, false),
   BASE_OF_EMULSION("Base of emulsion", 4, 1, false),
@@ -34,9 +34,9 @@ public enum ControlFieldItem {
   DATE1("Date1", 8, 4, false),
   DATE2("Date2", 12, 4, false),
   DETERIORATION_STAGE("Deterioration stage", 15, 1, false),
-  DIMENSIONS("Dimensions", 4, 1, false),
-  DIMENSIONS_MOTION("Dimensions", 7, 1, false),
-  DIMENSIONS_SOUND("Dimensions", 6, 1, false),
+  DIMENSIONS(Constants.DIMENSIONS_NAME, 4, 1, false),
+  DIMENSIONS_MOTION(Constants.DIMENSIONS_NAME, 7, 1, false),
+  DIMENSIONS_SOUND(Constants.DIMENSIONS_NAME, 6, 1, false),
   DTST("DtSt", 7, 1, false),
   EMULSION_ON_FILM("Emulsion on film", 10, 1, false),
   ENTERED("Entered", 1, 6, false),
@@ -174,5 +174,10 @@ public enum ControlFieldItem {
 
   public boolean isArray() {
     return array;
+  }
+
+  private static class Constants {
+    private static final String POSITIVE_NEGATIVE_ASPECT = "Positive/negative aspect";
+    private static final String DIMENSIONS_NAME = "Dimensions";
   }
 }

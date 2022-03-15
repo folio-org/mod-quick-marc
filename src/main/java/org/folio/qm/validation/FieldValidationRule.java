@@ -18,8 +18,8 @@ import org.folio.qm.domain.dto.QuickMarc;
 public abstract class FieldValidationRule implements ValidationRule {
 
   @Override
-  public Optional<ValidationError> validate(QuickMarc record) {
-    return validate(record.getFields());
+  public Optional<ValidationError> validate(QuickMarc qmRecord) {
+    return validate(qmRecord.getFields());
   }
 
   protected abstract Optional<ValidationError> validate(List<FieldItem> fieldItems);

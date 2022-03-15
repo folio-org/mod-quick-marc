@@ -10,7 +10,7 @@ import org.folio.qm.domain.dto.QuickMarc;
 
 public interface ValidationRule {
 
-  Optional<ValidationError> validate(QuickMarc record);
+  Optional<ValidationError> validate(QuickMarc qmRecord);
 
   boolean supportFormat(MarcFormat marcFormat);
 

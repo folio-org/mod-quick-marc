@@ -16,8 +16,8 @@ import org.folio.qm.domain.dto.QuickMarc;
 public abstract class LeaderValidationRule implements ValidationRule {
 
   @Override
-  public Optional<ValidationError> validate(QuickMarc record) {
-    return validate(record.getLeader());
+  public Optional<ValidationError> validate(QuickMarc qmRecord) {
+    return validate(qmRecord.getLeader());
   }
 
   protected abstract Optional<ValidationError> validate(String leader);

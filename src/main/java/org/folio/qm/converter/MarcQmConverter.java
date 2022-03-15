@@ -80,11 +80,11 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
   }
 
   private Record toMarcRecord(String leaderString, List<FieldItem> fields, MarcFormat format) {
-    var record = factory.newRecord();
+    var marcRecord = factory.newRecord();
     fieldsConverter.convertQmFields(fields, format)
-      .forEach(record::addVariableField);
-    record.setLeader(convertLeader(leaderString));
-    return record;
+      .forEach(marcRecord::addVariableField);
+    marcRecord.setLeader(convertLeader(leaderString));
+    return marcRecord;
   }
 
   private Leader convertLeader(String leaderString) {

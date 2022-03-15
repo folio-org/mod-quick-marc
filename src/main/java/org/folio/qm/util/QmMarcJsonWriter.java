@@ -14,10 +14,10 @@ public class QmMarcJsonWriter extends MarcJsonWriter implements AutoCloseable {
   }
 
   @Override
-  public void write(Record record) {
+  public void write(Record marcRecord) {
     var marcStreamWriter = new MarcStreamWriter(new ByteArrayOutputStream());
-    marcStreamWriter.write(record);
+    marcStreamWriter.write(marcRecord);
     marcStreamWriter.close();
-    super.write(record);
+    super.write(marcRecord);
   }
 }

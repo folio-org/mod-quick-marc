@@ -24,7 +24,6 @@ import org.folio.qm.validation.ValidationRule;
 public class ValidationServiceImpl implements ValidationService {
 
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
-  public static final String QM_RECORD_ID_EMPTY_MESSAGE = "Parameter 'qmRecordId' should be not null";
 
   private final List<ValidationRule> validationRules;
 
@@ -49,14 +48,6 @@ public class ValidationServiceImpl implements ValidationService {
     if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
       var error =
         buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
-      throw new ValidationException(error);
-    }
-  }
-
-  @Override
-  public void validateQmRecordId(UUID qmRecordId) {
-    if (qmRecordId == null) {
-      var error = buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, QM_RECORD_ID_EMPTY_MESSAGE);
       throw new ValidationException(error);
     }
   }

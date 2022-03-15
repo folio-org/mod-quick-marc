@@ -39,8 +39,6 @@ public class Tag010FieldItemConverter extends AbstractFieldItemConverter {
       } else if (A_Z_S_3_D_8.matcher(lccnString).matches()) {
         lccnString = lccnString.concat(SPACE);
       }
-    } else {
-      System.out.println(1);
     }
     return new SubfieldImpl(string.charAt(1), lccnString);
   }

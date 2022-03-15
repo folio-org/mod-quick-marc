@@ -33,10 +33,10 @@ public class MarcFieldsConverter {
 
   public List<FieldItem> convertDtoFields(List<VariableField> fields, Leader leader, MarcFormat marcFormat) {
     var controlFields = fields.stream()
-      .filter(field -> field instanceof ControlField)
+      .filter(ControlField.class::isInstance)
       .map(cf -> controlFieldToQuickMarcField((ControlField) cf, leader, marcFormat));
     var dataFields = fields.stream()
-      .filter(field -> field instanceof DataField)
+      .filter(DataField.class::isInstance)
       .map(field -> dataFieldToQuickMarcField((DataField) field, leader, marcFormat));
     return Stream.concat(controlFields, dataFields).collect(Collectors.toList());
   }

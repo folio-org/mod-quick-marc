@@ -7,15 +7,27 @@ import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Optional;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 
 public final class MarcUtils {
 
   private static final DateTimeFormatter DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER =
     DateTimeFormatter.ofPattern("yyyyMMddHHmmss.S");
+
+  public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = HashBiMap.create(Map.of(
+    ParsedRecordDto.RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
+    ParsedRecordDto.RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
+    ParsedRecordDto.RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
+  ));
 
   private MarcUtils() {
   }

@@ -90,7 +90,7 @@ public class Constants {
     TAG_008_CONTROL_FIELD
   );
 
-  public static final List<ControlFieldItem> AUTHORITY_CONTROL_FIELD_ITEMS = Arrays.asList(
+  public static final List<ControlFieldItem> AUTHORITY_CONTROL_FIELD_ITEMS = List.of(
     DATE_ENTERED,
     GEO_SUBD, ROMAN,
     LANG_AUTHORITY, KIND_REC, CAT_RULES, SH_SYS,
@@ -99,7 +99,7 @@ public class Constants {
     REF_EVAL, UNDEF_30, REC_UPD, PERS_NAME,
     LEVEL_EST, UNDEF_34, MOD_REC_EST, SOURCE);
 
-  public static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = Arrays.asList(ACQ_STATUS, ACQ_METHOD,
+  public static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = List.of(ACQ_STATUS, ACQ_METHOD,
     ACQ_ENDDATE, COMPL, COPIES,
     DATE_ENTERED, GEN_RET, LANG_HOLDINGS, LEND, REPRO,
     REPT_DATE, SEP_COMP, SPEC_RET);

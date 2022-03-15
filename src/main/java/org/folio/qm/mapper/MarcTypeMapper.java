@@ -1,5 +1,7 @@
 package org.folio.qm.mapper;
 
+import static org.folio.qm.util.MarcUtils.TYPE_MAP;
+
 import java.util.Map;
 
 import com.google.common.collect.BiMap;
@@ -12,18 +14,12 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 @Mapper(componentModel = "spring")
 public interface MarcTypeMapper {
 
-  BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> typeMap = HashBiMap.create(Map.of(
-    ParsedRecordDto.RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
-    ParsedRecordDto.RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
-    ParsedRecordDto.RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
-  ));
-
   default ParsedRecordDto.RecordTypeEnum toDto(MarcFormat source) {
-    return typeMap.inverse().get(source);
+    return TYPE_MAP.inverse().get(source);
   }
 
   default MarcFormat fromDto(ParsedRecordDto.RecordTypeEnum source) {
-    return typeMap.get(source);
+    return TYPE_MAP.get(source);
   }
 }
 

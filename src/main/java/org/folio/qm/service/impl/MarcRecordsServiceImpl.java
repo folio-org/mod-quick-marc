@@ -64,6 +64,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
+  public CreationStatus deleteByExternalId(UUID externalId) {
+    var recordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
+    return runImportAndGetStatus(recordDto, DELETE);
+  }
+
+  @Override
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcFields(quickMarc);
@@ -73,7 +79,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public CreationStatus getCreationStatusByQmRecordId(UUID qmRecordId) {
-    validationService.validateQmRecordId(qmRecordId);
     return statusService.findById(qmRecordId).map(statusMapper::fromEntity)
       .orElseThrow(() -> new NotFoundException(String.format(RECORD_NOT_FOUND_MESSAGE, qmRecordId)));
   }
@@ -85,10 +90,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     return runImportAndGetStatus(recordDto, CREATE);
   }
 
-  @Override
-  public CreationStatus deleteByExternalId(UUID externalId) {
-    var recordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    return runImportAndGetStatus(recordDto, DELETE);
+  private QuickMarc prepareRecord(QuickMarc quickMarc) {
+    clearFields(quickMarc);
+    updateRecordTimestamp(quickMarc);
+    return quickMarc;
   }
 
   private CreationStatus runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction delete) {
@@ -96,12 +101,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     return statusService.findByJobExecutionId(jobId)
       .map(statusMapper::fromEntity)
       .orElseThrow(() -> new UnexpectedException(String.format(RECORD_NOT_FOUND_MESSAGE, jobId)));
-  }
-
-  private QuickMarc prepareRecord(QuickMarc quickMarc) {
-    clearFields(quickMarc);
-    updateRecordTimestamp(quickMarc);
-    return quickMarc;
   }
 
   private void clearFields(QuickMarc quickMarc) {

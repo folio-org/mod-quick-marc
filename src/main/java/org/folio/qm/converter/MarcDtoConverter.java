@@ -49,11 +49,11 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
   @Override
   public QuickMarc convert(@NonNull ParsedRecordDto source) {
     var parsedRecord = source.getParsedRecord();
-    var record = extractMarcRecord(parsedRecord);
+    var marcRecord = extractMarcRecord(parsedRecord);
 
     var format = typeMapper.fromDto(source.getRecordType());
-    var leader = convertLeader(record);
-    var fields = fieldsConverter.convertDtoFields(record.getVariableFields(), record.getLeader(), format);
+    var leader = convertLeader(marcRecord);
+    var fields = fieldsConverter.convertDtoFields(marcRecord.getVariableFields(), marcRecord.getLeader(), format);
 
     return new QuickMarc()
       .leader(leader)

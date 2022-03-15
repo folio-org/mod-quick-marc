@@ -1,7 +1,5 @@
 package org.folio.qm.converter.elements;
 
-import static org.folio.qm.converter.elements.Constants.BLVL_LEADER_POS;
-import static org.folio.qm.converter.elements.Constants.TYPE_OF_RECORD_LEADER_POS;
 import static org.folio.qm.converter.elements.ControlFieldItem.ACCM;
 import static org.folio.qm.converter.elements.ControlFieldItem.ALPH;
 import static org.folio.qm.converter.elements.ControlFieldItem.AUDN;
@@ -49,7 +47,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public enum MaterialTypeConfiguration {
+public enum Tag008Configuration {
+
   BOOKS("Books", Arrays.asList(ILLS, AUDN, FORM, CONT_B, GPUB, CONF, FEST, INDX, LITF, BIOG)),
   FILES("Computer Files", Arrays.asList(AUDN, FORM, FILE, GPUB)),
   CONTINUING("Continuing Resources", Arrays.asList(FREQ, REGL, SRTP, ORIG, FORM, ENTW, CONT_C, GPUB, CONF, ALPH, SL)),
@@ -63,7 +62,7 @@ public enum MaterialTypeConfiguration {
   private final String name;
   private final List<ControlFieldItem> controlFieldItems;
 
-  MaterialTypeConfiguration(String name, List<ControlFieldItem> controlFieldItems) {
+  Tag008Configuration(String name, List<ControlFieldItem> controlFieldItems) {
     this.name = name;
     this.controlFieldItems = controlFieldItems;
   }
@@ -72,13 +71,7 @@ public enum MaterialTypeConfiguration {
     return Arrays.asList(ENTERED, DTST, DATE1, DATE2, CTRY, LANG, MREC, SRCE);
   }
 
-  public static MaterialTypeConfiguration resolveContentType(String leader) {
-    var typeByte = leader.charAt(TYPE_OF_RECORD_LEADER_POS);
-    var blvlByte = leader.charAt(BLVL_LEADER_POS);
-    return resolveContentType(typeByte, blvlByte);
-  }
-
-  public static MaterialTypeConfiguration resolveContentType(char typeByte, char blvlByte) {
+  public static Tag008Configuration resolveContentType(char typeByte, char blvlByte) {
     switch (typeByte) {
       case 'a':
         return Arrays.asList('b', 'i', 's').contains(blvlByte) ? CONTINUING : BOOKS;

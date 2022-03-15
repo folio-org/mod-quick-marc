@@ -19,7 +19,7 @@ import org.marc4j.marc.Leader;
 import org.marc4j.marc.VariableField;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.converter.elements.MaterialTypeConfiguration;
+import org.folio.qm.converter.elements.Tag008Configuration;
 import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -32,7 +32,7 @@ public class Tag008BibliographicControlFieldConverter implements VariableFieldCo
     var typeOfRecord = leader.getTypeOfRecord();
     var implDefined1 = leader.getImplDefined1();
     var implDefined2 = leader.getImplDefined2();
-    var configuration = MaterialTypeConfiguration.resolveContentType(typeOfRecord, implDefined1[0]);
+    var configuration = Tag008Configuration.resolveContentType(typeOfRecord, implDefined1[0]);
 
     var content = masqueradeBlanks(field.getData());
     var contentMap = new LinkedHashMap<>();
@@ -40,7 +40,7 @@ public class Tag008BibliographicControlFieldConverter implements VariableFieldCo
     contentMap.put(BLVL, change(implDefined1[0]));
     contentMap.put(ELVL, change(implDefined2[0]));
     contentMap.put(DESC, change(implDefined2[1]));
-    contentMap.putAll(fillContentMap(MaterialTypeConfiguration.getCommonItems(), content, -1));
+    contentMap.putAll(fillContentMap(Tag008Configuration.getCommonItems(), content, -1));
     contentMap.putAll(fillContentMap(configuration.getSpecificItems(),
       content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX), -1));
     return new FieldItem().tag(field.getTag()).content(contentMap);

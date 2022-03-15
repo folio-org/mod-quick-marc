@@ -3,7 +3,7 @@ package org.folio.qm.converter.field.qm;
 import static org.folio.qm.converter.elements.Constants.TAG_007_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.ControlFieldItem.CATEGORY;
 import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
-import static org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements.resolveByCode;
+import static org.folio.qm.converter.elements.Tag007Configuration.resolveByCode;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
 import java.util.Map;
@@ -13,7 +13,7 @@ import org.marc4j.marc.VariableField;
 import org.marc4j.marc.impl.ControlFieldImpl;
 import org.springframework.stereotype.Component;
 
-import org.folio.qm.converter.elements.PhysicalDescriptionFixedFieldElements;
+import org.folio.qm.converter.elements.Tag007Configuration;
 import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -36,7 +36,7 @@ public class Tag007FieldItemConverter implements FieldItemConverter {
     var contentMap = (Map<String, Object>) content;
     char code = contentMap.get(CATEGORY.getName()).toString().charAt(0);
     var itemConfig = resolveByCode(code);
-    if (itemConfig.equals(PhysicalDescriptionFixedFieldElements.UNKNOWN)) {
+    if (itemConfig.equals(Tag007Configuration.UNKNOWN)) {
       return contentMap.get(VALUE.getName()).toString();
     } else {
       return restoreFixedLengthField(contentMap, itemConfig.getLength(), 0, itemConfig.getControlFieldItems());

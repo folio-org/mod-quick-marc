@@ -1,6 +1,6 @@
 package org.folio.qm.converter.field.dto;
 
-import static org.folio.qm.converter.elements.AdditionalMaterialConfiguration.resolveByCode;
+import static org.folio.qm.converter.elements.Tag006Configuration.resolveByCode;
 import static org.folio.qm.converter.elements.Constants.TAG_006_CONTROL_FIELD;
 import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
 

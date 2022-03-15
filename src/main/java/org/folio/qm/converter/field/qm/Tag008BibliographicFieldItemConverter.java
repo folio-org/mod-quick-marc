@@ -6,7 +6,7 @@ import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_IN
 import static org.folio.qm.converter.elements.Constants.TAG_006_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
-import static org.folio.qm.converter.elements.MaterialTypeConfiguration.getCommonItems;
+import static org.folio.qm.converter.elements.Tag008Configuration.getCommonItems;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
 import java.util.Map;
@@ -17,7 +17,7 @@ import org.marc4j.marc.impl.ControlFieldImpl;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.converter.elements.ControlFieldItem;
-import org.folio.qm.converter.elements.MaterialTypeConfiguration;
+import org.folio.qm.converter.elements.Tag008Configuration;
 import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -41,14 +41,14 @@ public class Tag008BibliographicFieldItemConverter implements FieldItemConverter
     var type = contentMap.get(ControlFieldItem.TYPE.getName()).toString().charAt(0);
     var blvl = contentMap.get(BLVL).toString().charAt(0);
 
-    var itemConfig = MaterialTypeConfiguration.resolveContentType(type, blvl);
+    var itemConfig = Tag008Configuration.resolveContentType(type, blvl);
     var specificItemsString = getSpecificItemsString(contentMap, itemConfig);
     var commonItemsString = getCommonItemsString(contentMap);
     return new StringBuilder(commonItemsString)
       .replace(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX, specificItemsString).toString();
   }
 
-  private String getSpecificItemsString(Map<String, Object> contentMap, MaterialTypeConfiguration itemConfig) {
+  private String getSpecificItemsString(Map<String, Object> contentMap, Tag008Configuration itemConfig) {
     return restoreFixedLengthField(contentMap, TAG_006_CONTROL_FIELD_LENGTH - 1, -1,
       itemConfig.getSpecificItems());
   }

@@ -18,7 +18,7 @@ public class TestEntitiesUtils {
   public static final String PARSED_RECORD_AUTHORITY_DTO_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDto.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/responce";
   public static final String DI_EVENT_DIR = "mockdata/request/di-event";
-  public static final String DI_COMPLETE_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-autority.json";
+  public static final String DI_COMPLETE_AUTHORITY_DELETE = DI_EVENT_DIR + "/complete-event-with-authority-delete.json";
   public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
   public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";

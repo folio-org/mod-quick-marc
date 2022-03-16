@@ -7,7 +7,7 @@ import static org.awaitility.Durations.ONE_MINUTE;
 import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.support.utils.DBTestUtils.saveCreationStatus;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY_DELETE;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 
 import java.util.UUID;
@@ -40,7 +40,7 @@ class KafkaListenerApiTest extends BaseApiTest {
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithAuthority() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(DI_COMPLETE_AUTHORITY);
+    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(DI_COMPLETE_AUTHORITY_DELETE);
   }
 
   @Test
@@ -97,11 +97,12 @@ class KafkaListenerApiTest extends BaseApiTest {
     UUID statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
 
-    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.CREATED);
 
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
+      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED);
   }

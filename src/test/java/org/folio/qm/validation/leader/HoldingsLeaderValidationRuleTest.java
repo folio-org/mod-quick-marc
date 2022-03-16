@@ -17,7 +17,7 @@ import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 @UnitTest
 class HoldingsLeaderValidationRuleTest {
 
-  private final LeaderValidationRule rule = new HoldingsLeaderValidationRule();
+  private final HoldingsLeaderValidationRule rule = new HoldingsLeaderValidationRule();
 
   private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
   private static final String WRONG_RECORD_STATUS = "00241ex\\\\a2200109zn\\4500";

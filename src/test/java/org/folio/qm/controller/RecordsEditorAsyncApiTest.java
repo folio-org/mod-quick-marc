@@ -34,13 +34,9 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXEC
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH1;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_LEADER_MISMATCH2;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_WITH_INCORRECT_TAG_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_WRONG_ITEM_LENGTH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
@@ -49,6 +45,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getField
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -94,6 +91,13 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(status().isAccepted());
   }
 
+  private String createPayload(String errorMessage) throws JsonProcessingException {
+    var payload = new QmCompletedEventPayload();
+    payload.setRecordId(VALID_PARSED_RECORD_DTO_ID);
+    payload.setErrorMessage(errorMessage);
+    return new ObjectMapper().writeValueAsString(payload);
+  }
+
   @Test
   void testUpdateQuickMarcRecordFailedInEvent() throws Exception {
     RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Failed in external modules =====");
@@ -118,9 +122,14 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(errorMessageMatch(equalTo(errorMessage)));
   }
 
+  private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
+    return jsonPath("$.message", errorMessageMatcher);
+  }
+
   @Test
   void testUpdateQuickMarcRecordFailedInEventByOptimisticLocking() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("==== Verify PUT record: Failed in external modules due to optimistic locking ====");
+    RecordsEditorAsyncApiTest.log.info(
+      "==== Verify PUT record: Failed in external modules due to optimistic locking ====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
@@ -132,11 +141,12 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(request().asyncStarted())
       .andReturn();
 
-    var optimisticLockingErrorMessage = "{ \"message\": \"Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because "
-      + "it has been changed (optimistic locking): Stored _version is 9, _version of request is 8\", \"severity\": "
-      + "\"ERROR\", \"code\": \"23F09\", \"where\": \"PL/pgSQL function instance_set_ol_version() line 8 at RAISE\", "
-      + "\"file\": \"pl_exec.c\", \"line\": \"3855\", \"routine\": \"exec_stmt_raise\", \"schema\": "
-      + "\"diku_mod_inventory_storage\", \"table\": \"instance\" }";
+    var optimisticLockingErrorMessage =
+      "{ \"message\": \"Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because "
+        + "it has been changed (optimistic locking): Stored _version is 9, _version of request is 8\", \"severity\": "
+        + "\"ERROR\", \"code\": \"23F09\", \"where\": \"PL/pgSQL function instance_set_ol_version() line 8 at RAISE\", "
+        + "\"file\": \"pl_exec.c\", \"line\": \"3855\", \"routine\": \"exec_stmt_raise\", \"schema\": "
+        + "\"diku_mod_inventory_storage\", \"table\": \"instance\" }";
     var expectedErrorMessage = "Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because"
       + " it has been changed (optimistic locking): Stored _version is 9, _version of request is 8";
     String eventPayload = createPayload(optimisticLockingErrorMessage);
@@ -185,9 +195,11 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordTagIsInvalid() throws Exception {
     log.info("===== Verify PUT record: Invalid MARC tag.The tag has alphabetic symbols =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_WITH_INCORRECT_TAG_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
+
+    quickMarcJson.getFields().get(0).setTag("001-invalid");
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isBadRequest())
@@ -205,7 +217,8 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(status().isBadRequest())
       .andExpect(errorMessageMatch(containsString("Required request body is missing")));
 
-    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+    wireMockServer.verify(exactly(0),
+      putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
   }
 
   @Test
@@ -214,26 +227,36 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     var field = getFieldWithIndicators(Collections.singletonList(" "));
     var titleField = getFieldWithValue("245", "title");
-    QuickMarc quickMarcJson = getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC)
-      .relatedRecordVersion("1")
-      .parsedRecordId(VALID_PARSED_RECORD_ID)
-      .externalId(UUID.randomUUID());
+    QuickMarc quickMarcJson =
+      getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
+        .marcFormat(MarcFormat.BIBLIOGRAPHIC)
+        .relatedRecordVersion("1")
+        .parsedRecordId(VALID_PARSED_RECORD_ID)
+        .externalId(UUID.randomUUID());
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
-      .andExpect(jsonPath("$.errors[0].message", containsString("Should have exactly 2 indicators")));
+      .andExpect(jsonPath("$.message", containsString("Should have exactly 2 indicators")));
 
-    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+    wireMockServer.verify(exactly(0),
+      putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
   }
 
   @Test
   void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() throws Exception {
     log.info("===== Verify PUT record: Invalid fixed length field items =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_WRONG_ITEM_LENGTH)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
+
+    quickMarcJson.getFields().stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .forEach(fieldItem -> {
+        @SuppressWarnings("unchecked")
+        var content = ((Map<String, Object>) fieldItem.getContent());
+        content.put("Date1", "12345");
+      });
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
@@ -243,20 +266,28 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID))));
   }
 
-  @ParameterizedTest
-  @ValueSource(strings = {QM_LEADER_MISMATCH1, QM_LEADER_MISMATCH2})
-  void testUpdateQuickMarcRecordLeaderMismatch(String filename) throws Exception {
+  @Test
+  void testUpdateQuickMarcRecordLeaderMismatch() throws Exception {
     log.info("===== Verify PUT record: Leader and 008 mismatch =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(filename)
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
+    quickMarcJson.getFields().stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .forEach(fieldItem -> {
+        @SuppressWarnings("unchecked")
+        var content = ((Map<String, Object>) fieldItem.getContent());
+        content.put("Desc", "a");
+      });
+
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
-      .andExpect(errorMessageMatch(equalTo("The Leader and 008 do not match")));
+      .andExpect(jsonPath("$.message", equalTo("The Leader and 008 do not match")));
 
-    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+    wireMockServer.verify(exactly(0),
+      putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
   }
 
   @Test
@@ -305,20 +336,10 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
     RecordsEditorAsyncApiTest.log.info("===== Verify DELETE record: Not found =====");
     mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, wireMockServer);
 
-    wireMockServer.verify(exactly(0), getRequestedFor(urlEqualTo(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID))));
+    wireMockServer.verify(exactly(0),
+      getRequestedFor(urlEqualTo(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID))));
 
     deleteResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
       .andExpect(status().isNotFound());
-  }
-
-  private String createPayload(String errorMessage) throws JsonProcessingException {
-    var payload = new QmCompletedEventPayload();
-    payload.setRecordId(VALID_PARSED_RECORD_DTO_ID);
-    payload.setErrorMessage(errorMessage);
-    return new ObjectMapper().writeValueAsString(payload);
-  }
-
-  private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
-    return jsonPath("$.message", errorMessageMatcher);
   }
 }

@@ -62,7 +62,8 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
     log.info("Process [{}] event for jobExecutionId [{}]", data.getEventType(), jobExecutionId);
     var isUpdated = statusService.updateByJobExecutionId(jobExecutionId, statusUpdate);
     if (isUpdated) {
-      log.info("Record creation status for jobExecutionId [{}] was updated with values [{}]", jobExecutionId, statusUpdate);
+      log.info("Record creation status for jobExecutionId [{}] was updated with values [{}]", jobExecutionId,
+        statusUpdate);
       var importResult = cacheService.getDataImportActionResult(jobExecutionId);
       if (importResult != null) {
         if (statusUpdate.getErrorMessage() == null) {

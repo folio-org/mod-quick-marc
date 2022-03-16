@@ -1,14 +1,8 @@
 package org.folio.qm.validation;
 
+import static org.folio.qm.converter.elements.Constants.COMMON_LEADER_ITEMS;
 import static org.folio.qm.converter.elements.LeaderItem.BASE_ADDRESS;
-import static org.folio.qm.converter.elements.LeaderItem.CODING_SCHEME;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_20;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_21;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_22;
-import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
-import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
 import static org.folio.qm.converter.elements.LeaderItem.RECORD_LENGTH;
-import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +11,18 @@ import java.util.stream.Stream;
 
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.LeaderItem;
-import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarc;
 
-public interface LeaderValidationRule {
+public abstract class LeaderValidationRule implements ValidationRule {
 
-  List<LeaderItem> COMMON_LEADER_ITEMS = List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
-    ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
+  @Override
+  public Optional<ValidationError> validate(QuickMarc qmRecord) {
+    return validate(qmRecord.getLeader());
+  }
 
-  boolean supportFormat(MarcFormat marcFormat);
+  protected abstract Optional<ValidationError> validate(String leader);
 
-  Optional<ValidationError> validate(String leader);
-
-  default Optional<ValidationError> commonLeaderValidation(String leader, List<LeaderItem> leaderItems) {
+  protected Optional<ValidationError> commonLeaderValidation(String leader, List<LeaderItem> leaderItems) {
     List<LeaderItem> summaryLeaderItems = new ArrayList<>(COMMON_LEADER_ITEMS);
     summaryLeaderItems.addAll(leaderItems);
     return Stream.of(
@@ -41,7 +35,7 @@ public interface LeaderValidationRule {
       .findFirst();
   }
 
-  default Optional<ValidationError> validateLeaderFieldsRestrictions(String leader, List<LeaderItem> leaderItems) {
+  protected Optional<ValidationError> validateLeaderFieldsRestrictions(String leader, List<LeaderItem> leaderItems) {
     return leaderItems.stream()
       .filter(item -> !isValidLeaderValue(leader, item))
       .findFirst()
@@ -55,8 +49,8 @@ public interface LeaderValidationRule {
 
   private Optional<ValidationError> validateLeaderLength(String leader) {
     return Constants.LEADER_LENGTH == leader.length()
-      ? Optional.empty()
-      : Optional.of(createValidationError(leader, "Wrong leader length"));
+           ? Optional.empty()
+           : Optional.of(createValidationError(leader, "Wrong leader length"));
   }
 
   private Optional<ValidationError> validateLeaderNumberFields(String leader, int start, int length) {
@@ -74,7 +68,4 @@ public interface LeaderValidationRule {
       || item.getPossibleValues().contains(Character.toLowerCase(leader.charAt(item.getPosition())));
   }
 
-  private ValidationError createValidationError(String fieldName, String message) {
-    return new ValidationError(fieldName, message);
-  }
 }

@@ -6,14 +6,7 @@
   "properties": {
     "recordState": {
       "description": "State of source record in QM workflow",
-      "type": "string",
-      "enum": [
-        "ACTUAL",
-        "IN_PROGRESS",
-        "ERROR"
-      ],
-      "default": "ACTUAL",
-      "example": "ERROR"
+      "$ref": "recordState.json"
     },
     "updateDate": {
       "description": "Date and time of last successful update of the record",

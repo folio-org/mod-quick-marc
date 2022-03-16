@@ -31,7 +31,8 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
   private final FolioModuleMetadata folioModuleMetadata;
 
   @Override
-  public Object postProcessBeforeInitialization(@Nullable Object bean, @Nullable String beanName) throws BeansException {
+  public Object postProcessBeforeInitialization(@Nullable Object bean, @Nullable String beanName)
+    throws BeansException {
     if (bean instanceof DataImportEventListener) {
       ProxyFactoryBean pfb = new ProxyFactoryBean();
       pfb.setTarget(bean);
@@ -98,7 +99,7 @@ public class EventListenerBeanPostProcessor implements BeanPostProcessor {
   private String getHeaderValue(MessageHeaders headers, String headerName) {
     var headerValue = headers.get(headerName);
     return headerValue == null
-      ? null
-      : new String((byte[]) headerValue, StandardCharsets.UTF_8);
+           ? null
+           : new String((byte[]) headerValue, StandardCharsets.UTF_8);
   }
 }

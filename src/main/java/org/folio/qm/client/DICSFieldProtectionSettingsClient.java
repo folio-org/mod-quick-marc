@@ -10,6 +10,6 @@ import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 public interface DICSFieldProtectionSettingsClient {
 
   @GetMapping(value = "/marc?limit=1000", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
-  MarcFieldProtectionSettingsCollection getFieldProtectionSettingsMarc();
+  MarcFieldProtectionSettingsCollection getFieldProtectionSettings();
 
 }

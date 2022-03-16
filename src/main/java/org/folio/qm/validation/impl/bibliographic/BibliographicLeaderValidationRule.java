@@ -18,10 +18,11 @@ import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 
 @Component
-public class BibliographicLeaderValidationRule implements LeaderValidationRule {
+public class BibliographicLeaderValidationRule extends LeaderValidationRule {
 
-  private static final List<LeaderItem> BIBLIOGRAPHIC_LEADER_ITEMS = List.of(BIB_RECORD_STATUS, BIB_RECORD_TYPE, BIBLIOGRAPHIC_LEVEL,
-    CONTROL_TYPE, CATALOGING_FORM, RESOURCE_RECORD_LEVEL);
+  private static final List<LeaderItem> BIBLIOGRAPHIC_LEADER_ITEMS =
+    List.of(BIB_RECORD_STATUS, BIB_RECORD_TYPE, BIBLIOGRAPHIC_LEVEL,
+      CONTROL_TYPE, CATALOGING_FORM, RESOURCE_RECORD_LEVEL);
 
   @Override
   public boolean supportFormat(MarcFormat marcFormat) {

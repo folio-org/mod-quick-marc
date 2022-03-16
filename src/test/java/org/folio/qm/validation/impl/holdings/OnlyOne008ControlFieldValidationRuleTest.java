@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,32 +28,8 @@ class OnlyOne008ControlFieldValidationRuleTest {
 
   @Test
   void testGeneralInformationControlFieldValidationRuleForHoldings() {
-    testGeneralInformationControlFieldValidationRule("Testing Holdings General Information Validation rule", QM_RECORD_HOLDINGS);
-  }
-
-  @Test
-  void testGeneralInformationControlFieldValidationRuleForBib() {
-    testGeneralInformationControlFieldValidationRule("Testing Bib General Information Validation rule", QM_RECORD_BIB_PATH);
-  }
-
-  @Test
-  void testGeneralInformationControlFieldValidationRuleForAuthority() {
-    testGeneralInformationControlFieldValidationRule("Testing Authority General Information Validation rule", QM_RECORD_AUTHORITY_PATH);
-  }
-
-  @Test
-  void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForHoldings() {
-    testGeneralInformationControlFieldValidationRuleInvalidAmountOfField("Testing Holdings General Information Validation rule - two 008 fields", QM_RECORD_HOLDINGS);
-  }
-
-  @Test
-  void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForAuthority() {
-    testGeneralInformationControlFieldValidationRuleInvalidAmountOfField("Testing Authority General Information Validation rule - two 008 fields", QM_RECORD_AUTHORITY_PATH);
-  }
-
-  @Test
-  void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForBib() {
-    testGeneralInformationControlFieldValidationRuleInvalidAmountOfField("Testing Bib General Information Validation rule - two 008 fields", QM_RECORD_BIB_PATH);
+    testGeneralInformationControlFieldValidationRule("Testing Holdings General Information Validation rule",
+      QM_RECORD_HOLDINGS_PATH);
   }
 
   private void testGeneralInformationControlFieldValidationRule(String s, String qmRecordHoldings) {
@@ -61,6 +37,24 @@ class OnlyOne008ControlFieldValidationRuleTest {
     var rule = new OnlyOne008ControlFieldValidationRule();
     QuickMarc quickMarc = getMockAsObject(qmRecordHoldings, QuickMarc.class);
     assertDoesNotThrow(() -> rule.validate(quickMarc.getFields()));
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleForBib() {
+    testGeneralInformationControlFieldValidationRule("Testing Bib General Information Validation rule",
+      QM_RECORD_BIB_PATH);
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleForAuthority() {
+    testGeneralInformationControlFieldValidationRule("Testing Authority General Information Validation rule",
+      QM_RECORD_AUTHORITY_PATH);
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForHoldings() {
+    testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(
+      "Testing Holdings General Information Validation rule - two 008 fields", QM_RECORD_HOLDINGS_PATH);
   }
 
   private void testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(String log, String qmRecordPath) {
@@ -73,5 +67,17 @@ class OnlyOne008ControlFieldValidationRuleTest {
     assertTrue(validationError.isPresent());
     assertThat(validationError.get().getTag(), Is.is("008"));
     assertThat(validationError.get().getMessage(), Is.is("Is unique tag"));
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForAuthority() {
+    testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(
+      "Testing Authority General Information Validation rule - two 008 fields", QM_RECORD_AUTHORITY_PATH);
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForBib() {
+    testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(
+      "Testing Bib General Information Validation rule - two 008 fields", QM_RECORD_BIB_PATH);
   }
 }

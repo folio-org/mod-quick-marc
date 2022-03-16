@@ -1,6 +1,6 @@
 package org.folio.qm.validation.impl.holdings;
 
-import static org.folio.qm.converter.elements.Constants.GENERAL_INFORMATION_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class OnlyOne008ControlFieldValidationRule extends AbstractHoldingsValida
 
   @Override
   public Optional<ValidationError> validate(List<FieldItem> fieldItems) {
-    var fieldsWith008TagCode = filterFieldsByTagCode(fieldItems, GENERAL_INFORMATION_CONTROL_FIELD);
-    return onlyOneRequiredCondition().apply(GENERAL_INFORMATION_CONTROL_FIELD, fieldsWith008TagCode);
+    var fieldsWith008TagCode = filterFieldsByTagCode(fieldItems, TAG_008_CONTROL_FIELD);
+    return onlyOneRequiredCondition().apply(TAG_008_CONTROL_FIELD, fieldsWith008TagCode);
   }
 }

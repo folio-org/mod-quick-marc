@@ -17,7 +17,7 @@ import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
 @UnitTest
 class AuthorityLeaderValidationRuleTest {
 
-  private final LeaderValidationRule rule = new AuthorityLeaderValidationRule();
+  private final AuthorityLeaderValidationRule rule = new AuthorityLeaderValidationRule();
 
   private static final String VALID_LEADER = "00241xz\\\\a2200109nu\\4500";
   private static final String WRONG_RECORD_STATUS = "00241zz\\\\a2200109nu\\4500";

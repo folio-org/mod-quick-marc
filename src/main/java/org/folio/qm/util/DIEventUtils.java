@@ -15,23 +15,29 @@ import org.folio.qm.domain.dto.DataImportEventPayload;
 public class DIEventUtils {
 
   public static Optional<UUID> extractExternalId(DataImportEventPayload data, ObjectMapper mapper) {
-    return extractRecordId(data, FolioRecord.INSTANCE, mapper)
-      .or(() -> extractRecordId(data, FolioRecord.HOLDINGS, mapper))
-      .or(() -> extractRecordId(data, FolioRecord.AUTHORITY, mapper));
+    return extractRecordIdFromRecord(data, FolioRecord.INSTANCE, mapper)
+      .or(() -> extractRecordIdFromRecord(data, FolioRecord.HOLDINGS, mapper))
+      .or(() -> extractRecordIdFromRecord(data, FolioRecord.AUTHORITY, mapper))
+      .or(() -> extractRecordIdFromField(data, FolioRecord.AUTHORITY));
+  }
+
+  private static Optional<UUID> extractRecordIdFromField(DataImportEventPayload data, FolioRecord folioRecord) {
+    return Optional.ofNullable(data.getContext().get(folioRecord.getValue() + "_RECORD_ID"))
+      .map(UUID::fromString);
   }
 
   public static Optional<UUID> extractMarcId(DataImportEventPayload data, ObjectMapper mapper) {
-    return extractRecordId(data, FolioRecord.MARC_BIBLIOGRAPHIC, mapper)
-      .or(() -> extractRecordId(data, FolioRecord.MARC_HOLDINGS, mapper))
-      .or(() -> extractRecordId(data, FolioRecord.MARC_AUTHORITY, mapper));
+    return extractRecordIdFromRecord(data, FolioRecord.MARC_BIBLIOGRAPHIC, mapper)
+      .or(() -> extractRecordIdFromRecord(data, FolioRecord.MARC_HOLDINGS, mapper))
+      .or(() -> extractRecordIdFromRecord(data, FolioRecord.MARC_AUTHORITY, mapper));
   }
 
   public static Optional<String> extractErrorMessage(DataImportEventPayload data) {
     return Optional.ofNullable(data.getContext().get("ERROR"));
   }
 
-  public static Optional<UUID> extractRecordId(DataImportEventPayload data, FolioRecord folioRecord,
-                                               ObjectMapper mapper) {
+  public static Optional<UUID> extractRecordIdFromRecord(DataImportEventPayload data, FolioRecord folioRecord,
+                                                         ObjectMapper mapper) {
     return Optional.ofNullable(data.getContext().get(folioRecord.getValue()))
       .map(recordInJson -> {
         try {

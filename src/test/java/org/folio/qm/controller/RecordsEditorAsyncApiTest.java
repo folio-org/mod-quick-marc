@@ -28,7 +28,7 @@ import static org.folio.qm.support.utils.APITestUtils.recordsEditorResourceByIdP
 import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.support.utils.IOTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY_DELETE;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
@@ -310,7 +310,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(request().asyncStarted())
       .andReturn();
 
-    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY, DI_COMPLETE_TOPIC_NAME);
+    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
 
     mockMvc
       .perform(asyncDispatch(result))

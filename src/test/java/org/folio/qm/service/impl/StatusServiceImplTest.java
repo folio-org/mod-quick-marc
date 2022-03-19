@@ -26,13 +26,13 @@ import org.folio.qm.support.types.UnitTest;
   MockitoExtension.class,
   RandomBeansExtension.class
 })
-class CreationStatusServiceImplTest {
+class StatusServiceImplTest {
 
   @Mock
   private RecordCreationStatusRepository statusRepository;
 
   @InjectMocks
-  private CreationStatusServiceImpl service;
+  private StatusServiceImpl service;
 
   @Test
   void shouldReturnStatusById(@Random UUID id, @Random RecordCreationStatus statusDto) {

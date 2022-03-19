@@ -24,7 +24,7 @@ import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.ChangeManagerService;
-import org.folio.qm.service.CreationStatusService;
+import org.folio.qm.service.StatusService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.FieldProtectionSetterService;
 import org.folio.qm.service.MarcRecordsService;
@@ -41,7 +41,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final DataImportJobService dataImportJobService;
   private final UsersClient usersClient;
   private final ValidationService validationService;
-  private final CreationStatusService statusService;
+  private final StatusService statusService;
   private final FieldProtectionSetterService protectionSetterService;
 
   private final CreationStatusMapper statusMapper;

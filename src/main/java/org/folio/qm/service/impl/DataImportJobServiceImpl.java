@@ -18,7 +18,7 @@ import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.service.ChangeManagerService;
-import org.folio.qm.service.CreationStatusService;
+import org.folio.qm.service.StatusService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.JobProfileService;
 import org.folio.spring.FolioExecutionContext;
@@ -34,7 +34,7 @@ public class DataImportJobServiceImpl implements DataImportJobService {
   );
 
   private final ChangeManagerService changeManagerService;
-  private final CreationStatusService statusService;
+  private final StatusService statusService;
   private final JobProfileService jobProfileService;
   private final FolioExecutionContext folioExecutionContext;
 

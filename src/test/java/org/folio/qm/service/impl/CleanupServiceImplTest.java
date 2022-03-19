@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.holder.impl.TenantsHolderImpl;
 import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.util.TenantUtils;
+import org.folio.qm.util.TenantContextUtils;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
 import org.folio.spring.scope.FolioExecutionScopeExecutionContextManager;
@@ -42,7 +42,7 @@ class CleanupServiceImplTest {
   private TenantsHolder tenantsHolder = new TenantsHolderImpl();
 
   @Mock
-  private CreationStatusServiceImpl creationStatusService;
+  private StatusServiceImpl creationStatusService;
 
   @InjectMocks
   private CleanupServiceImpl cleanupService;
@@ -60,14 +60,14 @@ class CleanupServiceImplTest {
   void shouldClearDataForAllTenants() {
     try (
       var contextManager = mockStatic(FolioExecutionScopeExecutionContextManager.class);
-      var tenantUtils = mockStatic(TenantUtils.class)
+      var tenantUtils = mockStatic(TenantContextUtils.class)
     ) {
-      tenantUtils.when(() -> TenantUtils.getFolioExecutionContextCopyForTenant(any(), any()))
+      tenantUtils.when(() -> TenantContextUtils.getFolioExecutionContextCopyForTenant(any(), any()))
         .thenReturn(context);
 
       cleanupService.clearCreationStatusesForAllTenants();
 
-      tenantUtils.verify(() -> TenantUtils.getFolioExecutionContextCopyForTenant(any(), any()),
+      tenantUtils.verify(() -> TenantContextUtils.getFolioExecutionContextCopyForTenant(any(), any()),
         times(tenantsHolder.count()));
       contextManager.verify(() -> FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext(context),
         times(tenantsHolder.count()));

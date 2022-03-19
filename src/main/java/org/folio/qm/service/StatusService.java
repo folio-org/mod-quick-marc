@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 
-public interface CreationStatusService {
+public interface StatusService {
 
   Optional<RecordCreationStatus> findById(UUID qmRecordId);
 

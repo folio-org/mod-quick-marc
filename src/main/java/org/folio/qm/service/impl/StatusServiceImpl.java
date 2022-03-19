@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.domain.repository.RecordCreationStatusRepository;
-import org.folio.qm.service.CreationStatusService;
+import org.folio.qm.service.StatusService;
 
 @Service
 @RequiredArgsConstructor
-public class CreationStatusServiceImpl implements CreationStatusService {
+public class StatusServiceImpl implements StatusService {
 
   private final RecordCreationStatusRepository statusRepository;
 

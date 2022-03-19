@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
-import org.folio.qm.service.CreationStatusService;
+import org.folio.qm.service.StatusService;
 import org.folio.qm.service.EventProcessingService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.tenant.domain.dto.Error;
@@ -26,7 +26,7 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
   private static final String INSTANCE_ID_MISSED_MESSAGE = "Instance ID is missed in event payload";
   private static final String ERROR_MISSED_MESSAGE = "Error message is missed in event payload";
 
-  private final CreationStatusService statusService;
+  private final StatusService statusService;
   private final ObjectMapper objectMapper;
   private final DeferredResultCacheService cacheService;
 

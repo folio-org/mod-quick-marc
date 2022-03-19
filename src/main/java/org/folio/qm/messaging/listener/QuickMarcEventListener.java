@@ -1,5 +1,9 @@
 package org.folio.qm.messaging.listener;
 
+import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromQMEvent;
+import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
+import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,11 +13,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.qm.util.ErrorUtils;
+import org.folio.spring.FolioModuleMetadata;
 import org.folio.tenant.domain.dto.Error;
 
 @Log4j2
@@ -24,6 +30,7 @@ public class QuickMarcEventListener {
   public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
 
   private final ObjectMapper objectMapper;
+  private final FolioModuleMetadata moduleMetadata;
   private final DeferredResultCacheService deferredResultCacheService;
 
   @KafkaListener(
@@ -32,9 +39,18 @@ public class QuickMarcEventListener {
     topicPattern = "#{folioKafkaProperties.listener['qm-completed'].topicPattern}",
     concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
-  public void qmCompletedListener(QmCompletedEventPayload data) throws JsonProcessingException {
+  public void qmCompletedListener(QmCompletedEventPayload data, MessageHeaders headers) {
+    try {
+      beginFolioExecutionContext(getFolioExecutionContextFromQMEvent(headers, moduleMetadata));
+      processEvent(data);
+    } finally {
+      endFolioExecutionContext();
+    }
+  }
+
+  private void processEvent(QmCompletedEventPayload data) {
     var recordId = data.getRecordId();
-    log.info("QM_COMPLETED received for record id [{}]", recordId);
+    log.info("Process [QM_COMPLETED] event for recordId [{}]", recordId);
     var deferredResult = deferredResultCacheService.getUpdateActionResult(recordId);
     if (deferredResult != null) {
       if (data.isSucceed()) {
@@ -44,8 +60,7 @@ public class QuickMarcEventListener {
         if (isOptimisticLockingError(errorMessage)) {
           deferredResult.setErrorResult(buildOptimisticLockingErrorResponse(errorMessage));
         } else {
-          ResponseEntity<Error> body = buildCommonErrorResponse(errorMessage);
-          deferredResult.setErrorResult(body);
+          deferredResult.setErrorResult(buildCommonErrorResponse(errorMessage));
         }
       }
     }
@@ -58,10 +73,14 @@ public class QuickMarcEventListener {
   }
 
   @NotNull
-  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage)
-    throws JsonProcessingException {
-    var errorNode = objectMapper.readTree(errorMessage);
-    var message = errorNode.get("message").asText();
+  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage) {
+    String message;
+    try {
+      var errorNode = objectMapper.readTree(errorMessage);
+      message = errorNode.get("message").asText();
+    } catch (JsonProcessingException e) {
+      message = "Failed due to optimistic locking";
+    }
     var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, message);
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }

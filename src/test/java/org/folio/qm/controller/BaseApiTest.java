@@ -41,7 +41,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.qm.support.extension.EnableKafka;
 import org.folio.qm.support.extension.EnablePostgres;
 import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;

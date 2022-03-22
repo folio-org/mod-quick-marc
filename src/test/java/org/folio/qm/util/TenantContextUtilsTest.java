@@ -3,7 +3,7 @@ package org.folio.qm.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
-import static org.folio.qm.util.TenantUtils.getFolioExecutionContextCopyForTenant;
+import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextCopyForTenant;
 
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
 
 @UnitTest
-class TenantUtilsTest {
+class TenantContextUtilsTest {
 
   @Test
   void shouldSetTenantIdIfHeadersPassed() {

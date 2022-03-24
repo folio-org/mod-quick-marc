@@ -66,7 +66,7 @@ import org.folio.qm.support.types.IntegrationTest;
 
 @Log4j2
 @IntegrationTest
-public class RecordsEditorAsyncApiTest extends BaseApiTest {
+class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
@@ -93,7 +93,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   private String createPayload(String errorMessage) throws JsonProcessingException {
     var payload = new QmCompletedEventPayload();
-    payload.setRecordId(VALID_PARSED_RECORD_DTO_ID);
+    payload.setRecordId(VALID_PARSED_RECORD_ID);
     payload.setErrorMessage(errorMessage);
     return new ObjectMapper().writeValueAsString(payload);
   }

@@ -275,7 +275,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   private String createPayload(String errorMessage) throws JsonProcessingException {
     var payload = new QmCompletedEventPayload();
-    payload.setRecordId(VALID_PARSED_RECORD_DTO_ID);
+    payload.setRecordId(VALID_PARSED_RECORD_ID);
     payload.setErrorMessage(errorMessage);
     return new ObjectMapper().writeValueAsString(payload);
   }

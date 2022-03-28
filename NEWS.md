@@ -1,3 +1,8 @@
+## 2.3.2 - Released
+
+### Changes
+* [MODQM-213](https://issues.folio.org/browse/MODQM-213) - Fix problem with record 2nd update
+
 ## 2.3.1 - Released
 
 ### Changes

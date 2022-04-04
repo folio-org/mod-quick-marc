@@ -18,12 +18,12 @@ public class DeferredResultCacheService {
   @Cacheable(cacheNames = QM_UPDATE_RESULT_CACHE, key = "@folioExecutionContext.tenantId + ':' + #recordId")
   public DeferredResult<ResponseEntity<Void>> getUpdateActionResult(UUID recordId) {
     log.info("New DeferredResult was created for [UPDATE] action and [{}] recordId", recordId);
-    return new DeferredResult<>();
+    return new DeferredResult<>(60000L);
   }
 
   @Cacheable(cacheNames = DATA_IMPORT_RESULT_CACHE, key = "@folioExecutionContext.tenantId + ':' + #jobId")
   public DeferredResult<ResponseEntity<Void>> getDataImportActionResult(UUID jobId) {
     log.info("New DeferredResult was created for [DELETE] action and [{}] jobId", jobId);
-    return new DeferredResult<>();
+    return new DeferredResult<>(60000L);
   }
 }

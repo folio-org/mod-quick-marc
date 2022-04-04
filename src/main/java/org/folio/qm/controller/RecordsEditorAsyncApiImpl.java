@@ -25,8 +25,6 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
   @Override
   public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarc quickMarc) {
     var deferredResult = new DeferredResult<ResponseEntity<Void>>(60000L);
-    deferredResult.onTimeout(() -> deferredResult
-      .setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Request timeout occurred.")));
 
     cacheService.putToCache(String.valueOf(id), deferredResult);
     marcRecordsService.updateById(id, quickMarc);

@@ -3,6 +3,7 @@ package org.folio.qm.controller;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,9 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
 
   @Override
   public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarc quickMarc) {
-    var deferredResult = new DeferredResult<ResponseEntity<Void>>();
+    var deferredResult = new DeferredResult<ResponseEntity<Void>>(60000L);
+    deferredResult.onTimeout(() -> deferredResult
+      .setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Request timeout occurred.")));
 
     cacheService.putToCache(String.valueOf(id), deferredResult);
     marcRecordsService.updateById(id, quickMarc);

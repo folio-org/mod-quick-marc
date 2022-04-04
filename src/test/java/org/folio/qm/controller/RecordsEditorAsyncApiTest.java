@@ -104,20 +104,36 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(request().asyncStarted())
       .andReturn();
 
-    var optimisticLockingErrorMessage = "{ \"message\": \"Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because "
-      + "it has been changed (optimistic locking): Stored _version is 9, _version of request is 8\", \"severity\": "
-      + "\"ERROR\", \"code\": \"23F09\", \"where\": \"PL/pgSQL function instance_set_ol_version() line 8 at RAISE\", "
-      + "\"file\": \"pl_exec.c\", \"line\": \"3855\", \"routine\": \"exec_stmt_raise\", \"schema\": "
-      + "\"diku_mod_inventory_storage\", \"table\": \"instance\" }";
     var expectedErrorMessage = "Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because"
       + " it has been changed (optimistic locking): Stored _version is 9, _version of request is 8";
-    String eventPayload = createPayload(optimisticLockingErrorMessage);
+    String eventPayload = createPayload(expectedErrorMessage);
     sendQMKafkaRecord(eventPayload, QM_COMPLETE_TOPIC_NAME);
     mockMvc
       .perform(asyncDispatch(result))
       .andExpect(status().isConflict())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(expectedErrorMessage)));
+  }
+
+  @Test
+  void testUpdateQuickMarcRecordFailedWhenNoQmCompletedEventComes() throws Exception {
+    RecordsEditorAsyncApiTest.log.info("==== Verify PUT record: Failed in external modules due to optimistic locking ====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    MvcResult result = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(request().asyncStarted())
+      .andReturn();
+
+    mockMvc
+      .perform(asyncDispatch(result))
+      .andExpect(status().isRequestTimeout())
+      .andDo(log())
+      .andExpect(errorMessageMatch(equalTo("Request timeout occurred.")));
   }
 
   @Test

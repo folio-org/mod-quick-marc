@@ -117,7 +117,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @Test
   void testUpdateQuickMarcRecordFailedWhenNoQmCompletedEventComes() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("==== Verify PUT record: Failed in external modules due to optimistic locking ====");
+    RecordsEditorAsyncApiTest.log.info("==== Verify PUT record: Failed in external modules due to request timeout====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
@@ -133,7 +133,7 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
       .perform(asyncDispatch(result))
       .andExpect(status().isRequestTimeout())
       .andDo(log())
-      .andExpect(errorMessageMatch(equalTo("Request timeout occurred.")));
+      .andExpect(errorMessageMatch(equalTo("Request timeout occurred")));
   }
 
   @Test

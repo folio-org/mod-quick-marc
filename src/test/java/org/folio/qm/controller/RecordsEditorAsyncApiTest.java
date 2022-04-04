@@ -116,27 +116,6 @@ public class RecordsEditorAsyncApiTest extends BaseApiTest {
   }
 
   @Test
-  void testUpdateQuickMarcRecordFailedWhenNoQmCompletedEventComes() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("==== Verify PUT record: Failed in external modules due to request timeout====");
-
-    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
-
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
-    MvcResult result = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
-      .andExpect(request().asyncStarted())
-      .andReturn();
-
-    mockMvc
-      .perform(asyncDispatch(result))
-      .andExpect(status().isRequestTimeout())
-      .andDo(log())
-      .andExpect(errorMessageMatch(equalTo("Request timeout occurred")));
-  }
-
-  @Test
   void testUpdateQuickMarcRecordWrongUuid() throws Exception {
     RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Not found =====");
     UUID wrongUUID = UUID.randomUUID();

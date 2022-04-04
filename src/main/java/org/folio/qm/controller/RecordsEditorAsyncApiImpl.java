@@ -23,7 +23,7 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
 
   @Override
   public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarc quickMarc) {
-    var deferredResult = new DeferredResult<ResponseEntity<Void>>();
+    var deferredResult = new DeferredResult<ResponseEntity<Void>>(60000L);
 
     cacheService.putToCache(String.valueOf(id), deferredResult);
     marcRecordsService.updateById(id, quickMarc);

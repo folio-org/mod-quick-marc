@@ -2,8 +2,6 @@ package org.folio.qm.messaging.listener;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,6 @@ public class QuickMarcEventListener {
   public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
 
   private final CacheService<DeferredResult> cacheService;
-  private final ObjectMapper objectMapper;
 
   @KafkaListener(
     id = QM_COMPLETED_LISTENER_ID,
@@ -34,7 +31,7 @@ public class QuickMarcEventListener {
     topicPattern = "#{folioKafkaProperties.listener['qm-completed'].topicPattern}",
     concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
-  public void qmCompletedListener(QmCompletedEventPayload data) throws JsonProcessingException {
+  public void qmCompletedListener(QmCompletedEventPayload data) {
     var recordId = data.getRecordId();
     log.info("QM_COMPLETED received for record id [{}]", recordId);
     DeferredResult deferredResult = cacheService.getFromCache(String.valueOf(recordId));
@@ -61,10 +58,8 @@ public class QuickMarcEventListener {
   }
 
   @NotNull
-  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage) throws JsonProcessingException {
-    var errorNode = objectMapper.readTree(errorMessage);
-    var message = errorNode.get("message").asText();
-    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, message);
+  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage) {
+    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, errorMessage);
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 

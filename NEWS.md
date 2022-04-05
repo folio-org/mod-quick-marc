@@ -1,3 +1,8 @@
+## 2.3.3 - Released
+
+### Changes
+* [MODQM-218](https://issues.folio.org/browse/MODQM-218) - Fix OL handling and improve timeout handling
+
 ## 2.3.2 - Released
 
 ### Changes

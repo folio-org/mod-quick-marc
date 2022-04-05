@@ -6,8 +6,6 @@ import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -29,7 +27,6 @@ public class QuickMarcEventListener {
 
   public static final String QM_COMPLETED_LISTENER_ID = "quick-marc-qm-completed-listener";
 
-  private final ObjectMapper objectMapper;
   private final FolioModuleMetadata moduleMetadata;
   private final DeferredResultCacheService deferredResultCacheService;
 
@@ -74,14 +71,7 @@ public class QuickMarcEventListener {
 
   @NotNull
   private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage) {
-    String message;
-    try {
-      var errorNode = objectMapper.readTree(errorMessage);
-      message = errorNode.get("message").asText();
-    } catch (JsonProcessingException e) {
-      message = "Failed due to optimistic locking";
-    }
-    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, message);
+    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, errorMessage);
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 

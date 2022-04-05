@@ -22,6 +22,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import org.folio.qm.exception.FieldsValidationException;
@@ -125,6 +126,12 @@ public class ErrorHandling {
     log.warn(e.getMessage());
     var message = String.format(CONSTRAINT_VIOLATION_MSG_PATTERN, e.getMessage());
     return buildError(HttpStatus.BAD_REQUEST, INTERNAL, message);
+  }
+
+  @ExceptionHandler(AsyncRequestTimeoutException.class)
+  @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
+  public Error handleAsyncRequestTimeoutException(AsyncRequestTimeoutException e) {
+    return buildError(HttpStatus.REQUEST_TIMEOUT, INTERNAL, "Request timeout occurred");
   }
 
   @ExceptionHandler(Exception.class)

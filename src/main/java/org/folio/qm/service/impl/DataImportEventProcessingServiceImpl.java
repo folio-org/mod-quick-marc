@@ -71,6 +71,7 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
         } else {
           importResult.setErrorResult(buildErrorResponse(statusUpdate.getErrorMessage()));
         }
+        cacheService.evictDataImportActionResult(jobExecutionId);
       }
     }
   }

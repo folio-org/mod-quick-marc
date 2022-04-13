@@ -141,12 +141,23 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
       .andExpect(request().asyncStarted())
       .andReturn();
 
-    var expectedErrorMessage = "Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because"
-      + " it has been changed (optimistic locking): Stored _version is 9, _version of request is 8";
-    String eventPayload = createPayload(expectedErrorMessage);
+    String eventPayload = createPayload(null);
     sendQMKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
+      .andDo(log())
+      .andExpect(status().isAccepted());
+
+    MvcResult result2 = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(request().asyncStarted())
+      .andReturn();
+
+    var expectedErrorMessage = "Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because"
+      + " it has been changed (optimistic locking): Stored _version is 9, _version of request is 8";
+    String eventPayload2 = createPayload(expectedErrorMessage);
+    sendQMKafkaRecord(eventPayload2);
+    mockMvc
+      .perform(asyncDispatch(result2))
       .andExpect(status().isConflict())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(expectedErrorMessage)));

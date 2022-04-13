@@ -60,6 +60,7 @@ public class QuickMarcEventListener {
           deferredResult.setErrorResult(buildCommonErrorResponse(errorMessage));
         }
       }
+      deferredResultCacheService.evictUpdateActionResult(recordId);
     }
   }
 

@@ -9,6 +9,6 @@ public interface ValidationService {
 
   ValidationResult validate(QuickMarc quickMarc);
 
-  void validateIdsMatch(QuickMarc quickMarc, UUID externalId);
+  void validateIdsMatch(QuickMarc quickMarc, UUID recordId);
 
 }

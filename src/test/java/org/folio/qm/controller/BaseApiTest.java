@@ -1,6 +1,8 @@
 package org.folio.qm.controller;
 
 import static java.util.Objects.requireNonNull;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -8,9 +10,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.support.utils.IOTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
@@ -18,12 +22,19 @@ import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matcher;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,15 +43,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.requestreply.CorrelationKey;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 
+import org.folio.qm.domain.entity.ActionStatusEnum;
+import org.folio.qm.messaging.domain.Event;
 import org.folio.qm.support.extension.EnableKafka;
 import org.folio.qm.support.extension.EnablePostgres;
 import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;
@@ -61,11 +79,12 @@ class BaseApiTest {
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
   protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
+  protected static final UUID defaultCorrelationId = UUID.randomUUID();
 
   private static boolean dbInitialized = false;
 
   @Autowired
-  protected WireMockServer wireMockServer;
+  protected WireMockServer mockServer;
   @Autowired
   protected FolioModuleMetadata metadata;
   @Autowired
@@ -94,7 +113,7 @@ class BaseApiTest {
 
   @AfterEach
   void afterEach() {
-    this.wireMockServer.resetAll();
+    this.mockServer.resetAll();
   }
 
   protected ResultActions getResultActions(String uri) throws Exception {
@@ -140,7 +159,7 @@ class BaseApiTest {
   protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
     var jsonObject = new JSONObject();
     jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
-    String message = jsonObject.toString();
+    var message = jsonObject.toString();
     sendKafkaRecord(message, topicName);
   }
 
@@ -154,6 +173,7 @@ class BaseApiTest {
   protected void sendKafkaRecord(String eventPayload, String topicName) {
     ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
     record.headers()
+      .add(createKafkaHeader("correlationId", defaultCorrelationId.toString()))
       .add(createKafkaHeader(TENANT, TENANT_ID))
       .add(createKafkaHeader(URL, okapiUrl));
     kafkaTemplate.send(record);
@@ -193,5 +213,34 @@ class BaseApiTest {
     httpHeaders.add(XOkapiHeaders.USER_ID, JOHN_USER_ID);
 
     return httpHeaders;
+  }
+
+  @NotNull
+  protected ResultMatcher errorHasMessage(String expectedMessage) {
+    return jsonPath("$.message").value(containsString(expectedMessage));
+  }
+
+  protected void sendEventAndWaitStatusChange(UUID actionId, ActionStatusEnum status, String diCompleteTopicName,
+                                              String payloadFilePath) {
+    sendDIKafkaRecord(payloadFilePath, diCompleteTopicName);
+
+    await().atMost(Duration.ofSeconds(20))
+      .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(actionId, metadata, jdbcTemplate).getStatus())
+        .isEqualTo(status)
+      );
+  }
+
+  protected ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
+    return jsonPath("$.message", errorMessageMatcher);
+  }
+
+  @TestConfiguration
+  static class TestConfig {
+
+    @Primary
+    @Bean
+    public Function<ProducerRecord<String, Event>, CorrelationKey> testCorrelationIdStrategy() {
+      return record -> new CorrelationKey(defaultCorrelationId.toString().getBytes(StandardCharsets.UTF_8));
+    }
   }
 }

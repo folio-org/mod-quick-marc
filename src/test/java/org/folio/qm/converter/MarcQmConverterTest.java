@@ -53,7 +53,7 @@ class MarcQmConverterTest {
   @SneakyThrows
   @ParameterizedTest
   @CsvSource(value = {
-    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
+    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH + "," + "01727cz  a2200433n  4500",
     PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
     PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_BIB_PATH + "," + "01705ccm a2200421   4500"
   })

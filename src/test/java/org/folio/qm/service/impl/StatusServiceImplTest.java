@@ -17,8 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.folio.qm.domain.entity.RecordCreationStatus;
-import org.folio.qm.domain.repository.RecordCreationStatusRepository;
+import org.folio.qm.domain.entity.ActionStatus;
+import org.folio.qm.domain.repository.ActionStatusRepository;
 import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
@@ -29,13 +29,13 @@ import org.folio.qm.support.types.UnitTest;
 class StatusServiceImplTest {
 
   @Mock
-  private RecordCreationStatusRepository statusRepository;
+  private ActionStatusRepository statusRepository;
 
   @InjectMocks
   private StatusServiceImpl service;
 
   @Test
-  void shouldReturnStatusById(@Random UUID id, @Random RecordCreationStatus statusDto) {
+  void shouldReturnStatusById(@Random UUID id, @Random ActionStatus statusDto) {
     when(statusRepository.findById(any(UUID.class))).thenReturn(Optional.of(statusDto));
 
     var actual = service.findById(id);

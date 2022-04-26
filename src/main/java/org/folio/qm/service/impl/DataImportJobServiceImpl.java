@@ -1,28 +1,28 @@
 package org.folio.qm.service.impl;
 
-import static org.folio.qm.service.DataImportJobService.getDefaultJodExecutionDto;
+import static org.folio.qm.service.DataImportJobService.prepareJodExecutionDto;
 import static org.folio.qm.service.DataImportJobService.toJobProfileInfo;
-import static org.folio.qm.service.DataImportJobService.toLastRawRecordsDto;
 import static org.folio.qm.service.DataImportJobService.toRawRecordsDto;
 import static org.folio.qm.util.StatusUtils.getStatusInProgress;
-import static org.folio.qm.util.StatusUtils.getStatusNew;
 
 import java.util.Map;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.domain.entity.RecordType;
-import org.folio.qm.service.ChangeManagerService;
-import org.folio.qm.service.StatusService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.JobProfileService;
+import org.folio.qm.service.SRMService;
+import org.folio.qm.service.StatusService;
 import org.folio.spring.FolioExecutionContext;
 
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class DataImportJobServiceImpl implements DataImportJobService {
@@ -33,8 +33,8 @@ public class DataImportJobServiceImpl implements DataImportJobService {
     ParsedRecordDto.RecordTypeEnum.HOLDING, RecordType.MARC_HOLDINGS
   );
 
-  private final ChangeManagerService changeManagerService;
   private final StatusService statusService;
+  private final SRMService srmService;
   private final JobProfileService jobProfileService;
   private final FolioExecutionContext folioExecutionContext;
 
@@ -53,37 +53,31 @@ public class DataImportJobServiceImpl implements DataImportJobService {
   }
 
   private UUID initJob(JobProfile jobProfile, UUID userId) {
-    var jobExecutionDto = getDefaultJodExecutionDto(userId, jobProfile);
-    var jobExecutionResponse = changeManagerService.postJobExecution(jobExecutionDto);
-    var jobExecutionId = jobExecutionResponse.getJobExecutions().get(0).getId();
-    saveNewStatus(jobExecutionId);
-    return jobExecutionId;
+    var jobExecutionDto = prepareJodExecutionDto(jobProfile, userId);
+    var jobExecutionResponse = srmService.postJobExecution(jobExecutionDto);
+    return jobExecutionResponse.getJobExecutions().get(0).getId();
   }
 
   private void updateJobProfile(UUID jobExecutionId, JobProfile jobProfile) {
-    changeManagerService.putJobProfileByJobExecutionId(jobExecutionId, toJobProfileInfo(jobProfile));
-    saveInProgressStatus(jobExecutionId);
+    srmService.putJobProfileByJobExecutionId(jobExecutionId, toJobProfileInfo(jobProfile));
+    saveInProgressStatus(jobExecutionId, jobProfile.getId());
   }
 
   private void sendRecord(ParsedRecordDto parsedRecordDto, UUID jobExecutionId) {
-    changeManagerService.postRawRecordsByJobExecutionId(jobExecutionId, toRawRecordsDto(parsedRecordDto));
+    srmService.postRawRecordsByJobExecutionId(jobExecutionId, toRawRecordsDto(parsedRecordDto));
   }
 
   private void completeImport(UUID jobExecutionId) {
-    changeManagerService.postRawRecordsByJobExecutionId(jobExecutionId, toLastRawRecordsDto());
+    srmService.postRawRecordsByJobExecutionId(jobExecutionId, DataImportJobService.toLastRawRecordsDto());
   }
 
   private JobProfile getJobProfile(ParsedRecordDto recordDto, JobProfileAction action) {
     return jobProfileService.getJobProfile(typeMap.get(recordDto.getRecordType()), action);
   }
 
-  private void saveNewStatus(UUID jobExecutionId) {
-    var status = getStatusNew(jobExecutionId);
+  private void saveInProgressStatus(UUID jobExecutionId, UUID jobProfileId) {
+    var status = getStatusInProgress(jobExecutionId, jobProfileId);
     statusService.save(status);
   }
 
-  private void saveInProgressStatus(UUID jobExecutionId) {
-    final var status = getStatusInProgress();
-    statusService.updateByJobExecutionId(jobExecutionId, status);
-  }
 }

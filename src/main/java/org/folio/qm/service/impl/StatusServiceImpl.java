@@ -8,30 +8,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.folio.qm.domain.entity.RecordCreationStatus;
-import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
-import org.folio.qm.domain.repository.RecordCreationStatusRepository;
+import org.folio.qm.domain.entity.ActionStatus;
+import org.folio.qm.domain.entity.ActionStatusUpdate;
+import org.folio.qm.domain.repository.ActionStatusRepository;
 import org.folio.qm.service.StatusService;
 
 @Service
 @RequiredArgsConstructor
 public class StatusServiceImpl implements StatusService {
 
-  private final RecordCreationStatusRepository statusRepository;
+  private final ActionStatusRepository statusRepository;
 
   @Override
-  public Optional<RecordCreationStatus> findById(UUID id) {
+  public Optional<ActionStatus> findById(UUID id) {
     return statusRepository.findById(id);
   }
 
   @Override
-  public Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId) {
+  public Optional<ActionStatus> findByJobExecutionId(UUID jobExecutionId) {
     return statusRepository.findByJobExecutionId(jobExecutionId);
   }
 
   @Override
   @Transactional
-  public boolean updateByJobExecutionId(UUID jobExecutionId, RecordCreationStatusUpdate statusUpdate) {
+  public boolean updateByJobExecutionId(UUID jobExecutionId, ActionStatusUpdate statusUpdate) {
     return findByJobExecutionId(jobExecutionId)
       .map(recordCreationStatus -> {
         recordCreationStatus.setStatus(statusUpdate.getStatus());
@@ -43,7 +43,7 @@ public class StatusServiceImpl implements StatusService {
   }
 
   @Override
-  public RecordCreationStatus save(RecordCreationStatus status) {
+  public ActionStatus save(ActionStatus status) {
     return statusRepository.saveAndFlush(status);
   }
 

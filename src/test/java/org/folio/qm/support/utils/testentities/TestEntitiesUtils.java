@@ -12,13 +12,16 @@ public class TestEntitiesUtils {
   public static final String QM_JSON_DIR = "mockdata/request/change-manager";
   public static final String JOB_DIR = QM_JSON_DIR + "/job-execution";
   public static final String JOB_EXECUTION_CREATED = JOB_DIR + "/jobExecutionCreated.json";
+  public static final String JOB_EXECUTION_WITH_INVALID_USER = JOB_DIR + "/jobExecution_invalid_user_id.json";
   public static final String USER_JOHN_PATH = "mockdata/request/users/userJohn.json";
   public static final String PARSED_RECORD_BIB_DTO_PATH = QM_JSON_DIR + "/parsedRecordBibDto.json";
   public static final String PARSED_RECORD_HOLDINGS_DTO_PATH = QM_JSON_DIR + "/parsedRecordHoldingsDto.json";
   public static final String PARSED_RECORD_AUTHORITY_DTO_PATH = QM_JSON_DIR + "/parsedRecordAuthorityDto.json";
   public static final String PARSED_RECORDS_DIR = "mockdata/responce";
   public static final String DI_EVENT_DIR = "mockdata/request/di-event";
-  public static final String DI_COMPLETE_AUTHORITY_DELETE = DI_EVENT_DIR + "/complete-event-with-authority-delete.json";
+  public static final String DI_COMPLETE_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-authority.json";
+  public static final String DI_COMPLETE_INSTANCE = DI_EVENT_DIR + "/complete-event-with-instance.json";
+  public static final String DI_COMPLETE_HOLDINGS = DI_EVENT_DIR + "/complete-event-with-holdings.json";
   public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
   public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";
@@ -26,6 +29,7 @@ public class TestEntitiesUtils {
     "mockdata/request/change-manager/protection-settings";
   public static final String FIELD_PROTECTION_SETTINGS_PATH =
     PROTECTION_SETTINGS_PATH + "/fieldProtectionSettingsCollection.json";
+
 
   public static final String TESTED_TAG_NAME = "333";
   public static final UUID VALID_PARSED_RECORD_DTO_ID = UUID.fromString("c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c");

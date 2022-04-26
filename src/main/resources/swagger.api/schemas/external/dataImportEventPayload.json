@@ -7,6 +7,14 @@
       "description": "Unique Event type, human-readable String, not UUID",
       "type": "string"
     },
+    "profileSnapshot": {
+      "description": "Job Profile snapshot entity with all relations",
+      "type": "object"
+    },
+    "currentNode": {
+      "description": "Current profile that should be processed",
+      "type": "object"
+    },
     "currentNodePath": {
       "description": "List of processed profile ids",
       "type": "array",

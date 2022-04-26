@@ -5,25 +5,30 @@ import java.util.UUID;
 
 import lombok.experimental.UtilityClass;
 
-import org.folio.qm.domain.entity.RecordCreationStatus;
-import org.folio.qm.domain.entity.RecordCreationStatusEnum;
-import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
+import org.folio.qm.domain.entity.ActionStatus;
+import org.folio.qm.domain.entity.ActionStatusEnum;
+import org.folio.qm.domain.entity.ActionStatusUpdate;
+import org.folio.qm.domain.entity.JobProfile;
 
 @UtilityClass
 public class StatusUtils {
 
-  public static RecordCreationStatus getStatusNew(UUID jobExecutionId) {
-    final RecordCreationStatus status = new RecordCreationStatus();
+  public static ActionStatus getStatusInProgress(UUID jobExecutionId, UUID jobProfileId) {
+    final ActionStatus status = new ActionStatus();
     status.setJobExecutionId(jobExecutionId);
-    status.setStatus(RecordCreationStatusEnum.NEW);
+    status.setStatus(ActionStatusEnum.IN_PROGRESS);
+    var jobProfile = new JobProfile();
+    jobProfile.setId(jobProfileId);
+    status.setJobProfile(jobProfile);
     status.setCreatedAt(new Timestamp(System.currentTimeMillis()));
     status.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     return status;
   }
 
-  public static RecordCreationStatusUpdate getStatusInProgress() {
-    var status = RecordCreationStatusUpdate.builder();
-    status.status(RecordCreationStatusEnum.IN_PROGRESS);
-    return status.build();
+  public static ActionStatusUpdate getStatusErrorUpdate(String errorMessage) {
+    return ActionStatusUpdate.builder()
+      .status(ActionStatusEnum.ERROR)
+      .errorMessage(errorMessage)
+      .build();
   }
 }

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.3</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <version>2.6.6</version>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>org.folio</groupId>
   <artifactId>mod-quick-marc</artifactId>
-  <version>2.4.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <description>API for quickMARC - in-app editor for MARC records in SRS</description>
   <packaging>jar</packaging>
 
@@ -19,10 +20,9 @@
     <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
-    <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
+    <api.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</api.yaml.file>
 
-    <folio-spring-base.version>3.0.1</folio-spring-base.version>
+    <folio-spring-base.version>4.0.0</folio-spring-base.version>
     <openapi-generator.version>5.3.1</openapi-generator.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -35,11 +35,11 @@
     </sonar.exclusions>
 
     <!-- Test properties-->
-    <wiremock.version>2.32.0</wiremock.version>
+    <wiremock.version>2.33.1</wiremock.version>
     <marc4j.version>2.9.2</marc4j.version>
     <junit-extensions.version>2.5.0</junit-extensions.version>
     <jsonassert.version>1.5.0</jsonassert.version>
-    <testcontainer.version>1.16.3</testcontainer.version>
+    <testcontainer.version>1.17.1</testcontainer.version>
   </properties>
 
   <dependencies>
@@ -284,7 +284,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${records-editor.yaml.file}</inputSpec>
+              <inputSpec>${api.yaml.file}</inputSpec>
               <output>${project.build.directory}/generated-sources</output>
               <generatorName>spring</generatorName>
               <modelPackage>${project.groupId}.qm.domain.dto</modelPackage>
@@ -299,43 +299,11 @@
               <generateModelDocumentation>true</generateModelDocumentation>
               <importMappings>
                 <importMapping>error=org.folio.tenant.domain.dto.Error</importMapping>
-              </importMappings>
-              <configOptions>
-                <useTags>true</useTags>
-                <java8>true</java8>
-                <dateLibrary>java8</dateLibrary>
-                <interfaceOnly>true</interfaceOnly>
-              </configOptions>
-            </configuration>
-          </execution>
-          <execution>
-            <id>records-editor-async</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <inputSpec>${records-editor-async.yaml.file}</inputSpec>
-              <output>${project.build.directory}/generated-sources</output>
-              <generatorName>spring</generatorName>
-              <modelPackage>${project.groupId}.qm.domain.dto</modelPackage>
-              <apiPackage>${project.groupId}.qm.rest.resource</apiPackage>
-              <generateApis>true</generateApis>
-              <generateApiTests>true</generateApiTests>
-              <generateApiDocumentation>true</generateApiDocumentation>
-              <generateModels>true</generateModels>
-              <generateModelTests>false</generateModelTests>
-              <generateSupportingFiles>true</generateSupportingFiles>
-              <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
-              <generateModelDocumentation>true</generateModelDocumentation>
-              <importMappings>
-                <importMapping>error=org.folio.tenant.domain.dto.Error</importMapping>
+                <importMapping>errors=org.folio.tenant.domain.dto.Errors</importMapping>
               </importMappings>
               <configOptions>
                 <java8>true</java8>
-                <useTags>true</useTags>
-                <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
-                <responseWrapper>DeferredResult</responseWrapper>
               </configOptions>
             </configuration>
           </execution>

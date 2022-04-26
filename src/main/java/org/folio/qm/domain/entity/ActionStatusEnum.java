@@ -1,9 +1,9 @@
 package org.folio.qm.domain.entity;
 
-public enum RecordCreationStatusEnum {
+public enum ActionStatusEnum {
 
   NEW,
   IN_PROGRESS,
-  CREATED,
+  COMPLETED,
   ERROR
 }

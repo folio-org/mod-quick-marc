@@ -1,8 +1,10 @@
 package org.folio.qm.messaging.topic;
 
+import static org.folio.qm.util.KafkaUtils.getTenantTopicName;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,9 +16,9 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
 
+import org.folio.qm.config.properties.FolioEnvironment;
 import org.folio.qm.config.properties.FolioKafkaProperties;
-import org.folio.qm.messaging.domain.DataImportEventTypes;
-import org.folio.qm.messaging.domain.QmEventTypes;
+import org.folio.qm.messaging.domain.DIEventTypes;
 import org.folio.spring.FolioExecutionContext;
 
 @Log4j2
@@ -29,7 +31,7 @@ public class KafkaTopicsInitializer {
   private final FolioExecutionContext folioExecutionContext;
   private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
   private final FolioKafkaProperties folioKafkaProperties;
-  private final String kafkaEnvId;
+  private final FolioEnvironment environment;
 
   public void createTopics() {
     if (folioExecutionContext == null) {
@@ -47,7 +49,6 @@ public class KafkaTopicsInitializer {
       }
     });
     kafkaAdmin.initialize();
-    restartEventListeners();
   }
 
   public void restartEventListeners() {
@@ -60,15 +61,9 @@ public class KafkaTopicsInitializer {
   }
 
   private List<NewTopic> tenantSpecificTopics(String tenant) {
-    var eventsNameStreamBuilder = Stream.<Enum<?>>builder();
-    for (QmEventTypes qmEventType : QmEventTypes.values()) {
-      eventsNameStreamBuilder.add(qmEventType);
-    }
-    eventsNameStreamBuilder.add(DataImportEventTypes.DI_ERROR);
-    eventsNameStreamBuilder.add(DataImportEventTypes.DI_COMPLETED);
-    return eventsNameStreamBuilder.build()
+    return Arrays.stream(DIEventTypes.values())
       .map(Enum::name)
-      .map(topic -> getTenantTopicName(topic, tenant))
+      .map(topic -> getTenantTopicName(topic, tenant, environment.getEnvId()))
       .map(this::toKafkaTopic)
       .collect(Collectors.toList());
   }
@@ -78,9 +73,5 @@ public class KafkaTopicsInitializer {
       .replicas(folioKafkaProperties.getReplicationFactor())
       .partitions(folioKafkaProperties.getNumberOfPartitions())
       .build();
-  }
-
-  private String getTenantTopicName(String topicName, String tenantId) {
-    return String.format("%s.Default.%s.%s", kafkaEnvId, tenantId, topicName);
   }
 }

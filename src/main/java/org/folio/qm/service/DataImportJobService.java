@@ -29,7 +29,7 @@ public interface DataImportJobService {
       .dataType(ProfileInfo.DataTypeEnum.MARC);
   }
 
-  static InitJobExecutionsRqDto getDefaultJodExecutionDto(UUID userId, JobProfile jobProfile) {
+  static InitJobExecutionsRqDto prepareJodExecutionDto(JobProfile jobProfile, UUID userId) {
     return new InitJobExecutionsRqDto()
       .jobProfileInfo(toJobProfileInfo(jobProfile))
       .sourceType(InitJobExecutionsRqDto.SourceTypeEnum.ONLINE)

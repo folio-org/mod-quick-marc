@@ -17,7 +17,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_jobprofile"/>
             </column>
             <column name="profile_id" type="UUID">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="profile_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -75,4 +75,50 @@
             <column name="record_type" value="MARC_AUTHORITY"/>
         </insert>
     </changeSet>
+
+    <changeSet id="MODQM-195@@add-update-marc-bib-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = 'cf6f2718-5aa5-482a-bba5-5bc9b75614da';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="cf6f2718-5aa5-482a-bba5-5bc9b75614da"/>
+            <column name="profile_name" value="QuickMarc Update MARC Bib"/>
+            <column name="profile_action" value="UPDATE"/>
+            <column name="record_type" value="MARC_BIBLIOGRAPHIC"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="MODQM-195@@add-update-marc-authority-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = 'c7fcbc40-c4c0-411d-b569-1fc6bc142a92';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="c7fcbc40-c4c0-411d-b569-1fc6bc142a92"/>
+            <column name="profile_name" value="QuickMarc Update MARC Authority"/>
+            <column name="profile_action" value="UPDATE"/>
+            <column name="record_type" value="MARC_AUTHORITY"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="MODQM-195@@add-update-marc-holdings-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = '6cb347c6-c0b0-4363-89fc-32cedede87ba';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="6cb347c6-c0b0-4363-89fc-32cedede87ba"/>
+            <column name="profile_name" value="QuickMarc Update MARC Holdings"/>
+            <column name="profile_action" value="UPDATE"/>
+            <column name="record_type" value="MARC_HOLDINGS"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

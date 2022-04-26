@@ -1,28 +1,43 @@
 {
   "$id": "https://example.com/arrays.schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Status of MARC bibliographic record creation",
+  "description": "Status of MARC record action",
   "type": "object",
   "properties": {
-    "qmRecordId": {
-      "description": "ID of ParsedRecord to be created",
+    "actionId": {
+      "description": "ID of action",
       "$ref": "uuid.json",
       "example": "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1"
     },
     "externalId": {
-      "description": "ID of created external record",
+      "description": "ID of related external record",
       "$ref": "uuid.json",
       "example": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c"
     },
     "marcId": {
-      "description": "ID of created MARC record",
+      "description": "ID of related MARC record",
       "$ref": "uuid.json",
       "example": "55a76b7b-841d-45b9-9e64-d0827b9e2480"
     },
     "jobExecutionId": {
-      "description": "ID of job",
+      "description": "ID of data-import job",
       "$ref": "uuid.json",
       "example": "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c"
+    },
+    "marcFormat": {
+      "description": "MARC record format",
+      "$ref": "marcFormat.json",
+      "example": "AUTHORITY"
+    },
+    "actionType": {
+      "description": "Action type",
+      "type": "string",
+      "example": "UPDATE",
+      "enum": [
+        "CREATE",
+        "UPDATE",
+        "DELETE"
+      ]
     },
     "status": {
       "type": "string",
@@ -31,7 +46,7 @@
       "enum": [
         "NEW",
         "IN_PROGRESS",
-        "CREATED",
+        "COMPLETED",
         "ERROR"
       ]
     },

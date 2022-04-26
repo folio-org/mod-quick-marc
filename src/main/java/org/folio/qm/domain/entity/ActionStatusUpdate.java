@@ -7,9 +7,9 @@ import lombok.Value;
 
 @Value
 @Builder
-public class RecordCreationStatusUpdate {
+public class ActionStatusUpdate {
 
-  RecordCreationStatusEnum status;
+  ActionStatusEnum status;
 
   String errorMessage;
 

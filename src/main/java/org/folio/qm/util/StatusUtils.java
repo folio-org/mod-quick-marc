@@ -7,7 +7,6 @@ import lombok.experimental.UtilityClass;
 
 import org.folio.qm.domain.entity.ActionStatus;
 import org.folio.qm.domain.entity.ActionStatusEnum;
-import org.folio.qm.domain.entity.ActionStatusUpdate;
 import org.folio.qm.domain.entity.JobProfile;
 
 @UtilityClass
@@ -25,10 +24,4 @@ public class StatusUtils {
     return status;
   }
 
-  public static ActionStatusUpdate getStatusErrorUpdate(String errorMessage) {
-    return ActionStatusUpdate.builder()
-      .status(ActionStatusEnum.ERROR)
-      .errorMessage(errorMessage)
-      .build();
-  }
 }

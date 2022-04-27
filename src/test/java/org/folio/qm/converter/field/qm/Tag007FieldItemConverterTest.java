@@ -11,7 +11,6 @@ import org.marc4j.marc.ControlField;
 
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.support.utils.testdata.Tag006FieldTestData;
 import org.folio.qm.support.utils.testdata.Tag007FieldTestData;
 
 @UnitTest

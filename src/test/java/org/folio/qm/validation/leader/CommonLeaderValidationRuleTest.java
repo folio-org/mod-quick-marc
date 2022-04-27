@@ -9,14 +9,11 @@ import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 
 @UnitTest
 class CommonLeaderValidationRuleTest {
-
-  private final HoldingsLeaderValidationRule rule = new HoldingsLeaderValidationRule();
 
   private static final String WRONG_RECORD_LENGTH = "00241cx\\\\a2200109zn\\45000";
   private static final String LEADER_RECORD_LENGTH_WITH_CHARS = "0a241cx\\\\a2200109zn\\4500";
@@ -27,6 +24,8 @@ class CommonLeaderValidationRuleTest {
   private static final String WRONG_ENTRY_MAP_21 = "00241cx\\\\a2200109zn\\4400";
   private static final String WRONG_ENTRY_MAP_22 = "00241cx\\\\a2200109zn\\4510";
   private static final String WRONG_ENTRY_MAP_23 = "00241cx\\\\a2200109zn\\4501";
+
+  private final HoldingsLeaderValidationRule rule = new HoldingsLeaderValidationRule();
 
   @Test
   void shouldValidateLeaderWithWrongLengthError() {

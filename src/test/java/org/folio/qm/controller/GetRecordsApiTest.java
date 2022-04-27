@@ -68,7 +68,7 @@ class GetRecordsApiTest extends BaseApiTest {
       mockServer);
     mockPost(changeManagerRecordsPath(VALID_JOB_EXECUTION_ID), SC_OK, mockServer);
 
-    getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID)).andExpect(status().isOk())
+    performGet(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID)).andExpect(status().isOk())
       .andExpect(jsonPath("$.marcFormat").value(marcFormat.getValue()))
       .andExpect(jsonPath("$.parsedRecordDtoId").value(VALID_PARSED_RECORD_DTO_ID.toString()))
       .andExpect(jsonPath("$.externalId").value(EXISTED_EXTERNAL_ID.toString()))
@@ -85,7 +85,7 @@ class GetRecordsApiTest extends BaseApiTest {
 
     mockGet(changeManagerPath(EXTERNAL_ID, recordNotFoundId), "Not found", SC_NOT_FOUND, mockServer);
 
-    getResultActions(recordsEditorPath(EXTERNAL_ID, recordNotFoundId))
+    performGet(recordsEditorPath(EXTERNAL_ID, recordNotFoundId))
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
       .andExpect(errorHasMessage("Not found"));
@@ -103,7 +103,7 @@ class GetRecordsApiTest extends BaseApiTest {
     mockGet(APITestUtils.FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
       mockServer);
 
-    getResultActions(recordsEditorPath(EXTERNAL_ID, instanceId))
+    performGet(recordsEditorPath(EXTERNAL_ID, instanceId))
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
       .andExpect(errorHasMessage("Generic Error"));
@@ -117,7 +117,7 @@ class GetRecordsApiTest extends BaseApiTest {
 
     UUID id = UUID.randomUUID();
 
-    getResultActions(recordsEditorPath("X", id))
+    performGet(recordsEditorPath("X", id))
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
       .andExpect(errorHasMessage("Parameter 'externalId' is required"));
@@ -133,7 +133,7 @@ class GetRecordsApiTest extends BaseApiTest {
     var id = UUID.randomUUID();
     saveCreationStatus(id, id, metadata, jdbcTemplate);
 
-    getResultActions(recordsEditorStatusPath(ACTION_ID_PARAM, id.toString()))
+    performGet(recordsEditorStatusPath(ACTION_ID_PARAM, id.toString()))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(id.toString()))
       .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.NEW.getValue()))
@@ -147,7 +147,7 @@ class GetRecordsApiTest extends BaseApiTest {
 
     var notExistedId = UUID.randomUUID().toString();
 
-    getResultActions(recordsEditorStatusPath(ACTION_ID_PARAM, notExistedId))
+    performGet(recordsEditorStatusPath(ACTION_ID_PARAM, notExistedId))
       .andExpect(status().isNotFound())
       .andExpect(errorHasMessage("not found"));
   }
@@ -158,7 +158,7 @@ class GetRecordsApiTest extends BaseApiTest {
 
     var invalidId = "invalid";
 
-    getResultActions(recordsEditorStatusPath(ACTION_ID_PARAM, invalidId))
+    performGet(recordsEditorStatusPath(ACTION_ID_PARAM, invalidId))
       .andExpect(status().isBadRequest())
       .andExpect(errorHasMessage("Parameter 'actionId' is invalid"));
   }
@@ -167,7 +167,7 @@ class GetRecordsApiTest extends BaseApiTest {
   void testReturn400IfActionIdIsMissing() throws Exception {
     log.info("===== Verify GET record status: Parameter missing =====");
 
-    getResultActions(recordsEditorStatusPath())
+    performGet(recordsEditorStatusPath())
       .andExpect(status().isBadRequest())
       .andExpect(errorHasMessage("Parameter 'actionId' is required"));
   }
@@ -177,7 +177,7 @@ class GetRecordsApiTest extends BaseApiTest {
     log.info("===== Verify GET record status: Parameter empty =====");
 
     var id = "";
-    getResultActions(recordsEditorStatusPath(ACTION_ID_PARAM, id))
+    performGet(recordsEditorStatusPath(ACTION_ID_PARAM, id))
       .andExpect(status().isBadRequest())
       .andExpect(errorHasMessage("Parameter 'actionId' is required"));
   }

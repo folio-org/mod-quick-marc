@@ -25,9 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -43,14 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.requestreply.CorrelationKey;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,7 +52,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import org.folio.qm.domain.entity.ActionStatusEnum;
-import org.folio.qm.messaging.domain.Event;
 import org.folio.qm.support.extension.EnableKafka;
 import org.folio.qm.support.extension.EnablePostgres;
 import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;
@@ -78,8 +71,6 @@ class BaseApiTest {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
-  protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
-  protected static final UUID defaultCorrelationId = UUID.randomUUID();
 
   private static boolean dbInitialized = false;
 
@@ -103,7 +94,7 @@ class BaseApiTest {
   void before() throws Exception {
     if (!dbInitialized) {
       var body = new TenantAttributes().moduleTo("mod-quick-marc");
-      postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
+      performPost("/_/tenant", body, getHeaders().toSingleValueMap())
         .andExpect(status().isNoContent());
 
       dbInitialized = true;
@@ -114,74 +105,6 @@ class BaseApiTest {
   @AfterEach
   void afterEach() {
     this.mockServer.resetAll();
-  }
-
-  protected ResultActions getResultActions(String uri) throws Exception {
-    return mockMvc.perform(get(uri)
-        .headers(getHeaders())
-        .contentType(APPLICATION_JSON_VALUE))
-      .andDo(log());
-  }
-
-  protected ResultActions postResultActions(String uri, Object body, Map<String, String> headers) throws Exception {
-    return mockMvc.perform(post(uri)
-        .headers(getCustomHeaders(headers))
-        .contentType(APPLICATION_JSON_VALUE)
-        .content(getObjectAsJson(body)))
-      .andDo(log());
-  }
-
-  protected ResultActions putResultActions(String uri, Object body) throws Exception {
-    return mockMvc.perform(put(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(body)))
-      .andDo(log());
-  }
-
-  protected ResultActions putResultActions(String uri) throws Exception {
-    return mockMvc.perform(put(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
-      .andDo(log());
-  }
-
-  protected ResultActions deleteResultActions(String uri) throws Exception {
-    return mockMvc.perform(delete(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
-      .andDo(log());
-  }
-
-  @SneakyThrows
-  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
-    var message = jsonObject.toString();
-    sendKafkaRecord(message, topicName);
-  }
-
-  @SneakyThrows
-  protected void sendQMKafkaRecord(String eventPayload) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), BaseApiTest.QM_COMPLETE_TOPIC_NAME);
-  }
-
-  protected void sendKafkaRecord(String eventPayload, String topicName) {
-    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
-    record.headers()
-      .add(createKafkaHeader("correlationId", defaultCorrelationId.toString()))
-      .add(createKafkaHeader(TENANT, TENANT_ID))
-      .add(createKafkaHeader(URL, okapiUrl));
-    kafkaTemplate.send(record);
-    kafkaTemplate.flush();
-  }
-
-  protected String getOkapiUrl() {
-    return okapiUrl;
   }
 
   private RecordHeader createKafkaHeader(String headerName, String headerValue) {
@@ -215,9 +138,56 @@ class BaseApiTest {
     return httpHeaders;
   }
 
-  @NotNull
-  protected ResultMatcher errorHasMessage(String expectedMessage) {
-    return jsonPath("$.message").value(containsString(expectedMessage));
+  @SneakyThrows
+  protected ResultActions performGet(String uri) {
+    return mockMvc.perform(get(uri)
+        .headers(getHeaders())
+        .contentType(APPLICATION_JSON_VALUE))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected ResultActions performPost(String uri, Object body, Map<String, String> headers) {
+    return mockMvc.perform(post(uri)
+        .headers(getCustomHeaders(headers))
+        .contentType(APPLICATION_JSON_VALUE)
+        .content(getObjectAsJson(body)))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected ResultActions performPut(String uri, Object body) {
+    return mockMvc.perform(put(uri)
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(getObjectAsJson(body)))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected ResultActions performDelete(String uri) {
+    return mockMvc.perform(delete(uri)
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(""))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
+    var jsonObject = new JSONObject();
+    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
+    var message = jsonObject.toString();
+    sendKafkaRecord(message, topicName);
+  }
+
+  protected void sendKafkaRecord(String eventPayload, String topicName) {
+    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
+    record.headers()
+      .add(createKafkaHeader(TENANT, TENANT_ID))
+      .add(createKafkaHeader(URL, okapiUrl));
+    kafkaTemplate.send(record);
+    kafkaTemplate.flush();
   }
 
   protected void sendEventAndWaitStatusChange(UUID actionId, ActionStatusEnum status, String diCompleteTopicName,
@@ -230,17 +200,17 @@ class BaseApiTest {
       );
   }
 
+  protected String getOkapiUrl() {
+    return okapiUrl;
+  }
+
+  @NotNull
+  protected ResultMatcher errorHasMessage(String expectedMessage) {
+    return jsonPath("$.message").value(containsString(expectedMessage));
+  }
+
   protected ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
     return jsonPath("$.message", errorMessageMatcher);
   }
 
-  @TestConfiguration
-  static class TestConfig {
-
-    @Primary
-    @Bean
-    public Function<ProducerRecord<String, Event>, CorrelationKey> testCorrelationIdStrategy() {
-      return record -> new CorrelationKey(defaultCorrelationId.toString().getBytes(StandardCharsets.UTF_8));
-    }
-  }
 }

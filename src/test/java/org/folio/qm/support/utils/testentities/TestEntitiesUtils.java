@@ -22,6 +22,7 @@ public class TestEntitiesUtils {
   public static final String DI_COMPLETE_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-authority.json";
   public static final String DI_COMPLETE_INSTANCE = DI_EVENT_DIR + "/complete-event-with-instance.json";
   public static final String DI_COMPLETE_HOLDINGS = DI_EVENT_DIR + "/complete-event-with-holdings.json";
+  public static final String DI_ERROR = DI_EVENT_DIR + "/error-event.json";
   public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
   public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
   public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";

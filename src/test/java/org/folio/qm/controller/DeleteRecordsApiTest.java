@@ -58,7 +58,7 @@ class DeleteRecordsApiTest extends BaseApiTest {
     mockPut(changeManagerJobProfilePath(VALID_JOB_EXECUTION_ID), SC_OK, mockServer);
     mockPost(changeManagerRecordsPath(VALID_JOB_EXECUTION_ID), SC_OK, mockServer);
 
-    var result = deleteResultActions(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
+    var result = performDelete(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
       .andReturn();
 
@@ -69,7 +69,7 @@ class DeleteRecordsApiTest extends BaseApiTest {
     sendEventAndWaitStatusChange(actionId, ActionStatusEnum.COMPLETED, DI_COMPLETE_TOPIC_NAME,
       DI_COMPLETE_AUTHORITY);
 
-    getResultActions(recordsEditorStatusPath(ACTION_ID_PARAM, actionId.toString()))
+    performGet(recordsEditorStatusPath(ACTION_ID_PARAM, actionId.toString()))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(actionId.toString()))
       .andExpect(jsonPath("$.marcFormat").value(MarcFormat.AUTHORITY.getValue()))
@@ -86,7 +86,7 @@ class DeleteRecordsApiTest extends BaseApiTest {
     log.info("===== Verify DELETE no authority record: Bad Request");
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(filename), SC_OK, mockServer);
 
-    deleteResultActions(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
+    performDelete(recordsEditorResourceByIdPath(EXISTED_EXTERNAL_ID))
       .andExpect(status().isBadRequest())
       .andExpect(errorHasMessage("Job profile for [DELETE] action"));
 
@@ -99,7 +99,7 @@ class DeleteRecordsApiTest extends BaseApiTest {
     log.info("===== Verify DELETE record: Not found =====");
     mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, mockServer);
 
-    deleteResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
+    performDelete(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
       .andExpect(status().isNotFound());
   }
 }

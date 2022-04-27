@@ -67,7 +67,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public RecordActionStatus createRecord(QuickMarc quickMarc) {
     validateMarcFields(quickMarc);
-    var recordDto = qmConverter.convert(prepareRecord(quickMarc));
+    var recordDto = qmConverter.convert(prepareRecordForCreation(quickMarc));
     return runImportAndGetStatus(recordDto, CREATE);
   }
 
@@ -91,17 +91,17 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       .orElseThrow(() -> new NotFoundException(String.format(RECORD_NOT_FOUND_MESSAGE, actionId)));
   }
 
-  private QuickMarc prepareRecord(QuickMarc quickMarc) {
-    clearFields(quickMarc);
-    updateRecordTimestamp(quickMarc);
-    return quickMarc;
-  }
-
   private RecordActionStatus runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction delete) {
     var jobId = dataImportJobService.executeDataImportJob(recordDto, delete);
     return statusService.findByJobExecutionId(jobId)
       .map(statusMapper::fromEntity)
       .orElseThrow(() -> new UnexpectedException(String.format(RECORD_NOT_FOUND_MESSAGE, jobId)));
+  }
+
+  private QuickMarc prepareRecordForCreation(QuickMarc quickMarc) {
+    clearFields(quickMarc);
+    updateRecordTimestamp(quickMarc);
+    return quickMarc;
   }
 
   private void clearFields(QuickMarc quickMarc) {

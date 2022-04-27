@@ -60,7 +60,7 @@ import org.folio.spring.integration.XOkapiHeaders;
 
 @Log4j2
 @IntegrationTest
-class CreateRecordsTest extends BaseApiTest {
+class CreateRecordsApiTest extends BaseApiTest {
 
   public static Stream<Arguments> testCreateRecordTestData() {
     return Stream.of(
@@ -72,9 +72,8 @@ class CreateRecordsTest extends BaseApiTest {
   @MethodSource("testCreateRecordTestData")
   @ParameterizedTest
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testRecordCreation(String qmRecordMockPath, String diCompleteEventMockPath, MarcFormat marcFormat)
-    throws Exception {
-    QuickMarc quickMarcJson = readQuickMarc(qmRecordMockPath)
+  void testRecordCreation(String qmRecordMockPath, String eventMockPath, MarcFormat marcFormat)    throws Exception {
+    QuickMarc qmRecord = readQuickMarc(qmRecordMockPath)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -82,7 +81,7 @@ class CreateRecordsTest extends BaseApiTest {
     mockPut(changeManagerJobProfilePath(VALID_JOB_EXECUTION_ID), SC_OK, mockServer);
     mockPost(changeManagerRecordsPath(VALID_JOB_EXECUTION_ID), SC_OK, mockServer);
 
-    MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+    MvcResult result = performPost(recordsEditorPath(), qmRecord, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
       .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.IN_PROGRESS.getValue()))
@@ -94,9 +93,9 @@ class CreateRecordsTest extends BaseApiTest {
     final var actionId = response.getActionId();
 
     sendEventAndWaitStatusChange(actionId, ActionStatusEnum.COMPLETED, DI_COMPLETE_TOPIC_NAME,
-      diCompleteEventMockPath);
+      eventMockPath);
 
-    getResultActions(recordsEditorStatusPath(ACTION_ID_PARAM, actionId.toString()))
+    performGet(recordsEditorStatusPath(ACTION_ID_PARAM, actionId.toString()))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(actionId.toString()))
       .andExpect(jsonPath("$.marcFormat").value(marcFormat.getValue()))
@@ -110,13 +109,13 @@ class CreateRecordsTest extends BaseApiTest {
   void testReturn401WhenInvalidUserId() throws Exception {
     log.info("===== Verify POST record: User Id Invalid =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarc qmRecord = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_WITH_INVALID_USER, SC_UNPROCESSABLE_ENTITY, mockServer);
 
-    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+    performPost(recordsEditorPath(), qmRecord, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
       .andExpect(jsonPath("$.code").value("UNPROCESSABLE_ENTITY"));
@@ -126,13 +125,13 @@ class CreateRecordsTest extends BaseApiTest {
   void testReturn400WhenNoHeader() throws Exception {
     log.info("===== Verify POST record: Bad request =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarc qmRecord = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
     mockMvc.perform(MockMvcRequestBuilders.post(recordsEditorPath())
         .header(XOkapiHeaders.TENANT, TENANT_ID)
-        .content(getObjectAsJson(quickMarcJson)))
+        .content(getObjectAsJson(qmRecord)))
       .andDo(log())
       .andExpect(status().isBadRequest())
       .andExpect(content().string(containsString("x-okapi-user-id header must be provided")));
@@ -142,13 +141,13 @@ class CreateRecordsTest extends BaseApiTest {
   void testReturn422WhenCreateHoldingsWithMultiply852() throws Exception {
     log.info("===== Verify POST record: Multiply 852 =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
+    QuickMarc qmRecord = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    quickMarcJson.getFields().add(new FieldItem().tag("852").content("$b content"));
+    qmRecord.getFields().add(new FieldItem().tag("852").content("$b content"));
 
-    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+    performPost(recordsEditorPath(), qmRecord, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
       .andExpect(jsonPath("$.message").value("Is unique tag"));
@@ -158,7 +157,7 @@ class CreateRecordsTest extends BaseApiTest {
   void testReturn400WhenConnectionReset() throws Exception {
     log.info("===== Verify POST record: Connection reset =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarc qmRecord = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -168,7 +167,7 @@ class CreateRecordsTest extends BaseApiTest {
         .withFault(Fault.CONNECTION_RESET_BY_PEER)
       ));
 
-    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+    performPost(recordsEditorPath(), qmRecord, JOHN_USER_ID_HEADER)
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
       .andExpect(jsonPath("$.code").value("BAD_REQUEST"))

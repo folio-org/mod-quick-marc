@@ -3,17 +3,15 @@ package org.folio.qm.domain.entity;
 import java.util.UUID;
 
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
 public class ActionStatusUpdate {
 
-  ActionStatusEnum status;
+  private final ActionStatusEnum status;
 
-  String errorMessage;
+  private final String errorMessage;
 
-  UUID externalId;
+  private final UUID externalId;
 
-  UUID marcId;
+  private final UUID marcId;
 }

@@ -232,7 +232,7 @@ class UpdateRecordsApiTest extends BaseApiTest {
   void testUpdateQuickMarcRecordWithEmptyBody() throws Exception {
     log.info("===== Verify PUT record: Request with empty body =====");
 
-    performPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), "")
+    performPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), null)
       .andExpect(status().isBadRequest())
       .andExpect(errorMessageMatch(containsString("Required request body is missing")));
 

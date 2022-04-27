@@ -151,7 +151,7 @@ class BaseApiTest {
     return mockMvc.perform(post(uri)
         .headers(getCustomHeaders(headers))
         .contentType(APPLICATION_JSON_VALUE)
-        .content(getObjectAsJson(body)))
+        .content(body == null ? "" : getObjectAsJson(body)))
       .andDo(log());
   }
 
@@ -160,16 +160,14 @@ class BaseApiTest {
     return mockMvc.perform(put(uri)
         .headers(defaultHeaders())
         .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(body)))
+        .content(body == null ? "" : getObjectAsJson(body)))
       .andDo(log());
   }
 
   @SneakyThrows
   protected ResultActions performDelete(String uri) {
     return mockMvc.perform(delete(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
+        .headers(defaultHeaders()))
       .andDo(log());
   }
 

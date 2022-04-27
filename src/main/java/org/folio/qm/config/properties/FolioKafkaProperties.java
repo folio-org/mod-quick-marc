@@ -12,17 +12,11 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("folio.kafka")
 public class FolioKafkaProperties {
 
-  private static final String DI_PROPERTIES_KEY = "di";
-
   private int numberOfPartitions;
 
   private int replicationFactor;
 
   private Map<String, KafkaListenerProperties> listener;
-
-  public KafkaListenerProperties getDIProperties() {
-    return listener.get(DI_PROPERTIES_KEY);
-  }
 
   @Data
   public static class KafkaListenerProperties {

@@ -30,7 +30,8 @@ folio:
   environment: ${ENV:folio}
   logging:
     request:
-      enabled: false
+      enabled: true
+      level: basic
     feign:
       enabled: false
       level: full

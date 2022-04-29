@@ -4,18 +4,18 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.folio.qm.domain.entity.RecordCreationStatus;
-import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
+import org.folio.qm.domain.entity.ActionStatus;
+import org.folio.qm.domain.entity.ActionStatusUpdate;
 
 public interface StatusService {
 
-  Optional<RecordCreationStatus> findById(UUID qmRecordId);
+  Optional<ActionStatus> findById(UUID qmRecordId);
 
-  Optional<RecordCreationStatus> findByJobExecutionId(UUID jobExecutionId);
+  Optional<ActionStatus> findByJobExecutionId(UUID jobExecutionId);
 
-  boolean updateByJobExecutionId(UUID jobExecutionId, RecordCreationStatusUpdate statusUpdate);
+  boolean updateByJobExecutionId(UUID jobExecutionId, ActionStatusUpdate statusUpdate);
 
-  RecordCreationStatus save(RecordCreationStatus status);
+  ActionStatus save(ActionStatus status);
 
   void removeOlderThan(Timestamp timestamp);
 }

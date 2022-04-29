@@ -8,11 +8,9 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.ProfileInfo;
 import org.folio.qm.domain.dto.RawRecordsDto;
 
-public interface ChangeManagerService {
+public interface SRMService {
 
   ParsedRecordDto getParsedRecordByExternalId(String externalId);
-
-  void putParsedRecordByInstanceId(UUID id, ParsedRecordDto recordDto);
 
   InitJobExecutionsRsDto postJobExecution(InitJobExecutionsRqDto jobExecutionDto);
 

@@ -2,49 +2,51 @@ package org.folio.qm.service;
 
 import java.util.UUID;
 
-import org.springframework.web.context.request.async.DeferredResult;
-
-import org.folio.qm.domain.dto.CreationStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.ActionStatusDto;
 
 public interface MarcRecordsService {
 
   /**
-   * This method returns QuickMarc record from SRS by corresponding external id
+   * Retrieves QuickMarc record from 'mod-source-record-manager' by corresponding external id
    *
    * @param externalId external id
    * @return {@link QuickMarc} record
    */
-  QuickMarc findByExternalId(UUID externalId);
+  QuickMarc findRecordByExternalId(UUID externalId);
 
   /**
-   * @param externalId external id
-   * @return {@link DeferredResult} response
-   */
-  CreationStatus deleteByExternalId(UUID externalId);
-
-  /**
-   * This method updates QuickMarc record
-   *
-   * @param parsedRecordId DTO id
-   * @param quickMarc      QuickMarc object
-   */
-  void updateById(UUID parsedRecordId, QuickMarc quickMarc);
-
-  /**
-   * This method retrieves status of new record creation
-   *
-   * @param qmRecordId id of record that should be created
-   * @return {@link CreationStatus}
-   */
-  CreationStatus getCreationStatusByQmRecordId(UUID qmRecordId);
-
-  /**
-   * This method triggers the 'mod-source-record-manager' import process of QuickMarc record
+   * Triggers the 'mod-source-record-manager' create import process of QuickMarc record
    *
    * @param quickMarc QuickMarc object
-   * @return {@link UUID} qmParsedRecordId of record
+   * @return {@link ActionStatusDto}
    */
-  CreationStatus createNewRecord(QuickMarc quickMarc);
+  ActionStatusDto createRecord(QuickMarc quickMarc);
+
+  /**
+   * Triggers the 'mod-source-record-manager' update import process of QuickMarc record
+   *
+   * @param parsedRecordId record id
+   * @param quickMarc      QuickMarc object
+   * @return {@link ActionStatusDto}
+   */
+  ActionStatusDto updateById(UUID parsedRecordId, QuickMarc quickMarc);
+
+  /**
+   * Triggers the 'mod-source-record-manager' delete import process of QuickMarc record
+   *
+   * @param externalId external id
+   * @return {@link ActionStatusDto}
+   */
+  ActionStatusDto deleteRecordByExternalId(UUID externalId);
+
+  /**
+   * Retrieves status of record action
+   *
+   * @param actionId id of record action
+   * @return {@link ActionStatusDto}
+   */
+  ActionStatusDto getActionStatusByActionId(UUID actionId);
 }
 

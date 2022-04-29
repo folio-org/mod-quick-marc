@@ -4,5 +4,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="changes/v2.3.0/create-job-profile-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/v3.0.0/create-job-profile-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/v3.0.0/update-status-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

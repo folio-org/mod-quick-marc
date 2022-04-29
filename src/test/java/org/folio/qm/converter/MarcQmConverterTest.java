@@ -2,9 +2,7 @@ package org.folio.qm.converter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.contentOf;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +26,6 @@ import org.marc4j.marc.Record;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecord;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
@@ -53,7 +50,7 @@ class MarcQmConverterTest {
   @SneakyThrows
   @ParameterizedTest
   @CsvSource(value = {
-    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
+    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH + "," + "01727cz  a2200433n  4500",
     PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
     PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_BIB_PATH + "," + "01705ccm a2200421   4500"
   })

@@ -37,7 +37,7 @@ public class APITestUtils {
   public static final String USERS_PATH = "/users";
 
   public static final String EXTERNAL_ID = "externalId";
-  public static final String QM_RECORD_ID = "qmRecordId";
+  public static final String ACTION_ID_PARAM = "actionId";
 
   public static final Map<String, String> JOHN_USER_ID_HEADER = Map.of(USER_ID, TestEntitiesUtils.JOHN_USER_ID);
 
@@ -81,12 +81,24 @@ public class APITestUtils {
     return CHANGE_MANAGER_PARSED_RECORDS_PATH;
   }
 
+  public static String changeManagerJobExecutionPath() {
+    return CHANGE_MANAGER_JOB_EXECUTION_PATH;
+  }
+
   public static String changeManagerPath(String parameter, UUID value) {
     return changeManagerPath() + buildQuery(parameter, String.valueOf(value));
   }
 
   public static String changeManagerResourceByIdPath(UUID id) {
     return changeManagerPath() + "/" + id;
+  }
+
+  public static String changeManagerJobProfilePath(UUID jobId) {
+    return String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, jobId);
+  }
+
+  public static String changeManagerRecordsPath(UUID jobId) {
+    return String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, jobId);
   }
 
   public static void mockGet(String url, String body, int status, WireMockServer mockServer) {
@@ -106,6 +118,12 @@ public class APITestUtils {
         .withStatus(status)
         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .withBody(IOTestUtils.readFile(filePath))));
+  }
+
+  public static void mockPost(String url, int status, WireMockServer mockServer) {
+    mockServer.stubFor(post(urlEqualTo(url))
+      .willReturn(aResponse()
+        .withStatus(status)));
   }
 
   public static void mockPut(String url, int status, WireMockServer mockServer) {

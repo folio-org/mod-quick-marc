@@ -1,6 +1,8 @@
 package org.folio.qm.controller;
 
 import static java.util.Objects.requireNonNull;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -8,9 +10,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
+import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
 import static org.folio.qm.support.utils.IOTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
@@ -18,12 +22,17 @@ import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
+import java.util.UUID;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matcher;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +49,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 
+import org.folio.qm.domain.entity.ActionStatusEnum;
 import org.folio.qm.support.extension.EnableKafka;
 import org.folio.qm.support.extension.EnablePostgres;
 import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;
@@ -60,12 +71,11 @@ class BaseApiTest {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
-  protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
 
   private static boolean dbInitialized = false;
 
   @Autowired
-  protected WireMockServer wireMockServer;
+  protected WireMockServer mockServer;
   @Autowired
   protected FolioModuleMetadata metadata;
   @Autowired
@@ -84,7 +94,7 @@ class BaseApiTest {
   void before() throws Exception {
     if (!dbInitialized) {
       var body = new TenantAttributes().moduleTo("mod-quick-marc");
-      postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
+      performPost("/_/tenant", body, getHeaders().toSingleValueMap())
         .andExpect(status().isNoContent());
 
       dbInitialized = true;
@@ -94,74 +104,7 @@ class BaseApiTest {
 
   @AfterEach
   void afterEach() {
-    this.wireMockServer.resetAll();
-  }
-
-  protected ResultActions getResultActions(String uri) throws Exception {
-    return mockMvc.perform(get(uri)
-        .headers(getHeaders())
-        .contentType(APPLICATION_JSON_VALUE))
-      .andDo(log());
-  }
-
-  protected ResultActions postResultActions(String uri, Object body, Map<String, String> headers) throws Exception {
-    return mockMvc.perform(post(uri)
-        .headers(getCustomHeaders(headers))
-        .contentType(APPLICATION_JSON_VALUE)
-        .content(getObjectAsJson(body)))
-      .andDo(log());
-  }
-
-  protected ResultActions putResultActions(String uri, Object body) throws Exception {
-    return mockMvc.perform(put(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(getObjectAsJson(body)))
-      .andDo(log());
-  }
-
-  protected ResultActions putResultActions(String uri) throws Exception {
-    return mockMvc.perform(put(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
-      .andDo(log());
-  }
-
-  protected ResultActions deleteResultActions(String uri) throws Exception {
-    return mockMvc.perform(delete(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
-      .andDo(log());
-  }
-
-  @SneakyThrows
-  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
-    String message = jsonObject.toString();
-    sendKafkaRecord(message, topicName);
-  }
-
-  @SneakyThrows
-  protected void sendQMKafkaRecord(String eventPayload) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), BaseApiTest.QM_COMPLETE_TOPIC_NAME);
-  }
-
-  protected void sendKafkaRecord(String eventPayload, String topicName) {
-    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
-    record.headers()
-      .add(createKafkaHeader(TENANT, TENANT_ID))
-      .add(createKafkaHeader(URL, okapiUrl));
-    kafkaTemplate.send(record);
-    kafkaTemplate.flush();
-  }
-
-  protected String getOkapiUrl() {
-    return okapiUrl;
+    this.mockServer.resetAll();
   }
 
   private RecordHeader createKafkaHeader(String headerName, String headerValue) {
@@ -194,4 +137,78 @@ class BaseApiTest {
 
     return httpHeaders;
   }
+
+  @SneakyThrows
+  protected ResultActions performGet(String uri) {
+    return mockMvc.perform(get(uri)
+        .headers(getHeaders())
+        .contentType(APPLICATION_JSON_VALUE))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected ResultActions performPost(String uri, Object body, Map<String, String> headers) {
+    return mockMvc.perform(post(uri)
+        .headers(getCustomHeaders(headers))
+        .contentType(APPLICATION_JSON_VALUE)
+        .content(body == null ? "" : getObjectAsJson(body)))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected ResultActions performPut(String uri, Object body) {
+    return mockMvc.perform(put(uri)
+        .headers(defaultHeaders())
+        .contentType(APPLICATION_JSON)
+        .content(body == null ? "" : getObjectAsJson(body)))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected ResultActions performDelete(String uri) {
+    return mockMvc.perform(delete(uri)
+        .headers(defaultHeaders()))
+      .andDo(log());
+  }
+
+  @SneakyThrows
+  protected void sendDIKafkaRecord(String eventPayloadFilePath, String topicName) {
+    var jsonObject = new JSONObject();
+    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
+    var message = jsonObject.toString();
+    sendKafkaRecord(message, topicName);
+  }
+
+  protected void sendKafkaRecord(String eventPayload, String topicName) {
+    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
+    record.headers()
+      .add(createKafkaHeader(TENANT, TENANT_ID))
+      .add(createKafkaHeader(URL, okapiUrl));
+    kafkaTemplate.send(record);
+    kafkaTemplate.flush();
+  }
+
+  protected void sendEventAndWaitStatusChange(UUID actionId, ActionStatusEnum status, String diCompleteTopicName,
+                                              String payloadFilePath) {
+    sendDIKafkaRecord(payloadFilePath, diCompleteTopicName);
+
+    await().atMost(Duration.ofSeconds(20))
+      .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(actionId, metadata, jdbcTemplate).getStatus())
+        .isEqualTo(status)
+      );
+  }
+
+  protected String getOkapiUrl() {
+    return okapiUrl;
+  }
+
+  @NotNull
+  protected ResultMatcher errorHasMessage(String expectedMessage) {
+    return jsonPath("$.message").value(containsString(expectedMessage));
+  }
+
+  protected ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
+    return jsonPath("$.message", errorMessageMatcher);
+  }
+
 }

@@ -11,36 +11,32 @@ import org.folio.qm.domain.dto.InitJobExecutionsRsDto;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.ProfileInfo;
 import org.folio.qm.domain.dto.RawRecordsDto;
-import org.folio.qm.service.ChangeManagerService;
+import org.folio.qm.service.SRMService;
 
 @Service
 @RequiredArgsConstructor
-public class ChangeManagerServiceImpl implements ChangeManagerService {
+public class SRMServiceImpl implements SRMService {
 
-  private final SRMChangeManagerClient srmClient;
+  private final SRMChangeManagerClient changeManagerClient;
 
   @Override
   public ParsedRecordDto getParsedRecordByExternalId(String externalId) {
-    return srmClient.getParsedRecordByExternalId(externalId);
-  }
-
-  @Override
-  public void putParsedRecordByInstanceId(UUID id, ParsedRecordDto recordDto) {
-    srmClient.putParsedRecordByInstanceId(id, recordDto);
+    return changeManagerClient.getParsedRecordByExternalId(externalId);
   }
 
   @Override
   public InitJobExecutionsRsDto postJobExecution(InitJobExecutionsRqDto jobExecutionDto) {
-    return srmClient.postJobExecution(jobExecutionDto);
+    return changeManagerClient.postJobExecution(jobExecutionDto);
   }
 
   @Override
   public void putJobProfileByJobExecutionId(UUID jobExecutionId, ProfileInfo jobProfile) {
-    srmClient.putJobProfileByJobExecutionId(jobExecutionId, jobProfile);
+    changeManagerClient.putJobProfileByJobExecutionId(jobExecutionId, jobProfile);
   }
 
   @Override
   public void postRawRecordsByJobExecutionId(UUID jobExecutionId, RawRecordsDto rawRecords) {
-    srmClient.postRawRecordsByJobExecutionId(jobExecutionId, rawRecords);
+    changeManagerClient.postRawRecordsByJobExecutionId(jobExecutionId, rawRecords);
   }
+
 }

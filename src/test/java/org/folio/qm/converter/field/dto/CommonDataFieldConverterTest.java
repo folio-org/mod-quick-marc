@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -52,7 +51,7 @@ class CommonDataFieldConverterTest {
   public static Stream<Arguments> dataFields() {
     return IntStream.range(10, 999)
       .mapToObj(value -> String.format("%03d", value))
-      .map(tag -> new DataFieldImpl(tag,'0', '0'))
+      .map(tag -> new DataFieldImpl(tag, '0', '0'))
       .map(Arguments::arguments);
   }
 

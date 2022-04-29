@@ -1,6 +1,7 @@
 package org.folio.qm.config.properties;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,7 +21,7 @@ public class FolioKafkaProperties {
   @Data
   public static class KafkaListenerProperties {
 
-    private String topicPattern;
+    private Pattern topicPattern;
 
     private Integer concurrency = 5;
 

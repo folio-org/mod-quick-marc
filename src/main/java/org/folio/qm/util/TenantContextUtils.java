@@ -35,11 +35,6 @@ public class TenantContextUtils {
     return getContextFromKafkaHeaders(data.getTenant(), data.getOkapiUrl(), data.getToken(), headers, moduleMetadata);
   }
 
-  public static FolioExecutionContext getFolioExecutionContextFromQMEvent(MessageHeaders headers,
-                                                                          FolioModuleMetadata moduleMetadata) {
-    return getContextFromKafkaHeaders(null, null, null, headers, moduleMetadata);
-  }
-
   private static FolioExecutionContext getContextFromKafkaHeaders(String tenantDefault, String urlDefault,
                                                                   String tokenDefault, MessageHeaders headers,
                                                                   FolioModuleMetadata moduleMetadata) {

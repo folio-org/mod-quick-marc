@@ -1,6 +1,7 @@
 package org.folio.qm.client;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import lombok.Value;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,7 +18,7 @@ public interface UsersClient {
   @Value
   class UserDto {
 
-    String id;
+    UUID id;
     String username;
     UserPersonal personal;
   }

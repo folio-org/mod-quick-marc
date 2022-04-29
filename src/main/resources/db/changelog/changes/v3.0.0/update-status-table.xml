@@ -5,21 +5,21 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
-    <changeSet id="MODQM-195@@rename-record-creation-status-table" author="psmahin">
+    <changeSet id="MODQM-223@@rename-record-creation-status-table" author="psmahin">
         <preConditions>
             <tableExists tableName="record_creation_status"/>
         </preConditions>
         <renameTable oldTableName="record_creation_status" newTableName="action_status"/>
     </changeSet>
 
-    <changeSet id="MODQM-195@@cleanup-action-status-table" author="psmahin">
+    <changeSet id="MODQM-223@@cleanup-action-status-table" author="psmahin">
         <preConditions>
             <tableExists tableName="action_status"/>
         </preConditions>
         <delete tableName="action_status"/>
     </changeSet>
 
-    <changeSet id="MODQM-195@@add-job-profile-id-column" author="psmahin">
+    <changeSet id="MODQM-223@@add-job-profile-id-column" author="psmahin">
         <addColumn tableName="action_status">
             <column name="job_profile_id" type="UUID">
                 <constraints nullable="false"/>
@@ -27,7 +27,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="MODQM-195@@add-job-profile-id-column-fk" author="psmahin">
+    <changeSet id="MODQM-223@@add-job-profile-id-column-fk" author="psmahin">
         <addForeignKeyConstraint baseTableName="action_status"
                                  baseColumnNames="job_profile_id"
                                  referencedTableName="job_profile"
@@ -35,7 +35,7 @@
                                  deleteCascade="true"
                                  constraintName="fk_action_status_job_profile_id"/>
     </changeSet>
-    <changeSet id="1649009307111-1" author="Pavlo_Smahin">
+    <changeSet id="MODQM-223@@raname-status-created-to-completed" author="Pavlo_Smahin">
         <sql>
             ALTER TYPE status RENAME VALUE 'CREATED' TO 'COMPLETED';
         </sql>

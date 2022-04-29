@@ -17,7 +17,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_jobprofile"/>
             </column>
             <column name="profile_id" type="UUID">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="profile_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -76,7 +76,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="MODQM-195@@add-update-marc-bib-profile" author="psmahin">
+    <changeSet id="MODQM-223@@add-update-marc-bib-profile" author="psmahin">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(id) FROM job_profile WHERE profile_id = 'cf6f2718-5aa5-482a-bba5-5bc9b75614da';
@@ -91,7 +91,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="MODQM-195@@add-update-marc-authority-profile" author="psmahin">
+    <changeSet id="MODQM-223@@add-update-marc-authority-profile" author="psmahin">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(id) FROM job_profile WHERE profile_id = 'c7fcbc40-c4c0-411d-b569-1fc6bc142a92';
@@ -106,7 +106,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="MODQM-195@@add-update-marc-holdings-profile" author="psmahin">
+    <changeSet id="MODQM-223@@add-update-marc-holdings-profile" author="psmahin">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(id) FROM job_profile WHERE profile_id = '6cb347c6-c0b0-4363-89fc-32cedede87ba';

@@ -43,7 +43,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/recordActionStatus'
+                $ref: '#/components/schemas/actionStatusDto'
         '400':
           $ref: '#/components/responses/badRequestResponse'
 
@@ -70,7 +70,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/recordActionStatus'
+                $ref: '#/components/schemas/actionStatusDto'
         '400':
           $ref: '#/components/responses/badRequestResponse'
         '404':
@@ -100,7 +100,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/recordActionStatus'
+                $ref: '#/components/schemas/actionStatusDto'
         '400':
           $ref: '#/components/responses/badRequestResponse'
         '404':
@@ -123,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/recordActionStatus'
+                $ref: '#/components/schemas/actionStatusDto'
         '400':
           $ref: '#/components/responses/badRequestResponse'
         '404':
@@ -133,8 +133,8 @@ components:
   schemas:
     quickMarc:
       $ref: schemas/quickMarc.json
-    recordActionStatus:
-      $ref: schemas/recordActionStatus.json
+    actionStatusDto:
+      $ref: schemas/actionStatusDto.json
     error:
       type: object
     errors:

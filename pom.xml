@@ -302,7 +302,7 @@
                 <importMapping>errors=org.folio.tenant.domain.dto.Errors</importMapping>
               </importMappings>
               <configOptions>
-                <java8>true</java8>
+                <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
               </configOptions>
             </configuration>

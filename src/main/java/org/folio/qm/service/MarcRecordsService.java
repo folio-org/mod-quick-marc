@@ -2,8 +2,9 @@ package org.folio.qm.service;
 
 import java.util.UUID;
 
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 
 public interface MarcRecordsService {
 
@@ -19,33 +20,33 @@ public interface MarcRecordsService {
    * Triggers the 'mod-source-record-manager' create import process of QuickMarc record
    *
    * @param quickMarc QuickMarc object
-   * @return {@link RecordActionStatus}
+   * @return {@link ActionStatusDto}
    */
-  RecordActionStatus createRecord(QuickMarc quickMarc);
+  ActionStatusDto createRecord(QuickMarc quickMarc);
 
   /**
    * Triggers the 'mod-source-record-manager' update import process of QuickMarc record
    *
    * @param parsedRecordId record id
    * @param quickMarc      QuickMarc object
-   * @return {@link RecordActionStatus}
+   * @return {@link ActionStatusDto}
    */
-  RecordActionStatus updateById(UUID parsedRecordId, QuickMarc quickMarc);
+  ActionStatusDto updateById(UUID parsedRecordId, QuickMarc quickMarc);
 
   /**
    * Triggers the 'mod-source-record-manager' delete import process of QuickMarc record
    *
    * @param externalId external id
-   * @return {@link RecordActionStatus}
+   * @return {@link ActionStatusDto}
    */
-  RecordActionStatus deleteRecordByExternalId(UUID externalId);
+  ActionStatusDto deleteRecordByExternalId(UUID externalId);
 
   /**
    * Retrieves status of record action
    *
    * @param actionId id of record action
-   * @return {@link RecordActionStatus}
+   * @return {@link ActionStatusDto}
    */
-  RecordActionStatus getActionStatusByActionId(UUID actionId);
+  ActionStatusDto getActionStatusByActionId(UUID actionId);
 }
 

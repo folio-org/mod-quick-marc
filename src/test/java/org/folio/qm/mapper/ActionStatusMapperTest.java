@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.entity.ActionStatus;
 import org.folio.qm.domain.entity.ActionStatusEnum;
 import org.folio.qm.support.types.UnitTest;
@@ -40,7 +40,7 @@ class ActionStatusMapperTest {
       .hasFieldOrPropertyWithValue("externalId", externalId)
       .hasFieldOrPropertyWithValue("actionId", id)
       .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId)
-      .hasFieldOrPropertyWithValue("status", RecordActionStatus.StatusEnum.IN_PROGRESS)
+      .hasFieldOrPropertyWithValue("status", ActionStatusDto.StatusEnum.IN_PROGRESS)
       .hasFieldOrPropertyWithValue("metadata.createdAt", getFrom(createdAt))
       .hasFieldOrPropertyWithValue("metadata.updatedAt", getFrom(updatedAt));
   }
@@ -58,7 +58,7 @@ class ActionStatusMapperTest {
       .hasFieldOrPropertyWithValue("externalId", externalId)
       .hasFieldOrPropertyWithValue("actionId", id)
       .hasFieldOrPropertyWithValue("jobExecutionId", jobExecutionId)
-      .hasFieldOrPropertyWithValue("status", RecordActionStatus.StatusEnum.IN_PROGRESS)
+      .hasFieldOrPropertyWithValue("status", ActionStatusDto.StatusEnum.IN_PROGRESS)
       .hasFieldOrPropertyWithValue("metadata.createdAt", null)
       .hasFieldOrPropertyWithValue("metadata.updatedAt", null);
   }
@@ -74,7 +74,7 @@ class ActionStatusMapperTest {
       .hasFieldOrPropertyWithValue("externalId", null)
       .hasFieldOrPropertyWithValue("actionId", null)
       .hasFieldOrPropertyWithValue("jobExecutionId", null)
-      .hasFieldOrPropertyWithValue("status", RecordActionStatus.StatusEnum.IN_PROGRESS)
+      .hasFieldOrPropertyWithValue("status", ActionStatusDto.StatusEnum.IN_PROGRESS)
       .hasFieldOrPropertyWithValue("metadata.createdAt", getFrom(createdAt))
       .hasFieldOrPropertyWithValue("metadata.updatedAt", getFrom(updatedAt));
   }

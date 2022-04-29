@@ -51,7 +51,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.entity.ActionStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
@@ -84,11 +84,11 @@ class CreateRecordsApiTest extends BaseApiTest {
     MvcResult result = performPost(recordsEditorPath(), qmRecord, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.IN_PROGRESS.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.IN_PROGRESS.getValue()))
       .andReturn();
 
     String resultResponse = result.getResponse().getContentAsString();
-    RecordActionStatus response = getObjectFromJson(resultResponse, RecordActionStatus.class);
+    ActionStatusDto response = getObjectFromJson(resultResponse, ActionStatusDto.class);
 
     final var actionId = response.getActionId();
 
@@ -99,8 +99,8 @@ class CreateRecordsApiTest extends BaseApiTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(actionId.toString()))
       .andExpect(jsonPath("$.marcFormat").value(marcFormat.getValue()))
-      .andExpect(jsonPath("$.actionType").value(RecordActionStatus.ActionTypeEnum.CREATE.getValue()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.COMPLETED.getValue()))
+      .andExpect(jsonPath("$.actionType").value(ActionStatusDto.ActionTypeEnum.CREATE.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.COMPLETED.getValue()))
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
       .andExpect(jsonPath("$.metadata").value(notNullValue()));
   }

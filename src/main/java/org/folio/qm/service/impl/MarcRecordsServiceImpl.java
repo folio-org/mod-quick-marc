@@ -18,7 +18,7 @@ import org.folio.qm.client.UsersClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.UnexpectedException;
@@ -65,14 +65,14 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
-  public RecordActionStatus createRecord(QuickMarc quickMarc) {
+  public ActionStatusDto createRecord(QuickMarc quickMarc) {
     validateMarcFields(quickMarc);
     var recordDto = qmConverter.convert(prepareRecordForCreation(quickMarc));
     return runImportAndGetStatus(recordDto, CREATE);
   }
 
   @Override
-  public RecordActionStatus updateById(UUID parsedRecordId, QuickMarc quickMarc) {
+  public ActionStatusDto updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcFields(quickMarc);
     var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
@@ -80,18 +80,18 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
-  public RecordActionStatus deleteRecordByExternalId(UUID externalId) {
+  public ActionStatusDto deleteRecordByExternalId(UUID externalId) {
     var recordDto = srmService.getParsedRecordByExternalId(externalId.toString());
     return runImportAndGetStatus(recordDto, DELETE);
   }
 
   @Override
-  public RecordActionStatus getActionStatusByActionId(UUID actionId) {
+  public ActionStatusDto getActionStatusByActionId(UUID actionId) {
     return statusService.findById(actionId).map(statusMapper::fromEntity)
       .orElseThrow(() -> new NotFoundException(String.format(RECORD_NOT_FOUND_MESSAGE, actionId)));
   }
 
-  private RecordActionStatus runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction delete) {
+  private ActionStatusDto runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction delete) {
     var jobId = dataImportJobService.executeDataImportJob(recordDto, delete);
     return statusService.findByJobExecutionId(jobId)
       .map(statusMapper::fromEntity)

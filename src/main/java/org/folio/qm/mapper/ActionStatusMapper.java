@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
 
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.entity.ActionStatus;
 import org.folio.qm.domain.entity.ActionStatusEnum;
 import org.folio.qm.domain.entity.JobProfileAction;
@@ -24,7 +24,7 @@ public interface ActionStatusMapper {
   @Mapping(target = "metadata.updatedAt", source = "updatedAt")
   @Mapping(target = "actionType", source = "jobProfile.profileAction")
   @Mapping(target = "marcFormat", source = "jobProfile.recordType")
-  RecordActionStatus fromEntity(ActionStatus actionStatus);
+  ActionStatusDto fromEntity(ActionStatus actionStatus);
 
   default OffsetDateTime map(Timestamp value) {
     return value != null ? OffsetDateTime.from(value.toInstant().atZone(ZoneOffset.UTC)) : null;
@@ -34,12 +34,12 @@ public interface ActionStatusMapper {
     return MarcFormat.fromValue(recordType.name().replace("MARC_", ""));
   }
 
-  default RecordActionStatus.ActionTypeEnum map(JobProfileAction action) {
-    return RecordActionStatus.ActionTypeEnum.fromValue(action.name());
+  default ActionStatusDto.ActionTypeEnum map(JobProfileAction action) {
+    return ActionStatusDto.ActionTypeEnum.fromValue(action.name());
   }
 
-  default RecordActionStatus.StatusEnum map(ActionStatusEnum actionStatus) {
-    return RecordActionStatus.StatusEnum.fromValue(actionStatus.name());
+  default ActionStatusDto.StatusEnum map(ActionStatusEnum actionStatus) {
+    return ActionStatusDto.StatusEnum.fromValue(actionStatus.name());
   }
 }
 

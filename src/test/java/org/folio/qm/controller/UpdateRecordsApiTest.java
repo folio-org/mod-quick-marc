@@ -53,7 +53,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.entity.ActionStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
@@ -87,11 +87,11 @@ class UpdateRecordsApiTest extends BaseApiTest {
     MvcResult result = performPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), qmRecord)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.IN_PROGRESS.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.IN_PROGRESS.getValue()))
       .andReturn();
 
     String resultResponse = result.getResponse().getContentAsString();
-    RecordActionStatus response = getObjectFromJson(resultResponse, RecordActionStatus.class);
+    ActionStatusDto response = getObjectFromJson(resultResponse, ActionStatusDto.class);
 
     var actionId = response.getActionId();
 
@@ -101,8 +101,8 @@ class UpdateRecordsApiTest extends BaseApiTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(actionId.toString()))
       .andExpect(jsonPath("$.marcFormat").value(marcFormat.getValue()))
-      .andExpect(jsonPath("$.actionType").value(RecordActionStatus.ActionTypeEnum.UPDATE.getValue()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.COMPLETED.getValue()))
+      .andExpect(jsonPath("$.actionType").value(ActionStatusDto.ActionTypeEnum.UPDATE.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.COMPLETED.getValue()))
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
       .andExpect(jsonPath("$.metadata").value(notNullValue()));
   }
@@ -125,11 +125,11 @@ class UpdateRecordsApiTest extends BaseApiTest {
     MvcResult result = performPut(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), qmRecord)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.IN_PROGRESS.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.IN_PROGRESS.getValue()))
       .andReturn();
 
     String resultResponse = result.getResponse().getContentAsString();
-    RecordActionStatus response = getObjectFromJson(resultResponse, RecordActionStatus.class);
+    ActionStatusDto response = getObjectFromJson(resultResponse, ActionStatusDto.class);
 
     var actionId = response.getActionId();
 
@@ -139,8 +139,8 @@ class UpdateRecordsApiTest extends BaseApiTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(actionId.toString()))
       .andExpect(jsonPath("$.marcFormat").value(marcFormat.getValue()))
-      .andExpect(jsonPath("$.actionType").value(RecordActionStatus.ActionTypeEnum.UPDATE.getValue()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.ERROR.getValue()))
+      .andExpect(jsonPath("$.actionType").value(ActionStatusDto.ActionTypeEnum.UPDATE.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.ERROR.getValue()))
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
       .andExpect(jsonPath("$.metadata").value(notNullValue()));
   }

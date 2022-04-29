@@ -38,7 +38,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.domain.entity.ActionStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
@@ -63,7 +63,7 @@ class DeleteRecordsApiTest extends BaseApiTest {
       .andReturn();
 
     String resultResponse = result.getResponse().getContentAsString();
-    RecordActionStatus response = getObjectFromJson(resultResponse, RecordActionStatus.class);
+    ActionStatusDto response = getObjectFromJson(resultResponse, ActionStatusDto.class);
     var actionId = response.getActionId();
 
     sendEventAndWaitStatusChange(actionId, ActionStatusEnum.COMPLETED, DI_COMPLETE_TOPIC_NAME,
@@ -73,8 +73,8 @@ class DeleteRecordsApiTest extends BaseApiTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(actionId.toString()))
       .andExpect(jsonPath("$.marcFormat").value(MarcFormat.AUTHORITY.getValue()))
-      .andExpect(jsonPath("$.actionType").value(RecordActionStatus.ActionTypeEnum.DELETE.getValue()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.COMPLETED.getValue()))
+      .andExpect(jsonPath("$.actionType").value(ActionStatusDto.ActionTypeEnum.DELETE.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.COMPLETED.getValue()))
       .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
       .andExpect(jsonPath("$.metadata").value(notNullValue()));
 

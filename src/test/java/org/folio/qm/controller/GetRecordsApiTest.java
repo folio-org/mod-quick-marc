@@ -41,7 +41,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.RecordActionStatus;
+import org.folio.qm.domain.dto.ActionStatusDto;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.support.utils.APITestUtils;
@@ -136,7 +136,7 @@ class GetRecordsApiTest extends BaseApiTest {
     performGet(recordsEditorStatusPath(ACTION_ID_PARAM, id.toString()))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.actionId").value(id.toString()))
-      .andExpect(jsonPath("$.status").value(RecordActionStatus.StatusEnum.NEW.getValue()))
+      .andExpect(jsonPath("$.status").value(ActionStatusDto.StatusEnum.NEW.getValue()))
       .andExpect(jsonPath("$.metadata").value(notNullValue()))
       .andExpect(jsonPath("$.metadata.createdAt").value(matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+")));
   }

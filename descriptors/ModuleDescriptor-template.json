@@ -58,7 +58,12 @@
           "methods": ["DELETE"],
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["records-editor.records.item.delete"],
-          "modulePermissions": ["change-manager.parsedrecords.get"]
+          "modulePermissions": [
+            "change-manager.jobexecutions.post",
+            "change-manager.jobexecutions.put",
+            "change-manager.parsedrecords.get",
+            "change-manager.records.post"
+          ]
         },
         {
           "methods": ["GET"],

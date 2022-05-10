@@ -59,6 +59,7 @@
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["records-editor.records.item.delete"],
           "modulePermissions": [
+            "inventory-storage.authorities.item.delete",
             "change-manager.jobexecutions.post",
             "change-manager.jobexecutions.put",
             "change-manager.parsedrecords.get",

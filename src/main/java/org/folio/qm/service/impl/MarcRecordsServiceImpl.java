@@ -24,10 +24,10 @@ import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.ChangeManagerService;
-import org.folio.qm.service.StatusService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.FieldProtectionSetterService;
 import org.folio.qm.service.MarcRecordsService;
+import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
 import org.folio.spring.exception.NotFoundException;
 
@@ -43,6 +43,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final ValidationService validationService;
   private final StatusService statusService;
   private final FieldProtectionSetterService protectionSetterService;
+  private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
@@ -72,7 +73,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
-    validateMarcFields(quickMarc);
+    populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
   }
@@ -85,7 +86,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
-    validateMarcFields(quickMarc);
+    populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var recordDto = qmConverter.convert(prepareRecord(quickMarc));
     return runImportAndGetStatus(recordDto, CREATE);
   }
@@ -116,7 +117,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     quickMarc.setExternalHrid(null);
   }
 
-  private void validateMarcFields(QuickMarc quickMarc) {
+  private void populateWithDefaultValuesAndValidateMarcRecord(QuickMarc quickMarc) {
+    defaultValuesPopulationService.populate(quickMarc);
     var validationResult = validationService.validate(quickMarc);
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);

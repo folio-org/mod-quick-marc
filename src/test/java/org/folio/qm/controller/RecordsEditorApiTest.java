@@ -405,6 +405,22 @@ class RecordsEditorApiTest extends BaseApiTest {
   }
 
   @Test
+  void testReturn422WhenRecordWithMultiple001() throws Exception {
+    log.info("===== Verify POST record: Multiple 001 =====");
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
+
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.message").value("Is unique tag"));
+  }
+
+  @Test
   void testReturn400WhenConnectionReset() throws Exception {
     log.info("===== Verify POST record: Connection reset =====");
 

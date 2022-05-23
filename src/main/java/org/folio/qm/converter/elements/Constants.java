@@ -71,6 +71,7 @@ public class Constants {
   public static final Pattern CONCAT_CONDITION_PATTERN = Pattern.compile("(?:[$][1]\\s*|[$]\\d+[.,][^\\\\]*)$");
 
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
+  public static final String TAG_001_CONTROL_FIELD = "001";
   public static final String TAG_006_CONTROL_FIELD = "006";
   public static final String TAG_007_CONTROL_FIELD = "007";
   public static final String TAG_008_CONTROL_FIELD = "008";

@@ -1,7 +1,5 @@
 package org.folio.qm.service.population.impl;
 
-import java.util.Collections;
-
 import org.springframework.stereotype.Service;
 
 import org.folio.qm.domain.dto.MarcFormat;
@@ -13,10 +11,5 @@ public class HoldingsLeaderMarcPopulationService extends LeaderMarcPopulationSer
   @Override
   public boolean supportFormat(MarcFormat marcFormat) {
     return marcFormat.equals(MarcFormat.HOLDINGS);
-  }
-
-  @Override
-  public String populate(String leader) {
-    return populateValues(leader, Collections.emptyList());
   }
 }

@@ -13,21 +13,18 @@ public abstract class LeaderMarcPopulationService implements MarcPopulationServi
 
   @Override
   public void populate(QuickMarc qmRecord) {
-    var leader = populate(qmRecord.getLeader());
+    var initialLeader = qmRecord.getLeader();
+    if (LEADER_LENGTH != initialLeader.length()) {
+      return;
+    }
+
+    var leader = populateValues(initialLeader, new LinkedList<>(COMMON_CONSTANT_LEADER_ITEMS));
 
     qmRecord.setLeader(leader);
   }
 
-  protected abstract String populate(String leader);
-
-  protected String populateValues(String leader, List<LeaderItem> customLeaderItems) {
-    if (LEADER_LENGTH != leader.length()) {
-      return leader;
-    }
-
+  protected String populateValues(String leader, List<LeaderItem> leaderItems) {
     var leaderBuilder = new StringBuilder(leader);
-    var leaderItems = new LinkedList<>(COMMON_CONSTANT_LEADER_ITEMS);
-    leaderItems.addAll(customLeaderItems);
 
     leaderItems.stream()
       .filter(leaderItem -> leaderItem.getPossibleValues().size() == 1)

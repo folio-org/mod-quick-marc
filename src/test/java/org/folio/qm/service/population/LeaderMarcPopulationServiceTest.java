@@ -2,15 +2,24 @@ package org.folio.qm.service.population;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
-import org.folio.qm.service.population.impl.HoldingsLeaderMarcPopulationService;
+import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
 class LeaderMarcPopulationServiceTest {
 
-  private final HoldingsLeaderMarcPopulationService populationService = new HoldingsLeaderMarcPopulationService();
+  private final LeaderMarcPopulationService populationService = new LeaderMarcPopulationService() {
+    @Override
+    public boolean supportFormat(MarcFormat marcFormat) {
+      return true;
+    }
+  };
 
   private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
   private static final String INVALID_LEADER_LENGTH = "00241cx\\\\a2200109zn\\450";
@@ -20,56 +29,98 @@ class LeaderMarcPopulationServiceTest {
   private static final String WRONG_ENTRY_MAP_21 = "00241cx\\\\a2200109zn\\4400";
   private static final String WRONG_ENTRY_MAP_22 = "00241cx\\\\a2200109zn\\4510";
   private static final String WRONG_ENTRY_MAP_23 = "00241cx\\\\a2200109zn\\4501";
+  private static final String WRONG_CODING_SCHEME = "00241cx\\\\g2200109zn\\4500";
 
   @Test
   void shouldReturnInitialLeaderIfValid() {
-    var expectedLeader = VALID_LEADER;
-    var actualLeader = populationService.populate(expectedLeader);
+    var leader = VALID_LEADER;
+    var quickMarc = getQuickMarc(leader);
 
-    assertEquals(expectedLeader, actualLeader);
+    populationService.populate(quickMarc);
+
+    assertEquals(leader, quickMarc.getLeader());
   }
 
   @Test
   void shouldReturnInitialLeaderIfWrongLength() {
-    var expectedLeader = INVALID_LEADER_LENGTH;
-    var actualLeader = populationService.populate(expectedLeader);
+    var leader = INVALID_LEADER_LENGTH;
+    var quickMarc = getQuickMarc(leader);
 
-    assertEquals(expectedLeader, actualLeader);
+    populationService.populate(quickMarc);
+
+    assertEquals(leader, quickMarc.getLeader());
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnIndicatorCount() {
-    var leader = populationService.populate(WRONG_INDICATOR_COUNT);
-    assertEquals(VALID_LEADER, leader);
+    var quickMarc = getQuickMarc(WRONG_INDICATOR_COUNT);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnSubfieldCodeLength() {
-    var leader = populationService.populate(WRONG_SUBFIELD_CODE_LENGTH);
-    assertEquals(VALID_LEADER, leader);
+    var quickMarc = getQuickMarc(WRONG_SUBFIELD_CODE_LENGTH);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap20() {
-    var leader = populationService.populate(WRONG_ENTRY_MAP_20);
-    assertEquals(VALID_LEADER, leader);
+    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_20);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap21() {
-    var leader = populationService.populate(WRONG_ENTRY_MAP_21);
-    assertEquals(VALID_LEADER, leader);
+    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_21);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap22() {
-    var leader = populationService.populate(WRONG_ENTRY_MAP_22);
-    assertEquals(VALID_LEADER, leader);
+    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_22);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap23() {
-    var leader = populationService.populate(WRONG_ENTRY_MAP_23);
-    assertEquals(VALID_LEADER, leader);
+    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_23);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
+  }
+
+  @Test
+  void shouldNotUpdatePositionWithMultiplePossibleValues() {
+    var customPopulationService = getPopulationServiceForCodingScheme();
+
+    var leader = WRONG_CODING_SCHEME;
+    var quickMarc = getQuickMarc(leader);
+    customPopulationService.populate(quickMarc);
+
+    assertEquals(leader, quickMarc.getLeader());
+  }
+
+  private LeaderMarcPopulationService getPopulationServiceForCodingScheme() {
+    return new LeaderMarcPopulationService() {
+      @Override
+      public boolean supportFormat(MarcFormat marcFormat) {
+        return true;
+      }
+
+      @Override
+      protected String populateValues(String leader, List<LeaderItem> leaderItems) {
+        leaderItems.add(LeaderItem.CODING_SCHEME);
+        return super.populateValues(leader, leaderItems);
+      }
+    };
+  }
+
+  private QuickMarc getQuickMarc(String leader) {
+    return new QuickMarc()
+      .leader(leader);
   }
 }

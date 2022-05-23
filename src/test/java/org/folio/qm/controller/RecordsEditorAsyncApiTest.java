@@ -300,7 +300,7 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
-    log.info("===== Verify PUT record: Failed =====");
+    log.info("===== Verify PUT record: 001 tag check =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 

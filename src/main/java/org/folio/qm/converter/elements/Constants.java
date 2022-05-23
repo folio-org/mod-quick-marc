@@ -108,6 +108,10 @@ public class Constants {
     List.of(CODING_SCHEME, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
       ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
 
+  public static final List<LeaderItem> COMMON_CONSTANT_LEADER_ITEMS =
+    List.of(INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
+      ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
+
   private Constants() {
   }
 }

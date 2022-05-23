@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.service.population.impl.HoldingsLeaderMarcPopulationService;
 import org.folio.qm.support.types.UnitTest;
 
@@ -24,68 +23,53 @@ class LeaderMarcPopulationServiceTest {
 
   @Test
   void shouldReturnInitialLeaderIfValid() {
-    var leader = VALID_LEADER;
-    var quickMarc = getQuickMarc(leader);
+    var expectedLeader = VALID_LEADER;
+    var actualLeader = populationService.populate(expectedLeader);
 
-    populationService.populate(quickMarc);
-
-    assertEquals(leader, quickMarc.getLeader());
+    assertEquals(expectedLeader, actualLeader);
   }
 
   @Test
   void shouldReturnInitialLeaderIfWrongLength() {
-    var leader = INVALID_LEADER_LENGTH;
-    var quickMarc = getQuickMarc(leader);
+    var expectedLeader = INVALID_LEADER_LENGTH;
+    var actualLeader = populationService.populate(expectedLeader);
 
-    populationService.populate(quickMarc);
-
-    assertEquals(leader, quickMarc.getLeader());
+    assertEquals(expectedLeader, actualLeader);
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnIndicatorCount() {
-    var quickMarc = getQuickMarc(WRONG_INDICATOR_COUNT);
-    populationService.populate(quickMarc);
-    assertEquals(VALID_LEADER, quickMarc.getLeader());
+    var leader = populationService.populate(WRONG_INDICATOR_COUNT);
+    assertEquals(VALID_LEADER, leader);
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnSubfieldCodeLength() {
-    var quickMarc = getQuickMarc(WRONG_SUBFIELD_CODE_LENGTH);
-    populationService.populate(quickMarc);
-    assertEquals(VALID_LEADER, quickMarc.getLeader());
+    var leader = populationService.populate(WRONG_SUBFIELD_CODE_LENGTH);
+    assertEquals(VALID_LEADER, leader);
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap20() {
-    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_20);
-    populationService.populate(quickMarc);
-    assertEquals(VALID_LEADER, quickMarc.getLeader());
+    var leader = populationService.populate(WRONG_ENTRY_MAP_20);
+    assertEquals(VALID_LEADER, leader);
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap21() {
-    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_21);
-    populationService.populate(quickMarc);
-    assertEquals(VALID_LEADER, quickMarc.getLeader());
+    var leader = populationService.populate(WRONG_ENTRY_MAP_21);
+    assertEquals(VALID_LEADER, leader);
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap22() {
-    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_22);
-    populationService.populate(quickMarc);
-    assertEquals(VALID_LEADER, quickMarc.getLeader());
+    var leader = populationService.populate(WRONG_ENTRY_MAP_22);
+    assertEquals(VALID_LEADER, leader);
   }
 
   @Test
   void shouldSetDefaultValueForInvalidValueOnEntryMap23() {
-    var quickMarc = getQuickMarc(WRONG_ENTRY_MAP_23);
-    populationService.populate(quickMarc);
-    assertEquals(VALID_LEADER, quickMarc.getLeader());
-  }
-
-  private QuickMarc getQuickMarc(String leader) {
-    return new QuickMarc()
-      .leader(leader);
+    var leader = populationService.populate(WRONG_ENTRY_MAP_23);
+    assertEquals(VALID_LEADER, leader);
   }
 }

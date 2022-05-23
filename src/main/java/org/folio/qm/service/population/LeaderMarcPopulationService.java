@@ -13,12 +13,12 @@ public abstract class LeaderMarcPopulationService implements MarcPopulationServi
 
   @Override
   public void populate(QuickMarc qmRecord) {
-    var leader = populateValues(qmRecord.getLeader());
+    var leader = populate(qmRecord.getLeader());
 
     qmRecord.setLeader(leader);
   }
 
-  protected abstract String populateValues(String leader);
+  protected abstract String populate(String leader);
 
   protected String populateValues(String leader, List<LeaderItem> customLeaderItems) {
     if (LEADER_LENGTH != leader.length()) {
@@ -30,15 +30,9 @@ public abstract class LeaderMarcPopulationService implements MarcPopulationServi
     leaderItems.addAll(customLeaderItems);
 
     leaderItems.stream()
-      .filter(leaderItem -> !isValidLeaderValue(leader, leaderItem))
       .filter(leaderItem -> leaderItem.getPossibleValues().size() == 1)
       .forEach(leaderItem -> leaderBuilder.setCharAt(leaderItem.getPosition(), leaderItem.getPossibleValues().get(0)));
 
     return leaderBuilder.toString();
-  }
-
-  private boolean isValidLeaderValue(String leader, LeaderItem item) {
-    return item.getPossibleValues().contains(leader.charAt(item.getPosition()))
-      || item.getPossibleValues().contains(Character.toLowerCase(leader.charAt(item.getPosition())));
   }
 }

@@ -16,7 +16,7 @@ public class HoldingsLeaderMarcPopulationService extends LeaderMarcPopulationSer
   }
 
   @Override
-  public String populateValues(String leader) {
+  public String populate(String leader) {
     return populateValues(leader, Collections.emptyList());
   }
 }

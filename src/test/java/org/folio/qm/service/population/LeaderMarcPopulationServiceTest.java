@@ -1,10 +1,11 @@
-package org.folio.qm.service.population.impl;
+package org.folio.qm.service.population;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.service.population.impl.HoldingsLeaderMarcPopulationService;
 import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
@@ -13,6 +14,7 @@ class LeaderMarcPopulationServiceTest {
   private final HoldingsLeaderMarcPopulationService populationService = new HoldingsLeaderMarcPopulationService();
 
   private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
+  private static final String INVALID_LEADER_LENGTH = "00241cx\\\\a2200109zn\\450";
   private static final String WRONG_INDICATOR_COUNT = "00241cx\\\\a0200109zn\\4500";
   private static final String WRONG_SUBFIELD_CODE_LENGTH = "00241cx\\\\a2000109zn\\4500";
   private static final String WRONG_ENTRY_MAP_20 = "00241cx\\\\a2200109zn\\5500";
@@ -23,6 +25,16 @@ class LeaderMarcPopulationServiceTest {
   @Test
   void shouldReturnInitialLeaderIfValid() {
     var leader = VALID_LEADER;
+    var quickMarc = getQuickMarc(leader);
+
+    populationService.populate(quickMarc);
+
+    assertEquals(leader, quickMarc.getLeader());
+  }
+
+  @Test
+  void shouldReturnInitialLeaderIfWrongLength() {
+    var leader = INVALID_LEADER_LENGTH;
     var quickMarc = getQuickMarc(leader);
 
     populationService.populate(quickMarc);

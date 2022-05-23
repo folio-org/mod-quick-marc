@@ -4,12 +4,8 @@ import static org.folio.qm.util.MarcUtils.updateRecordTimestamp;
 
 import java.util.Objects;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.DICSFieldProtectionSettingsClient;
-import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
-import org.springframework.stereotype.Service;
-
 import org.folio.qm.client.SRMChangeManagerClient;
 import org.folio.qm.client.UsersClient;
 import org.folio.qm.converter.MarcConverterFactory;
@@ -22,8 +18,10 @@ import org.folio.qm.service.CreationStatusService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.RecordCreationService;
 import org.folio.qm.service.ValidationService;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +35,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final UsersClient usersClient;
   private final ValidationService validationService;
   private final CreationStatusService statusService;
+  private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
@@ -47,7 +46,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public QuickMarc findByExternalId(UUID externalId) {
     var parsedRecordDto = srmClient.getParsedRecordByExternalId(externalId.toString());
     MarcFieldProtectionSettingsCollection fieldProtectionSettingsMarc = discClient.getFieldProtectionSettingsMarc();
-    var quickMarc = marcConverterFactory.findConverter(parsedRecordDto.getRecordType(), fieldProtectionSettingsMarc).convert(parsedRecordDto);
+    var quickMarc = marcConverterFactory.findConverter(parsedRecordDto.getRecordType(), fieldProtectionSettingsMarc)
+      .convert(parsedRecordDto);
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {
@@ -61,7 +61,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
-    validateMarcFields(quickMarc);
+    populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto =
       marcConverterFactory.findConverter(quickMarc.getMarcFormat()).convert(updateRecordTimestamp(quickMarc));
     srmClient.putParsedRecordByInstanceId(String.valueOf(quickMarc.getParsedRecordDtoId()), parsedRecordDto);
@@ -77,11 +77,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
     validationService.validateUserId(folioExecutionContext);
-    validateMarcFields(quickMarc);
+    populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     return recordCreationService.createRecord(quickMarc);
   }
 
-  private void validateMarcFields(QuickMarc quickMarc) {
+  private void populateWithDefaultValuesAndValidateMarcRecord(QuickMarc quickMarc) {
+    defaultValuesPopulationService.populate(quickMarc);
     var validationResult = validationService.validate(quickMarc);
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);

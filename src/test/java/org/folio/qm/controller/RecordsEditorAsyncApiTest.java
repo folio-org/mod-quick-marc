@@ -51,6 +51,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.util.ErrorUtils;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -293,6 +295,25 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     wireMockServer.verify(exactly(0),
       putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
+  void testUpdateReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
+    log.info("===== Verify PUT record: 001 tag check =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(filePath)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    // Now we add the new 001 field to the record and try to update existing record
+    quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test value"));
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(errorMessageMatch(equalTo("Is unique tag")));
   }
 
   @Test

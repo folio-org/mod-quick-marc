@@ -5,6 +5,7 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.FieldValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,11 +16,15 @@ import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
 import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 
 @Component
-public class OnlyOne100ControlFieldValidationRule extends FieldValidationRule {
+public class OnlyOne001ControlFieldValidationRule extends FieldValidationRule {
   @Override
   protected Optional<ValidationError> validate(List<FieldItem> fieldItems) {
-    var fieldsWith008TagCode = filterFieldsByTagCode(fieldItems, TAG_001_CONTROL_FIELD);
-    return onlyOneRequiredCondition().apply(TAG_001_CONTROL_FIELD, fieldsWith008TagCode);
+    var fieldsWith001TagCode = filterFieldsByTagCode(fieldItems, TAG_001_CONTROL_FIELD);
+    if (CollectionUtils.isEmpty(fieldsWith001TagCode)) {
+      return Optional.empty();
+    } else {
+      return onlyOneRequiredCondition().apply(TAG_001_CONTROL_FIELD, fieldsWith001TagCode);
+    }
   }
 
   /**

@@ -234,9 +234,8 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
 
     var field = getFieldWithIndicators(Collections.singletonList(" "));
     var titleField = getFieldWithValue("245", "title");
-    var hridField = getFieldWithValue("001", "hrid");
     QuickMarc quickMarcJson =
-      getQuickMarcJsonWithMinContent(field, field, titleField, hridField).parsedRecordDtoId(UUID.randomUUID())
+      getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
         .marcFormat(MarcFormat.BIBLIOGRAPHIC)
         .relatedRecordVersion("1")
         .parsedRecordId(VALID_PARSED_RECORD_ID)

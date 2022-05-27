@@ -1,6 +1,7 @@
 package org.folio.qm.service.population.impl;
 
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AuthorityLeaderMarcPopulationServiceTest {
 
   private final AuthorityLeaderMarcPopulationService populationService = new AuthorityLeaderMarcPopulationService();
+
+  private static final String VALID_LEADER = "06059cz\\\\a2201201n\\\\4500";
+  private static final String WRONG_AUTHORITY_RECORD_TYPE = "06059ca\\\\a2201201n\\\\4500";
 
   @Test
   void shouldSupportAuthorityFormat() {
@@ -25,5 +29,17 @@ class AuthorityLeaderMarcPopulationServiceTest {
   @Test
   void shouldNotSupportHoldingsFormat() {
     assertFalse(populationService.supportFormat(MarcFormat.HOLDINGS));
+  }
+
+  @Test
+  void shouldSetDefaultValueForInvalidValueOnAuthorityRecordType() {
+    var quickMarc = getQuickMarc(WRONG_AUTHORITY_RECORD_TYPE);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
+  }
+
+  private QuickMarc getQuickMarc(String leader) {
+    return new QuickMarc()
+      .leader(leader);
   }
 }

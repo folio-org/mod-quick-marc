@@ -43,6 +43,11 @@ import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
 import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
 import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 import static org.folio.qm.converter.elements.LeaderItem.AUTHORITY_RECORD_TYPE;
+import static org.folio.qm.converter.elements.LeaderItem.AUTHORITY_CODING_SCHEME;
+import static org.folio.qm.converter.elements.LeaderItem.AUTHORITY_PUNCTUATION_POLICY;
+import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_7;
+import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_8;
+import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_19;
 
 import java.util.List;
 import java.util.Set;
@@ -113,9 +118,11 @@ public class Constants {
     List.of(INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
       ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
 
-  public static final List<LeaderItem> AUTHORITY_CONSTANT_LEADER_ITEMS =
-    List.of(AUTHORITY_RECORD_TYPE, INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
-      ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
+  public static final List<LeaderItem> AUTHORITY_CONSTANT_LEADER_ITEMS = List.of(
+    UNDEFINED_CHARACTER_POSITION_7, UNDEFINED_CHARACTER_POSITION_8, UNDEFINED_CHARACTER_POSITION_19,
+    AUTHORITY_RECORD_TYPE, AUTHORITY_CODING_SCHEME, AUTHORITY_PUNCTUATION_POLICY,
+    INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
+    ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
 
   private Constants() {
   }

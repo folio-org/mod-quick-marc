@@ -17,9 +17,9 @@ public enum LeaderItem {
   ENTRY_MAP_23("Entry map", 23, 1, '0'),
 
   //COMMON FIELDS FOR HOLDINGS AND AUTHORITY
-  UNDEFINED_CHARACTER_POSITION_7("Undefined character position", 7, 1, '\\', ' ', '\u00A0'),
-  UNDEFINED_CHARACTER_POSITION_8("Undefined character position", 8, 1, '\\', ' ', '\u00A0'),
-  UNDEFINED_CHARACTER_POSITION_19("Undefined character position", 19, 1, '\\', ' ', '\u00A0'),
+  UNDEFINED_CHARACTER_POSITION_7("Undefined character position", 7, 1, '\\'),
+  UNDEFINED_CHARACTER_POSITION_8("Undefined character position", 8, 1, '\\'),
+  UNDEFINED_CHARACTER_POSITION_19("Undefined character position", 19, 1, '\\'),
 
   //BIB FIELDS
   BIB_RECORD_STATUS("Bib record status", 5, 1, 'a', 'c', 'd', 'n', 'p'),
@@ -43,6 +43,8 @@ public enum LeaderItem {
   AUTHORITY_RECORD_STATUS("Authority record status", 5, 1, 'a', 'c', 'd', 'n', 'o', 's', 'x'),
   AUTHORITY_RECORD_TYPE("Authority type of record", 6, 1, 'z'),
   AUTHORITY_ENCODING_LEVEL("Authority encoding level", 17, 1, 'n', 'o'),
+  AUTHORITY_CODING_SCHEME("Authority character coding scheme", 9, 1, '\\'),
+  AUTHORITY_PUNCTUATION_POLICY("Authority punctuation policy", 18, 1, '\\'),
   PUNCTUATION_POLICY("Punctuation policy", 18, 1, '\\', ' ', '\u00A0', 'c', 'i', 'u');
 
   private final String name;

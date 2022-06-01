@@ -2,6 +2,9 @@ package org.folio.qm.service.population;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,11 @@ import org.folio.qm.support.types.UnitTest;
 class LeaderMarcPopulationServiceTest {
 
   private final LeaderMarcPopulationService populationService = new LeaderMarcPopulationService() {
+    @Override
+    protected List<LeaderItem> getConstantLeaderItems() {
+      return COMMON_CONSTANT_LEADER_ITEMS;
+    }
+
     @Override
     public boolean supportFormat(MarcFormat marcFormat) {
       return true;
@@ -109,6 +117,11 @@ class LeaderMarcPopulationServiceTest {
       @Override
       public boolean supportFormat(MarcFormat marcFormat) {
         return true;
+      }
+
+      @Override
+      protected List<LeaderItem> getConstantLeaderItems() {
+        return new LinkedList<>(COMMON_CONSTANT_LEADER_ITEMS);
       }
 
       @Override

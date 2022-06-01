@@ -1,6 +1,6 @@
 package org.folio.qm.service.population.impl;
 
-import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
+import static org.folio.qm.converter.elements.Constants.AUTHORITY_CONSTANT_LEADER_ITEMS;
 
 import java.util.List;
 
@@ -11,15 +11,15 @@ import org.folio.qm.service.population.LeaderMarcPopulationService;
 import org.folio.qm.converter.elements.LeaderItem;
 
 @Service
-public class BibliographicLeaderMarcPopulationService extends LeaderMarcPopulationService {
+public class AuthorityLeaderMarcPopulationService extends LeaderMarcPopulationService {
 
   @Override
   public boolean supportFormat(MarcFormat marcFormat) {
-    return marcFormat.equals(MarcFormat.BIBLIOGRAPHIC);
+    return marcFormat.equals(MarcFormat.AUTHORITY);
   }
 
   @Override
   protected List<LeaderItem> getConstantLeaderItems() {
-    return COMMON_CONSTANT_LEADER_ITEMS;
+    return AUTHORITY_CONSTANT_LEADER_ITEMS;
   }
 }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -120,7 +121,7 @@ class LeaderMarcPopulationServiceTest {
 
       @Override
       protected List<LeaderItem> getConstantLeaderItems() {
-        return COMMON_CONSTANT_LEADER_ITEMS;
+        return new LinkedList<>(COMMON_CONSTANT_LEADER_ITEMS);
       }
 
       @Override

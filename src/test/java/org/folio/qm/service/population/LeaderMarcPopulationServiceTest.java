@@ -2,11 +2,12 @@ package org.folio.qm.service.population;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
+
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
 import org.folio.qm.converter.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;

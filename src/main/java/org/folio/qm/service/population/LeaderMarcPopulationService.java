@@ -2,7 +2,6 @@ package org.folio.qm.service.population;
 
 import static org.folio.qm.converter.elements.Constants.LEADER_LENGTH;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.folio.qm.converter.elements.LeaderItem;
@@ -17,7 +16,7 @@ public abstract class LeaderMarcPopulationService implements MarcPopulationServi
       return;
     }
 
-    var leader = populateValues(initialLeader, new LinkedList<>(getConstantLeaderItems()));
+    var leader = populateValues(initialLeader, getConstantLeaderItems());
 
     qmRecord.setLeader(leader);
   }

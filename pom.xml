@@ -12,7 +12,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>mod-quick-marc</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.3.0-SNAPSHOT</version>
   <description>API for quickMARC - in-app editor for MARC records in SRS</description>
   <packaging>jar</packaging>
 

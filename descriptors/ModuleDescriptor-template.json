@@ -45,6 +45,7 @@
           "modulePermissions": [
             "change-manager.jobexecutions.post",
             "change-manager.jobexecutions.put",
+            "change-manager.parsedrecords.put",
             "change-manager.records.post"
           ]
         },

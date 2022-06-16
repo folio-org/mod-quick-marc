@@ -94,13 +94,6 @@ class BaseApiTest {
 
   @AfterEach
   void afterEach() throws Exception {
-    if (dbInitialized) {
-      var body = new TenantAttributes().purge(true);
-      postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
-        .andExpect(status().isNoContent());
-
-      dbInitialized = false;
-    }
     this.wireMockServer.resetAll();
   }
 
@@ -175,7 +168,7 @@ class BaseApiTest {
     return new RecordHeader(headerName, headerValue.getBytes(StandardCharsets.UTF_8));
   }
 
-  private HttpHeaders getHeaders() {
+  protected HttpHeaders getHeaders() {
     final HttpHeaders httpHeaders = new HttpHeaders();
 
     httpHeaders.add(XOkapiHeaders.TENANT, TENANT_ID);

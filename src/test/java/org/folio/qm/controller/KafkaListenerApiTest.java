@@ -3,6 +3,7 @@ package org.folio.qm.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Durations.ONE_MINUTE;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
+import org.folio.tenant.domain.dto.TenantAttributes;
 
 @IntegrationTest
 class KafkaListenerApiTest extends BaseApiTest {
@@ -105,6 +107,13 @@ class KafkaListenerApiTest extends BaseApiTest {
       .hasNoNullFieldsOrPropertiesExcept("errorMessage")
       .hasFieldOrPropertyWithValue("id", statusId)
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED);
+  }
+
+  @Test
+  void shouldPurgeTenant() throws Exception {
+    var body = new TenantAttributes().purge(true);
+    postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
+      .andExpect(status().isNoContent());
   }
 
   @Test

@@ -25,10 +25,8 @@ import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +56,6 @@ import org.folio.tenant.domain.dto.TenantAttributes;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BaseApiTest {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
@@ -96,15 +93,15 @@ class BaseApiTest {
   }
 
   @AfterEach
-  void afterEach() {
-    this.wireMockServer.resetAll();
-  }
+  void afterEach() throws Exception {
+    if (dbInitialized) {
+      var body = new TenantAttributes().purge(true);
+      postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
+        .andExpect(status().isNoContent());
 
-  @AfterAll
-  void teardown() throws Exception {
-    var body = new TenantAttributes().purge(true);
-    postResultActions("/_/tenant", body, getHeaders().toSingleValueMap())
-      .andExpect(status().isNoContent());
+      dbInitialized = false;
+    }
+    this.wireMockServer.resetAll();
   }
 
   protected ResultActions getResultActions(String uri) throws Exception {

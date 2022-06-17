@@ -93,7 +93,7 @@ class BaseApiTest {
   }
 
   @AfterEach
-  void afterEach() throws Exception {
+  void afterEach() {
     this.wireMockServer.resetAll();
   }
 

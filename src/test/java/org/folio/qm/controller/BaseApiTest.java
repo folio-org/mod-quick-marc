@@ -168,7 +168,7 @@ class BaseApiTest {
     return new RecordHeader(headerName, headerValue.getBytes(StandardCharsets.UTF_8));
   }
 
-  protected HttpHeaders getHeaders() {
+  private HttpHeaders getHeaders() {
     final HttpHeaders httpHeaders = new HttpHeaders();
 
     httpHeaders.add(XOkapiHeaders.TENANT, TENANT_ID);

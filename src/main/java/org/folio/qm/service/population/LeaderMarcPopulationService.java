@@ -23,11 +23,16 @@ public abstract class LeaderMarcPopulationService implements MarcPopulationServi
 
   protected abstract List<LeaderItem> getConstantLeaderItems();
 
+  /**
+   * @param leader to populate default values
+   * @param leaderItems leader items that should be populated if leader has not acceptable value
+   * @return cleaned leader
+   */
   protected String populateValues(String leader, List<LeaderItem> leaderItems) {
     var leaderBuilder = new StringBuilder(leader);
 
     leaderItems.stream()
-      .filter(leaderItem -> leaderItem.getPossibleValues().size() == 1)
+      .filter(leaderItem -> !leaderItem.getPossibleValues().contains(leaderBuilder.charAt(leaderItem.getPosition())))
       .forEach(leaderItem -> leaderBuilder.setCharAt(leaderItem.getPosition(), leaderItem.getPossibleValues().get(0)));
 
     return leaderBuilder.toString();

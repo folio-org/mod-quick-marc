@@ -3,7 +3,7 @@ version: "3.9"
 services:
   postgres:
     container_name: postgres-quick-marc
-    image: postgres:12.10
+    image: postgres:12-alpine
     ports:
       - "5432:5432"
     volumes:
@@ -77,6 +77,7 @@ services:
 
   mod-quick-marc:
     container_name: mod-quick-marc
+    image: dev.folio/mod-quick-marc
     build:
       context: ..\
       dockerfile: Dockerfile

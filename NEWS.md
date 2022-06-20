@@ -1,3 +1,8 @@
+## 2.4.0 - 2022.xx.xx
+
+### Changes
+* [MODQM-243](https://issues.folio.org/browse/MODQM-243) - Update folio-spring-base to v4.1.0
+
 ## 2.3.0 - Released
 
 ### Changes

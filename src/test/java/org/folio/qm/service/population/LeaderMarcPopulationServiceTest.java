@@ -38,6 +38,7 @@ class LeaderMarcPopulationServiceTest {
   private static final String WRONG_ENTRY_MAP_22 = "00241cx\\\\a2200109zn\\4510";
   private static final String WRONG_ENTRY_MAP_23 = "00241cx\\\\a2200109zn\\4501";
   private static final String WRONG_CODING_SCHEME = "00241cx\\\\g2200109zn\\4500";
+  private static final String VALID_CODING_SCHEME = "00241cx\\\\a2200109zn\\4500";
 
   @Test
   void shouldReturnInitialLeaderIfValid() {
@@ -102,14 +103,30 @@ class LeaderMarcPopulationServiceTest {
   }
 
   @Test
-  void shouldNotUpdatePositionWithMultiplePossibleValues() {
+  void shouldNotUpdatePositionWithMultiplePossibleValuesIfLeaderIsAcceptable() {
     var customPopulationService = getPopulationServiceForCodingScheme();
 
-    var leader = WRONG_CODING_SCHEME;
+    var leader = VALID_CODING_SCHEME;
     var quickMarc = getQuickMarc(leader);
     customPopulationService.populate(quickMarc);
 
     assertEquals(leader, quickMarc.getLeader());
+  }
+
+  @Test
+  void shouldUpdatePositionWithMultiplePossibleValuesIfLeaderPositionIsNotAcceptable() {
+    var customPopulationService = getPopulationServiceForCodingScheme();
+
+    var leader = WRONG_CODING_SCHEME;
+    var stringBuilder = new StringBuilder(leader);
+    stringBuilder.setCharAt(9, '\\');
+    var expected = stringBuilder.toString();
+
+    var quickMarc = getQuickMarc(leader);
+    customPopulationService.populate(quickMarc);
+
+
+    assertEquals(expected, quickMarc.getLeader());
   }
 
   private LeaderMarcPopulationService getPopulationServiceForCodingScheme() {
@@ -121,14 +138,11 @@ class LeaderMarcPopulationServiceTest {
 
       @Override
       protected List<LeaderItem> getConstantLeaderItems() {
-        return new LinkedList<>(COMMON_CONSTANT_LEADER_ITEMS);
+        var leaderItems = new LinkedList<>(COMMON_CONSTANT_LEADER_ITEMS);
+        leaderItems.add(LeaderItem.CODING_SCHEME);
+        return leaderItems;
       }
 
-      @Override
-      protected String populateValues(String leader, List<LeaderItem> leaderItems) {
-        leaderItems.add(LeaderItem.CODING_SCHEME);
-        return super.populateValues(leader, leaderItems);
-      }
     };
   }
 

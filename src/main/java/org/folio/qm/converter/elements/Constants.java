@@ -42,7 +42,6 @@ import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_21;
 import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_22;
 import static org.folio.qm.converter.elements.LeaderItem.ENTRY_MAP_23;
 import static org.folio.qm.converter.elements.LeaderItem.INDICATOR_COUNT;
-import static org.folio.qm.converter.elements.LeaderItem.PUNCTUATION_POLICY;
 import static org.folio.qm.converter.elements.LeaderItem.SUBFIELD_CODE_LENGTH;
 import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_19;
 import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_7;
@@ -119,7 +118,7 @@ public class Constants {
 
   public static final List<LeaderItem> AUTHORITY_CONSTANT_LEADER_ITEMS = List.of(
     UNDEFINED_CHARACTER_POSITION_7, UNDEFINED_CHARACTER_POSITION_8, UNDEFINED_CHARACTER_POSITION_19,
-    AUTHORITY_RECORD_TYPE, CODING_SCHEME, PUNCTUATION_POLICY,
+    AUTHORITY_RECORD_TYPE, CODING_SCHEME,
     INDICATOR_COUNT, SUBFIELD_CODE_LENGTH,
     ENTRY_MAP_20, ENTRY_MAP_21, ENTRY_MAP_22, ENTRY_MAP_23);
 

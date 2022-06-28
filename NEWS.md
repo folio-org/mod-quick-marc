@@ -1,6 +1,20 @@
-## 2.4.0 - 2022.xx.xx
+## 2.4.0 - Released
 
 ### Changes
+* [MODQM-195](https://issues.folio.org/browse/MODQM-195) - Delete Authority: Implement DELETE record
+* [MODQM-203](https://issues.folio.org/browse/MODQM-203) - Moved to testcontainers
+* [MODQM-204](https://issues.folio.org/browse/MODQM-204) - Change validation for holdings 852 tag
+* [MODQM-206](https://issues.folio.org/browse/MODQM-206) - Refactor and improve record conversion
+* [MODQM-207](https://issues.folio.org/browse/MODQM-207) - Extract externalRecordId from DI_COMPLETE after deletion
+* [MODQM-209](https://issues.folio.org/browse/MODQM-209) - Fix validation error
+* [MODQM-211](https://issues.folio.org/browse/MODQM-211) - Fix problem with cache for update action
+* [MODQM-213](https://issues.folio.org/browse/MODQM-213) - MARC authority - Cannot Edit record (snapshot environment)
+* [MODQM-218](https://issues.folio.org/browse/MODQM-218) - Fix OL handling and improve timeout handling
+* [MODQM-223](https://issues.folio.org/browse/MODQM-223) - Migrate update to data-import flow
+* [MODQM-225](https://issues.folio.org/browse/MODQM-225) - Improve handling of erroneous MARC bib Leader positions that cannot be edited via quickMARC
+* [MODQM-226](https://issues.folio.org/browse/MODQM-226) - Improve handling of erroneous MARC holdings Leader positions that cannot be edited via quickMARC
+* [MODQM-228](https://issues.folio.org/browse/MODQM-228) - added validation rule to check if only one 001 field is present in a record
+* [MODQM-229](https://issues.folio.org/browse/MODQM-229) - Improve handling of erroneous MARC authority Leader positions that cannot be edited via quickMARC
 * [MODQM-243](https://issues.folio.org/browse/MODQM-243) - Update folio-spring-base to v4.1.0
 
 ## 2.3.0 - Released

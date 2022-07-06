@@ -297,6 +297,28 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
       putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
   }
 
+  @Test
+  void testUpdateQuickMarcRecordIgnoreElvlLeaderMismatch() throws Exception {
+    log.info("===== Verify PUT record: Leader and ignore 008 Elvl mismatch =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    quickMarcJson.getFields().stream()
+      .filter(fieldItem -> fieldItem.getTag().equals("008"))
+      .forEach(fieldItem -> {
+        @SuppressWarnings("unchecked")
+        var content = ((Map<String, Object>) fieldItem.getContent());
+        content.put("Elvl", "a");
+      });
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isOk());
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordWithMultiple001(String filePath) throws Exception {

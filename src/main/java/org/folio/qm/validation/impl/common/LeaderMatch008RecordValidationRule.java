@@ -4,8 +4,6 @@ import static java.util.Objects.nonNull;
 
 import static org.folio.qm.converter.elements.Constants.DESC;
 import static org.folio.qm.converter.elements.Constants.DESC_LEADER_POS;
-import static org.folio.qm.converter.elements.Constants.ELVL;
-import static org.folio.qm.converter.elements.Constants.ELVL_LEADER_POS;
 import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 
 import java.util.List;
@@ -42,9 +40,7 @@ public class LeaderMatch008RecordValidationRule extends RecordValidationRule {
     @SuppressWarnings("unchecked")
     var contentMap = ((Map<String, Object>) content);
     return nonNull(contentMap)
-      && nonNull(contentMap.get(ELVL))
       && nonNull(contentMap.get(DESC))
-      && contentMap.get(ELVL).toString().equals(Character.toString(leader.charAt(ELVL_LEADER_POS)))
       && contentMap.get(DESC).toString().equals(Character.toString(leader.charAt(DESC_LEADER_POS)));
   }
 

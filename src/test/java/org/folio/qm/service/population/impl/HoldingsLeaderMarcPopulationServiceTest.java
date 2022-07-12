@@ -1,15 +1,22 @@
 package org.folio.qm.service.population.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
 class HoldingsLeaderMarcPopulationServiceTest {
+
+  private static final String VALID_LEADER = "00497cy\\\\a22001574\\\\4500";
+  private static final String WRONG_UNDEFINED_CHARACTER_POSITION_7 = "00497cy7\\a22001574\\\\4500";
+  private static final String WRONG_UNDEFINED_CHARACTER_POSITION_8 = "00497cy\\8a22001574\\\\4500";
+  private static final String WRONG_UNDEFINED_CHARACTER_POSITION_19 = "00497cy\\\\a22001574\\94500";
 
   private final HoldingsLeaderMarcPopulationService populationService = new HoldingsLeaderMarcPopulationService();
 
@@ -26,5 +33,31 @@ class HoldingsLeaderMarcPopulationServiceTest {
   @Test
   void shouldNotSupportAuthorityFormat() {
     assertFalse(populationService.supportFormat(MarcFormat.AUTHORITY));
+  }
+
+  @Test
+  void shouldSetDefaultValueForInvalidValueOnAuthorityUndefinedCharacterPosition7() {
+    var quickMarc = getQuickMarc(WRONG_UNDEFINED_CHARACTER_POSITION_7);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
+  }
+
+  @Test
+  void shouldSetDefaultValueForInvalidValueOnAuthorityUndefinedCharacterPosition8() {
+    var quickMarc = getQuickMarc(WRONG_UNDEFINED_CHARACTER_POSITION_8);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
+  }
+
+  @Test
+  void shouldSetDefaultValueForInvalidValueOnAuthorityUndefinedCharacterPosition19() {
+    var quickMarc = getQuickMarc(WRONG_UNDEFINED_CHARACTER_POSITION_19);
+    populationService.populate(quickMarc);
+    assertEquals(VALID_LEADER, quickMarc.getLeader());
+  }
+
+  private QuickMarc getQuickMarc(String leader) {
+    return new QuickMarc()
+      .leader(leader);
   }
 }

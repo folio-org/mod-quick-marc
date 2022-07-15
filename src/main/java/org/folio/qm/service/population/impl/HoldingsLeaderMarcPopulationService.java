@@ -1,6 +1,6 @@
 package org.folio.qm.service.population.impl;
 
-import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
+import static org.folio.qm.converter.elements.Constants.HOLDINGS_CONSTANT_LEADER_ITEMS;
 
 import java.util.List;
 
@@ -20,6 +20,6 @@ public class HoldingsLeaderMarcPopulationService extends LeaderMarcPopulationSer
 
   @Override
   protected List<LeaderItem> getConstantLeaderItems() {
-    return COMMON_CONSTANT_LEADER_ITEMS;
+    return HOLDINGS_CONSTANT_LEADER_ITEMS;
   }
 }

@@ -80,7 +80,7 @@ import org.folio.spring.integration.XOkapiHeaders;
 
 @Log4j2
 @IntegrationTest
-class RecordsEditorApiTest extends BaseApiTest {
+class RecordsEditorIT extends BaseIT {
 
   @Test
   void testGetQuickMarcBibRecord() throws Exception {

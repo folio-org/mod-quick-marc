@@ -52,7 +52,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.util.ErrorUtils;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -68,7 +67,7 @@ import org.folio.qm.support.types.IntegrationTest;
 
 @Log4j2
 @IntegrationTest
-class RecordsEditorAsyncApiTest extends BaseApiTest {
+class RecordsEditorAsyncIT extends BaseIT {
 
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
@@ -102,7 +101,7 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @Test
   void testUpdateQuickMarcRecordFailedInEvent() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Failed in external modules =====");
+    RecordsEditorAsyncIT.log.info("===== Verify PUT record: Failed in external modules =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
@@ -130,7 +129,7 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @Test
   void testUpdateQuickMarcRecordFailedInEventByOptimisticLocking() throws Exception {
-    RecordsEditorAsyncApiTest.log.info(
+    RecordsEditorAsyncIT.log.info(
       "==== Verify PUT record: Failed in external modules due to optimistic locking ====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
@@ -167,7 +166,7 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @Test
   void testUpdateQuickMarcRecordWrongUuid() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("===== Verify PUT record: Not found =====");
+    RecordsEditorAsyncIT.log.info("===== Verify PUT record: Not found =====");
     UUID wrongUUID = UUID.randomUUID();
 
     mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
@@ -381,7 +380,7 @@ class RecordsEditorAsyncApiTest extends BaseApiTest {
 
   @Test
   void testDeleteQuickMarcRecordWrongUuid() throws Exception {
-    RecordsEditorAsyncApiTest.log.info("===== Verify DELETE record: Not found =====");
+    RecordsEditorAsyncIT.log.info("===== Verify DELETE record: Not found =====");
     mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, wireMockServer);
 
     wireMockServer.verify(exactly(0),

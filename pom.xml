@@ -423,7 +423,6 @@
           </execution>
         </executions>
         <configuration>
-          <includes>*ApiTest*</includes>
           <groups>integration</groups>
         </configuration>
       </plugin>

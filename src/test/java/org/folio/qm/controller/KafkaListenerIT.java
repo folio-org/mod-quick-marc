@@ -19,7 +19,7 @@ import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
 
 @IntegrationTest
-class KafkaListenerApiTest extends BaseApiTest {
+class KafkaListenerIT extends BaseIT {
 
   private static final String DI_ERROR_EVENT = "mockdata/request/di-event/error-event.json";
 

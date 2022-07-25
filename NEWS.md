@@ -1,3 +1,8 @@
+## 2.4.1 - Released
+
+### Changes
+* [MODQM-249](https://issues.folio.org/browse/MODQM-249) - Improve handling of erroneous "MARC Holdings" LDR 07, 08, 19 positions
+
 ## 2.4.0 - Released
 
 ### Changes

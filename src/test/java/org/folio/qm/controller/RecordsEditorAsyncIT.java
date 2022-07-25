@@ -101,7 +101,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   @Test
   void testUpdateQuickMarcRecordFailedInEvent() throws Exception {
-    RecordsEditorAsyncIT.log.info("===== Verify PUT record: Failed in external modules =====");
+    log.info("===== Verify PUT record: Failed in external modules =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
@@ -129,8 +129,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   @Test
   void testUpdateQuickMarcRecordFailedInEventByOptimisticLocking() throws Exception {
-    RecordsEditorAsyncIT.log.info(
-      "==== Verify PUT record: Failed in external modules due to optimistic locking ====");
+    log.info("==== Verify PUT record: Failed in external modules due to optimistic locking ====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
@@ -166,7 +165,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   @Test
   void testUpdateQuickMarcRecordWrongUuid() throws Exception {
-    RecordsEditorAsyncIT.log.info("===== Verify PUT record: Not found =====");
+    log.info("===== Verify PUT record: Not found =====");
     UUID wrongUUID = UUID.randomUUID();
 
     mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);

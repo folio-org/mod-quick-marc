@@ -7,7 +7,7 @@ import org.folio.qm.validation.ValidationResult;
 public class FieldsValidationException extends RuntimeException {
 
   @Getter
-  private final ValidationResult validationResult;
+  private final transient ValidationResult validationResult;
 
   public FieldsValidationException(ValidationResult validationResult) {
     this.validationResult = validationResult;

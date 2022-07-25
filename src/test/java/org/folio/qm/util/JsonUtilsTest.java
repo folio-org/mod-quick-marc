@@ -43,8 +43,9 @@ class JsonUtilsTest {
 
   @Test
   void shouldThrowExceptionWhenInvalidObject() {
+    var arg = new Object();
     Exception exception = assertThrows(IllegalStateException.class,
-      () -> JsonUtils.objectToJsonString(new Object()));
+      () -> JsonUtils.objectToJsonString(arg));
     assertTrue(exception.getMessage().contains(OBJECT_SERIALIZATION_FAILED));
   }
 

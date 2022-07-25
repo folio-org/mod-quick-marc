@@ -56,7 +56,7 @@ import org.folio.tenant.domain.dto.TenantAttributes;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-class BaseApiTest {
+class BaseIT {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
@@ -148,7 +148,7 @@ class BaseApiTest {
   protected void sendQMKafkaRecord(String eventPayload) {
     var jsonObject = new JSONObject();
     jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), BaseApiTest.QM_COMPLETE_TOPIC_NAME);
+    sendKafkaRecord(jsonObject.toString(), BaseIT.QM_COMPLETE_TOPIC_NAME);
   }
 
   protected void sendKafkaRecord(String eventPayload, String topicName) {

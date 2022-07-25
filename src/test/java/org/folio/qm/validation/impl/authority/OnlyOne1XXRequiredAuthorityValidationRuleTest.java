@@ -40,7 +40,7 @@ class OnlyOne1XXRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals(validationError.getMessage(), "Content couldn't be empty"));
+      .hasValueSatisfying(validationError -> assertEquals("Content couldn't be empty", validationError.getMessage()));
   }
 
   @Test
@@ -52,7 +52,7 @@ class OnlyOne1XXRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals(validationError.getMessage(), "Is unique tag"));
+      .hasValueSatisfying(validationError -> assertEquals("Is unique tag", validationError.getMessage()));
   }
 
   @Test
@@ -61,7 +61,7 @@ class OnlyOne1XXRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals(validationError.getMessage(), "Is required tag"));
+      .hasValueSatisfying(validationError -> assertEquals("Is required tag", validationError.getMessage()));
   }
 
 }

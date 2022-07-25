@@ -23,8 +23,8 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
     <folio-spring-base.version>4.1.0</folio-spring-base.version>
-    <openapi-generator.version>5.3.1</openapi-generator.version>
-    <mapstruct.version>1.5.1.Final</mapstruct.version>
+    <openapi-generator.version>5.4.0</openapi-generator.version>
+    <mapstruct.version>1.5.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
     <lombok.mapstruct-binding.version>0.2.0</lombok.mapstruct-binding.version>
 
@@ -38,8 +38,15 @@
     <wiremock.version>2.33.2</wiremock.version>
     <marc4j.version>2.9.2</marc4j.version>
     <junit-extensions.version>2.5.0</junit-extensions.version>
-    <jsonassert.version>1.5.0</jsonassert.version>
-    <testcontainer.version>1.17.2</testcontainer.version>
+    <jsonassert.version>1.5.1</jsonassert.version>
+    <testcontainer.version>1.17.3</testcontainer.version>
+
+    <!-- Plugin properties -->
+    <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+    <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+    <maven-release-plugin.version>3.0.0-M5</maven-release-plugin.version>
   </properties>
 
   <dependencies>
@@ -257,7 +264,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>${build-helper-maven-plugin.version}</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
@@ -369,7 +376,7 @@
       <plugin>
         <groupId>com.coderplus.maven.plugins</groupId>
         <artifactId>copy-rename-maven-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>${copy-rename-maven-plugin.version}</version>
         <executions>
           <execution>
             <id>rename-descriptor-outputs</id>
@@ -396,7 +403,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
+        <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
           <groups>unit</groups>
@@ -406,17 +413,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0-M5</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
+        <version>${maven-failsafe-plugin.version}</version>
         <configuration>
-          <includes>*ApiTest.java</includes>
           <groups>integration</groups>
         </configuration>
       </plugin>
@@ -424,7 +422,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>3.0.0-M1</version>
+        <version>${maven-release-plugin.version}</version>
         <configuration>
           <preparationGoals>clean verify</preparationGoals>
           <tagNameFormat>v@{project.version}</tagNameFormat>

@@ -1,3 +1,7 @@
+## 2.5.0 IN-PROGRESS
+
+* [MODQM-260] (https://issues.folio.org/browse/MODQM-260) - Supports users interface 15.0 16.0
+
 ## 2.4.0 - Released
 
 ### Changes

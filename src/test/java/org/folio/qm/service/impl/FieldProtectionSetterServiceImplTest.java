@@ -86,4 +86,32 @@ class FieldProtectionSetterServiceImplTest {
       .contains(tuple(setting.getField(), true));
   }
 
+  public static Stream<Arguments> nonProtectedTestData() {
+    return Stream.of(
+      arguments(
+        new MarcFieldProtectionSetting().field("245").indicator1("*").indicator2("*").subfield("b").data("*"),
+        new FieldItem().tag("245").indicators(List.of("\\", "\\")).content("$a test")
+      ),
+      arguments(
+        new MarcFieldProtectionSetting().field("245").indicator1("*").indicator2("*").subfield("b").data("*"),
+        new FieldItem().tag("245").indicators(List.of("\\", "\\")).content("$ba test")
+      )
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("nonProtectedTestData")
+  void testNonProtectedFieldProtectionSettingsSet(MarcFieldProtectionSetting setting, FieldItem fieldItem) {
+    var settingsCollection = new MarcFieldProtectionSettingsCollection();
+    settingsCollection.addMarcFieldProtectionSettingsItem(setting);
+    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
+
+    var record = new QuickMarc().fields(List.of(fieldItem));
+    var actual = service.applyFieldProtection(record);
+
+    assertThat(actual.getFields())
+      .extracting("tag", "isProtected")
+      .contains(tuple(setting.getField(), false));
+  }
+
 }

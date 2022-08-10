@@ -91,10 +91,6 @@ class FieldProtectionSetterServiceImplTest {
       arguments(
         new MarcFieldProtectionSetting().field("245").indicator1("*").indicator2("*").subfield("b").data("*"),
         new FieldItem().tag("245").indicators(List.of("\\", "\\")).content("$a test")
-      ),
-      arguments(
-        new MarcFieldProtectionSetting().field("245").indicator1("*").indicator2("*").subfield("b").data("*"),
-        new FieldItem().tag("245").indicators(List.of("\\", "\\")).content("$ba test")
       )
     );
   }

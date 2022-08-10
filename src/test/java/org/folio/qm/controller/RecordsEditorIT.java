@@ -134,6 +134,29 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Test
+  void testGetQuickMarcHoldingsRecord_updatedByUserNotFound() throws Exception {
+    log.info("===== Verify GET Holdings record: user is not found =====");
+
+    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_HOLDINGS_DTO_PATH), SC_OK,
+      wireMockServer);
+    mockGet(usersByIdPath(JOHN_USER_ID), null, SC_NOT_FOUND, wireMockServer);
+    mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
+      wireMockServer);
+
+    getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.marcFormat").value(MarcFormat.HOLDINGS.getValue()))
+      .andExpect(jsonPath("$.parsedRecordDtoId").value(VALID_PARSED_RECORD_DTO_ID.toString()))
+      .andExpect(jsonPath("$.externalId").value(EXISTED_EXTERNAL_ID.toString()))
+      .andExpect(jsonPath("$.externalHrid").value(EXISTED_EXTERNAL_HRID))
+      .andExpect(jsonPath("$.suppressDiscovery").value(Boolean.FALSE))
+      .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
+      .andExpect(jsonPath("$.updateInfo.updatedBy.userId").doesNotExist());
+
+    checkParseRecordDtoId();
+  }
+
+  @Test
   void testGetQuickMarcAuthorityRecord() throws Exception {
     log.info("===== Verify GET Authority record: Successful =====");
 

@@ -3,20 +3,17 @@ package org.folio.qm.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Durations.ONE_MINUTE;
-
-import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
-import static org.folio.qm.support.utils.DBTestUtils.saveCreationStatus;
+import static org.folio.qm.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.support.utils.DataBaseTestUtils.getCreationStatusById;
+import static org.folio.qm.support.utils.DataBaseTestUtils.saveCreationStatus;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY_DELETE;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 
 import java.util.UUID;
-
-import org.junit.jupiter.api.Test;
-
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
+import org.junit.jupiter.api.Test;
 
 @IntegrationTest
 class KafkaListenerIT extends BaseIT {
@@ -25,30 +22,31 @@ class KafkaListenerIT extends BaseIT {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInstance() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(
+  void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithInstance() {
+    shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(
       "mockdata/request/di-event/complete-event-with-instance.json");
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithHoldings() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(
+  void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithHoldings() {
+    shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(
       "mockdata/request/di-event/complete-event-with-holdings.json");
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithAuthority() {
-    shouldUpdateExistingStatusWhenReceivedDICompletedEvent(DI_COMPLETE_AUTHORITY_DELETE);
+  void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithAuthority() {
+    shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(DI_COMPLETE_AUTHORITY_DELETE);
   }
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithoutExternalId() {
+  void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithoutExternalId() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/request/di-event/complete-event-without-external-record.json", DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord("mockdata/request/di-event/complete-event-without-external-record.json",
+      DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
@@ -61,10 +59,11 @@ class KafkaListenerIT extends BaseIT {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDICompletedEventWithInvalidJson() {
+  void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithInvalidJson() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord("mockdata/request/di-event/complete-event-with-invalid-json.json", DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord("mockdata/request/di-event/complete-event-with-invalid-json.json",
+      DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
@@ -77,10 +76,10 @@ class KafkaListenerIT extends BaseIT {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDIErrorEvent() {
+  void shouldUpdateExistingStatusWhenReceivedDataImportErrorEvent() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord(DI_ERROR_EVENT, DI_ERROR_TOPIC_NAME);
+    sendDataImportKafkaRecord(DI_ERROR_EVENT, DI_ERROR_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
@@ -93,11 +92,11 @@ class KafkaListenerIT extends BaseIT {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldDeleteRecordWhenReceivedDICompletedEvent() {
+  void shouldDeleteRecordWhenReceivedDataImportCompletedEvent() {
     UUID statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
 
-    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.CREATED);
 
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
@@ -109,11 +108,11 @@ class KafkaListenerIT extends BaseIT {
 
   @Test
   @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldDeleteRecordWhenReceivedDIErrorEvent() {
+  void shouldDeleteRecordWhenReceivedDataImportErrorEvent() {
     UUID statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
 
-    sendDIKafkaRecord(DI_ERROR_EVENT, DI_ERROR_TOPIC_NAME);
+    sendDataImportKafkaRecord(DI_ERROR_EVENT, DI_ERROR_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.ERROR);
 
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
@@ -122,13 +121,13 @@ class KafkaListenerIT extends BaseIT {
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR);
   }
 
-  private void shouldUpdateExistingStatusWhenReceivedDICompletedEvent(String eventMockPath) {
+  private void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(String eventMockPath) {
     var statusId = UUID.randomUUID();
-    var expectedExternalId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
-    var expectedMarcId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-    sendDIKafkaRecord(eventMockPath, DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord(eventMockPath, DI_COMPLETE_TOPIC_NAME);
     awaitStatusChanged(statusId, RecordCreationStatusEnum.CREATED);
+    var expectedMarcId = UUID.fromString("55a76b7b-841d-45b9-9e64-d0827b9e2480");
+    var expectedExternalId = UUID.fromString("04b557bc-7c5e-4050-b95d-7510293caa8b");
     var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
     assertThat(creationStatus)
       .hasNoNullFieldsOrPropertiesExcept("errorMessage")
@@ -142,8 +141,7 @@ class KafkaListenerIT extends BaseIT {
   private void awaitStatusChanged(UUID statusId, RecordCreationStatusEnum status) {
     await().atMost(ONE_MINUTE)
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
-        .isEqualTo(status)
-      );
+        .isEqualTo(status));
   }
 
 }

@@ -7,9 +7,15 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.sql.Timestamp;
-
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
+import java.sql.Timestamp;
+import org.folio.qm.holder.TenantsHolder;
+import org.folio.qm.holder.impl.TenantsHolderImpl;
+import org.folio.qm.support.types.UnitTest;
+import org.folio.qm.util.TenantContextUtils;
+import org.folio.spring.FolioExecutionContext;
+import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
+import org.folio.spring.scope.FolioExecutionScopeExecutionContextManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,14 +26,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.folio.qm.holder.TenantsHolder;
-import org.folio.qm.holder.impl.TenantsHolderImpl;
-import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.util.TenantContextUtils;
-import org.folio.spring.FolioExecutionContext;
-import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
-import org.folio.spring.scope.FolioExecutionScopeExecutionContextManager;
-
 @UnitTest
 @ExtendWith({
   MockitoExtension.class,
@@ -35,7 +33,7 @@ import org.folio.spring.scope.FolioExecutionScopeExecutionContextManager;
 })
 class CleanupServiceImplTest {
 
-  private static final FolioExecutionContext context = new EmptyFolioExecutionContextHolder(null)
+  private static final FolioExecutionContext CONTEXT = new EmptyFolioExecutionContextHolder(null)
     .getEmptyFolioExecutionContext();
 
   @Spy
@@ -63,13 +61,13 @@ class CleanupServiceImplTest {
       var tenantUtils = mockStatic(TenantContextUtils.class)
     ) {
       tenantUtils.when(() -> TenantContextUtils.getFolioExecutionContextCopyForTenant(any(), any()))
-        .thenReturn(context);
+        .thenReturn(CONTEXT);
 
       cleanupService.clearCreationStatusesForAllTenants();
 
       tenantUtils.verify(() -> TenantContextUtils.getFolioExecutionContextCopyForTenant(any(), any()),
         times(tenantsHolder.count()));
-      contextManager.verify(() -> FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext(context),
+      contextManager.verify(() -> FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext(CONTEXT),
         times(tenantsHolder.count()));
       contextManager.verify(FolioExecutionScopeExecutionContextManager::endFolioExecutionContext,
         times(tenantsHolder.count() + 1));

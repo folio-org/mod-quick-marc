@@ -2,12 +2,11 @@ package org.folio.qm.converter.field.qm;
 
 import static org.folio.qm.converter.elements.Constants.LCCN_CONTROL_FIELD;
 
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.SubfieldImpl;
 import org.springframework.stereotype.Component;
-
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.MarcFormat;
 
 @Component
 public class CommonFieldItemConverter extends AbstractFieldItemConverter {

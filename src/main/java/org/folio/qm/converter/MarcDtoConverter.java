@@ -1,22 +1,14 @@
 package org.folio.qm.converter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-
 import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
-import org.marc4j.MarcJsonReader;
-import org.marc4j.marc.Record;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecord;
@@ -25,18 +17,23 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
+import org.marc4j.MarcJsonReader;
+import org.marc4j.marc.Record;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
 
-  private static final Map<MarcFormat, Function<ExternalIdsHolder, UUID>> externalIdExtractors = Map.of(
+  private static final Map<MarcFormat, Function<ExternalIdsHolder, UUID>> EXTERNAL_ID_EXTRACTORS = Map.of(
     MarcFormat.BIBLIOGRAPHIC, ExternalIdsHolder::getInstanceId,
     MarcFormat.HOLDINGS, ExternalIdsHolder::getHoldingsId,
     MarcFormat.AUTHORITY, ExternalIdsHolder::getAuthorityId
   );
 
-  private static final Map<MarcFormat, Function<ExternalIdsHolder, String>> externalHridExtractors = Map.of(
+  private static final Map<MarcFormat, Function<ExternalIdsHolder, String>> EXTERNAL_HRID_EXTRACTORS = Map.of(
     MarcFormat.BIBLIOGRAPHIC, ExternalIdsHolder::getInstanceHrid,
     MarcFormat.HOLDINGS, ExternalIdsHolder::getHoldingsHrid,
     MarcFormat.AUTHORITY, ExternalIdsHolder::getAuthorityHrid
@@ -61,8 +58,8 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
       .marcFormat(format)
       .parsedRecordId(parsedRecord.getId())
       .parsedRecordDtoId(source.getId())
-      .externalId(externalIdExtractors.get(format).apply(source.getExternalIdsHolder()))
-      .externalHrid(externalHridExtractors.get(format).apply(source.getExternalIdsHolder()))
+      .externalId(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
+      .externalHrid(EXTERNAL_HRID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
       .suppressDiscovery(source.getAdditionalInfo().getSuppressDiscovery())
       .updateInfo(new UpdateInfo()
         .recordState(source.getRecordState())

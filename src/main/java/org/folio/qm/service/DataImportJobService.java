@@ -3,11 +3,9 @@ package org.folio.qm.service;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
-
 import static org.folio.qm.util.JsonUtils.objectToJsonString;
 
 import java.util.UUID;
-
 import org.folio.qm.domain.dto.InitJobExecutionsRqDto;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.ProfileInfo;

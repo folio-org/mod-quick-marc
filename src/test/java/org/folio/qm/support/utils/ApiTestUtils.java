@@ -6,25 +6,22 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.SC_OK;
-
 import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletionException;
-
-import com.github.tomakehurst.wiremock.WireMockServer;
 import lombok.experimental.UtilityClass;
+import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
-
 @UtilityClass
-public class APITestUtils {
+public class ApiTestUtils {
 
   public static final String TENANT_ID = "test";
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
@@ -105,7 +102,7 @@ public class APITestUtils {
       .willReturn(aResponse()
         .withStatus(status)
         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .withBody(IOTestUtils.readFile(filePath))));
+        .withBody(InputOutputTestUtils.readFile(filePath))));
   }
 
   public static void mockPut(String url, int status, WireMockServer mockServer) {

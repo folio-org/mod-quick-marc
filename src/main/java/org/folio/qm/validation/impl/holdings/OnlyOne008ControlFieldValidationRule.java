@@ -4,11 +4,9 @@ import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.validation.ValidationError;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OnlyOne008ControlFieldValidationRule extends AbstractHoldingsValidationRule {

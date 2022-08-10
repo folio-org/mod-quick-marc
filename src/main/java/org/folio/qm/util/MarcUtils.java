@@ -1,17 +1,14 @@
 package org.folio.qm.util;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
-
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
@@ -32,7 +29,7 @@ public final class MarcUtils {
   }
 
   /**
-   * This method decode MARC date-time representation for
+   * This method decode MARC date-time representation for.
    * Date and Time of Latest Transaction Field (005)
    * in the Java {@link LocalDateTime} value
    *

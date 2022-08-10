@@ -2,11 +2,9 @@ package org.folio.qm.validation.impl.bibliographic;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.validation.ValidationError;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OnlyOne245RequiredBibliographicValidationRule extends AbstractBibliographicValidationRule {

@@ -2,20 +2,12 @@ package org.folio.qm.converter;
 
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.marc4j.marc.Leader;
-import org.marc4j.marc.MarcFactory;
-import org.marc4j.marc.Record;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.AdditionalInfo;
 import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.FieldItem;
@@ -26,6 +18,12 @@ import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.util.QmMarcJsonWriter;
+import org.marc4j.marc.Leader;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -74,6 +72,8 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
       case AUTHORITY:
         externalIdsHolder.setAuthorityId(quickMarc.getExternalId());
         externalIdsHolder.setAuthorityHrid(quickMarc.getExternalHrid());
+        break;
+      default:
         break;
     }
     return externalIdsHolder;

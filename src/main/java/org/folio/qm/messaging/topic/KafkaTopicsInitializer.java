@@ -3,21 +3,19 @@ package org.folio.qm.messaging.topic;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.folio.qm.config.properties.FolioKafkaProperties;
+import org.folio.qm.messaging.domain.DataImportEventTypes;
+import org.folio.qm.messaging.domain.QmEventTypes;
+import org.folio.spring.FolioExecutionContext;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
-
-import org.folio.qm.config.properties.FolioKafkaProperties;
-import org.folio.qm.messaging.domain.DataImportEventTypes;
-import org.folio.qm.messaging.domain.QmEventTypes;
-import org.folio.spring.FolioExecutionContext;
 
 @Log4j2
 @Component

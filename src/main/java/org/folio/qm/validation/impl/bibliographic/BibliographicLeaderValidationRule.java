@@ -9,13 +9,11 @@ import static org.folio.qm.converter.elements.LeaderItem.RESOURCE_RECORD_LEVEL;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.converter.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.LeaderValidationRule;
 import org.folio.qm.validation.ValidationError;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BibliographicLeaderValidationRule extends LeaderValidationRule {

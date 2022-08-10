@@ -1,11 +1,9 @@
 package org.folio.qm.service.impl;
 
 import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.service.population.MarcPopulationService;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultValuesPopulationService {

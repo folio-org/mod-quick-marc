@@ -7,19 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.support.types.UnitTest;
-
 @UnitTest
-class OnlyOne1XXRequiredAuthorityValidationRuleTest {
+class OnlyOne1XxRequiredAuthorityValidationRuleTest {
 
-  private final OnlyOne1XXRequiredAuthorityValidationRule rule = new OnlyOne1XXRequiredAuthorityValidationRule();
+  private final OnlyOne1xxRequiredAuthorityValidationRule rule = new OnlyOne1xxRequiredAuthorityValidationRule();
 
   private static Stream<Arguments> provide1xxTagArguments() {
     return IntStream.range(100, 199).boxed()
@@ -28,14 +26,14 @@ class OnlyOne1XXRequiredAuthorityValidationRuleTest {
 
   @ParameterizedTest
   @MethodSource("provide1xxTagArguments")
-  void testValidationRuleSucceedWhenOnlyOne1XXTagExists(String tag) {
+  void testValidationRuleSucceedWhenOnlyOne1xxTagExists(String tag) {
     var fields = List.of(new FieldItem().tag(tag).content("test content"));
     var validationResult = rule.validate(fields);
     assertTrue(validationResult.isEmpty());
   }
 
   @Test
-  void testValidationRuleFailedWhenOnlyOne1XXTagExistsButContentIsEmpty() {
+  void testValidationRuleFailedWhenOnlyOne1xxTagExistsButContentIsEmpty() {
     var fields = List.of(new FieldItem().tag("100").content(""));
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
@@ -44,7 +42,7 @@ class OnlyOne1XXRequiredAuthorityValidationRuleTest {
   }
 
   @Test
-  void testValidationRuleFailedWhenSeveral1XXTagExist() {
+  void testValidationRuleFailedWhenSeveral1xxTagExist() {
     var fields = List.of(
       new FieldItem().tag("100").content("test content"),
       new FieldItem().tag("101").content("test content 2")
@@ -56,7 +54,7 @@ class OnlyOne1XXRequiredAuthorityValidationRuleTest {
   }
 
   @Test
-  void testValidationRuleFailedWhen1XXTagNotExist() {
+  void testValidationRuleFailedWhen1xxTagNotExist() {
     var fields = List.of(new FieldItem().tag("200").content("test content"));
     var validationResult = rule.validate(fields);
     assertThat(validationResult)

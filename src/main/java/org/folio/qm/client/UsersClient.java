@@ -1,7 +1,6 @@
 package org.folio.qm.client;
 
 import java.util.Optional;
-
 import lombok.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

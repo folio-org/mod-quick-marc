@@ -1,19 +1,18 @@
 package org.folio.qm.validation.impl.common;
 
+import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
+import static org.folio.qm.domain.dto.MarcFormat.AUTHORITY;
+import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
+import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
+
+import java.util.List;
+import java.util.Optional;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.FieldValidationRule;
 import org.folio.qm.validation.ValidationError;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
-import static org.folio.qm.domain.dto.MarcFormat.AUTHORITY;
-import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
-import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 
 @Component
 public class OnlyOne001ControlFieldValidationRule extends FieldValidationRule {

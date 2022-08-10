@@ -4,13 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
-import org.marc4j.marc.ControlField;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
+import org.junit.jupiter.api.Test;
+import org.marc4j.marc.ControlField;
 
 @UnitTest
 class Tag008HoldingsFieldItemConverterTest {

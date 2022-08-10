@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class Constants {
+public final class Constants {
 
   public static final char SPACE_CHARACTER = ' ';
 

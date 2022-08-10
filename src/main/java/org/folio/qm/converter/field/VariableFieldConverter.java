@@ -8,13 +8,11 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.marc4j.marc.Leader;
-import org.marc4j.marc.VariableField;
-
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.marc4j.marc.Leader;
+import org.marc4j.marc.VariableField;
 
 public interface VariableFieldConverter<T extends VariableField> {
 
@@ -32,8 +30,8 @@ public interface VariableFieldConverter<T extends VariableField> {
   private Object getControlFieldElementContent(String content, ControlFieldItem element, int delta) {
     var elementFromContent = extractElementFromContent(content, element, delta);
     return element.isArray()
-           ? Arrays.asList(elementFromContent.split(EMPTY))
-           : elementFromContent;
+      ? Arrays.asList(elementFromContent.split(EMPTY))
+      : elementFromContent;
   }
 
   default String extractElementFromContent(String content, ControlFieldItem element, int delta) {

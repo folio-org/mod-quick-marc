@@ -1,11 +1,10 @@
 package org.folio.qm.mapper;
 
+import org.folio.qm.client.UsersClient;
+import org.folio.qm.domain.dto.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
-
-import org.folio.qm.client.UsersClient;
-import org.folio.qm.domain.dto.UserInfo;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface UserMapper {

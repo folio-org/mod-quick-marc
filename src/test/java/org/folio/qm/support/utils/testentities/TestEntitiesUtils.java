@@ -3,7 +3,6 @@ package org.folio.qm.support.utils.testentities;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 
@@ -30,7 +29,7 @@ public class TestEntitiesUtils {
   public static final String TESTED_TAG_NAME = "333";
   public static final UUID VALID_PARSED_RECORD_DTO_ID = UUID.fromString("c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c");
   public static final UUID EXISTED_EXTERNAL_ID = UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817");
-  public static final String EXISTED_EXTERNAL_HRID= "hold0001";
+  public static final String EXISTED_EXTERNAL_HRID = "hold0001";
   public static final UUID VALID_PARSED_RECORD_ID = UUID.fromString("c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1");
   public static final UUID VALID_JOB_EXECUTION_ID = UUID.fromString("a7fb1c32-1ffb-4a22-a76a-4067284fe68d");
   public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";

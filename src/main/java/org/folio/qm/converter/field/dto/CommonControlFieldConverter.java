@@ -2,14 +2,13 @@ package org.folio.qm.converter.field.dto;
 
 import static org.folio.qm.converter.elements.Constants.COMPLEX_CONTROL_FIELD_TAGS;
 
+import org.folio.qm.converter.field.VariableFieldConverter;
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.VariableField;
 import org.springframework.stereotype.Component;
-
-import org.folio.qm.converter.field.VariableFieldConverter;
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.MarcFormat;
 
 @Component
 public class CommonControlFieldConverter implements VariableFieldConverter<ControlField> {

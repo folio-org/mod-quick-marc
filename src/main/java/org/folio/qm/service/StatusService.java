@@ -3,7 +3,6 @@ package org.folio.qm.service;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 

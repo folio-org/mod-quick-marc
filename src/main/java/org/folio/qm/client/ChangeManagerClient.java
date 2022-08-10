@@ -1,7 +1,11 @@
 package org.folio.qm.client;
 
 import java.util.UUID;
-
+import org.folio.qm.domain.dto.InitJobExecutionsRqDto;
+import org.folio.qm.domain.dto.InitJobExecutionsRsDto;
+import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.domain.dto.ProfileInfo;
+import org.folio.qm.domain.dto.RawRecordsDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.folio.qm.domain.dto.InitJobExecutionsRqDto;
-import org.folio.qm.domain.dto.InitJobExecutionsRsDto;
-import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.ProfileInfo;
-import org.folio.qm.domain.dto.RawRecordsDto;
-
 @FeignClient(value = "change-manager")
-public interface SRMChangeManagerClient {
+public interface ChangeManagerClient {
 
   @GetMapping(value = "/parsedRecords", produces = MediaType.APPLICATION_JSON_VALUE)
   ParsedRecordDto getParsedRecordByExternalId(@RequestParam("externalId") String externalId);
@@ -34,7 +32,7 @@ public interface SRMChangeManagerClient {
                                      @RequestBody ProfileInfo jobProfile);
 
   @PostMapping(value = "/jobExecutions/{jobExecutionId}/records",
-               produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
   void postRawRecordsByJobExecutionId(@PathVariable("jobExecutionId") UUID jobExecutionId,
                                       @RequestBody RawRecordsDto rawRecords);
 }

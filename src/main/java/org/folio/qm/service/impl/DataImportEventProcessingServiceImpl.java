@@ -1,22 +1,21 @@
 package org.folio.qm.service.impl;
 
-import static org.folio.qm.util.DIEventUtils.extractErrorMessage;
-import static org.folio.qm.util.DIEventUtils.extractExternalId;
-import static org.folio.qm.util.DIEventUtils.extractMarcId;
+import static org.folio.qm.util.DataImportEventUtils.extractErrorMessage;
+import static org.folio.qm.util.DataImportEventUtils.extractExternalId;
+import static org.folio.qm.util.DataImportEventUtils.extractMarcId;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
-import org.folio.qm.service.StatusService;
 import org.folio.qm.service.EventProcessingService;
+import org.folio.qm.service.StatusService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.tenant.domain.dto.Error;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
@@ -31,7 +30,7 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
   private final DeferredResultCacheService cacheService;
 
   @Override
-  public void processDICompleted(DataImportEventPayload data) {
+  public void processDataImportCompleted(DataImportEventPayload data) {
     var updateBuilder = RecordCreationStatusUpdate.builder();
     try {
       extractMarcId(data, objectMapper).ifPresent(updateBuilder::marcId);
@@ -45,19 +44,19 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
     } catch (IllegalStateException e) {
       updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(e.getMessage());
     }
-    processDIEvent(data, updateBuilder.build());
+    processDataImportEvent(data, updateBuilder.build());
   }
 
   @Override
-  public void processDIError(DataImportEventPayload data) {
+  public void processDataImportError(DataImportEventPayload data) {
     var errorMessage = extractErrorMessage(data).orElse(ERROR_MISSED_MESSAGE);
     var updateBuilder = RecordCreationStatusUpdate.builder()
       .status(RecordCreationStatusEnum.ERROR)
       .errorMessage(errorMessage);
-    processDIEvent(data, updateBuilder.build());
+    processDataImportEvent(data, updateBuilder.build());
   }
 
-  private void processDIEvent(DataImportEventPayload data, RecordCreationStatusUpdate statusUpdate) {
+  private void processDataImportEvent(DataImportEventPayload data, RecordCreationStatusUpdate statusUpdate) {
     var jobExecutionId = data.getJobExecutionId();
     log.info("Process [{}] event for jobExecutionId [{}]", data.getEventType(), jobExecutionId);
     var isUpdated = statusService.updateByJobExecutionId(jobExecutionId, statusUpdate);

@@ -93,7 +93,7 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
 
   private boolean isAnySubFieldInSettingOrSubFieldMatch(MarcFieldProtectionSetting setting, FieldItem field) {
     return setting.getSubfield().equals(ANY_STRING)
-      || Pattern.compile("[$]" + setting.getSubfield() + "\\b").matcher(field.getContent().toString()).find();
+      || Pattern.compile("[$]" + setting.getSubfield()).matcher(field.getContent().toString()).find();
   }
 
   private boolean isAnyDataInSettingOrDataMatchWithSubfield(MarcFieldProtectionSetting setting, FieldItem field) {

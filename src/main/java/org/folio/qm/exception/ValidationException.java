@@ -1,11 +1,10 @@
 package org.folio.qm.exception;
 
+import org.folio.tenant.domain.dto.Error;
 import org.springframework.http.HttpStatus;
 
-import org.folio.tenant.domain.dto.Error;
-
 /**
- * Custom exception for validation errors
+ * Custom exception for validation errors.
  */
 public class ValidationException extends QuickMarcException {
 

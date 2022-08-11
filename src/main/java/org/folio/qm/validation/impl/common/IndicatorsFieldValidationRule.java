@@ -2,13 +2,11 @@ package org.folio.qm.validation.impl.common;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.FieldValidationRule;
 import org.folio.qm.validation.ValidationError;
+import org.springframework.stereotype.Component;
 
 @Component
 public class IndicatorsFieldValidationRule extends FieldValidationRule {
@@ -21,7 +19,8 @@ public class IndicatorsFieldValidationRule extends FieldValidationRule {
         if (indicators.size() != 2) {
           return Optional.of(createValidationError(fieldItem.getTag(), "Should have exactly 2 indicators"));
         } else if (isValidIndicator(indicators.get(0)) || isValidIndicator(indicators.get(1))) {
-          return Optional.of(createValidationError(fieldItem.getTag(), "Indicator could have only one-character value"));
+          return Optional.of(
+            createValidationError(fieldItem.getTag(), "Indicator could have only one-character value"));
         }
       }
     }

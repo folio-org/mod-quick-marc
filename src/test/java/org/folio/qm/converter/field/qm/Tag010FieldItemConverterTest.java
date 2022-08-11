@@ -7,15 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
-
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.marc4j.marc.DataField;
-
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
 class Tag010FieldItemConverterTest {

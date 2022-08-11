@@ -4,20 +4,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.support.types.UnitTest;
+import org.folio.qm.validation.ValidationError;
+import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
-import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.validation.LeaderValidationRule;
-import org.folio.qm.validation.ValidationError;
-import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
-
 @UnitTest
 class HoldingsLeaderValidationRuleTest {
-
-  private final HoldingsLeaderValidationRule rule = new HoldingsLeaderValidationRule();
 
   private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
   private static final String WRONG_RECORD_STATUS = "00241ex\\\\a2200109zn\\4500";
@@ -25,6 +20,8 @@ class HoldingsLeaderValidationRuleTest {
   private static final String WRONG_UNDEFINED_CHARACTER = "00241cx0\\a2200109zn\\4500";
   private static final String WRONG_ENCODING_LEVEL = "00241cx\\\\a2200109an\\4500";
   private static final String WRONG_ITEM_INFORMATION = "00241cx\\\\a2200109za\\4500";
+
+  private final HoldingsLeaderValidationRule rule = new HoldingsLeaderValidationRule();
 
   @Test
   void shouldValidateHoldingsLeaderWithOutErrors() {

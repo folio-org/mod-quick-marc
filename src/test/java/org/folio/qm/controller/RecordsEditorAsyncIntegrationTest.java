@@ -7,26 +7,18 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.folio.qm.support.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
-import static org.folio.qm.support.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
-import static org.folio.qm.support.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
-import static org.folio.qm.support.utils.APITestUtils.EXTERNAL_ID;
-import static org.folio.qm.support.utils.APITestUtils.changeManagerPath;
-import static org.folio.qm.support.utils.APITestUtils.changeManagerResourceByIdPath;
-import static org.folio.qm.support.utils.APITestUtils.mockGet;
-import static org.folio.qm.support.utils.APITestUtils.mockPost;
-import static org.folio.qm.support.utils.APITestUtils.mockPut;
-import static org.folio.qm.support.utils.APITestUtils.recordsEditorResourceByIdPath;
-import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.qm.support.utils.IOTestUtils.readFile;
+import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.EXTERNAL_ID;
+import static org.folio.qm.support.utils.ApiTestUtils.changeManagerPath;
+import static org.folio.qm.support.utils.ApiTestUtils.changeManagerResourceByIdPath;
+import static org.folio.qm.support.utils.ApiTestUtils.mockGet;
+import static org.folio.qm.support.utils.ApiTestUtils.mockPost;
+import static org.folio.qm.support.utils.ApiTestUtils.mockPut;
+import static org.folio.qm.support.utils.ApiTestUtils.recordsEditorResourceByIdPath;
+import static org.folio.qm.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.support.utils.InputOutputTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY_DELETE;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
@@ -43,15 +35,26 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PA
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.messaging.domain.QmCompletedEventPayload;
+import org.folio.qm.support.extension.ClearTable;
+import org.folio.qm.support.types.IntegrationTest;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -59,15 +62,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.messaging.domain.QmCompletedEventPayload;
-import org.folio.qm.support.extension.ClearTable;
-import org.folio.qm.support.types.IntegrationTest;
-
 @Log4j2
 @IntegrationTest
-class RecordsEditorAsyncIT extends BaseIT {
+class RecordsEditorAsyncIntegrationTest extends BaseIT {
 
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
@@ -85,7 +82,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andReturn();
 
     String eventPayload = createPayload(null);
-    sendQMKafkaRecord(eventPayload);
+    sendQuickMarcKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
       .andDo(log())
@@ -115,7 +112,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     var errorMessage = "Some error occurred";
     String eventPayload = createPayload(errorMessage);
-    sendQMKafkaRecord(eventPayload);
+    sendQuickMarcKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
       .andExpect(status().isBadRequest())
@@ -142,7 +139,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andReturn();
 
     String eventPayload = createPayload(null);
-    sendQMKafkaRecord(eventPayload);
+    sendQuickMarcKafkaRecord(eventPayload);
     mockMvc
       .perform(asyncDispatch(result))
       .andDo(log())
@@ -155,7 +152,7 @@ class RecordsEditorAsyncIT extends BaseIT {
     var expectedErrorMessage = "Cannot update record 4f531857-a91d-433a-99ae-0372cecd07d8 because"
       + " it has been changed (optimistic locking): Stored _version is 9, _version of request is 8";
     String eventPayload2 = createPayload(expectedErrorMessage);
-    sendQMKafkaRecord(eventPayload2);
+    sendQuickMarcKafkaRecord(eventPayload2);
     mockMvc
       .perform(asyncDispatch(result2))
       .andExpect(status().isConflict())
@@ -166,15 +163,15 @@ class RecordsEditorAsyncIT extends BaseIT {
   @Test
   void testUpdateQuickMarcRecordWrongUuid() throws Exception {
     log.info("===== Verify PUT record: Not found =====");
-    UUID wrongUUID = UUID.randomUUID();
+    UUID wrongUuid = UUID.randomUUID();
 
-    mockPut(changeManagerResourceByIdPath(wrongUUID), "{}", SC_NOT_FOUND, wireMockServer);
+    mockPut(changeManagerResourceByIdPath(wrongUuid), "{}", SC_NOT_FOUND, wireMockServer);
 
     QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(wrongUUID)
+      .parsedRecordDtoId(wrongUuid)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(wrongUUID))));
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(wrongUuid))));
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isNotFound());
@@ -259,7 +256,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .filter(fieldItem -> fieldItem.getTag().equals("008"))
       .forEach(fieldItem -> {
         @SuppressWarnings("unchecked")
-        var content = ((Map<String, Object>) fieldItem.getContent());
+        var content = (Map<String, Object>) fieldItem.getContent();
         content.put("Date1", "12345");
       });
 
@@ -283,7 +280,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .filter(fieldItem -> fieldItem.getTag().equals("008"))
       .forEach(fieldItem -> {
         @SuppressWarnings("unchecked")
-        var content = ((Map<String, Object>) fieldItem.getContent());
+        var content = (Map<String, Object>) fieldItem.getContent();
         content.put("Desc", "a");
       });
 
@@ -309,7 +306,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .filter(fieldItem -> fieldItem.getTag().equals("008"))
       .forEach(fieldItem -> {
         @SuppressWarnings("unchecked")
-        var content = ((Map<String, Object>) fieldItem.getContent());
+        var content = (Map<String, Object>) fieldItem.getContent();
         content.put("Elvl", "a");
       });
 
@@ -356,7 +353,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andExpect(request().asyncStarted())
       .andReturn();
 
-    sendDIKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
 
     mockMvc
       .perform(asyncDispatch(result))
@@ -379,7 +376,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   @Test
   void testDeleteQuickMarcRecordWrongUuid() throws Exception {
-    RecordsEditorAsyncIT.log.info("===== Verify DELETE record: Not found =====");
+    RecordsEditorAsyncIntegrationTest.log.info("===== Verify DELETE record: Not found =====");
     mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, wireMockServer);
 
     wireMockServer.verify(exactly(0),

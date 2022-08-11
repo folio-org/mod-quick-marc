@@ -1,21 +1,18 @@
 package org.folio.qm.service.impl;
 
 import static org.apache.commons.lang3.time.DateUtils.MILLIS_PER_DAY;
-
 import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextCopyForTenant;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import java.sql.Timestamp;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.service.CleanupService;
 import org.folio.qm.service.StatusService;
 import org.folio.spring.FolioExecutionContext;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

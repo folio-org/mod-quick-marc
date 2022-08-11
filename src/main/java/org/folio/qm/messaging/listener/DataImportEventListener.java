@@ -1,18 +1,17 @@
 package org.folio.qm.messaging.listener;
 
-import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromDIEvent;
+import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromDataImportEvent;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.service.EventProcessingService;
 import org.folio.spring.FolioModuleMetadata;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
@@ -33,8 +32,8 @@ public class DataImportEventListener {
     containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diCompletedListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
     try {
-      beginFolioExecutionContext(getFolioExecutionContextFromDIEvent(data, messageHeaders, moduleMetadata));
-      eventProcessingService.processDICompleted(data);
+      beginFolioExecutionContext(getFolioExecutionContextFromDataImportEvent(data, messageHeaders, moduleMetadata));
+      eventProcessingService.processDataImportCompleted(data);
     } finally {
       endFolioExecutionContext();
     }
@@ -48,8 +47,8 @@ public class DataImportEventListener {
     containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diErrorListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
     try {
-      beginFolioExecutionContext(getFolioExecutionContextFromDIEvent(data, messageHeaders, moduleMetadata));
-      eventProcessingService.processDIError(data);
+      beginFolioExecutionContext(getFolioExecutionContextFromDataImportEvent(data, messageHeaders, moduleMetadata));
+      eventProcessingService.processDataImportError(data);
     } finally {
       endFolioExecutionContext();
     }

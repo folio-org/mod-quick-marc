@@ -2,13 +2,11 @@ package org.folio.qm.util;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.http.HttpStatus;
-
 import org.folio.qm.validation.ValidationError;
 import org.folio.tenant.domain.dto.Error;
 import org.folio.tenant.domain.dto.Errors;
 import org.folio.tenant.domain.dto.Parameter;
+import org.springframework.http.HttpStatus;
 
 public final class ErrorUtils {
 
@@ -23,6 +21,14 @@ public final class ErrorUtils {
     return new Error().code(HttpStatus.valueOf(status).name()).message(message);
   }
 
+  public static Error buildError(ValidationError validationError) {
+    var parameter = new Parameter().key(validationError.getTag());
+    return new Error()
+      .type(ErrorType.INTERNAL.getTypeCode())
+      .message(validationError.getMessage())
+      .parameters(List.of(parameter));
+  }
+
   public static Error buildError(HttpStatus status, ErrorType type, String message) {
     return new Error().code(status.name()).type(type.getTypeCode()).message(message);
   }
@@ -35,10 +41,6 @@ public final class ErrorUtils {
     return new Error().code(code.name()).type(type.getTypeCode()).message(message);
   }
 
-  public static Error buildInternalError(ErrorCodes code, String message) {
-    return buildErrors(code, ErrorType.INTERNAL, message);
-  }
-
   public static Errors buildErrors(List<ValidationError> validationErrors) {
     var errors = validationErrors.stream()
       .map(ErrorUtils::buildError)
@@ -46,12 +48,8 @@ public final class ErrorUtils {
     return new Errors().errors(errors).totalRecords(errors.size());
   }
 
-  public static Error buildError(ValidationError validationError) {
-    var parameter = new Parameter().key(validationError.getTag());
-    return new Error()
-      .type(ErrorType.INTERNAL.getTypeCode())
-      .message(validationError.getMessage())
-      .parameters(List.of(parameter));
+  public static Error buildInternalError(ErrorCodes code, String message) {
+    return buildErrors(code, ErrorType.INTERNAL, message);
   }
 
   public enum ErrorType {

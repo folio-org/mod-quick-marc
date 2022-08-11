@@ -1,11 +1,10 @@
 package org.folio.qm.exception;
 
+import org.folio.tenant.domain.dto.Error;
 import org.springframework.http.HttpStatus;
 
-import org.folio.tenant.domain.dto.Error;
-
 /**
- * Custom exception for QuickMarc <-> ParsedRecordDto converting errors
+ * Custom exception for QuickMarc <-> ParsedRecordDto converting errors.
  */
 public class ConverterException extends QuickMarcException {
 

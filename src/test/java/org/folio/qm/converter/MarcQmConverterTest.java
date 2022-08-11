@@ -2,12 +2,6 @@ package org.folio.qm.converter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.contentOf;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
@@ -15,10 +9,19 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_R
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.folio.qm.domain.dto.ParsedRecord;
+import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.exception.ConverterException;
+import org.folio.qm.mapper.MarcTypeMapperImpl;
+import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,14 +30,6 @@ import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.ParsedRecord;
-import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.exception.ConverterException;
-import org.folio.qm.mapper.MarcTypeMapperImpl;
-import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)

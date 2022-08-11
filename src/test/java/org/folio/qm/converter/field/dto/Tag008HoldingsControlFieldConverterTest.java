@@ -6,17 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
-
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.support.types.UnitTest;
+import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.marc4j.marc.impl.ControlFieldImpl;
 import org.marc4j.marc.impl.LeaderImpl;
-
-import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
 
 @UnitTest
 class Tag008HoldingsControlFieldConverterTest {

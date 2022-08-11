@@ -1,21 +1,29 @@
 package org.folio.qm.service.population;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import org.folio.qm.converter.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
+import org.junit.jupiter.api.Test;
 
 @UnitTest
 class LeaderMarcPopulationServiceTest {
+
+  private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
+  private static final String INVALID_LEADER_LENGTH = "00241cx\\\\a2200109zn\\450";
+  private static final String WRONG_INDICATOR_COUNT = "00241cx\\\\a0200109zn\\4500";
+  private static final String WRONG_SUBFIELD_CODE_LENGTH = "00241cx\\\\a2000109zn\\4500";
+  private static final String WRONG_ENTRY_MAP_20 = "00241cx\\\\a2200109zn\\5500";
+  private static final String WRONG_ENTRY_MAP_21 = "00241cx\\\\a2200109zn\\4400";
+  private static final String WRONG_ENTRY_MAP_22 = "00241cx\\\\a2200109zn\\4510";
+  private static final String WRONG_ENTRY_MAP_23 = "00241cx\\\\a2200109zn\\4501";
+  private static final String WRONG_CODING_SCHEME = "00241cx\\\\g2200109zn\\4500";
+  private static final String VALID_CODING_SCHEME = "00241cx\\\\a2200109zn\\4500";
 
   private final LeaderMarcPopulationService populationService = new LeaderMarcPopulationService() {
     @Override
@@ -28,17 +36,6 @@ class LeaderMarcPopulationServiceTest {
       return true;
     }
   };
-
-  private static final String VALID_LEADER = "00241cx\\\\a2200109zn\\4500";
-  private static final String INVALID_LEADER_LENGTH = "00241cx\\\\a2200109zn\\450";
-  private static final String WRONG_INDICATOR_COUNT = "00241cx\\\\a0200109zn\\4500";
-  private static final String WRONG_SUBFIELD_CODE_LENGTH = "00241cx\\\\a2000109zn\\4500";
-  private static final String WRONG_ENTRY_MAP_20 = "00241cx\\\\a2200109zn\\5500";
-  private static final String WRONG_ENTRY_MAP_21 = "00241cx\\\\a2200109zn\\4400";
-  private static final String WRONG_ENTRY_MAP_22 = "00241cx\\\\a2200109zn\\4510";
-  private static final String WRONG_ENTRY_MAP_23 = "00241cx\\\\a2200109zn\\4501";
-  private static final String WRONG_CODING_SCHEME = "00241cx\\\\g2200109zn\\4500";
-  private static final String VALID_CODING_SCHEME = "00241cx\\\\a2200109zn\\4500";
 
   @Test
   void shouldReturnInitialLeaderIfValid() {

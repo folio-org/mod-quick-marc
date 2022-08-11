@@ -1,7 +1,6 @@
 package org.folio.qm.service;
 
 import java.util.UUID;
-
 import org.folio.qm.domain.dto.InitJobExecutionsRqDto;
 import org.folio.qm.domain.dto.InitJobExecutionsRsDto;
 import org.folio.qm.domain.dto.ParsedRecordDto;

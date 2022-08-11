@@ -9,14 +9,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.folio.spring.integration.XOkapiHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.filter.GenericFilterBean;
-
-import org.folio.spring.integration.XOkapiHeaders;
 
 @Component
 public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean implements OrderedFilter {
@@ -30,9 +28,9 @@ public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean impleme
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
-    String requestURI = req.getRequestURI();
-    if (!requestURI.startsWith("/_/")
-      && !requestURI.startsWith(managementBasePath)
+    String requestUri = req.getRequestURI();
+    if (!requestUri.startsWith("/_/")
+      && !requestUri.startsWith(managementBasePath)
       && isBlank(req.getHeader(XOkapiHeaders.USER_ID))) {
       HttpServletResponse res = (HttpServletResponse) response;
       res.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);

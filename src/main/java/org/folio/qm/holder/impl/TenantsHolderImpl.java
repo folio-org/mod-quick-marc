@@ -2,10 +2,8 @@ package org.folio.qm.holder.impl;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.holder.TenantsHolder;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TenantsHolderImpl implements TenantsHolder {

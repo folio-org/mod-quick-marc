@@ -9,36 +9,25 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.folio.qm.support.utils.APITestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
-import static org.folio.qm.support.utils.APITestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
-import static org.folio.qm.support.utils.APITestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
-import static org.folio.qm.support.utils.APITestUtils.EXTERNAL_ID;
-import static org.folio.qm.support.utils.APITestUtils.FIELD_PROTECTION_SETTINGS_PATH;
-import static org.folio.qm.support.utils.APITestUtils.JOHN_USER_ID_HEADER;
-import static org.folio.qm.support.utils.APITestUtils.QM_RECORD_ID;
-import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
-import static org.folio.qm.support.utils.APITestUtils.changeManagerPath;
-import static org.folio.qm.support.utils.APITestUtils.mockGet;
-import static org.folio.qm.support.utils.APITestUtils.mockPost;
-import static org.folio.qm.support.utils.APITestUtils.mockPut;
-import static org.folio.qm.support.utils.APITestUtils.recordsEditorPath;
-import static org.folio.qm.support.utils.APITestUtils.recordsEditorStatusPath;
-import static org.folio.qm.support.utils.APITestUtils.usersByIdPath;
-import static org.folio.qm.support.utils.DBTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.qm.support.utils.DBTestUtils.getCreationStatusById;
-import static org.folio.qm.support.utils.DBTestUtils.saveCreationStatus;
-import static org.folio.qm.support.utils.IOTestUtils.readFile;
+import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_JOB_PROFILE_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_PARSE_RECORDS_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.EXTERNAL_ID;
+import static org.folio.qm.support.utils.ApiTestUtils.FIELD_PROTECTION_SETTINGS_PATH;
+import static org.folio.qm.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
+import static org.folio.qm.support.utils.ApiTestUtils.QM_RECORD_ID;
+import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
+import static org.folio.qm.support.utils.ApiTestUtils.changeManagerPath;
+import static org.folio.qm.support.utils.ApiTestUtils.mockGet;
+import static org.folio.qm.support.utils.ApiTestUtils.mockPost;
+import static org.folio.qm.support.utils.ApiTestUtils.mockPut;
+import static org.folio.qm.support.utils.ApiTestUtils.recordsEditorPath;
+import static org.folio.qm.support.utils.ApiTestUtils.recordsEditorStatusPath;
+import static org.folio.qm.support.utils.ApiTestUtils.usersByIdPath;
+import static org.folio.qm.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
+import static org.folio.qm.support.utils.DataBaseTestUtils.getCreationStatusById;
+import static org.folio.qm.support.utils.DataBaseTestUtils.saveCreationStatus;
+import static org.folio.qm.support.utils.InputOutputTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
@@ -55,17 +44,22 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOH
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
-
-import java.util.UUID;
-import java.util.regex.Pattern;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.http.Fault;
+import java.util.UUID;
+import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -77,6 +71,9 @@ import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.integration.XOkapiHeaders;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Log4j2
 @IntegrationTest
@@ -299,10 +296,6 @@ class RecordsEditorIT extends BaseIT {
   void testPostQuickMarcValidBibRecordCreated() throws Exception {
     log.info("===== Verify POST bib record: Successful =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
@@ -311,6 +304,10 @@ class RecordsEditorIT extends BaseIT {
     final var postRecordsPath = String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, VALID_JOB_EXECUTION_ID);
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
 
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
@@ -323,11 +320,10 @@ class RecordsEditorIT extends BaseIT {
 
     final var qmRecordId = response.getQmRecordId();
 
-    sendDIKafkaRecord("mockdata/request/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord("mockdata/request/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
-        .isEqualTo(RecordCreationStatusEnum.CREATED)
-      );
+        .isEqualTo(RecordCreationStatusEnum.CREATED));
     var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
     Assertions.assertThat(creationStatus)
       .hasNoNullFieldsOrPropertiesExcept("errorMessage")
@@ -341,10 +337,6 @@ class RecordsEditorIT extends BaseIT {
   void testPostQuickMarcValidHoldingsRecordCreated() throws Exception {
     log.info("===== Verify POST holdings record: Successful =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
@@ -353,6 +345,10 @@ class RecordsEditorIT extends BaseIT {
     final var postRecordsPath = String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, VALID_JOB_EXECUTION_ID);
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
 
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
@@ -365,11 +361,10 @@ class RecordsEditorIT extends BaseIT {
 
     final var qmRecordId = response.getQmRecordId();
 
-    sendDIKafkaRecord("mockdata/request/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord("mockdata/request/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
-        .isEqualTo(RecordCreationStatusEnum.CREATED)
-      );
+        .isEqualTo(RecordCreationStatusEnum.CREATED));
     var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
     Assertions.assertThat(creationStatus)
       .hasNoNullFieldsOrPropertiesExcept("errorMessage")
@@ -382,12 +377,12 @@ class RecordsEditorIT extends BaseIT {
   void testReturn401WhenInvalidUserId() throws Exception {
     log.info("===== Verify POST record: User Id Invalid =====");
 
+    String jobExecution = "mockdata/request/change-manager/job-execution/jobExecution_invalid_user_id.json";
+    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
+
     QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
-
-    String jobExecution = "mockdata/request/change-manager/job-execution/jobExecution_invalid_user_id.json";
-    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
@@ -447,15 +442,15 @@ class RecordsEditorIT extends BaseIT {
   void testReturn400WhenConnectionReset() throws Exception {
     log.info("===== Verify POST record: Connection reset =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
     wireMockServer.stubFor(post(urlEqualTo(CHANGE_MANAGER_JOB_EXECUTION_PATH))
       .willReturn(aResponse()
         .withStatus(SC_OK)
         .withFault(Fault.CONNECTION_RESET_BY_PEER)
       ));
+
+    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isBadRequest())

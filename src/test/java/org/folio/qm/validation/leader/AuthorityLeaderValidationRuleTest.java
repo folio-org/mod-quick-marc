@@ -4,20 +4,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.support.types.UnitTest;
+import org.folio.qm.validation.ValidationError;
+import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
-import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.validation.LeaderValidationRule;
-import org.folio.qm.validation.ValidationError;
-import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
-
 @UnitTest
 class AuthorityLeaderValidationRuleTest {
-
-  private final AuthorityLeaderValidationRule rule = new AuthorityLeaderValidationRule();
 
   private static final String VALID_LEADER = "00241xz\\\\a2200109nu\\4500";
   private static final String WRONG_RECORD_STATUS = "00241zz\\\\a2200109nu\\4500";
@@ -25,6 +20,8 @@ class AuthorityLeaderValidationRuleTest {
   private static final String WRONG_UNDEFINED_CHARACTER = "00241xzz\\a2200109nu\\4500";
   private static final String WRONG_ENCODING_LEVEL = "00241xz\\\\a2200109au\\4500";
   private static final String WRONG_PUNCTUATION_POLICY = "00241xz\\\\a2200109nz\\4500";
+
+  private final AuthorityLeaderValidationRule rule = new AuthorityLeaderValidationRule();
 
   @Test
   void shouldValidateAuthorityLeaderWithOutErrors() {

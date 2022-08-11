@@ -8,10 +8,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 
@@ -70,7 +68,7 @@ public abstract class FieldValidationRule implements ValidationRule {
           var simplifiedContent = ((Map<?, ?>) field.getContent()).values().stream()
             .map(o -> {
               if (o instanceof List) {
-                return StringUtils.join(((List<?>) o), "");
+                return StringUtils.join((List<?>) o, "");
               } else {
                 return o.toString();
               }

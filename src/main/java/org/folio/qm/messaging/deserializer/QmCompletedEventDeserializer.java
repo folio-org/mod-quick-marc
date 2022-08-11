@@ -1,16 +1,14 @@
 package org.folio.qm.messaging.deserializer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -28,8 +26,8 @@ public class QmCompletedEventDeserializer implements Deserializer<QmCompletedEve
       }
       return qmCompletedEventPayload;
     } catch (IOException e) {
-      throw new SerializationException("Can't deserialize data [" + Arrays.toString(data) +
-        "] from topic [" + topic + "]", e);
+      throw new SerializationException(
+        "Can't deserialize data [" + Arrays.toString(data) + "] from topic [" + topic + "]", e);
     }
   }
 }

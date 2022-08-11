@@ -7,7 +7,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.stream.Stream;
-
+import org.folio.qm.client.FieldProtectionSettingsClient;
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
+import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
+import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,19 +21,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.folio.qm.client.DICSFieldProtectionSettingsClient;
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
-import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
-import org.folio.qm.domain.dto.QuickMarc;
-import org.folio.qm.support.types.UnitTest;
-
 @UnitTest
 @ExtendWith(MockitoExtension.class)
 class FieldProtectionSetterServiceImplTest {
 
   @Mock
-  private DICSFieldProtectionSettingsClient protectionSettingsClient;
+  private FieldProtectionSettingsClient protectionSettingsClient;
 
   @InjectMocks
   private FieldProtectionSetterServiceImpl service;
@@ -65,7 +63,8 @@ class FieldProtectionSetterServiceImplTest {
         new FieldItem().tag("300").indicators(List.of("1", "2")).content("$a test $1 v.eqq")
       ),
       arguments(
-        new MarcFieldProtectionSetting().field("505").indicator1("*").indicator2("*").subfield("a").data("Purchase price: $325.00, 1980 August."),
+        new MarcFieldProtectionSetting().field("505").indicator1("*").indicator2("*").subfield("a")
+          .data("Purchase price: $325.00, 1980 August."),
         new FieldItem().tag("505").content("$a Purchase price: $325.00, 1980 August. $b test")
       )
     );

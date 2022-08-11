@@ -2,9 +2,7 @@ package org.folio.qm.util;
 
 import java.sql.Timestamp;
 import java.util.UUID;
-
 import lombok.experimental.UtilityClass;
-
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;

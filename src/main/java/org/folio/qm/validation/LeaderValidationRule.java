@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.LeaderItem;
 import org.folio.qm.domain.dto.QuickMarc;
@@ -49,8 +48,8 @@ public abstract class LeaderValidationRule implements ValidationRule {
 
   private Optional<ValidationError> validateLeaderLength(String leader) {
     return Constants.LEADER_LENGTH == leader.length()
-           ? Optional.empty()
-           : Optional.of(createValidationError(leader, "Wrong leader length"));
+      ? Optional.empty()
+      : Optional.of(createValidationError(leader, "Wrong leader length"));
   }
 
   private Optional<ValidationError> validateLeaderNumberFields(String leader, int start, int length) {

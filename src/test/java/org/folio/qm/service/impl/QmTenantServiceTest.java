@@ -1,23 +1,20 @@
 package org.folio.qm.service.impl;
 
+import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
 import org.folio.qm.support.types.UnitTest;
 import org.folio.spring.FolioExecutionContext;
-import org.folio.tenant.domain.dto.Parameter;
 import org.folio.tenant.domain.dto.TenantAttributes;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)

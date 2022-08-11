@@ -2,21 +2,19 @@ package org.folio.qm.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.glytching.junit.extension.random.Random;
+import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.UUID;
-
-import io.github.glytching.junit.extension.random.Random;
-import io.github.glytching.junit.extension.random.RandomBeansExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
-
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.types.UnitTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 
 @UnitTest
 @ExtendWith(RandomBeansExtension.class)
@@ -64,7 +62,7 @@ class CreationStatusMapperTest {
   }
 
   @Test
-  void shouldConvertSuccessfullyWhenUUIDFieldsAreNull(@Random Timestamp createdAt, @Random Timestamp updatedAt) {
+  void shouldConvertSuccessfullyWhenUuidFieldsAreNull(@Random Timestamp createdAt, @Random Timestamp updatedAt) {
     var recordCreationStatus = new RecordCreationStatus();
     recordCreationStatus.setStatus(RecordCreationStatusEnum.NEW);
     recordCreationStatus.setCreatedAt(createdAt);

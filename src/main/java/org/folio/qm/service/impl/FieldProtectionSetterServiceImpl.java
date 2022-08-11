@@ -2,21 +2,18 @@ package org.folio.qm.service.impl;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 import static org.folio.qm.converter.elements.Constants.CONTROL_FIELD_PATTERN;
 
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import org.folio.qm.client.DICSFieldProtectionSettingsClient;
+import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
 import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.service.FieldProtectionSetterService;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +22,7 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
   private static final String ANY_STRING = "*";
   private static final String BLANK_SUBFIELD_CODE = "\\";
 
-  private final DICSFieldProtectionSettingsClient dicsClient;
+  private final FieldProtectionSettingsClient dicsClient;
 
   @Override
   public QuickMarc applyFieldProtection(QuickMarc qmRecord) {
@@ -67,7 +64,7 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
   }
 
   private boolean isAnyValueInSettingOrTagMatch(MarcFieldProtectionSetting setting, FieldItem field) {
-    return (isBlank(setting.getIndicator1()) && isBlank(setting.getIndicator2()) && isBlank(setting.getSubfield()))
+    return isBlank(setting.getIndicator1()) && isBlank(setting.getIndicator2()) && isBlank(setting.getSubfield())
       && setting.getField().equals(ANY_STRING) || setting.getField().equals(field.getTag());
   }
 

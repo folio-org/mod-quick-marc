@@ -11,15 +11,13 @@ import java.io.PrintWriter;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.SneakyThrows;
+import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.integration.XOkapiHeaders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import org.folio.qm.support.types.UnitTest;
-import org.folio.spring.integration.XOkapiHeaders;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +32,7 @@ class UserIdOkapiHeaderValidationFilterTest {
 
   @SneakyThrows
   @Test
-  void testStopFilterChainWhenXOkapiUserIdHeaderIsMissingInCommonRequest() {
+  void testStopFilterChainWhen_xOkapiUserIdHeaderIsMissingInCommonRequest() {
     var filter = new UserIdOkapiHeaderValidationFilter();
     var contentStream = new ByteArrayOutputStream();
     filter.setManagementBasePath("/admin");
@@ -51,7 +49,7 @@ class UserIdOkapiHeaderValidationFilterTest {
 
   @SneakyThrows
   @Test
-  void testContinueFilterChainWhenXOkapiUserIdHeaderIsExistInCommonRequest() {
+  void testContinueFilterChainWhen_xOkapiUserIdHeaderIsExistInCommonRequest() {
     var filter = new UserIdOkapiHeaderValidationFilter();
     filter.setManagementBasePath("/admin");
     when(request.getRequestURI()).thenReturn("/test");
@@ -65,7 +63,7 @@ class UserIdOkapiHeaderValidationFilterTest {
 
   @SneakyThrows
   @Test
-  void testContinueFilterChainWhenXOkapiUserIdHeaderIsMissingInAdminRequest() {
+  void testContinueFilterChainWhen_xOkapiUserIdHeaderIsMissingInAdminRequest() {
     var filter = new UserIdOkapiHeaderValidationFilter();
     filter.setManagementBasePath("/admin");
     when(request.getRequestURI()).thenReturn("/admin/test");
@@ -78,7 +76,7 @@ class UserIdOkapiHeaderValidationFilterTest {
 
   @SneakyThrows
   @Test
-  void testContinueFilterChainWhenXOkapiUserIdHeaderIsMissingInTenantRequest() {
+  void testContinueFilterChainWhen_xOkapiUserIdHeaderIsMissingInTenantRequest() {
     var filter = new UserIdOkapiHeaderValidationFilter();
     filter.setManagementBasePath("/admin");
     when(request.getRequestURI()).thenReturn("/_/tenant");

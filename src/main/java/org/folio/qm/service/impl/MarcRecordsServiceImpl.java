@@ -7,12 +7,8 @@ import static org.folio.qm.util.MarcUtils.updateRecordTimestamp;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Service;
-
 import org.folio.qm.client.UsersClient;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
@@ -30,6 +26,8 @@ import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
 import org.folio.spring.exception.NotFoundException;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

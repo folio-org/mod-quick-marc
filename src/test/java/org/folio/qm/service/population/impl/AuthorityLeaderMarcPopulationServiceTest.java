@@ -4,16 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
-
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
+import org.junit.jupiter.api.Test;
 
 @UnitTest
 class AuthorityLeaderMarcPopulationServiceTest {
-
-  private final AuthorityLeaderMarcPopulationService populationService = new AuthorityLeaderMarcPopulationService();
 
   private static final String VALID_LEADER = "06059cz\\\\\\2201201n\\\\4500";
   private static final String WRONG_AUTHORITY_RECORD_TYPE = "06059ca\\\\\\2201201n\\\\4500";
@@ -22,6 +19,8 @@ class AuthorityLeaderMarcPopulationServiceTest {
   private static final String WRONG_UNDEFINED_CHARACTER_POSITION_7 = "06059cza\\\\2201201n\\\\4500";
   private static final String WRONG_UNDEFINED_CHARACTER_POSITION_8 = "06059cz\\a\\2201201n\\\\4500";
   private static final String WRONG_UNDEFINED_CHARACTER_POSITION_19 = "06059cz\\\\\\2201201n\\a4500";
+
+  private final AuthorityLeaderMarcPopulationService populationService = new AuthorityLeaderMarcPopulationService();
 
   @Test
   void shouldSupportAuthorityFormat() {

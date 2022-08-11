@@ -1,17 +1,14 @@
 package org.folio.qm.util;
 
+import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
+import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextCopyForTenant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.folio.qm.support.utils.APITestUtils.TENANT_ID;
-import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextCopyForTenant;
-
 import java.util.HashMap;
-
-import org.junit.jupiter.api.Test;
-
 import org.folio.qm.support.types.UnitTest;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
+import org.junit.jupiter.api.Test;
 
 @UnitTest
 class TenantContextUtilsTest {

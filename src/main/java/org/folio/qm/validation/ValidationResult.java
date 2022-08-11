@@ -1,7 +1,6 @@
 package org.folio.qm.validation;
 
 import java.util.List;
-
 import lombok.Value;
 
 @Value

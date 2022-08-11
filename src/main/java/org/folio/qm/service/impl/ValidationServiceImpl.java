@@ -7,17 +7,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.qm.validation.ValidationRule;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

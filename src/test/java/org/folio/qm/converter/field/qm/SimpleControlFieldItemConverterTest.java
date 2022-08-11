@@ -9,15 +9,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.impl.ControlFieldImpl;
-
-import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.support.types.UnitTest;
 
 @UnitTest
 class SimpleControlFieldItemConverterTest {
@@ -48,7 +46,7 @@ class SimpleControlFieldItemConverterTest {
   }
 
   public static Stream<Arguments> canProcessFields() {
-    return IntStream.of(1, 2,3,4,5,9)
+    return IntStream.of(1, 2, 3, 4, 5, 9)
       .mapToObj(value -> String.format("%03d", value))
       .map(tag -> new FieldItem().tag(tag))
       .map(Arguments::arguments);

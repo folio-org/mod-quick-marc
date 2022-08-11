@@ -1,24 +1,22 @@
 package org.folio.qm.messaging.listener;
 
-import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromQMEvent;
+import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromQuickMarcEvent;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
 import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import javax.validation.constraints.NotNull;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.tenant.domain.dto.Error;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
@@ -38,7 +36,7 @@ public class QuickMarcEventListener {
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data, MessageHeaders headers) {
     try {
-      beginFolioExecutionContext(getFolioExecutionContextFromQMEvent(headers, moduleMetadata));
+      beginFolioExecutionContext(getFolioExecutionContextFromQuickMarcEvent(headers, moduleMetadata));
       processEvent(data);
     } finally {
       endFolioExecutionContext();

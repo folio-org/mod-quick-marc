@@ -2,7 +2,6 @@ package org.folio.qm.converter.field;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
-
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.COMPLEX_CONTROL_FIELD_TAGS;
 import static org.folio.qm.converter.elements.Constants.CONTROL_FIELD_PATTERN;
@@ -11,13 +10,11 @@ import static org.folio.qm.util.ErrorUtils.buildInternalError;
 
 import java.util.List;
 import java.util.Map;
-
-import org.marc4j.marc.VariableField;
-
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.exception.ConverterException;
+import org.marc4j.marc.VariableField;
 
 public interface FieldItemConverter {
 
@@ -64,7 +61,7 @@ public interface FieldItemConverter {
   private String getItemValue(Map<String, Object> map, ControlFieldItem item) {
     var itemValue = map.get(item.getName());
     if (itemValue instanceof List && item.isArray()) {
-      return String.join(EMPTY, ((List<String>) itemValue));
+      return String.join(EMPTY, (List<String>) itemValue);
     } else {
       return itemValue.toString();
     }

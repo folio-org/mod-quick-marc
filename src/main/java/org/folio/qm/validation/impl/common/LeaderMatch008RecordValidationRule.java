@@ -1,7 +1,6 @@
 package org.folio.qm.validation.impl.common;
 
 import static java.util.Objects.nonNull;
-
 import static org.folio.qm.converter.elements.Constants.DESC;
 import static org.folio.qm.converter.elements.Constants.DESC_LEADER_POS;
 import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
@@ -9,13 +8,11 @@ import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.validation.RecordValidationRule;
 import org.folio.qm.validation.ValidationError;
+import org.springframework.stereotype.Component;
 
 @Component
 public class LeaderMatch008RecordValidationRule extends RecordValidationRule {
@@ -38,7 +35,7 @@ public class LeaderMatch008RecordValidationRule extends RecordValidationRule {
 
   private boolean isLeaderMatches(Object content, String leader) {
     @SuppressWarnings("unchecked")
-    var contentMap = ((Map<String, Object>) content);
+    var contentMap = (Map<String, Object>) content;
     return nonNull(contentMap)
       && nonNull(contentMap.get(DESC))
       && contentMap.get(DESC).toString().equals(Character.toString(leader.charAt(DESC_LEADER_POS)));

@@ -1,20 +1,18 @@
 package org.folio.qm.util;
 
+import static org.folio.qm.util.JsonUtils.OBJECT_DESERIALIZATION_FAILED;
+import static org.folio.qm.util.JsonUtils.OBJECT_SERIALIZATION_FAILED;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.folio.qm.util.JsonUtils.OBJECT_DESERIALIZATION_FAILED;
-import static org.folio.qm.util.JsonUtils.OBJECT_SERIALIZATION_FAILED;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.junit.jupiter.api.Test;
-
 import org.folio.qm.support.types.UnitTest;
+import org.junit.jupiter.api.Test;
 
 @UnitTest
 class JsonUtilsTest {
@@ -28,12 +26,12 @@ class JsonUtilsTest {
 
   @Test
   void shouldDeserializeObjectFromValidJsonString() {
-    final var jsonString = "{\n" +
-      "  \"sub\": \"john_doe\",\n" +
-      "  \"user_id\": \"00000000-0000-0000-0000-000000000000\",\n" +
-      "  \"iat\": 1614252390,\n" +
-      "  \"tenant\": \"test\"\n" +
-      "}";
+    final var jsonString = "{\n"
+      + "  \"sub\": \"john_doe\",\n"
+      + "  \"user_id\": \"00000000-0000-0000-0000-000000000000\",\n"
+      + "  \"iat\": 1614252390,\n"
+      + "  \"tenant\": \"test\"\n"
+      + "}";
     assertDoesNotThrow(() -> {
       final var userInfo = JsonUtils.jsonToObject(jsonString, UserInfo.class);
       assertEquals("00000000-0000-0000-0000-000000000000", userInfo.getUserId());

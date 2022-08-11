@@ -9,25 +9,23 @@ import static org.folio.qm.util.StatusUtils.getStatusNew;
 
 import java.util.Map;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.service.ChangeManagerService;
-import org.folio.qm.service.StatusService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.JobProfileService;
+import org.folio.qm.service.StatusService;
 import org.folio.spring.FolioExecutionContext;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class DataImportJobServiceImpl implements DataImportJobService {
 
-  private static final Map<ParsedRecordDto.RecordTypeEnum, RecordType> typeMap = Map.of(
+  private static final Map<ParsedRecordDto.RecordTypeEnum, RecordType> TYPE_MAP = Map.of(
     ParsedRecordDto.RecordTypeEnum.AUTHORITY, RecordType.MARC_AUTHORITY,
     ParsedRecordDto.RecordTypeEnum.BIB, RecordType.MARC_BIBLIOGRAPHIC,
     ParsedRecordDto.RecordTypeEnum.HOLDING, RecordType.MARC_HOLDINGS
@@ -74,7 +72,7 @@ public class DataImportJobServiceImpl implements DataImportJobService {
   }
 
   private JobProfile getJobProfile(ParsedRecordDto recordDto, JobProfileAction action) {
-    return jobProfileService.getJobProfile(typeMap.get(recordDto.getRecordType()), action);
+    return jobProfileService.getJobProfile(TYPE_MAP.get(recordDto.getRecordType()), action);
   }
 
   private void saveNewStatus(UUID jobExecutionId) {

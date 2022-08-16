@@ -1,3 +1,9 @@
+## 2.4.2 - Released
+
+### Changes
+* [MODQM-262](https://issues.folio.org/browse/MODQM-262) - Fix: MARC field protection doesn't verify the subfield value
+* [MODQM-267](https://issues.folio.org/browse/MODQM-267) - Fix: Cannot access a MARC bib record because creator has been deleted
+
 ## 2.4.1 - Released
 
 ### Changes

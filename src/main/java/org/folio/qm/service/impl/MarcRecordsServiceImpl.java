@@ -22,6 +22,7 @@ import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.ChangeManagerService;
 import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.FieldProtectionSetterService;
+import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
@@ -42,6 +43,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final StatusService statusService;
   private final FieldProtectionSetterService protectionSetterService;
   private final DefaultValuesPopulationService defaultValuesPopulationService;
+  private final LinksService linksService;
 
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
@@ -51,14 +53,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public QuickMarc findByExternalId(UUID externalId) {
     var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    var quickMarc = protectionSetterService.applyFieldProtection(dtoConverter.convert(parsedRecordDto));
-    if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
-      usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
-        .ifPresent(userDto -> {
-          var userInfo = userMapper.fromDto(userDto);
-          Objects.requireNonNull(quickMarc).getUpdateInfo().setUpdatedBy(userInfo);
-        });
-    }
+    var quickMarc = dtoConverter.convert(parsedRecordDto);
+
+    protectionSetterService.applyFieldProtection(quickMarc);
+    linksService.setRecordLinks(quickMarc);
+    setUserInfo(quickMarc, parsedRecordDto);
+
     return quickMarc;
   }
 
@@ -120,6 +120,16 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var validationResult = validationService.validate(quickMarc);
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);
+    }
+  }
+
+  private void setUserInfo(QuickMarc quickMarc, ParsedRecordDto parsedRecordDto) {
+    if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
+      usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
+        .ifPresent(userDto -> {
+          var userInfo = userMapper.fromDto(userDto);
+          Objects.requireNonNull(quickMarc).getUpdateInfo().setUpdatedBy(userInfo);
+        });
     }
   }
 }

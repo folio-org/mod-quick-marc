@@ -21,12 +21,16 @@
     {
       "id": "field-protection-settings",
       "version": "1.0"
+    },
+    {
+      "id": "instance-authority-links",
+      "version": "1.0"
     }
   ],
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "3.1",
+      "version": "3.2",
       "handlers": [
         {
           "methods": ["GET"],
@@ -35,7 +39,8 @@
           "modulePermissions": [
             "change-manager.parsedrecords.get",
             "users.item.get",
-            "converter-storage.field-protection-settings.get"
+            "converter-storage.field-protection-settings.get",
+            "instance-authority-links.collection.get"
           ]
         },
         {

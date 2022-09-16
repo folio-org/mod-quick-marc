@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
@@ -42,6 +43,13 @@ class CommonDataFieldConverterTest {
       arguments(new DataFieldImpl("010", ' ', ' '),
         new String[] {"a", "  34005678 /M"},
         new FieldItem().tag("010").indicators(List.of("\\", "\\")).content("$a   34005678 /M")
+      ),
+      arguments(new DataFieldImpl("010", ' ', ' '),
+        new String[] {"a", "34005678", "9", "2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"},
+        new FieldItem().tag("010")
+          .indicators(List.of("\\", "\\"))
+          .content("$a 34005678 $9 2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")
+          .authorityId(UUID.fromString("2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"))
       )
     );
   }

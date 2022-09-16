@@ -1,0 +1,13 @@
+{
+  "links": [
+    {
+      "id": 1,
+      "authorityId": "b9a5f035-de63-4e2c-92c2-07240c88b817",
+      "authorityNaturalId": "12345",
+      "instanceId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
+      "bibRecordTag": "001",
+      "bibRecordSubfields": ["a", "b", "c"]
+    }
+  ],
+  "totalRecords": 1
+}

@@ -1,6 +1,7 @@
 ## 2.5.0 IN-PROGRESS
 
 * [MODQM-260] (https://issues.folio.org/browse/MODQM-260) - Supports users interface 15.0 16.0
+* [MODQM-271] (https://issues.folio.org/browse/MODQM-271) - Extend GET /records endpoint to support bib-auth links
 
 ## 2.4.0 - Released
 

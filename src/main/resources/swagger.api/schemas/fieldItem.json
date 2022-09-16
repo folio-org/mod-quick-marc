@@ -31,6 +31,20 @@
       "readOnly": true,
       "default": false,
       "example": true
+    },
+    "authorityId": {
+      "description": "Id of the authority that controls subfields",
+      "$ref": "uuid.json",
+      "example": "c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1"
+    },
+    "authorityControlledSubfields": {
+      "description": "Subfields' codes that are controlled by an authority",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 100
     }
   },
   "required": [

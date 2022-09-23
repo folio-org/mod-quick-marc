@@ -40,7 +40,7 @@
             "change-manager.parsedrecords.get",
             "users.item.get",
             "converter-storage.field-protection-settings.get",
-            "instance-authority-links.collection.get"
+            "instance-authority-links.instances.collection.get"
           ]
         },
         {

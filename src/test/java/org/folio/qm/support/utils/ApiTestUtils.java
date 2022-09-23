@@ -32,6 +32,8 @@ public class ApiTestUtils {
   public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
   public static final String FIELD_PROTECTION_SETTINGS_PATH = "/field-protection-settings/marc?limit=1000";
   public static final String USERS_PATH = "/users";
+  public static final String LINKS_PATH = "/links";
+  public static final String LINKS_INSTANCES_PATH = LINKS_PATH + "/instances";
 
   public static final String EXTERNAL_ID = "externalId";
   public static final String QM_RECORD_ID = "qmRecordId";
@@ -84,6 +86,10 @@ public class ApiTestUtils {
 
   public static String changeManagerResourceByIdPath(UUID id) {
     return changeManagerPath() + "/" + id;
+  }
+
+  public static String linksByInstanceIdPath(UUID instanceId) {
+    return LINKS_INSTANCES_PATH + '/' + instanceId;
   }
 
   public static void mockGet(String url, String body, int status, WireMockServer mockServer) {

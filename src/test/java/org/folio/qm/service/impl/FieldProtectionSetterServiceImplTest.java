@@ -78,9 +78,9 @@ class FieldProtectionSetterServiceImplTest {
     when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
 
     var record = new QuickMarc().fields(List.of(fieldItem));
-    var actual = service.applyFieldProtection(record);
+    service.applyFieldProtection(record);
 
-    assertThat(actual.getFields())
+    assertThat(record.getFields())
       .extracting("tag", "isProtected")
       .contains(tuple(setting.getField(), true));
   }
@@ -102,9 +102,9 @@ class FieldProtectionSetterServiceImplTest {
     when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
 
     var record = new QuickMarc().fields(List.of(fieldItem));
-    var actual = service.applyFieldProtection(record);
+    service.applyFieldProtection(record);
 
-    assertThat(actual.getFields())
+    assertThat(record.getFields())
       .extracting("tag", "isProtected")
       .contains(tuple(setting.getField(), false));
   }

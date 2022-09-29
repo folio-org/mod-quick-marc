@@ -80,7 +80,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "a");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -106,7 +105,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "a");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -132,7 +130,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "s");
     content.put("BLvl", "b");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -159,7 +156,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "m");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -179,7 +175,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "e");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -202,7 +197,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "p");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -219,7 +213,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "c");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -243,7 +236,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "i");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -267,7 +259,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "h");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
@@ -284,7 +275,6 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "g");
     content.put("BLvl", "a");
-    content.put("Desc", "\\");
     content.put("Entered", "abcdef");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");

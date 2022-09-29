@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 public class CommonDataFieldConverter implements VariableFieldConverter<DataField> {
 
   private static final char AUTHORITY_ID_SUBFIELD_CODE = '9';
+  private static final char AUTHORITY_NATURAL_ID_SUBFIELD_CODE = '0';
 
   @Override
   public FieldItem convert(DataField field, Leader leader) {
@@ -30,6 +31,7 @@ public class CommonDataFieldConverter implements VariableFieldConverter<DataFiel
       .content(convertSubfields(field.getSubfields()));
 
     extractAuthorityId(field.getSubfields()).ifPresent(fieldItem::setAuthorityId);
+    extractAuthorityNaturalId(field.getSubfields()).ifPresent(fieldItem::setAuthorityNaturalId);
 
     return fieldItem;
   }
@@ -55,6 +57,13 @@ public class CommonDataFieldConverter implements VariableFieldConverter<DataFiel
     return subfields.stream()
       .filter(subfield -> subfield.getCode() == AUTHORITY_ID_SUBFIELD_CODE)
       .map(subfield -> UUID.fromString(subfield.getData()))
+      .findFirst();
+  }
+
+  private Optional<String> extractAuthorityNaturalId(List<Subfield> subfields) {
+    return subfields.stream()
+      .filter(subfield -> subfield.getCode() == AUTHORITY_NATURAL_ID_SUBFIELD_CODE)
+      .map(Subfield::getData)
       .findFirst();
   }
 }

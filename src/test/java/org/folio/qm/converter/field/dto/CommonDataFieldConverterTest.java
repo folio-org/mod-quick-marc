@@ -45,11 +45,12 @@ class CommonDataFieldConverterTest {
         new FieldItem().tag("010").indicators(List.of("\\", "\\")).content("$a   34005678 /M")
       ),
       arguments(new DataFieldImpl("010", ' ', ' '),
-        new String[] {"a", "34005678", "9", "2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"},
+        new String[] {"a", "34005678", "0", "n1234567890", "9", "2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"},
         new FieldItem().tag("010")
           .indicators(List.of("\\", "\\"))
-          .content("$a 34005678 $9 2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")
+          .content("$a 34005678 $0 n1234567890 $9 2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")
           .authorityId(UUID.fromString("2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"))
+          .authorityNaturalId("n1234567890")
       )
     );
   }

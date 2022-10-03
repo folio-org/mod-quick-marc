@@ -34,6 +34,7 @@ import static org.folio.qm.support.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.AUTHORITY_CONTROLLED_SUBFIELDS;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.AUTHORITY_ID;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.AUTHORITY_NATURAL_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
@@ -103,6 +104,7 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
       .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID))
       .andExpect(jsonPath("$.fields[0].authorityId").value(AUTHORITY_ID))
+      .andExpect(jsonPath("$.fields[0].authorityNaturalId").value(AUTHORITY_NATURAL_ID))
       .andExpect(jsonPath("$.fields[0].authorityControlledSubfields")
         .value(containsInAnyOrder(AUTHORITY_CONTROLLED_SUBFIELDS)));
 
@@ -183,6 +185,7 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
       .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID))
       .andExpect(jsonPath("$.fields[0].authorityId").doesNotExist())
+      .andExpect(jsonPath("$.fields[0].authorityNaturalId").doesNotExist())
       .andExpect(jsonPath("$.fields[0].authorityControlledSubfields").doesNotExist());
 
     checkParseRecordDtoId();

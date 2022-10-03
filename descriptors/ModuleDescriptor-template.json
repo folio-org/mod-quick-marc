@@ -57,7 +57,10 @@
           "methods": ["PUT"],
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["records-editor.records.item.put"],
-          "modulePermissions": ["change-manager.parsedrecords.put"]
+          "modulePermissions": [
+            "change-manager.parsedrecords.put",
+            "instance-authority-links.instances.collection.put"
+          ]
         },
         {
           "methods": ["DELETE"],

@@ -37,6 +37,11 @@
       "$ref": "uuid.json",
       "example": "c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1"
     },
+    "authorityNaturalId": {
+      "description": "Natural id of the authority that controls subfields",
+      "type": "string",
+      "example": "n1234567890"
+    },
     "authorityControlledSubfields": {
       "description": "Subfields' codes that are controlled by an authority",
       "type": "array",

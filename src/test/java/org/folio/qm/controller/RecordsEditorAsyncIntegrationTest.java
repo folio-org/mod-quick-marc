@@ -92,7 +92,9 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andDo(log())
       .andExpect(status().isAccepted());
 
-    if (!filePath.equals(QM_RECORD_BIB_PATH)) {
+    if (filePath.equals(QM_RECORD_BIB_PATH)) {
+      wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
+    } else {
       wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
     }
   }
@@ -127,6 +129,8 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andExpect(status().isBadRequest())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(errorMessage)));
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
   }
 
   private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
@@ -168,6 +172,8 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andExpect(status().isConflict())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(expectedErrorMessage)));
+
+    wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
   }
 
   @Test

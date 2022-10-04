@@ -3,6 +3,8 @@ package org.folio.qm.service.impl;
 import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
 import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
 import static org.folio.qm.util.MarcUtils.updateRecordTimestamp;
+import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
+import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -26,9 +28,13 @@ import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
+import org.folio.spring.DefaultFolioExecutionContext;
+import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +56,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final Converter<QuickMarc, ParsedRecordDto> qmConverter;
   private final Converter<ParsedRecordDto, QuickMarc> dtoConverter;
 
+  private final FolioExecutionContext folioExecutionContext;
+
   @Override
   public QuickMarc findByExternalId(UUID externalId) {
     var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
@@ -69,12 +77,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
-  public void updateById(UUID parsedRecordId, QuickMarc quickMarc) {
+  public void updateById(UUID parsedRecordId, QuickMarc quickMarc, DeferredResult<ResponseEntity<Void>> updateResult) {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
+    updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
-    linksService.updateRecordLinks(quickMarc);
   }
 
   @Override
@@ -96,8 +104,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     return quickMarc;
   }
 
-  private CreationStatus runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction delete) {
-    var jobId = dataImportJobService.executeDataImportJob(recordDto, delete);
+  private CreationStatus runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction action) {
+    var jobId = dataImportJobService.executeDataImportJob(recordDto, action);
     return statusService.findByJobExecutionId(jobId)
       .map(statusMapper::fromEntity)
       .orElseThrow(() -> new UnexpectedException(String.format(RECORD_NOT_FOUND_MESSAGE, jobId)));
@@ -132,5 +140,25 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
           Objects.requireNonNull(quickMarc).getUpdateInfo().setUpdatedBy(userInfo);
         });
     }
+  }
+
+  private Runnable updateLinksTask(FolioExecutionContext executionContext,
+                                   QuickMarc quickMarc,
+                                   DeferredResult<ResponseEntity<Void>> updateResult) {
+    var newContext = new DefaultFolioExecutionContext(executionContext.getFolioModuleMetadata(),
+      executionContext.getAllHeaders());
+    return () -> {
+      var result = (ResponseEntity<Void>) updateResult.getResult();
+      if (result == null || result.getStatusCode().isError()) {
+        return;
+      }
+
+      try {
+        beginFolioExecutionContext(newContext);
+        linksService.updateRecordLinks(quickMarc);
+      } finally {
+        endFolioExecutionContext();
+      }
+    };
   }
 }

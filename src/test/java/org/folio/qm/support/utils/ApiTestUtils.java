@@ -9,12 +9,10 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletionException;
 import lombok.experimental.UtilityClass;
 import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.springframework.http.HttpHeaders;
@@ -45,11 +43,7 @@ public class ApiTestUtils {
   }
 
   private static String encodeQuery(String query) {
-    try {
-      return URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-    } catch (UnsupportedEncodingException e) {
-      throw new CompletionException(e);
-    }
+    return URLEncoder.encode(query, StandardCharsets.UTF_8);
   }
 
   public static String usersByIdPath(String id) {

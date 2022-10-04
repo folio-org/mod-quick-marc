@@ -66,6 +66,7 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
       var importResult = cacheService.getDataImportActionResult(jobExecutionId);
       if (importResult != null) {
         if (statusUpdate.getErrorMessage() == null) {
+
           importResult.setResult(ResponseEntity.noContent().build());
         } else {
           importResult.setErrorResult(buildErrorResponse(statusUpdate.getErrorMessage()));

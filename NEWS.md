@@ -2,6 +2,7 @@
 
 * [MODQM-260] (https://issues.folio.org/browse/MODQM-260) - Supports users interface 15.0 16.0
 * [MODQM-271] (https://issues.folio.org/browse/MODQM-271) - Extend GET /records endpoint to support bib-auth links
+* [MODQM-291] (https://issues.folio.org/browse/MODQM-291) - Upgrade to folio-spring-base v5.0.0
 
 ## 2.4.0 - Released
 

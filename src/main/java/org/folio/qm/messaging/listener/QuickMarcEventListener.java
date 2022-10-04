@@ -1,8 +1,7 @@
 package org.folio.qm.messaging.listener;
 
 import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromQuickMarcEvent;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
+import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +34,8 @@ public class QuickMarcEventListener {
     concurrency = "#{folioKafkaProperties.listener['qm-completed'].concurrency}",
     containerFactory = "quickMarcKafkaListenerContainerFactory")
   public void qmCompletedListener(QmCompletedEventPayload data, MessageHeaders headers) {
-    try {
-      beginFolioExecutionContext(getFolioExecutionContextFromQuickMarcEvent(headers, moduleMetadata));
-      processEvent(data);
-    } finally {
-      endFolioExecutionContext();
-    }
+    runInFolioContext(getFolioExecutionContextFromQuickMarcEvent(headers, moduleMetadata),
+      () -> processEvent(data));
   }
 
   private void processEvent(QmCompletedEventPayload data) {

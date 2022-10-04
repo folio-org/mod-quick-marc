@@ -12,6 +12,7 @@ import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
+import org.folio.spring.scope.FolioExecutionContextSetter;
 import org.springframework.messaging.MessageHeaders;
 
 @UtilityClass
@@ -36,6 +37,12 @@ public class TenantContextUtils {
   public static FolioExecutionContext getFolioExecutionContextFromQuickMarcEvent(MessageHeaders headers,
                                                                                  FolioModuleMetadata moduleMetadata) {
     return getContextFromKafkaHeaders(null, null, null, headers, moduleMetadata);
+  }
+
+  public static void runInFolioContext(FolioExecutionContext context, Runnable runnable) {
+    try (var fec = new FolioExecutionContextSetter(context)) {
+      runnable.run();
+    }
   }
 
   private static FolioExecutionContext getContextFromKafkaHeaders(String tenantDefault, String urlDefault,

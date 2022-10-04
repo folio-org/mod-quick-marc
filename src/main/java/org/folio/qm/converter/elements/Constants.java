@@ -62,9 +62,6 @@ public final class Constants {
   public static final int TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH = 40;
   public static final int TOKEN_MIN_LENGTH = 3;
   public static final int LEADER_LENGTH = 24;
-  public static final int TYPE_OF_RECORD_LEADER_POS = 6;
-  public static final int BLVL_LEADER_POS = 7;
-  public static final int DESC_LEADER_POS = 18;
   public static final int LCCN_NEW_PREFIX_LENGTH = 2;
   public static final int LCCN_OLD_PREFIX_LENGTH = 3;
   public static final int SPECIFIC_ELEMENTS_BEGIN_INDEX = 18;
@@ -84,7 +81,6 @@ public final class Constants {
   public static final String BLANK_REPLACEMENT = "\\";
   public static final String CATEGORY_NAME = "$categoryName";
   public static final String BLVL = "BLvl";
-  public static final String DESC = "Desc";
   public static final String TYPE = "Type";
 
   public static final Set<String> COMPLEX_CONTROL_FIELD_TAGS = Set.of(

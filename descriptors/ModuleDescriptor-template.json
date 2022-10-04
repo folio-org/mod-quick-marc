@@ -30,7 +30,7 @@
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "3.2",
+      "version": "3.3",
       "handlers": [
         {
           "methods": ["GET"],

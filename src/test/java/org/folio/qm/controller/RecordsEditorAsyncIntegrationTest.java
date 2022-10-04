@@ -13,6 +13,7 @@ import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_PARSE_RECOR
 import static org.folio.qm.support.utils.ApiTestUtils.EXTERNAL_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.changeManagerPath;
 import static org.folio.qm.support.utils.ApiTestUtils.changeManagerResourceByIdPath;
+import static org.folio.qm.support.utils.ApiTestUtils.linksByInstanceIdPath;
 import static org.folio.qm.support.utils.ApiTestUtils.mockGet;
 import static org.folio.qm.support.utils.ApiTestUtils.mockPost;
 import static org.folio.qm.support.utils.ApiTestUtils.mockPut;
@@ -72,6 +73,9 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
     log.info("===== Verify PUT record: Successful =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+    if (filePath.equals(QM_RECORD_BIB_PATH)) {
+      mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
+    }
 
     QuickMarc quickMarcJson = readQuickMarc(filePath)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
@@ -87,6 +91,10 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .perform(asyncDispatch(result))
       .andDo(log())
       .andExpect(status().isAccepted());
+
+    if (!filePath.equals(QM_RECORD_BIB_PATH)) {
+      wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
+    }
   }
 
   @Test
@@ -94,6 +102,7 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
     log.info("===== Verify PUT record: Failed in external modules =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+    mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
     QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
@@ -118,6 +127,7 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
     log.info("==== Verify PUT record: Failed in external modules due to optimistic locking ====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+    mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
     QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
@@ -262,6 +272,7 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
     log.info("===== Verify PUT record: Leader and ignore 008 Elvl mismatch =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+    mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
     QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)

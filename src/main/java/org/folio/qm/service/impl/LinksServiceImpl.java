@@ -19,12 +19,40 @@ public class LinksServiceImpl implements LinksService {
 
   @Override
   public void setRecordLinks(QuickMarc qmRecord) {
-    if (!MarcFormat.BIBLIOGRAPHIC.equals(qmRecord.getMarcFormat())) {
+    if (!verifyFormat(qmRecord)) {
       return;
     }
 
     var instanceLinksOptional = linksClient.fetchLinksByInstanceId(qmRecord.getExternalId());
     instanceLinksOptional.ifPresent(instanceLinks -> populateLinks(qmRecord, instanceLinks));
+  }
+
+  @Override
+  public void updateRecordLinks(QuickMarc qmRecord) {
+    if (!verifyFormat(qmRecord)) {
+      return;
+    }
+
+    var instanceLinks = extractLinks(qmRecord);
+    linksClient.putLinksByInstanceId(qmRecord.getExternalId(), instanceLinks);
+  }
+
+  private boolean verifyFormat(QuickMarc quickMarc) {
+    return MarcFormat.BIBLIOGRAPHIC.equals(quickMarc.getMarcFormat());
+  }
+
+  private InstanceLinks extractLinks(QuickMarc quickMarc) {
+    var links = quickMarc.getFields().stream()
+      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
+      .map(fieldItem -> new InstanceLink()
+        .setInstanceId(quickMarc.getExternalId())
+        .setAuthorityId(fieldItem.getAuthorityId())
+        .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
+        .setBibRecordTag(fieldItem.getTag())
+        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields()))
+      .collect(Collectors.toList());
+
+    return new InstanceLinks(links, links.size());
   }
 
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
@@ -45,6 +73,7 @@ public class LinksServiceImpl implements LinksService {
 
   private void populateLink(FieldItem fieldItem, InstanceLink instanceLink) {
     fieldItem.setAuthorityId(instanceLink.getAuthorityId());
+    fieldItem.setAuthorityNaturalId(instanceLink.getAuthorityNaturalId());
     fieldItem.setAuthorityControlledSubfields(instanceLink.getBibRecordSubfields());
   }
 }

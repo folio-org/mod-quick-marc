@@ -1,6 +1,7 @@
 ## 2.5.0 IN-PROGRESS
 
 * [MODQM-260] (https://issues.folio.org/browse/MODQM-260) - Supports users interface 15.0 16.0
+* [MODQM-281] (https://issues.folio.org/browse/MODQM-281) - Remove 008 Desc from request/response on edit/derive MARC bib
 
 ## 2.4.0 - Released
 

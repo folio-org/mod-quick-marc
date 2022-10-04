@@ -83,6 +83,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
+    linksService.updateRecordLinks(quickMarc);
   }
 
   @Override

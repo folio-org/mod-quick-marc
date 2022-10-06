@@ -51,11 +51,10 @@ public final class MarcUtils {
   }
 
   /**
-   * This method encode Java {@link LocalDateTime} value in the MARC date-time format for
-   * Date and Time of Latest Transaction Field (005)
-   * https://www.loc.gov/marc/bibliographic/bd005.html
+   * This method encode Java {@link java.time.LocalDateTime} value in the MARC date-time format for
+   * <a href="https://www.loc.gov/marc/bibliographic/bd005.html">Date and Time of Latest Transaction Field (005)</a>.
    *
-   * @param localDateTime {@link LocalDateTime} value
+   * @param localDateTime {@link java.time.LocalDateTime} value
    * @return string with MARC date-time representation
    */
   public static String encodeToMarcDateTime(LocalDateTime localDateTime) {

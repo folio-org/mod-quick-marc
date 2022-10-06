@@ -11,12 +11,12 @@ Spring-based module that provides API for quickMARC - in-app editor for MARC rec
 ## Additional information
 quickMARC API provides the following URLs:
 
-|  Method | URL| Permissions  | Description  | 
-|---|---|---|---|
-| GET | /records-editor/records?externalId={externalId}  |records-editor.records.item.get   | Retrieves QuickMarc by external id  |
-| POST| /records-editor/records|records-editor.records.item.post| Create a new MARC and Instance records|
-| PUT | /records-editor/records/{recordId}  |records-editor.records.item.get   | Updates SRS record |
-| GET | /records-editor/records/status?qmRecordId={qmRecordId}  |records-editor.records.status.item.get   | Retrieves status of MARC bibliographic record creation  |
+| Method | URL                                                    | Permissions                            | Description                                            | 
+|--------|--------------------------------------------------------|----------------------------------------|--------------------------------------------------------|
+| GET    | /records-editor/records?externalId={externalId}        | records-editor.records.item.get        | Retrieves QuickMarc by external id                     |
+| POST   | /records-editor/records                                | records-editor.records.item.post       | Create a new MARC and Instance records                 |
+| PUT    | /records-editor/records/{recordId}                     | records-editor.records.item.get        | Updates SRS record                                     |
+| GET    | /records-editor/records/status?qmRecordId={qmRecordId} | records-editor.records.status.item.get | Retrieves status of MARC bibliographic record creation |
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).
 

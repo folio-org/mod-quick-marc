@@ -3,8 +3,7 @@ package org.folio.qm.service.impl;
 import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
 import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
 import static org.folio.qm.util.MarcUtils.updateRecordTimestamp;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
+import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -153,13 +152,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       if (result == null || result.getStatusCode().isError()) {
         return;
       }
-
-      try {
-        beginFolioExecutionContext(newContext);
-        linksService.updateRecordLinks(quickMarc);
-      } finally {
-        endFolioExecutionContext();
-      }
+      runInFolioContext(newContext, () -> linksService.updateRecordLinks(quickMarc));
     };
   }
 }

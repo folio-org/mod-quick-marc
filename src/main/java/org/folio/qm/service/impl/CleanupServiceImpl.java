@@ -2,8 +2,7 @@ package org.folio.qm.service.impl;
 
 import static org.apache.commons.lang3.time.DateUtils.MILLIS_PER_DAY;
 import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextCopyForTenant;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
+import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import java.sql.Timestamp;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +26,10 @@ public class CleanupServiceImpl implements CleanupService {
              fixedDelayString = "${folio.qm.creation-status.clear.fixed-delay-ms}")
   public void clearCreationStatusesForAllTenants() {
     var yesterdayTimestamp = new Timestamp(System.currentTimeMillis() - MILLIS_PER_DAY);
-    endFolioExecutionContext();
 
     for (var tenant : tenantsHolder.getAll()) {
-      beginFolioExecutionContext(getFolioExecutionContextCopyForTenant(context, tenant));
-      try {
-        statusService.removeOlderThan(yesterdayTimestamp);
-      } finally {
-        endFolioExecutionContext();
-      }
+      runInFolioContext(getFolioExecutionContextCopyForTenant(context, tenant),
+        () -> statusService.removeOlderThan(yesterdayTimestamp));
     }
   }
 }

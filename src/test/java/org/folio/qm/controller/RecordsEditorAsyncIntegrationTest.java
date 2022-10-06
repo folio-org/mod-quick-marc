@@ -97,13 +97,6 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
     }
   }
 
-  private String createPayload(String errorMessage) throws JsonProcessingException {
-    var payload = new QmCompletedEventPayload();
-    payload.setRecordId(VALID_PARSED_RECORD_ID);
-    payload.setErrorMessage(errorMessage);
-    return new ObjectMapper().writeValueAsString(payload);
-  }
-
   @Test
   void testUpdateQuickMarcRecordFailedInEvent() throws Exception {
     log.info("===== Verify PUT record: Failed in external modules =====");
@@ -127,10 +120,6 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andExpect(status().isBadRequest())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(errorMessage)));
-  }
-
-  private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
-    return jsonPath("$.message", errorMessageMatcher);
   }
 
   @Test
@@ -279,30 +268,6 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
   }
 
   @Test
-  void testUpdateQuickMarcRecordLeaderMismatch() throws Exception {
-    log.info("===== Verify PUT record: Leader and 008 mismatch =====");
-
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
-
-    quickMarcJson.getFields().stream()
-      .filter(fieldItem -> fieldItem.getTag().equals("008"))
-      .forEach(fieldItem -> {
-        @SuppressWarnings("unchecked")
-        var content = (Map<String, Object>) fieldItem.getContent();
-        content.put("Desc", "a");
-      });
-
-    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
-      .andExpect(status().isUnprocessableEntity())
-      .andExpect(jsonPath("$.message", equalTo("The Leader and 008 do not match")));
-
-    wireMockServer.verify(exactly(0),
-      putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
-  }
-
-  @Test
   void testUpdateQuickMarcRecordIgnoreElvlLeaderMismatch() throws Exception {
     log.info("===== Verify PUT record: Leader and ignore 008 Elvl mismatch =====");
 
@@ -395,5 +360,16 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
 
     deleteResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID))
       .andExpect(status().isNotFound());
+  }
+
+  private String createPayload(String errorMessage) throws JsonProcessingException {
+    var payload = new QmCompletedEventPayload();
+    payload.setRecordId(VALID_PARSED_RECORD_ID);
+    payload.setErrorMessage(errorMessage);
+    return new ObjectMapper().writeValueAsString(payload);
+  }
+
+  private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
+    return jsonPath("$.message", errorMessageMatcher);
   }
 }

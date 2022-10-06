@@ -2,7 +2,6 @@ package org.folio.qm.converter.field.dto;
 
 import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
 import static org.folio.qm.converter.elements.Constants.BLVL;
-import static org.folio.qm.converter.elements.Constants.DESC;
 import static org.folio.qm.converter.elements.Constants.SPACE_CHARACTER;
 import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_BEGIN_INDEX;
 import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_INDEX;
@@ -28,14 +27,12 @@ public class Tag008BibliographicControlFieldConverter implements VariableFieldCo
   public FieldItem convert(ControlField field, Leader leader) {
     var typeOfRecord = leader.getTypeOfRecord();
     var implDefined1 = leader.getImplDefined1();
-    var implDefined2 = leader.getImplDefined2();
     var configuration = Tag008Configuration.resolveContentType(typeOfRecord, implDefined1[0]);
 
     var content = masqueradeBlanks(field.getData());
     var contentMap = new LinkedHashMap<>();
     contentMap.put(TYPE, Character.toString(typeOfRecord));
     contentMap.put(BLVL, change(implDefined1[0]));
-    contentMap.put(DESC, change(implDefined2[1]));
     contentMap.putAll(fillContentMap(Tag008Configuration.getCommonItems(), content, -1));
     contentMap.putAll(fillContentMap(configuration.getSpecificItems(),
       content.substring(SPECIFIC_ELEMENTS_BEGIN_INDEX, SPECIFIC_ELEMENTS_END_INDEX), -1));

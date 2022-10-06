@@ -15,7 +15,6 @@ import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.util.TenantContextUtils;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
-import org.folio.spring.scope.FolioExecutionScopeExecutionContextManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +39,7 @@ class CleanupServiceImplTest {
   private TenantsHolder tenantsHolder = new TenantsHolderImpl();
 
   @Mock
-  private StatusServiceImpl creationStatusService;
+  private StatusServiceImpl statusService;
 
   @InjectMocks
   private CleanupServiceImpl cleanupService;
@@ -57,23 +56,19 @@ class CleanupServiceImplTest {
   @Test
   void shouldClearDataForAllTenants() {
     try (
-      var contextManager = mockStatic(FolioExecutionScopeExecutionContextManager.class);
       var tenantUtils = mockStatic(TenantContextUtils.class)
     ) {
       tenantUtils.when(() -> TenantContextUtils.getFolioExecutionContextCopyForTenant(any(), any()))
         .thenReturn(CONTEXT);
+      tenantUtils.when(() -> TenantContextUtils.runInFolioContext(any(), any())).thenCallRealMethod();
 
       cleanupService.clearCreationStatusesForAllTenants();
 
       tenantUtils.verify(() -> TenantContextUtils.getFolioExecutionContextCopyForTenant(any(), any()),
         times(tenantsHolder.count()));
-      contextManager.verify(() -> FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext(CONTEXT),
-        times(tenantsHolder.count()));
-      contextManager.verify(FolioExecutionScopeExecutionContextManager::endFolioExecutionContext,
-        times(tenantsHolder.count() + 1));
     }
 
-    verify(creationStatusService, times(tenantsHolder.count()))
+    verify(statusService, times(tenantsHolder.count()))
       .removeOlderThan(timestampCaptor.capture());
 
     var yesterdayTime = System.currentTimeMillis() - MILLIS_PER_DAY;

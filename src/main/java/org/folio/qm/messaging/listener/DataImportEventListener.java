@@ -1,8 +1,7 @@
 package org.folio.qm.messaging.listener;
 
 import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromDataImportEvent;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.beginFolioExecutionContext;
-import static org.folio.spring.scope.FolioExecutionScopeExecutionContextManager.endFolioExecutionContext;
+import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,12 +30,8 @@ public class DataImportEventListener {
     concurrency = "#{folioKafkaProperties.listener['di-completed'].concurrency}",
     containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diCompletedListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
-    try {
-      beginFolioExecutionContext(getFolioExecutionContextFromDataImportEvent(data, messageHeaders, moduleMetadata));
-      eventProcessingService.processDataImportCompleted(data);
-    } finally {
-      endFolioExecutionContext();
-    }
+    runInFolioContext(getFolioExecutionContextFromDataImportEvent(data, messageHeaders, moduleMetadata),
+      () -> eventProcessingService.processDataImportCompleted(data));
   }
 
   @KafkaListener(
@@ -46,11 +41,7 @@ public class DataImportEventListener {
     concurrency = "#{folioKafkaProperties.listener['di-error'].concurrency}",
     containerFactory = "dataImportKafkaListenerContainerFactory")
   public void diErrorListener(DataImportEventPayload data, MessageHeaders messageHeaders) {
-    try {
-      beginFolioExecutionContext(getFolioExecutionContextFromDataImportEvent(data, messageHeaders, moduleMetadata));
-      eventProcessingService.processDataImportError(data);
-    } finally {
-      endFolioExecutionContext();
-    }
+    runInFolioContext(getFolioExecutionContextFromDataImportEvent(data, messageHeaders, moduleMetadata),
+      () -> eventProcessingService.processDataImportError(data));
   }
 }

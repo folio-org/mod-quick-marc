@@ -65,7 +65,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 @Log4j2
 @IntegrationTest
-class RecordsEditorAsyncIntegrationTest extends BaseIT {
+class RecordsEditorAsyncIT extends BaseIT {
 
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
@@ -92,7 +92,9 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andDo(log())
       .andExpect(status().isAccepted());
 
-    if (!filePath.equals(QM_RECORD_BIB_PATH)) {
+    if (filePath.equals(QM_RECORD_BIB_PATH)) {
+      wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
+    } else {
       wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
     }
   }
@@ -120,6 +122,8 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andExpect(status().isBadRequest())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(errorMessage)));
+
+    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
   }
 
   @Test
@@ -157,6 +161,8 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
       .andExpect(status().isConflict())
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(expectedErrorMessage)));
+
+    wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
   }
 
   @Test
@@ -352,7 +358,7 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
 
   @Test
   void testDeleteQuickMarcRecordWrongUuid() throws Exception {
-    RecordsEditorAsyncIntegrationTest.log.info("===== Verify DELETE record: Not found =====");
+    RecordsEditorAsyncIT.log.info("===== Verify DELETE record: Not found =====");
     mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, wireMockServer);
 
     wireMockServer.verify(exactly(0),

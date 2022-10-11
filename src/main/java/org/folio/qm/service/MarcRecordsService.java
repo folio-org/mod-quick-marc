@@ -3,6 +3,7 @@ package org.folio.qm.service;
 import java.util.UUID;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
 public interface MarcRecordsService {
@@ -28,8 +29,9 @@ public interface MarcRecordsService {
    *
    * @param parsedRecordId DTO id
    * @param quickMarc      QuickMarc object
+   * @param updateResult result to set handlers on it
    */
-  void updateById(UUID parsedRecordId, QuickMarc quickMarc);
+  void updateById(UUID parsedRecordId, QuickMarc quickMarc, DeferredResult<ResponseEntity<Void>> updateResult);
 
   /**
    * This method retrieves status of new record creation.

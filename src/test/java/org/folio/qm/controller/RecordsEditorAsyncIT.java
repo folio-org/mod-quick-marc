@@ -65,7 +65,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 @Log4j2
 @IntegrationTest
-class RecordsEditorAsyncIntegrationTest extends BaseIT {
+class RecordsEditorAsyncIT extends BaseIT {
 
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
@@ -358,7 +358,7 @@ class RecordsEditorAsyncIntegrationTest extends BaseIT {
 
   @Test
   void testDeleteQuickMarcRecordWrongUuid() throws Exception {
-    RecordsEditorAsyncIntegrationTest.log.info("===== Verify DELETE record: Not found =====");
+    RecordsEditorAsyncIT.log.info("===== Verify DELETE record: Not found =====");
     mockGet(changeManagerPath(EXTERNAL_ID, VALID_PARSED_RECORD_ID), "{}", SC_NOT_FOUND, wireMockServer);
 
     wireMockServer.verify(exactly(0),

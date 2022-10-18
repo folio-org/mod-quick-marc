@@ -22,7 +22,7 @@
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
 
-    <folio-spring-base.version>5.0.0</folio-spring-base.version>
+    <folio-spring-base.version>5.0.1</folio-spring-base.version>
     <openapi-generator.version>6.2.0</openapi-generator.version>
     <mapstruct.version>1.5.2.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>

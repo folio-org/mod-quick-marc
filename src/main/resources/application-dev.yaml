@@ -66,12 +66,15 @@ management:
   endpoints:
     web:
       exposure:
-        include: info,health,env,httptrace
+        include: info,health,env,httptrace,loggers
       base-path: /admin
   health:
     defaults:
       enabled: false
     readinessstate:
+      enabled: true
+  endpoint:
+    loggers:
       enabled: true
 server:
   port: 8081

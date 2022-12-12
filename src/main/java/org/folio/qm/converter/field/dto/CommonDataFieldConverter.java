@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.util.MarcUtils;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Subfield;
@@ -54,17 +55,8 @@ public class CommonDataFieldConverter implements VariableFieldConverter<DataFiel
   private Optional<UUID> extractAuthorityId(List<Subfield> subfields) {
     return subfields.stream()
       .filter(subfield -> subfield.getCode() == AUTHORITY_ID_SUBFIELD_CODE)
-      .filter(subfield -> isValidUuid(subfield.getData()))
+      .filter(subfield -> MarcUtils.isValidUuid(subfield.getData()))
       .map(subfield -> UUID.fromString(subfield.getData()))
       .findFirst();
-  }
-
-  private boolean isValidUuid(String id) {
-    try {
-      UUID.fromString(id);
-      return true;
-    } catch (Exception ex) {
-      return false;
-    }
   }
 }

@@ -50,6 +50,13 @@ class CommonDataFieldConverterTest {
           .indicators(List.of("\\", "\\"))
           .content("$a 34005678 $9 2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")
           .authorityId(UUID.fromString("2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"))
+      ),
+      arguments(new DataFieldImpl("014", '0', ' '),
+        new String[] {"9", "not-valid-authority-uiid"},
+        new FieldItem().tag("014")
+          .indicators(List.of("0", "\\"))
+          .content("$9 not-valid-authority-uiid")
+          .authorityId(null)
       )
     );
   }

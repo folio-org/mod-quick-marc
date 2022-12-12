@@ -54,12 +54,12 @@ public class CommonDataFieldConverter implements VariableFieldConverter<DataFiel
   private Optional<UUID> extractAuthorityId(List<Subfield> subfields) {
     return subfields.stream()
       .filter(subfield -> subfield.getCode() == AUTHORITY_ID_SUBFIELD_CODE)
-      .filter(subfield -> isValidUUID(subfield.getData()))
+      .filter(subfield -> isValidUuid(subfield.getData()))
       .map(subfield -> UUID.fromString(subfield.getData()))
       .findFirst();
   }
 
-  private boolean isValidUUID(String id) {
+  private boolean isValidUuid(String id) {
     try {
       UUID.fromString(id);
       return true;

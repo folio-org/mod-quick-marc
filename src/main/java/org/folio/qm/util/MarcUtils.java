@@ -16,16 +16,15 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarc;
 
 public final class MarcUtils {
-  private static final Pattern UUID_REGEX =
-    Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
   public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
     ParsedRecordDto.RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
     ParsedRecordDto.RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
     ParsedRecordDto.RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
   );
-
   private static final DateTimeFormatter DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER =
     DateTimeFormatter.ofPattern("yyyyMMddHHmmss.S");
+  private static final Pattern UUID_REGEX =
+    Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 
   private MarcUtils() {
   }

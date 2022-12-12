@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 class MarcUtilsTest {
 
   @Test
-  void whenUUIDIsValid_thenValidationSucceeds() {
+  void whenUuidIsValid_thenValidationSucceeds() {
     Assertions.assertTrue(MarcUtils.isValidUuid(UUID.randomUUID().toString()));
   }
 
   @Test
-  void whenUUIDIsInvalid_thenValidationFails() {
+  void whenUuidIsInvalid_thenValidationFails() {
     Assertions.assertFalse(MarcUtils.isValidUuid("invalid-uuid"));
   }
 }

@@ -24,7 +24,8 @@ import org.marc4j.marc.impl.SubfieldImpl;
 class CommonDataFieldConverterTest {
 
   private final CommonDataFieldConverter converter = new CommonDataFieldConverter();
-  private final static MarcFormat[] BIB_AND_HOLDING_MARC = {HOLDINGS, BIBLIOGRAPHIC};
+  private static final MarcFormat[] BIB_AND_HOLDING_MARC = {HOLDINGS, BIBLIOGRAPHIC};
+
   private static Stream<Arguments> fieldData() {
     return Stream.of(
       arguments(new DataFieldImpl("948", '1', '2'),

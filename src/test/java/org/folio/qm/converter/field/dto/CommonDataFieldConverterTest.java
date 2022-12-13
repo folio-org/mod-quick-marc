@@ -23,8 +23,8 @@ import org.marc4j.marc.impl.SubfieldImpl;
 @UnitTest
 class CommonDataFieldConverterTest {
 
-  private final CommonDataFieldConverter converter = new CommonDataFieldConverter();
   private static final MarcFormat[] BIB_AND_HOLDING_MARC = {HOLDINGS, BIBLIOGRAPHIC};
+  private final CommonDataFieldConverter converter = new CommonDataFieldConverter();
 
   private static Stream<Arguments> fieldData() {
     return Stream.of(

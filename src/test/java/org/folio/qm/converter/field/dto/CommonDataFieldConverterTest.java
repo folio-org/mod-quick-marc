@@ -1,6 +1,9 @@
 package org.folio.qm.converter.field.dto;
 
+import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
+import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -8,6 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,7 +24,7 @@ import org.marc4j.marc.impl.SubfieldImpl;
 class CommonDataFieldConverterTest {
 
   private final CommonDataFieldConverter converter = new CommonDataFieldConverter();
-
+  private final static MarcFormat[] BIB_AND_HOLDING_MARC = {HOLDINGS, BIBLIOGRAPHIC};
   private static Stream<Arguments> fieldData() {
     return Stream.of(
       arguments(new DataFieldImpl("948", '1', '2'),
@@ -80,6 +84,12 @@ class CommonDataFieldConverterTest {
   @ParameterizedTest
   @MethodSource("dataFields")
   void testCanProcessField(DataField dtoField) {
-    assertTrue(converter.canProcess(dtoField, null));
+    assertTrue(converter.canProcess(dtoField, BIB_AND_HOLDING_MARC[(int) Math.round(Math.random())]));
+  }
+
+  @ParameterizedTest
+  @MethodSource("dataFields")
+  void testCannotProcessField(DataField dtoField) {
+    assertFalse(converter.canProcess(dtoField, MarcFormat.AUTHORITY));
   }
 }

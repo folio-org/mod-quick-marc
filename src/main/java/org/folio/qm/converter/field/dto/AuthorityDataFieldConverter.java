@@ -25,7 +25,7 @@ public class AuthorityDataFieldConverter extends CommonDataFieldConverter {
 
   @Override
   public boolean canProcess(VariableField field, MarcFormat marcFormat) {
-    return super.canProcess(field, marcFormat) && marcFormat == MarcFormat.AUTHORITY;
+    return field instanceof DataField && marcFormat == MarcFormat.AUTHORITY;
   }
 
   private Optional<UUID> extractAuthorityId(List<Subfield> subfields) {

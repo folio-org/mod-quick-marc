@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;

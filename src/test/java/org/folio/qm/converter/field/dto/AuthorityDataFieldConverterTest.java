@@ -1,13 +1,12 @@
 package org.folio.qm.converter.field.dto;
 
-import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
-import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
@@ -21,39 +20,31 @@ import org.marc4j.marc.impl.DataFieldImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
 
 @UnitTest
-class CommonDataFieldConverterTest {
+class AuthorityDataFieldConverterTest {
+  private final AuthorityDataFieldConverter converter = new AuthorityDataFieldConverter();
 
-  private static final MarcFormat[] BIB_AND_HOLDING_MARC = {HOLDINGS, BIBLIOGRAPHIC};
-  private final CommonDataFieldConverter converter = new CommonDataFieldConverter();
+  private static Stream<Arguments> cannotProcessFields() {
+    return Stream.of(
+      arguments(new DataFieldImpl("014", ' ', ' '), MarcFormat.BIBLIOGRAPHIC),
+      arguments(new DataFieldImpl("014", ' ', ' '), MarcFormat.HOLDINGS)
+    );
+  }
+
+  public static Stream<Arguments> dataFields() {
+    return IntStream.range(10, 999)
+      .mapToObj(value -> String.format("%03d", value))
+      .map(tag -> new DataFieldImpl(tag, '0', '0'))
+      .map(Arguments::arguments);
+  }
 
   private static Stream<Arguments> fieldData() {
     return Stream.of(
-      arguments(new DataFieldImpl("948", '1', '2'),
-        new String[] {"a", "1", "b", "a", "d", "b", "e", "2", "1", "3"},
-        new FieldItem().tag("948").indicators(List.of("1", "2")).content("$a 1 $b a $d b $e 2 $1 3")
-      ),
-      arguments(new DataFieldImpl("010", '1', '1'),
-        new String[] {"a", " 2001000234"},
-        new FieldItem().tag("010").indicators(List.of("1", "1")).content("$a  2001000234")
-      ),
-      arguments(new DataFieldImpl("010", '1', '1'),
-        new String[] {"a", "sn2003045678 "},
-        new FieldItem().tag("010").indicators(List.of("1", "1")).content("$a sn2003045678 ")
-      ),
-      arguments(new DataFieldImpl("010", '1', '1'),
-        new String[] {"a", "34005678 "},
-        new FieldItem().tag("010").indicators(List.of("1", "1")).content("$a 34005678 ")
-      ),
-      arguments(new DataFieldImpl("010", ' ', ' '),
-        new String[] {"a", "  34005678 /M"},
-        new FieldItem().tag("010").indicators(List.of("\\", "\\")).content("$a   34005678 /M")
-      ),
       arguments(new DataFieldImpl("010", ' ', ' '),
         new String[] {"a", "34005678", "9", "2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"},
         new FieldItem().tag("010")
           .indicators(List.of("\\", "\\"))
           .content("$a 34005678 $9 2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")
-          .authorityId(null)
+          .authorityId(UUID.fromString("2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"))
       ),
       arguments(new DataFieldImpl("014", '0', ' '),
         new String[] {"9", "not-valid-authority-uiid"},
@@ -63,13 +54,6 @@ class CommonDataFieldConverterTest {
           .authorityId(null)
       )
     );
-  }
-
-  public static Stream<Arguments> dataFields() {
-    return IntStream.range(10, 999)
-      .mapToObj(value -> String.format("%03d", value))
-      .map(tag -> new DataFieldImpl(tag, '0', '0'))
-      .map(Arguments::arguments);
   }
 
   @ParameterizedTest
@@ -83,14 +67,14 @@ class CommonDataFieldConverterTest {
   }
 
   @ParameterizedTest
-  @MethodSource("dataFields")
-  void testCanProcessField(DataField dtoField) {
-    assertTrue(converter.canProcess(dtoField, BIB_AND_HOLDING_MARC[(int) Math.round(Math.random())]));
+  @MethodSource("cannotProcessFields")
+  void testCannotProcessField(DataField field, MarcFormat format) {
+    assertFalse(converter.canProcess(field, format));
   }
 
   @ParameterizedTest
   @MethodSource("dataFields")
-  void testCannotProcessField(DataField dtoField) {
-    assertFalse(converter.canProcess(dtoField, MarcFormat.AUTHORITY));
+  void testCanProcessField(DataField dtoField) {
+    assertTrue(converter.canProcess(dtoField, MarcFormat.AUTHORITY));
   }
 }

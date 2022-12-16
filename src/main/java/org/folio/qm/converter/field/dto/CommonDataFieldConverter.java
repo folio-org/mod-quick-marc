@@ -28,7 +28,7 @@ public class CommonDataFieldConverter implements VariableFieldConverter<DataFiel
 
   @Override
   public boolean canProcess(VariableField field, MarcFormat marcFormat) {
-    return field instanceof DataField && marcFormat != MarcFormat.AUTHORITY;
+    return field instanceof DataField && marcFormat != MarcFormat.BIBLIOGRAPHIC;
   }
 
   private String convertSubfields(List<Subfield> subfields) {

@@ -20,12 +20,12 @@ import org.marc4j.marc.impl.DataFieldImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
 
 @UnitTest
-class AuthorityDataFieldConverterTest {
-  private final AuthorityDataFieldConverter converter = new AuthorityDataFieldConverter();
+class BibliographicDataFieldConverterTest {
+  private final BibliographicDataFieldConverter converter = new BibliographicDataFieldConverter();
 
   private static Stream<Arguments> cannotProcessFields() {
     return Stream.of(
-      arguments(new DataFieldImpl("014", ' ', ' '), MarcFormat.BIBLIOGRAPHIC),
+      arguments(new DataFieldImpl("014", ' ', ' '), MarcFormat.AUTHORITY),
       arguments(new DataFieldImpl("014", ' ', ' '), MarcFormat.HOLDINGS)
     );
   }
@@ -75,6 +75,6 @@ class AuthorityDataFieldConverterTest {
   @ParameterizedTest
   @MethodSource("dataFields")
   void testCanProcessField(DataField dtoField) {
-    assertTrue(converter.canProcess(dtoField, MarcFormat.AUTHORITY));
+    assertTrue(converter.canProcess(dtoField, MarcFormat.BIBLIOGRAPHIC));
   }
 }

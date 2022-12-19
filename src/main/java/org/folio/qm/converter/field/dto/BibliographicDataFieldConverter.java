@@ -13,7 +13,7 @@ import org.marc4j.marc.VariableField;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthorityDataFieldConverter extends CommonDataFieldConverter {
+public class BibliographicDataFieldConverter extends CommonDataFieldConverter {
   private static final char AUTHORITY_ID_SUBFIELD_CODE = '9';
 
   @Override
@@ -25,7 +25,7 @@ public class AuthorityDataFieldConverter extends CommonDataFieldConverter {
 
   @Override
   public boolean canProcess(VariableField field, MarcFormat marcFormat) {
-    return field instanceof DataField && marcFormat == MarcFormat.AUTHORITY;
+    return field instanceof DataField && marcFormat == MarcFormat.BIBLIOGRAPHIC;
   }
 
   private Optional<UUID> extractAuthorityId(List<Subfield> subfields) {

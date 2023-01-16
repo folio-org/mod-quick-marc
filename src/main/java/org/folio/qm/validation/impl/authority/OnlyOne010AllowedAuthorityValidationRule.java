@@ -3,7 +3,6 @@ package org.folio.qm.validation.impl.authority;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.validation.ValidationError;
 import org.springframework.stereotype.Component;

@@ -2,18 +2,11 @@ package org.folio.qm.validation.impl.authority;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 @UnitTest
 class OnlyOne010AllowedAuthorityValidationRuleTest {
@@ -47,9 +40,10 @@ class OnlyOne010AllowedAuthorityValidationRuleTest {
   }
 
   @Test
-  void testValidationRulePassedWhen010TagHasEmptyContent() {
+  void testValidationRuleFailedWhen010TagHasEmptyContent() {
     var fields = List.of(new FieldItem().tag("010").content(""));
     var validationResult = rule.validate(fields);
-    assertThat(validationResult).isEmpty();
+    assertThat(validationResult).isPresent()
+      .hasValueSatisfying(validationError -> assertEquals("Content couldn't be empty", validationError.getMessage()));
   }
 }

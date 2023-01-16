@@ -15,6 +15,8 @@ import org.folio.qm.domain.dto.QuickMarc;
 
 public abstract class FieldValidationRule implements ValidationRule {
 
+  public static final String CONTENT_COULDN_T_BE_EMPTY = "Content couldn't be empty";
+
   @Override
   public Optional<ValidationError> validate(QuickMarc qmRecord) {
     return validate(qmRecord.getFields());
@@ -37,10 +39,25 @@ public abstract class FieldValidationRule implements ValidationRule {
         return Optional.of(createValidationError(tagCode, "Is unique tag"));
       } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty(
         (CharSequence) fields.get(0).getContent())) {
-        return Optional.of(createValidationError(tagCode, "Content couldn't be empty"));
+        return Optional.of(createValidationError(tagCode, CONTENT_COULDN_T_BE_EMPTY));
       } else {
         return Optional.empty();
       }
+    };
+  }
+
+  protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> notRequiredOnlyOneCondition() {
+    return (tagCode, fields) -> {
+      if (fields.isEmpty()) {
+        return Optional.empty();
+      } else if (fields.size() != 1) {
+        return Optional.of(createValidationError(tagCode, "Is unique tag"));
+      } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty(
+        (CharSequence) fields.get(0).getContent())) {
+        return Optional.of(createValidationError(tagCode, "Content couldn't be empty"));
+      }
+
+      return Optional.empty();
     };
   }
 
@@ -51,7 +68,7 @@ public abstract class FieldValidationRule implements ValidationRule {
       } else {
         for (FieldItem fieldItem : fields) {
           if (StringUtils.isEmpty((CharSequence) fieldItem.getContent())) {
-            return Optional.of(createValidationError(tagCode, "Content couldn't be empty"));
+            return Optional.of(createValidationError(tagCode, CONTENT_COULDN_T_BE_EMPTY));
           }
         }
       }

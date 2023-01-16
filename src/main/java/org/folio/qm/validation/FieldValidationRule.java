@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.folio.qm.domain.dto.FieldItem;
@@ -41,6 +42,18 @@ public abstract class FieldValidationRule implements ValidationRule {
       } else {
         return Optional.empty();
       }
+    };
+  }
+
+  protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> notRequiredOnlyOneCondition() {
+    return (tagCode, fields) -> {
+      if (fields.isEmpty()) {
+        return Optional.empty();
+      } else if (fields.size() != 1) {
+        return Optional.of(createValidationError(tagCode, "Is unique tag"));
+      }
+
+      return Optional.empty();
     };
   }
 

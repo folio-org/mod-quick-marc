@@ -1,6 +1,7 @@
 package org.folio.qm.validation.impl.authority;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.folio.qm.validation.FieldValidationRule.CONTENT_COULDN_T_BE_EMPTY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -44,6 +45,6 @@ class OnlyOne010AllowedAuthorityValidationRuleTest {
     var fields = List.of(new FieldItem().tag("010").content(""));
     var validationResult = rule.validate(fields);
     assertThat(validationResult).isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Content couldn't be empty", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(CONTENT_COULDN_T_BE_EMPTY, validationError.getMessage()));
   }
 }

@@ -1,6 +1,9 @@
 package org.folio.qm.validation.impl.authority;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.folio.qm.validation.FieldValidationRule.CONTENT_COULDN_T_BE_EMPTY;
+import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG;
+import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +12,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.support.types.UnitTest;
+import org.folio.qm.validation.FieldValidationRule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -38,7 +42,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Content couldn't be empty", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(CONTENT_COULDN_T_BE_EMPTY, validationError.getMessage()));
   }
 
   @Test
@@ -50,7 +54,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Is unique tag", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_UNIQUE_TAG, validationError.getMessage()));
   }
 
   @Test
@@ -59,7 +63,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Is required tag", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_REQUIRED_TAG, validationError.getMessage()));
   }
 
 }

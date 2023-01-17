@@ -2,6 +2,7 @@ package org.folio.qm.validation.impl.authority;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.qm.validation.FieldValidationRule.CONTENT_COULDN_T_BE_EMPTY;
+import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -30,7 +31,7 @@ class OnlyOne010AllowedAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Is unique tag", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_UNIQUE_TAG, validationError.getMessage()));
   }
 
   @Test

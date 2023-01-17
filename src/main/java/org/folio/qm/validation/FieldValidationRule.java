@@ -15,9 +15,9 @@ import org.folio.qm.domain.dto.QuickMarc;
 
 public abstract class FieldValidationRule implements ValidationRule {
 
-  public static final String CONTENT_COULDN_T_BE_EMPTY = "Content couldn't be empty";
-  public static final String IS_UNIQUE_TAG = "Is unique tag";
-  public static final String IS_REQUIRED_TAG = "Is required tag";
+  public static final String EMPTY_CONTENT_ERROR_MSG = "Content couldn't be empty";
+  public static final String IS_UNIQUE_TAG_ERROR_MSG = "Is unique tag";
+  public static final String IS_REQUIRED_TAG_ERROR_MSG = "Is required tag";
 
   @Override
   public Optional<ValidationError> validate(QuickMarc qmRecord) {
@@ -36,12 +36,12 @@ public abstract class FieldValidationRule implements ValidationRule {
   protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> onlyOneRequiredCondition() {
     return (tagCode, fields) -> {
       if (fields.isEmpty()) {
-        return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG));
+        return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG_ERROR_MSG));
       } else if (fields.size() != 1) {
-        return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG));
+        return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG_ERROR_MSG));
       } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty(
         (CharSequence) fields.get(0).getContent())) {
-        return Optional.of(createValidationError(tagCode, CONTENT_COULDN_T_BE_EMPTY));
+        return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
       } else {
         return Optional.empty();
       }
@@ -53,10 +53,10 @@ public abstract class FieldValidationRule implements ValidationRule {
       if (fields.isEmpty()) {
         return Optional.empty();
       } else if (fields.size() != 1) {
-        return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG));
+        return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG_ERROR_MSG));
       } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty(
         (CharSequence) fields.get(0).getContent())) {
-        return Optional.of(createValidationError(tagCode, CONTENT_COULDN_T_BE_EMPTY));
+        return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
       }
 
       return Optional.empty();
@@ -66,11 +66,11 @@ public abstract class FieldValidationRule implements ValidationRule {
   protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> atLeastOneRequiredCondition() {
     return (tagCode, fields) -> {
       if (fields.isEmpty()) {
-        return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG));
+        return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG_ERROR_MSG));
       } else {
         for (FieldItem fieldItem : fields) {
           if (StringUtils.isEmpty((CharSequence) fieldItem.getContent())) {
-            return Optional.of(createValidationError(tagCode, CONTENT_COULDN_T_BE_EMPTY));
+            return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
           }
         }
       }

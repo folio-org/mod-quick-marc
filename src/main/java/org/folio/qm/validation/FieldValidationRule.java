@@ -16,7 +16,9 @@ import org.folio.qm.domain.dto.QuickMarc;
 public abstract class FieldValidationRule implements ValidationRule {
 
   public static final String EMPTY_CONTENT_ERROR_MSG = "Content couldn't be empty";
+
   public static final String IS_UNIQUE_TAG_ERROR_MSG = "Is unique tag";
+
   public static final String IS_REQUIRED_TAG_ERROR_MSG = "Is required tag";
 
   @Override

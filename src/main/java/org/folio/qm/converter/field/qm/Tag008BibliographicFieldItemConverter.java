@@ -9,8 +9,8 @@ import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Tag008Configuration.getCommonItems;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.Tag008Configuration;
 import org.folio.qm.converter.field.FieldItemConverter;

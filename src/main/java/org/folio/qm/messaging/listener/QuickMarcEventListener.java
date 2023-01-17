@@ -3,7 +3,7 @@ package org.folio.qm.messaging.listener;
 import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromQuickMarcEvent;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;

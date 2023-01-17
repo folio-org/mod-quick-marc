@@ -1,6 +1,9 @@
 package org.folio.qm.validation.impl.authority;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.folio.qm.validation.FieldValidationRule.EMPTY_CONTENT_ERROR_MSG;
+import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
+import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,7 +41,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Content couldn't be empty", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(EMPTY_CONTENT_ERROR_MSG, validationError.getMessage()));
   }
 
   @Test
@@ -50,7 +53,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Is unique tag", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_UNIQUE_TAG_ERROR_MSG, validationError.getMessage()));
   }
 
   @Test
@@ -59,7 +62,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals("Is required tag", validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_REQUIRED_TAG_ERROR_MSG, validationError.getMessage()));
   }
 
 }

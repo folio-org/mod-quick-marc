@@ -36,6 +36,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PA
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
+import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
@@ -312,7 +313,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
-      .andExpect(errorMessageMatch(equalTo("Is unique tag")));
+      .andExpect(errorMessageMatch(equalTo(IS_UNIQUE_TAG_ERROR_MSG)));
   }
 
   @Test

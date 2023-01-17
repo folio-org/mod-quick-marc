@@ -48,6 +48,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOH
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
+import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
@@ -457,7 +458,7 @@ class RecordsEditorIT extends BaseIT {
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
-      .andExpect(jsonPath("$.message").value("Is unique tag"));
+      .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
   @Test
@@ -473,7 +474,7 @@ class RecordsEditorIT extends BaseIT {
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
-      .andExpect(jsonPath("$.message").value("Is unique tag"));
+      .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
   @Test

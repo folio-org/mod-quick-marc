@@ -13,7 +13,7 @@ buildMvn {
     buildDocker {
       publishMaster = 'yes'
       healthChk = 'yes'
-      healthChkCmd = 'wget http://localhost:8081/admin/health -O test && cat test'
+      healthChkCmd = 'curl -sS --fail -o /dev/null http://localhost:8081/admin/health || exit 1'
     }
   }
 }

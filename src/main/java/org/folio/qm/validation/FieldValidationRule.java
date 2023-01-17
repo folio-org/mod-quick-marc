@@ -65,21 +65,6 @@ public abstract class FieldValidationRule implements ValidationRule {
     };
   }
 
-  protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> atLeastOneRequiredCondition() {
-    return (tagCode, fields) -> {
-      if (fields.isEmpty()) {
-        return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG_ERROR_MSG));
-      } else {
-        for (FieldItem fieldItem : fields) {
-          if (StringUtils.isEmpty((CharSequence) fieldItem.getContent())) {
-            return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
-          }
-        }
-      }
-      return Optional.empty();
-    };
-  }
-
   protected BiFunction<Pair<String, Integer>, List<FieldItem>, Optional<ValidationError>> contentLengthCondition() {
     return (tagLengthPair, fields) -> {
       var tagCode = tagLengthPair.getLeft();

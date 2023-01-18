@@ -349,7 +349,6 @@
                 <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
                 <useSpringBoot3>true</useSpringBoot3>
-                <!--requestMappingMode>api_interface</requestMappingMode-->
               </configOptions>
             </configuration>
           </execution>
@@ -381,7 +380,6 @@
                 <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
                 <useSpringBoot3>true</useSpringBoot3>
-                <!--requestMappingMode>api_interface</requestMappingMode-->
                 <responseWrapper>DeferredResult</responseWrapper>
               </configOptions>
             </configuration>

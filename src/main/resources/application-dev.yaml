@@ -15,12 +15,10 @@ spring:
       enable-auto-commit: true
       auto-commit-interval: 1000
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
   liquibase:

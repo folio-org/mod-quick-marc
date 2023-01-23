@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.support.types.UnitTest;
-import org.folio.qm.validation.impl.holdings.OnlyOne852RequiredHoldingsValidationRule;
 import org.junit.jupiter.api.Test;
 
 @UnitTest

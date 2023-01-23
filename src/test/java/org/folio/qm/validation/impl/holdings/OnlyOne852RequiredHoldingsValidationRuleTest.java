@@ -1,4 +1,4 @@
-package org.folio.qm.validation.impl.authority;
+package org.folio.qm.validation.impl.holdings;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.qm.validation.FieldValidationRule.EMPTY_CONTENT_ERROR_MSG;

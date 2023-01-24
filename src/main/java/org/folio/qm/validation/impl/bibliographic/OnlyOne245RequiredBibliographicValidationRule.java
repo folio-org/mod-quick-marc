@@ -13,7 +13,7 @@ public class OnlyOne245RequiredBibliographicValidationRule extends AbstractBibli
 
   @Override
   public Optional<ValidationError> validate(List<FieldItem> fieldItems) {
-    var fieldsWith004TagCode = filterFieldsByTagCode(fieldItems, TAG_CODE);
-    return onlyOneRequiredCondition().apply(TAG_CODE, fieldsWith004TagCode);
+    var fieldsWith245TagCode = filterFieldsByTagCode(fieldItems, TAG_CODE);
+    return onlyOneRequiredCondition().apply(TAG_CODE, fieldsWith245TagCode);
   }
 }

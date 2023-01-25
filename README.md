@@ -20,6 +20,27 @@ quickMARC API provides the following URLs:
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).
 
+### Validation rules in quickMARC
+#### MARC Holdings Validation rules
+
+| MARC field | Validation rule                    |
+|:-----------|:-----------------------------------|
+| **008**    | Required field  <br/> Unique field |    
+| **852**    | Required field  <br/> Unique field |    
+
+#### MARC Authority Validation rules
+
+| MARC field | Validation rule                    |
+|:-----------|:-----------------------------------|
+| **1xx**    | Required field  <br/> Unique field |    
+| **010**    | Optional field  <br/> Unique field |    
+
+#### MARC Bibliographic Validation rules
+
+| MARC field | Validation rule                    |
+|:-----------|:-----------------------------------|
+| **245**    | Required field  <br/> Unique field |    
+
 ### Required Permissions
 Institutional users should be granted the following permissions in order to use this quickMARC API:
 - `records-editor.all`

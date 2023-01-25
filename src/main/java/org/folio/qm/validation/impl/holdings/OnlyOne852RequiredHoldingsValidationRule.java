@@ -16,5 +16,4 @@ public class OnlyOne852RequiredHoldingsValidationRule extends AbstractHoldingsVa
     List<FieldItem> fieldsWith852TagCode = filterFieldsByTagCode(fieldItems, TAG_CODE);
     return onlyOneRequiredCondition().apply(TAG_CODE, fieldsWith852TagCode);
   }
-
 }

@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
 @UnitTest
 class OnlyOne245RequiredHoldingsValidationRuleTest {
 
-  private final OnlyOne245RequiredBibliographicValidationRule rule = new OnlyOne245RequiredBibliographicValidationRule();
+  private final OnlyOne245RequiredBibliographicValidationRule rule =
+    new OnlyOne245RequiredBibliographicValidationRule();
 
   @Test
   void testValidationRulePassedWhenOnlyOne245TagExists() {

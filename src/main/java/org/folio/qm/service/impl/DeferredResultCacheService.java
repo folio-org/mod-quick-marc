@@ -29,7 +29,9 @@ public class DeferredResultCacheService {
   }
 
   public void evictUpdateActionResult(UUID recordId) {
-    requireNonNull(cacheManager.getCache(QM_UPDATE_RESULT_CACHE)).evict(context.getTenantId() + ":" + recordId);
+    var key = context.getTenantId() + ":" + recordId;
+    log.debug("evictUpdateActionResult:: trying to evict [UPDATE] action by key: {}", key);
+    requireNonNull(cacheManager.getCache(QM_UPDATE_RESULT_CACHE)).evict(key);
   }
 
   @Cacheable(cacheNames = DATA_IMPORT_RESULT_CACHE, key = "@folioExecutionContext.tenantId + ':' + #jobId")
@@ -39,6 +41,8 @@ public class DeferredResultCacheService {
   }
 
   public void evictDataImportActionResult(UUID jobId) {
-    requireNonNull(cacheManager.getCache(DATA_IMPORT_RESULT_CACHE)).evict(context.getTenantId() + ":" + jobId);
+    var key = context.getTenantId() + ":" + jobId;
+    log.debug("evictDataImportActionResult:: trying to evict data import action by key: {}", key);
+    requireNonNull(cacheManager.getCache(DATA_IMPORT_RESULT_CACHE)).evict(key);
   }
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.ValidationService;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class ValidationServiceImpl implements ValidationService {
 
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
@@ -44,6 +46,8 @@ public class ValidationServiceImpl implements ValidationService {
   @Override
   public void validateIdsMatch(QuickMarc quickMarc, UUID parsedRecordId) {
     if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
+      log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
+        quickMarc.getParsedRecordId(), parsedRecordId);
       var error =
         buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
       throw new ValidationException(error);

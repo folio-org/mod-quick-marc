@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.client.UsersClient;
 import org.folio.qm.domain.dto.CreationStatus;
@@ -37,6 +38,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private static final String RECORD_NOT_FOUND_MESSAGE = "Record with id [%s] was not found";
@@ -59,42 +61,57 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public QuickMarc findByExternalId(UUID externalId) {
+    log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
     var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
     var quickMarc = dtoConverter.convert(parsedRecordDto);
 
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
     setUserInfo(quickMarc, parsedRecordDto);
-
+    log.info("findByExternalId:: quickMarc loaded by externalId: {}", externalId);
     return quickMarc;
   }
 
   @Override
   public CreationStatus deleteByExternalId(UUID externalId) {
+    log.debug("deleteByExternalId:: trying to delete quickMarc by externalId: {}", externalId);
     var recordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    return runImportAndGetStatus(recordDto, DELETE);
+    var status  = runImportAndGetStatus(recordDto, DELETE);
+    log.info("deleteByExternalId:: quickMarc deleted with status: {}", status.getStatus());
+    return status;
   }
 
   @Override
   public void updateById(UUID parsedRecordId, QuickMarc quickMarc, DeferredResult<ResponseEntity<Void>> updateResult) {
+    log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
+    log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
   }
 
   @Override
   public CreationStatus getCreationStatusByQmRecordId(UUID qmRecordId) {
-    return statusService.findById(qmRecordId).map(statusMapper::fromEntity)
+    log.debug("getCreationStatusByQmRecordId:: trying to get creationStatus by qmRecordId: {}", qmRecordId);
+    return statusService.findById(qmRecordId)
+      .map(status -> {
+        log.info("getCreationStatusByQmRecordId:: creationStatus: {} loaded by qmRecordId: {}",
+          status.getStatus(), qmRecordId);
+        return statusMapper.fromEntity(status);
+      })
       .orElseThrow(() -> new NotFoundException(String.format(RECORD_NOT_FOUND_MESSAGE, qmRecordId)));
   }
 
   @Override
   public CreationStatus createNewRecord(QuickMarc quickMarc) {
+    log.debug("createNewRecord:: trying to create a new quickMarc");
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var recordDto = qmConverter.convert(prepareRecord(quickMarc));
-    return runImportAndGetStatus(recordDto, CREATE);
+    var status  = runImportAndGetStatus(recordDto, CREATE);
+    log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
+    return status;
   }
 
   private QuickMarc prepareRecord(QuickMarc quickMarc) {

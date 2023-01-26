@@ -6,6 +6,7 @@ import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import java.sql.Timestamp;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.service.CleanupService;
 import org.folio.qm.service.StatusService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class CleanupServiceImpl implements CleanupService {
 
   private final TenantsHolder tenantsHolder;
@@ -25,9 +27,12 @@ public class CleanupServiceImpl implements CleanupService {
   @Scheduled(initialDelayString = "${folio.qm.creation-status.clear.initial-delay-ms}",
              fixedDelayString = "${folio.qm.creation-status.clear.fixed-delay-ms}")
   public void clearCreationStatusesForAllTenants() {
+    log.trace("clearCreationStatusesForAllTenants:: trying to clean up jobs from DB");
     var yesterdayTimestamp = new Timestamp(System.currentTimeMillis() - MILLIS_PER_DAY);
-
-    for (var tenant : tenantsHolder.getAll()) {
+    var tenants = tenantsHolder.getAll();
+    log.info("clearCreationStatusesForAllTenants:: Cleaning up jobs for tenants: {} older than {}", tenants,
+      yesterdayTimestamp);
+    for (var tenant : tenants) {
       runInFolioContext(getFolioExecutionContextCopyForTenant(context, tenant),
         () -> statusService.removeOlderThan(yesterdayTimestamp));
     }

@@ -31,6 +31,8 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
 
   @Override
   public void processDataImportCompleted(DataImportEventPayload data) {
+    log.debug("processDataImportCompleted:: trying to process [{}] event for jobExecutionId [{}]",
+      data.getEventType(), data.getJobExecutionId());
     var updateBuilder = RecordCreationStatusUpdate.builder();
     try {
       extractMarcId(data, objectMapper).ifPresent(updateBuilder::marcId);
@@ -49,6 +51,8 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
 
   @Override
   public void processDataImportError(DataImportEventPayload data) {
+    log.debug("processDataImportError:: trying to process [{}] event for jobExecutionId [{}]",
+      data.getEventType(), data.getJobExecutionId());
     var errorMessage = extractErrorMessage(data).orElse(ERROR_MISSED_MESSAGE);
     var updateBuilder = RecordCreationStatusUpdate.builder()
       .status(RecordCreationStatusEnum.ERROR)
@@ -66,7 +70,6 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
       var importResult = cacheService.getDataImportActionResult(jobExecutionId);
       if (importResult != null) {
         if (statusUpdate.getErrorMessage() == null) {
-
           importResult.setResult(ResponseEntity.noContent().build());
         } else {
           importResult.setErrorResult(buildErrorResponse(statusUpdate.getErrorMessage()));

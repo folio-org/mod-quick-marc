@@ -36,13 +36,17 @@ public class DataImportEventUtils {
 
   public static Optional<UUID> extractRecordIdFromRecord(DataImportEventPayload data, FolioRecord folioRecord,
                                                          ObjectMapper mapper) {
+    log.debug("extractRecordIdFromRecord:: trying to extract recordId by folioRecord: {}", folioRecord.getValue());
     return Optional.ofNullable(data.getContext().get(folioRecord.getValue()))
       .map(recordInJson -> {
         try {
           var idNode = mapper.readTree(recordInJson).get("id");
-          return idNode != null ? UUID.fromString(idNode.asText()) : null;
+          var recordId = idNode != null ? UUID.fromString(idNode.asText()) : null;
+          log.info("extractRecordIdFromRecord:: recordId: {} extracted by folioRecord: {}",
+            recordId, folioRecord.getValue());
+          return recordId;
         } catch (JsonProcessingException e) {
-          log.info("Failed to process json", e);
+          log.warn("extractRecordIdFromRecord:: failed to process json", e);
           throw new IllegalStateException("Failed to process json with message: " + e.getMessage());
         }
       });

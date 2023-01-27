@@ -6,8 +6,8 @@ import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
 import static org.folio.qm.converter.elements.Tag007Configuration.resolveByCode;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import org.folio.qm.converter.elements.Tag007Configuration;
 import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;

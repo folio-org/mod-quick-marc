@@ -5,8 +5,8 @@ import static org.folio.qm.converter.elements.Constants.TAG_006_CONTROL_FIELD_LE
 import static org.folio.qm.converter.elements.Tag006Configuration.resolveByCode;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;

@@ -8,8 +8,8 @@ import static org.folio.qm.util.ErrorUtils.buildError;
 import static org.folio.qm.util.ErrorUtils.buildErrors;
 
 import feign.FeignException;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.folio.qm.exception.FieldsValidationException;

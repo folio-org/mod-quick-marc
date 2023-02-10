@@ -1,6 +1,5 @@
 package org.folio.qm.service.impl;
 
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
@@ -49,8 +48,9 @@ public class LinksServiceImpl implements LinksService {
         .setAuthorityId(fieldItem.getAuthorityId())
         .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
         .setBibRecordTag(fieldItem.getTag())
-        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields()))
-      .collect(Collectors.toList());
+        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields())
+        .setLinkingRuleId(fieldItem.getLinkingRuleId()))
+      .toList();
 
     return new InstanceLinks(links, links.size());
   }
@@ -59,7 +59,7 @@ public class LinksServiceImpl implements LinksService {
     instanceLinks.getLinks().forEach(instanceLink -> {
       var fields = qmRecord.getFields().stream()
         .filter(fieldItem -> instanceLink.getBibRecordTag().equals(fieldItem.getTag()))
-        .collect(Collectors.toList());
+        .toList();
 
       if (fields.size() == 1) {
         populateLink(fields.get(0), instanceLink);
@@ -75,5 +75,6 @@ public class LinksServiceImpl implements LinksService {
     fieldItem.setAuthorityId(instanceLink.getAuthorityId());
     fieldItem.setAuthorityNaturalId(instanceLink.getAuthorityNaturalId());
     fieldItem.setAuthorityControlledSubfields(instanceLink.getBibRecordSubfields());
+    fieldItem.setLinkingRuleId(instanceLink.getLinkingRuleId());
   }
 }

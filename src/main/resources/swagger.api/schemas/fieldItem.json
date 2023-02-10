@@ -50,6 +50,10 @@
       },
       "minItems": 1,
       "maxItems": 100
+    },
+    "linkingRuleId": {
+      "description": "Linking rule ID by which the link was created",
+      "type": "integer"
     }
   },
   "required": [

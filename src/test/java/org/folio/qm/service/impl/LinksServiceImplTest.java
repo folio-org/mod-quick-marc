@@ -33,8 +33,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @UnitTest
 @ExtendWith(MockitoExtension.class)
 class LinksServiceImplTest {
-  
+
   private static final String AUTHORITY_ID = "b9a5f035-de63-4e2c-92c2-07240c88b817";
+  private static final int LINKING_RULE_ID = 1;
 
   @Mock
   private LinksClient linksClient;
@@ -81,7 +82,7 @@ class LinksServiceImplTest {
   @ParameterizedTest
   @MethodSource("setLinksTestData")
   void testRecordLinksSet(List<InstanceLink> links, List<FieldItem> fieldItemsMock, Integer expectedLinkedFieldsCount) {
-    var instanceLinks = new InstanceLinks(links, 1);
+    var instanceLinks = new InstanceLinks(links, LINKING_RULE_ID);
 
     when(linksClient.fetchLinksByInstanceId(any())).thenReturn(Optional.of(instanceLinks));
 
@@ -130,7 +131,8 @@ class LinksServiceImplTest {
         .setAuthorityId(fieldItem.getAuthorityId())
         .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
         .setBibRecordTag(fieldItem.getTag())
-        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields()))
+        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields())
+        .setLinkingRuleId(fieldItem.getLinkingRuleId()))
       .collect(Collectors.toList());
     var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
 
@@ -164,7 +166,7 @@ class LinksServiceImplTest {
 
   private static FieldItem getFieldItemLinked() {
     return getFieldItem(AUTHORITY_ID).authorityNaturalId("12345")
-      .authorityControlledSubfields(List.of("a", "b", "c"));
+      .authorityControlledSubfields(List.of("a", "b", "c")).linkingRuleId(LINKING_RULE_ID);
   }
 
   private static InstanceLink getInstanceLink(UUID authorityId, List<String> subfields) {
@@ -173,7 +175,8 @@ class LinksServiceImplTest {
       "12345",
       UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
       "650",
-      subfields);
+      subfields,
+      LINKING_RULE_ID);
   }
 
   private QuickMarc getQuickMarc(List<FieldItem> fieldItems) {

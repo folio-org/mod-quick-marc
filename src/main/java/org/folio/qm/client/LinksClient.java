@@ -42,5 +42,6 @@ public interface LinksClient {
     UUID instanceId;
     String bibRecordTag;
     List<String> bibRecordSubfields;
+    Integer linkingRuleId;
   }
 }

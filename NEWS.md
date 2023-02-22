@@ -1,6 +1,25 @@
-## 2.6.0 IN-PROGRESS
+## v3.0.0 2023-02-22
+### Breaking changes
+* Migration to Spring Boot v3.0.0 and Java 17 ([MODQM-302](https://issues.folio.org/browse/MODQM-302))
 
-* [MODQM-271] (https://issues.folio.org/browse/MODQM-271) - Extend GET /records endpoint to support bib-auth links
+### APIs versions
+* Requires `instance-authority-links` `v1.0`
+
+### Features
+* Extend endpoint to support bib-authority linking ([MODQM-271](https://issues.folio.org/browse/MODQM-271))
+* Added validation rule for 010 field of authority ([MODQM-306](https://issues.folio.org/browse/MODQM-306))
+* Added validation rule for 245 field of bibliographic ([MODQM-307](https://issues.folio.org/browse/MODQM-307))
+
+### Tech Dept
+* Align logging configuration with common Folio solution ([MODQM-297](https://issues.folio.org/browse/MODQM-297))
+* Improve logging according common Folio solution ([MODQM-200](https://issues.folio.org/browse/MODQM-200))
+
+### Dependencies
+* Bump `java` from `11` to `17`
+* Bump `spring-boot-starter-parent` from `2.7.4` to `3.0.2`
+* Bump `folio-spring-base` from `5.0.1` to `6.0.1`
+* Bump `mapstruct` from `1.5.2.Final` to `1.5.3.Final`
+* Bump `testcontainers` from `1.17.5` to `1.17.6`
 
 ## 2.5.0 - Released
 

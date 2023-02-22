@@ -10,3 +10,4 @@
 | R1 2022          | Lotus           | v2.3               |
 | R2 2022          | Morning Glory   | v2.4               |
 | R3 2022          | Nolana          | v2.5               |
+| R1 2023          | Orchid          | v3.0               |

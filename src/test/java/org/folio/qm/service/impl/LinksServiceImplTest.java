@@ -101,8 +101,6 @@ class LinksServiceImplTest {
         .isEqualTo(links.get(i).getAuthorityId());
       assertThat(linkedField.getAuthorityNaturalId())
         .isEqualTo(links.get(i).getAuthorityNaturalId());
-      assertThat(linkedField.getAuthorityControlledSubfields())
-        .isEqualTo(links.get(i).getBibRecordSubfields());
     }
   }
 
@@ -130,8 +128,6 @@ class LinksServiceImplTest {
         .setInstanceId(quickMarcMock.getExternalId())
         .setAuthorityId(fieldItem.getAuthorityId())
         .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
-        .setBibRecordTag(fieldItem.getTag())
-        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields())
         .setLinkingRuleId(fieldItem.getLinkingRuleId()))
       .collect(Collectors.toList());
     var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
@@ -157,7 +153,7 @@ class LinksServiceImplTest {
   }
 
   private static FieldItem getFieldItem() {
-    return new FieldItem().tag("650").indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
+    return new FieldItem().tag("650").indicators(List.of("\\", "\\")).linkingRuleId(1).content("$a bcdefghijklmn");
   }
 
   private static FieldItem getFieldItem(String authorityId) {
@@ -165,8 +161,7 @@ class LinksServiceImplTest {
   }
 
   private static FieldItem getFieldItemLinked() {
-    return getFieldItem(AUTHORITY_ID).authorityNaturalId("12345")
-      .authorityControlledSubfields(List.of("a", "b", "c")).linkingRuleId(LINKING_RULE_ID);
+    return getFieldItem(AUTHORITY_ID).authorityNaturalId("12345").linkingRuleId(LINKING_RULE_ID);
   }
 
   private static InstanceLink getInstanceLink(UUID authorityId, List<String> subfields) {
@@ -174,8 +169,6 @@ class LinksServiceImplTest {
       authorityId,
       "12345",
       UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
-      "650",
-      subfields,
       LINKING_RULE_ID);
   }
 

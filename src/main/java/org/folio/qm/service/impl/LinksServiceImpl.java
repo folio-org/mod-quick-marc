@@ -47,8 +47,6 @@ public class LinksServiceImpl implements LinksService {
         .setInstanceId(quickMarc.getExternalId())
         .setAuthorityId(fieldItem.getAuthorityId())
         .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
-        .setBibRecordTag(fieldItem.getTag())
-        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields())
         .setLinkingRuleId(fieldItem.getLinkingRuleId()))
       .toList();
 
@@ -58,7 +56,7 @@ public class LinksServiceImpl implements LinksService {
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
     instanceLinks.getLinks().forEach(instanceLink -> {
       var fields = qmRecord.getFields().stream()
-        .filter(fieldItem -> instanceLink.getBibRecordTag().equals(fieldItem.getTag()))
+        .filter(fieldItem -> instanceLink.getLinkingRuleId().equals(fieldItem.getLinkingRuleId()))
         .toList();
 
       if (fields.size() == 1) {
@@ -74,7 +72,6 @@ public class LinksServiceImpl implements LinksService {
   private void populateLink(FieldItem fieldItem, InstanceLink instanceLink) {
     fieldItem.setAuthorityId(instanceLink.getAuthorityId());
     fieldItem.setAuthorityNaturalId(instanceLink.getAuthorityNaturalId());
-    fieldItem.setAuthorityControlledSubfields(instanceLink.getBibRecordSubfields());
     fieldItem.setLinkingRuleId(instanceLink.getLinkingRuleId());
   }
 }

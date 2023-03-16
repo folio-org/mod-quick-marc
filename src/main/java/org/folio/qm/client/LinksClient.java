@@ -40,8 +40,6 @@ public interface LinksClient {
     UUID authorityId;
     String authorityNaturalId;
     UUID instanceId;
-    String bibRecordTag;
-    List<String> bibRecordSubfields;
     Integer linkingRuleId;
   }
 }

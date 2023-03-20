@@ -2,7 +2,6 @@ package org.folio.qm.converter.elements;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public enum LeaderItem {
   //COMMON FIELDS FOR BIB, HOLDINGS AND AUTHORITY
@@ -27,7 +26,7 @@ public enum LeaderItem {
   BIBLIOGRAPHIC_LEVEL("Bibliographic level", 7, 1, 'a', 'b', 'c', 'd', 'i', 'm', 's'),
   CONTROL_TYPE("Type of control", 8, 1, '\\', ' ', '\u00A0', 'a'),
   CATALOGING_FORM("Descriptive cataloging form", 18, 1, '\\', ' ', '\u00A0', 'a', 'c', 'i', 'n', 'u'),
-  RESOURCE_RECORD_LEVEL("Multipart resource record level", 19, 1, '\\', ' ', '\u00A0', 'a'),
+  RESOURCE_RECORD_LEVEL("Multipart resource record level", 19, 1, '\\', ' ', '\u00A0', 'a', 'b', 'c'),
 
   // Deprecated in MODQM-164
   BIB_ENCODING_LEVEL("Bib encoding level", 17, 1, '\\', ' ', '\u00A0', '1', '2', '3', '4', '5', '7', '8', 'i', 'j', 'k',
@@ -54,7 +53,7 @@ public enum LeaderItem {
     this.name = name;
     this.position = position;
     this.length = length;
-    this.possibleValues = Arrays.stream(possibleValues).collect(Collectors.toList());
+    this.possibleValues = Arrays.stream(possibleValues).toList();
   }
 
   public String getName() {

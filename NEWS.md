@@ -1,3 +1,8 @@
+## v3.1.0 xxxx-xx-xx
+
+### Features
+* Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))
+
 ## v3.0.0 2023-02-22
 ### Breaking changes
 * Migration to Spring Boot v3.0.0 and Java 17 ([MODQM-302](https://issues.folio.org/browse/MODQM-302))

@@ -10,11 +10,12 @@ import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationRule;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @UnitTest
 class BibliographicLeaderValidationRuleTest {
 
-  private static final String VALID_LEADER = "01706ccm\\a2200361\\\\\\4500";
   private static final String WRONG_BIB_RECORD_STATUS = "01706xcm\\a2200361\\\\\\4500";
   private static final String WRONG_BIB_RECORD_TYPE = "01706cxm\\a2200361\\\\\\4500";
   private static final String WRONG_BIBLIOGRAPHIC_LEVEL = "01706ccx\\a2200361\\\\\\4500";
@@ -25,9 +26,15 @@ class BibliographicLeaderValidationRuleTest {
 
   private final BibliographicLeaderValidationRule rule = new BibliographicLeaderValidationRule();
 
-  @Test
-  void shouldValidateBibliographicLeaderWithoutErrors() {
-    var validationError = rule.validate(VALID_LEADER);
+  @ParameterizedTest
+  @ValueSource(strings = {"01706ccm\\a2200361\\\\\\4500",
+    "01706ccm\\a2200361\\\\ 4500",
+    "01706ccm\\a2200361\\\\\u00A04500",
+    "01706ccm\\a2200361\\\\a4500",
+    "01706ccm\\a2200361\\\\b4500",
+    "01706ccm\\a2200361\\\\c4500"})
+  void shouldValidateBibliographicLeaderWithoutErrors(String validLeader) {
+    var validationError = rule.validate(validLeader);
     assertTrue(validationError.isEmpty());
   }
 

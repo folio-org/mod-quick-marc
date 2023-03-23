@@ -56,7 +56,7 @@ public class LinksServiceImpl implements LinksService {
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
     instanceLinks.getLinks().forEach(instanceLink -> {
       var fields = qmRecord.getFields().stream()
-        .filter(fieldItem -> instanceLink.getLinkingRuleId().equals(fieldItem.getLinkingRuleId()))
+        .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
         .toList();
 
       if (fields.size() == 1) {

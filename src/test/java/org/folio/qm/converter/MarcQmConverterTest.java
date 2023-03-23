@@ -50,7 +50,7 @@ class MarcQmConverterTest {
   @CsvSource(value = {
     PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
     PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
-    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_BIB_PATH + "," + "01705ccm a2200421   4500"
+    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_BIB_PATH + "," + "01750ccm a2200421   4500"
   })
   void testConvertDtoRecord(String parsedRecordDtoPath, String quickMarcJsonPath, String expectedLeader) {
     var expected = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);

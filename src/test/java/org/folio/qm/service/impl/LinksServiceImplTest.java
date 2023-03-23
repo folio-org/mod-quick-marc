@@ -55,7 +55,7 @@ class LinksServiceImplTest {
         List.of(
           getInstanceLink(UUID.fromString(AUTHORITY_ID), List.of("a", "b", "c"))),
         List.of(
-          getFieldItem()),
+          getFieldItem(AUTHORITY_ID)),
         1
       ),
       arguments(
@@ -153,7 +153,7 @@ class LinksServiceImplTest {
   }
 
   private static FieldItem getFieldItem() {
-    return new FieldItem().tag("650").indicators(List.of("\\", "\\")).linkingRuleId(1).content("$a bcdefghijklmn");
+    return new FieldItem().tag("650").indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
   }
 
   private static FieldItem getFieldItem(String authorityId) {

@@ -1,5 +1,8 @@
 package org.folio.qm.service.impl;
 
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
@@ -56,10 +59,13 @@ public class LinksServiceImpl implements LinksService {
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
     instanceLinks.getLinks().forEach(instanceLink -> {
       var fields = qmRecord.getFields().stream()
-        .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
+        .filter(fieldItem -> instanceLink.getLinkingRuleId().equals(fieldItem.getLinkingRuleId()))
         .toList();
-
-      if (fields.size() == 1) {
+      if (fields.isEmpty()) {
+        qmRecord.getFields().stream()
+          .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
+          .forEach(fieldItem -> populateLink(fieldItem, instanceLink));
+      } else if (fields.size() == 1) {
         populateLink(fields.get(0), instanceLink);
       } else {
         fields.stream()
@@ -67,6 +73,8 @@ public class LinksServiceImpl implements LinksService {
           .forEach(fieldItem -> populateLink(fieldItem, instanceLink));
       }
     });
+    qmRecord.getFields()
+      .sort(Comparator.comparing(FieldItem::getLinkingRuleId, Comparator.nullsLast(Comparator.naturalOrder())));
   }
 
   private void populateLink(FieldItem fieldItem, InstanceLink instanceLink) {

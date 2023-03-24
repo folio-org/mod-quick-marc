@@ -102,8 +102,8 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.suppressDiscovery").value(Boolean.FALSE))
       .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
       .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID))
-      .andExpect(jsonPath("$.fields[22].authorityId").value(AUTHORITY_ID))
-      .andExpect(jsonPath("$.fields[22].authorityNaturalId").value(AUTHORITY_NATURAL_ID));
+      .andExpect(jsonPath("$.fields[0].authorityId").value(AUTHORITY_ID))
+      .andExpect(jsonPath("$.fields[0].authorityNaturalId").value(AUTHORITY_NATURAL_ID));
 
     checkParseRecordDtoId();
   }

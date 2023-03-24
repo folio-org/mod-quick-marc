@@ -1,8 +1,6 @@
 package org.folio.qm.service.impl;
 
 import java.util.Comparator;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;

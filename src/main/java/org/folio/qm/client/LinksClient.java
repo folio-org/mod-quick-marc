@@ -1,6 +1,9 @@
 package org.folio.qm.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -23,6 +26,9 @@ public interface LinksClient {
   @PutMapping("/instances/{instanceId}")
   void putLinksByInstanceId(@PathVariable("instanceId") UUID instanceId, InstanceLinks instanceLinks);
 
+  @GetMapping(value = "/linking-rules/instance-authority", produces = MediaType.APPLICATION_JSON_VALUE)
+  List<LinkingRuleDto> fetchLinkingRules();
+
   @Value
   class InstanceLinks {
 
@@ -41,5 +47,27 @@ public interface LinksClient {
     String authorityNaturalId;
     UUID instanceId;
     Integer linkingRuleId;
+  }
+
+  @Data
+  class LinkingRuleDto {
+    private Integer id;
+    private String bibField;
+    private String authorityField;
+    private List<String> authoritySubfields = new ArrayList();
+    private List<SubfieldModification> subfieldModifications = new ArrayList();
+    private String bibRecordTag;
+
+    private SubfieldValidation validation;
+  }
+
+  class SubfieldModification {
+    private String source;
+    private String target;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  }
+
+  class SubfieldValidation {
+    private List<Map<String, Boolean>> existence = null;
   }
 }

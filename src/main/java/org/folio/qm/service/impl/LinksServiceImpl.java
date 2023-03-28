@@ -1,6 +1,8 @@
 package org.folio.qm.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
@@ -56,23 +58,31 @@ public class LinksServiceImpl implements LinksService {
 
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
     instanceLinks.getLinks().forEach(instanceLink -> {
-      var fields = qmRecord.getFields().stream()
-        .filter(fieldItem -> instanceLink.getLinkingRuleId().equals(fieldItem.getLinkingRuleId()))
+      var fieldsWithAuthorityId = qmRecord.getFields().stream()
+        .filter(fieldItem -> fieldItem.getAuthorityId() != null).toList();
+      var fields = fieldsWithAuthorityId.stream()
+        .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
         .toList();
-      if (fields.isEmpty()) {
-        qmRecord.getFields().stream()
-          .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
-          .forEach(fieldItem -> populateLink(fieldItem, instanceLink));
-      } else if (fields.size() == 1) {
-        populateLink(fields.get(0), instanceLink);
-      } else {
+      if (!fields.isEmpty()) {
         fields.stream()
           .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
           .forEach(fieldItem -> populateLink(fieldItem, instanceLink));
       }
+
+      setLinkingRules(fieldsWithAuthorityId);
     });
+    qmRecord.setFields(new ArrayList<>(qmRecord.getFields()));
     qmRecord.getFields()
       .sort(Comparator.comparing(FieldItem::getLinkingRuleId, Comparator.nullsLast(Comparator.naturalOrder())));
+  }
+
+  private void setLinkingRules(List<FieldItem> fieldsWithAuthorityId) {
+    var linkingRules = linksClient.fetchLinkingRules();
+    fieldsWithAuthorityId.forEach(fieldItem ->
+      linkingRules.stream()
+        .filter(l -> l.getBibField().equals(fieldItem.getTag()))
+        .findFirst()
+        .ifPresent(l -> fieldItem.setLinkingRuleId(l.getId())));
   }
 
   private void populateLink(FieldItem fieldItem, InstanceLink instanceLink) {

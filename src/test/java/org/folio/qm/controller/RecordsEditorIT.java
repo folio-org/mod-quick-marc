@@ -15,6 +15,7 @@ import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_PARSE_RECOR
 import static org.folio.qm.support.utils.ApiTestUtils.EXTERNAL_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.FIELD_PROTECTION_SETTINGS_PATH;
 import static org.folio.qm.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
+import static org.folio.qm.support.utils.ApiTestUtils.LINKING_RULES_FETCHING_PATH;
 import static org.folio.qm.support.utils.ApiTestUtils.QM_RECORD_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.changeManagerPath;
@@ -93,6 +94,7 @@ class RecordsEditorIT extends BaseIT {
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
     mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
       wireMockServer);
+    mockGet(LINKING_RULES_FETCHING_PATH, readFile(TestEntitiesUtils.LINKING_RULES_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -171,6 +173,7 @@ class RecordsEditorIT extends BaseIT {
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
     mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
       wireMockServer);
+    mockGet(LINKING_RULES_FETCHING_PATH, readFile(TestEntitiesUtils.LINKING_RULES_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andDo(result -> log.info("KEK" + result.getResponse().getContentAsString()))

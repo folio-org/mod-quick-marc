@@ -26,6 +26,7 @@ public class TestEntitiesUtils {
   public static final String FIELD_PROTECTION_SETTINGS_PATH =
     PROTECTION_SETTINGS_PATH + "/fieldProtectionSettingsCollection.json";
   public static final String LINKS_PATH = "mockdata/response/links/instanceLinks.json";
+  public static final String LINKING_RULES_PATH = "mockdata/response/links/linkingRules.json";
 
   public static final String TESTED_TAG_NAME = "333";
   public static final UUID VALID_PARSED_RECORD_DTO_ID = UUID.fromString("c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c");

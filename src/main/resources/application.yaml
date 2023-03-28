@@ -29,6 +29,7 @@ spring:
       - job-profiles
       - qm-update-results
       - data-import-results
+      - qm-fetch-linking-rules-results
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   cloud:

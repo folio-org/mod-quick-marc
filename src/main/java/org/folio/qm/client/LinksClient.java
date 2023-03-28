@@ -1,5 +1,7 @@
 package org.folio.qm.client;
 
+import static org.folio.qm.config.CacheNames.QM_FETCH_LINKING_RULES_RESULTS;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import lombok.experimental.Accessors;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,9 @@ public interface LinksClient {
   @PutMapping("/instances/{instanceId}")
   void putLinksByInstanceId(@PathVariable("instanceId") UUID instanceId, InstanceLinks instanceLinks);
 
+  @Cacheable(cacheNames = QM_FETCH_LINKING_RULES_RESULTS,
+    key = "@folioExecutionContext.tenantId",
+    unless = "#result.isEmpty()")
   @GetMapping(value = "/linking-rules/instance-authority", produces = MediaType.APPLICATION_JSON_VALUE)
   List<LinkingRuleDto> fetchLinkingRules();
 

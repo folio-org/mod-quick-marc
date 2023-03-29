@@ -2,10 +2,7 @@ package org.folio.qm.client;
 
 import static org.folio.qm.config.CacheNames.QM_FETCH_LINKING_RULES_RESULTS;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -59,21 +56,5 @@ public interface LinksClient {
   class LinkingRuleDto {
     private Integer id;
     private String bibField;
-    private String authorityField;
-    private List<String> authoritySubfields = new ArrayList();
-    private List<SubfieldModification> subfieldModifications = new ArrayList();
-    private String bibRecordTag;
-
-    private SubfieldValidation validation;
-  }
-
-  class SubfieldModification {
-    private String source;
-    private String target;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-  }
-
-  class SubfieldValidation {
-    private List<Map<String, Boolean>> existence = null;
   }
 }

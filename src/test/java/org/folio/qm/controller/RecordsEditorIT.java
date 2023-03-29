@@ -39,6 +39,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINKING_RULE_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
@@ -105,7 +106,8 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
       .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID))
       .andExpect(jsonPath("$.fields[14].authorityId").value(AUTHORITY_ID))
-      .andExpect(jsonPath("$.fields[14].authorityNaturalId").value(AUTHORITY_NATURAL_ID));
+      .andExpect(jsonPath("$.fields[14].authorityNaturalId").value(AUTHORITY_NATURAL_ID))
+      .andExpect(jsonPath("$.fields[14].linkingRuleId").value(LINKING_RULE_ID));
 
     checkParseRecordDtoId();
   }

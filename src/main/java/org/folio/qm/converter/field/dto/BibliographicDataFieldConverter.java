@@ -25,23 +25,7 @@ public class BibliographicDataFieldConverter extends CommonDataFieldConverter {
   public FieldItem convert(DataField field, Leader leader) {
     var fieldItem = super.convert(field, leader);
     extractAuthorityId(field.getSubfields()).ifPresent(fieldItem::setAuthorityId);
-    setLinkingRuleId(fieldItem, field);
     return fieldItem;
-  }
-
-  private void setLinkingRuleId(FieldItem fieldItem, DataField dataField) {
-    var subfields = dataField.getSubfields();
-    if (subfields.stream()
-      .anyMatch(subfield -> subfield.getCode() == AUTHORITY_ID_SUBFIELD_CODE)
-      && subfields.stream()
-      .anyMatch(subfield -> subfield.getCode() == AUTHORITY_NATURAL_ID_SUBFIELD_CODE)) {
-
-      var linkingRules = linksClient.fetchLinkingRules();
-      linkingRules.stream()
-        .filter(l -> l.getBibField().equals(dataField.getTag()))
-        .findFirst()
-        .ifPresent(l -> fieldItem.setLinkingRuleId(l.getId()));
-    }
   }
 
   @Override

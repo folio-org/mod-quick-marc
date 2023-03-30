@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.folio.qm.client.LinksClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.support.types.UnitTest;
@@ -19,14 +18,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.impl.DataFieldImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
-import org.mockito.Mock;
 
 @UnitTest
 class BibliographicDataFieldConverterTest {
 
-  @Mock
-  private LinksClient linksClient;
-  private final BibliographicDataFieldConverter converter = new BibliographicDataFieldConverter(linksClient);
+  private final BibliographicDataFieldConverter converter = new BibliographicDataFieldConverter();
 
   private static Stream<Arguments> cannotProcessFields() {
     return Stream.of(

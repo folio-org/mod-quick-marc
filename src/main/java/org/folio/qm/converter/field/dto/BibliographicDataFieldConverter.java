@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BibliographicDataFieldConverter extends CommonDataFieldConverter {
   private static final char AUTHORITY_ID_SUBFIELD_CODE = '9';
-  private static final char AUTHORITY_NATURAL_ID_SUBFIELD_CODE = '0';
 
   @Override
   public FieldItem convert(DataField field, Leader leader) {

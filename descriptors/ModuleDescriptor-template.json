@@ -24,6 +24,10 @@
     },
     {
       "id": "instance-authority-links",
+      "version": "2.0"
+    },
+    {
+      "id": "instance-authority-linking-rules",
       "version": "1.0"
     }
   ],
@@ -40,7 +44,8 @@
             "change-manager.parsedrecords.get",
             "users.item.get",
             "converter-storage.field-protection-settings.get",
-            "instance-authority-links.instances.collection.get"
+            "instance-authority-links.instances.collection.get",
+            "instance-authority.linking-rules.collection.get"
           ]
         },
         {

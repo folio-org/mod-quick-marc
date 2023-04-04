@@ -47,8 +47,6 @@ public class LinksServiceImpl implements LinksService {
         .setInstanceId(quickMarc.getExternalId())
         .setAuthorityId(fieldItem.getAuthorityId())
         .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
-        .setBibRecordTag(fieldItem.getTag())
-        .setBibRecordSubfields(fieldItem.getAuthorityControlledSubfields())
         .setLinkingRuleId(fieldItem.getLinkingRuleId()))
       .toList();
 
@@ -56,25 +54,28 @@ public class LinksServiceImpl implements LinksService {
   }
 
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
-    instanceLinks.getLinks().forEach(instanceLink -> {
-      var fields = qmRecord.getFields().stream()
-        .filter(fieldItem -> instanceLink.getBibRecordTag().equals(fieldItem.getTag()))
-        .toList();
-
-      if (fields.size() == 1) {
-        populateLink(fields.get(0), instanceLink);
-      } else {
-        fields.stream()
-          .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
-          .forEach(fieldItem -> populateLink(fieldItem, instanceLink));
-      }
-    });
+    var linkingRuleDtos = linksClient.fetchLinkingRules();
+    instanceLinks.getLinks().forEach(instanceLink ->
+      linkingRuleDtos.stream()
+        .filter(l -> l.getId().equals(instanceLink.getLinkingRuleId()))
+        .findFirst().ifPresent(rule -> {
+          var fields = qmRecord.getFields().stream()
+            .filter(fieldItem -> rule.getBibField().equals(fieldItem.getTag()))
+            .toList();
+          if (fields.size() == 1) {
+            populateLink(fields.get(0), instanceLink);
+          } else {
+            fields.stream()
+              .filter(fieldItem -> instanceLink.getAuthorityId().equals(fieldItem.getAuthorityId()))
+              .forEach(fieldItem -> populateLink(fieldItem, instanceLink));
+          }
+        })
+    );
   }
 
   private void populateLink(FieldItem fieldItem, InstanceLink instanceLink) {
     fieldItem.setAuthorityId(instanceLink.getAuthorityId());
     fieldItem.setAuthorityNaturalId(instanceLink.getAuthorityNaturalId());
-    fieldItem.setAuthorityControlledSubfields(instanceLink.getBibRecordSubfields());
     fieldItem.setLinkingRuleId(instanceLink.getLinkingRuleId());
   }
 }

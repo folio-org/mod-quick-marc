@@ -15,6 +15,7 @@ import static org.folio.qm.support.utils.ApiTestUtils.CHANGE_MANAGER_PARSE_RECOR
 import static org.folio.qm.support.utils.ApiTestUtils.EXTERNAL_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.FIELD_PROTECTION_SETTINGS_PATH;
 import static org.folio.qm.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
+import static org.folio.qm.support.utils.ApiTestUtils.LINKING_RULES_FETCHING_PATH;
 import static org.folio.qm.support.utils.ApiTestUtils.QM_RECORD_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
 import static org.folio.qm.support.utils.ApiTestUtils.changeManagerPath;
@@ -32,13 +33,13 @@ import static org.folio.qm.support.utils.InputOutputTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.qm.support.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.AUTHORITY_CONTROLLED_SUBFIELDS;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.AUTHORITY_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.AUTHORITY_NATURAL_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_HRID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXECUTION_CREATED;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOHN_USER_ID;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINKING_RULE_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
@@ -50,7 +51,6 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PA
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -95,6 +95,7 @@ class RecordsEditorIT extends BaseIT {
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
     mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
       wireMockServer);
+    mockGet(LINKING_RULES_FETCHING_PATH, readFile(TestEntitiesUtils.LINKING_RULES_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andExpect(status().isOk())
@@ -104,10 +105,9 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.suppressDiscovery").value(Boolean.FALSE))
       .andExpect(jsonPath("$.parsedRecordId").value(VALID_PARSED_RECORD_ID.toString()))
       .andExpect(jsonPath("$.updateInfo.updatedBy.userId").value(JOHN_USER_ID))
-      .andExpect(jsonPath("$.fields[0].authorityId").value(AUTHORITY_ID))
-      .andExpect(jsonPath("$.fields[0].authorityNaturalId").value(AUTHORITY_NATURAL_ID))
-      .andExpect(jsonPath("$.fields[0].authorityControlledSubfields")
-        .value(containsInAnyOrder(AUTHORITY_CONTROLLED_SUBFIELDS)));
+      .andExpect(jsonPath("$.fields[14].authorityId").value(AUTHORITY_ID))
+      .andExpect(jsonPath("$.fields[14].authorityNaturalId").value(AUTHORITY_NATURAL_ID))
+      .andExpect(jsonPath("$.fields[14].linkingRuleId").value(LINKING_RULE_ID));
 
     checkParseRecordDtoId();
   }
@@ -175,6 +175,7 @@ class RecordsEditorIT extends BaseIT {
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
     mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
       wireMockServer);
+    mockGet(LINKING_RULES_FETCHING_PATH, readFile(TestEntitiesUtils.LINKING_RULES_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
       .andDo(result -> log.info("KEK" + result.getResponse().getContentAsString()))

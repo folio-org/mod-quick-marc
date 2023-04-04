@@ -21,6 +21,7 @@ import org.marc4j.marc.impl.SubfieldImpl;
 
 @UnitTest
 class BibliographicDataFieldConverterTest {
+
   private final BibliographicDataFieldConverter converter = new BibliographicDataFieldConverter();
 
   private static Stream<Arguments> cannotProcessFields() {

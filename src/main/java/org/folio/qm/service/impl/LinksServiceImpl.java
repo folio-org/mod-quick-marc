@@ -7,6 +7,7 @@ import org.folio.qm.client.LinksClient.InstanceLinks;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.service.LinkingRulesService;
 import org.folio.qm.service.LinksService;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class LinksServiceImpl implements LinksService {
 
   private final LinksClient linksClient;
+  private final LinkingRulesService linkingRulesService;
 
   @Override
   public void setRecordLinks(QuickMarc qmRecord) {
@@ -54,10 +56,10 @@ public class LinksServiceImpl implements LinksService {
   }
 
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
-    var linkingRuleDtos = linksClient.fetchLinkingRules();
+    var linkingRules = linkingRulesService.getLinkingRules();
     instanceLinks.getLinks().forEach(instanceLink ->
-      linkingRuleDtos.stream()
-        .filter(l -> l.getId().equals(instanceLink.getLinkingRuleId()))
+      linkingRules.stream()
+        .filter(rule -> rule.getId().equals(instanceLink.getLinkingRuleId()))
         .findFirst().ifPresent(rule -> {
           var fields = qmRecord.getFields().stream()
             .filter(fieldItem -> rule.getBibField().equals(fieldItem.getTag()))

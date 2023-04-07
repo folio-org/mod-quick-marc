@@ -40,6 +40,9 @@ class LinksServiceImplTest {
   @Mock
   private LinksClient linksClient;
 
+  @Mock
+  private LinkingRulesServiceImpl rulesService;
+
   @InjectMocks
   private LinksServiceImpl service;
 

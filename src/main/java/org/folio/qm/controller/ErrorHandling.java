@@ -11,7 +11,6 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.StringUtils;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.JobProfileNotFoundException;
 import org.folio.qm.exception.QuickMarcException;
@@ -43,7 +42,7 @@ public class ErrorHandling {
     if (status != -1) {
       var message = e.responseBody()
         .map(byteBuffer -> new String(byteBuffer.array(), UTF_8))
-        .orElse(StringUtils.EMPTY);
+        .orElse(e.getMessage());
       response.setStatus(status);
       log.warn(message);
       return buildErrors(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);

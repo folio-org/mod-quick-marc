@@ -1,8 +1,5 @@
 package org.folio.qm.service.impl;
 
-import static org.folio.qm.config.CacheNames.QM_FETCH_LINKING_RULES_RESULTS;
-
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
@@ -10,8 +7,8 @@ import org.folio.qm.client.LinksClient.InstanceLinks;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.service.LinkingRulesService;
 import org.folio.qm.service.LinksService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class LinksServiceImpl implements LinksService {
 
   private final LinksClient linksClient;
+  private final LinkingRulesService linkingRulesService;
 
   @Override
   public void setRecordLinks(QuickMarc qmRecord) {
@@ -40,14 +38,6 @@ public class LinksServiceImpl implements LinksService {
     linksClient.putLinksByInstanceId(qmRecord.getExternalId(), instanceLinks);
   }
 
-  @Override
-  @Cacheable(cacheNames = QM_FETCH_LINKING_RULES_RESULTS,
-    key = "@folioExecutionContext.tenantId",
-    unless = "#result.isEmpty()")
-  public List<LinksClient.LinkingRuleDto> getLinkingRules() {
-    return linksClient.fetchLinkingRules();
-  }
-
   private boolean verifyFormat(QuickMarc quickMarc) {
     return MarcFormat.BIBLIOGRAPHIC.equals(quickMarc.getMarcFormat());
   }
@@ -66,10 +56,10 @@ public class LinksServiceImpl implements LinksService {
   }
 
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
-    var linkingRuleDtos = getLinkingRules();
+    var linkingRuleDtos = linkingRulesService.getLinkingRules();
     instanceLinks.getLinks().forEach(instanceLink ->
       linkingRuleDtos.stream()
-        .filter(l -> l.getId().equals(instanceLink.getLinkingRuleId()))
+        .filter(dto -> dto.getId().equals(instanceLink.getLinkingRuleId()))
         .findFirst().ifPresent(rule -> {
           var fields = qmRecord.getFields().stream()
             .filter(fieldItem -> rule.getBibField().equals(fieldItem.getTag()))

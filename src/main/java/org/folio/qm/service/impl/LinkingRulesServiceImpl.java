@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LinkingRuleServiceImpl implements LinkingRulesService {
+public class LinkingRulesServiceImpl implements LinkingRulesService {
 
   private final LinksClient linksClient;
 
@@ -22,5 +22,4 @@ public class LinkingRuleServiceImpl implements LinkingRulesService {
   public List<LinksClient.LinkingRuleDto> getLinkingRules() {
     return linksClient.fetchLinkingRules();
   }
-
 }

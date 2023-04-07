@@ -1,5 +1,8 @@
 package org.folio.qm.service.impl;
 
+import static org.folio.qm.config.CacheNames.QM_FETCH_LINKING_RULES_RESULTS;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
@@ -8,6 +11,7 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.service.LinksService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,6 +40,14 @@ public class LinksServiceImpl implements LinksService {
     linksClient.putLinksByInstanceId(qmRecord.getExternalId(), instanceLinks);
   }
 
+  @Override
+  @Cacheable(cacheNames = QM_FETCH_LINKING_RULES_RESULTS,
+    key = "@folioExecutionContext.tenantId",
+    unless = "#result.isEmpty()")
+  public List<LinksClient.LinkingRuleDto> getLinkingRules() {
+    return linksClient.fetchLinkingRules();
+  }
+
   private boolean verifyFormat(QuickMarc quickMarc) {
     return MarcFormat.BIBLIOGRAPHIC.equals(quickMarc.getMarcFormat());
   }
@@ -54,7 +66,7 @@ public class LinksServiceImpl implements LinksService {
   }
 
   private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
-    var linkingRuleDtos = linksClient.fetchLinkingRules();
+    var linkingRuleDtos = getLinkingRules();
     instanceLinks.getLinks().forEach(instanceLink ->
       linkingRuleDtos.stream()
         .filter(l -> l.getId().equals(instanceLink.getLinkingRuleId()))

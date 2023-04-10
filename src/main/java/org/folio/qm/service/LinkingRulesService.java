@@ -1,9 +1,9 @@
 package org.folio.qm.service;
 
 import java.util.List;
-import org.folio.qm.client.LinksClient;
+import org.folio.qm.client.LinkingRulesClient;
 
 public interface LinkingRulesService {
 
-  List<LinksClient.LinkingRuleDto> getLinkingRules();
+  List<LinkingRulesClient.LinkingRuleDto> getLinkingRules();
 }

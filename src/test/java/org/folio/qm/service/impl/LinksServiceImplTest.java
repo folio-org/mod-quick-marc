@@ -1,5 +1,6 @@
 package org.folio.qm.service.impl;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomUtils;
+import org.folio.qm.client.LinkingRulesClient;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
 import org.folio.qm.client.LinksClient.InstanceLinks;
@@ -36,6 +38,7 @@ class LinksServiceImplTest {
 
   private static final String AUTHORITY_ID = "b9a5f035-de63-4e2c-92c2-07240c88b817";
   private static final int LINKING_RULE_ID = 1;
+  private static final String BIB_TAG = "650";
 
   @Mock
   private LinksClient linksClient;
@@ -86,8 +89,12 @@ class LinksServiceImplTest {
   @MethodSource("setLinksTestData")
   void testRecordLinksSet(List<InstanceLink> links, List<FieldItem> fieldItemsMock, Integer expectedLinkedFieldsCount) {
     var instanceLinks = new InstanceLinks(links, LINKING_RULE_ID);
+    var linkingRules = singletonList(new LinkingRulesClient.LinkingRuleDto()
+      .setId(LINKING_RULE_ID)
+      .setBibField(BIB_TAG));
 
     when(linksClient.fetchLinksByInstanceId(any())).thenReturn(Optional.of(instanceLinks));
+    when(rulesService.getLinkingRules()).thenReturn(linkingRules);
 
     var record = getQuickMarc(fieldItemsMock);
     service.setRecordLinks(record);
@@ -104,6 +111,8 @@ class LinksServiceImplTest {
         .isEqualTo(links.get(i).getAuthorityId());
       assertThat(linkedField.getAuthorityNaturalId())
         .isEqualTo(links.get(i).getAuthorityNaturalId());
+      assertThat(linkedField.getLinkingRuleId())
+        .isEqualTo(links.get(i).getLinkingRuleId());
     }
   }
 
@@ -156,7 +165,7 @@ class LinksServiceImplTest {
   }
 
   private static FieldItem getFieldItem() {
-    return new FieldItem().tag("650").indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
+    return new FieldItem().tag(BIB_TAG).indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
   }
 
   private static FieldItem getFieldItem(String authorityId) {

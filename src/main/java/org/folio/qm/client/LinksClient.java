@@ -23,9 +23,6 @@ public interface LinksClient {
   @PutMapping("/instances/{instanceId}")
   void putLinksByInstanceId(@PathVariable("instanceId") UUID instanceId, InstanceLinks instanceLinks);
 
-  @GetMapping(value = "/linking-rules/instance-authority", produces = MediaType.APPLICATION_JSON_VALUE)
-  List<LinkingRuleDto> fetchLinkingRules();
-
   @Value
   class InstanceLinks {
     List<InstanceLink> links;
@@ -42,11 +39,5 @@ public interface LinksClient {
     String authorityNaturalId;
     UUID instanceId;
     Integer linkingRuleId;
-  }
-
-  @Data
-  class LinkingRuleDto {
-    private Integer id;
-    private String bibField;
   }
 }

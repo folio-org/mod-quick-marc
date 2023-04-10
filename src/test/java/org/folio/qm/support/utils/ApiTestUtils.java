@@ -29,7 +29,7 @@ public class ApiTestUtils {
   public static final String CHANGE_MANAGER_JOB_PROFILE_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/jobProfile";
   public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
   public static final String FIELD_PROTECTION_SETTINGS_PATH = "/field-protection-settings/marc?limit=1000";
-  public static final String LINKING_RULES_FETCHING_PATH = "/links/linking-rules/instance-authority";
+  public static final String LINKING_RULES_FETCHING_PATH = "/linking-rules/instance-authority";
   public static final String USERS_PATH = "/users";
   public static final String LINKS_PATH = "/links";
   public static final String LINKS_INSTANCES_PATH = LINKS_PATH + "/instances";

@@ -26,7 +26,8 @@
     },
     "userId": {
       "description": "ID of the user initializing JobExecutions",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     }
   },
   "required": [

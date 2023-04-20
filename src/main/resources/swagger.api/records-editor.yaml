@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: quickMARC Record Editor
-  version: 1.1.0
+  version: 4.0
 servers:
   - url: /records-editor/
 paths:
@@ -10,13 +10,13 @@ paths:
       tags:
         - records-editor
       responses:
-        "200":
+        '200':
           description: MARC record successfully retrieved
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/quickMarc"
-        "400":
+                $ref: '#/components/schemas/quickMarcView'
+        '400':
           description:
             Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
@@ -24,19 +24,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "404":
+                $ref: '#/components/schemas/error'
+        '404':
           description: MARC record with a given ID not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "500":
+                $ref: '#/components/schemas/error'
+        '500':
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
       description: Get MARC record by externalId
       operationId: getRecordByExternalId
       parameters:
@@ -45,42 +45,42 @@ paths:
           required: true
           description: UUID of the external that is related to the MARC record
           schema:
-            $ref: "#/components/schemas/UUID"
+            $ref: '#/components/schemas/UUID'
         - name: lang
           in: query
           required: false
           description: Requested language. Optional. [lang=en]
           schema:
             type: string
-            pattern: "[a-zA-Z]{2}"
-            default: "en"
+            pattern: '[a-zA-Z]{2}'
+            default: 'en'
     post:
       tags:
         - records-editor
       responses:
-        "201":
+        '201':
           description: MARC Record status created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/creationStatus"
-        "400":
+                $ref: '#/components/schemas/creationStatus'
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "500":
+                $ref: '#/components/schemas/error'
+        '500':
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/quickMarc"
+              $ref: '#/components/schemas/quickMarcCreate'
         required: true
   /records/status:
     get:
@@ -92,7 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/creationStatus"
+                $ref: '#/components/schemas/creationStatus'
         '400':
           description:
             Bad request, e.g. malformed request body or query parameter.
@@ -101,19 +101,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
         '404':
           description: MARC record with a given ID not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
         '500':
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
       description: Get status of MARC bibliographic record creation
       operationId: getRecordCreationStatus
       parameters:
@@ -122,18 +122,19 @@ paths:
           required: true
           description: UUID of ParsedRecord to be created
           schema:
-            $ref: "#/components/schemas/UUID"
+            $ref: '#/components/schemas/UUID'
 components:
   schemas:
-    quickMarc:
-      $ref: schemas/quickMarc.json
+    quickMarcView:
+      $ref: schemas/common.yaml#/quickMarcView
+    quickMarcCreate:
+      $ref: schemas/common.yaml#/quickMarcCreate
     creationStatus:
-      $ref: schemas/creationStatus.json
+      $ref: schemas/common.yaml#/creationStatus
     error:
       type: object
     UUID:
-      type: string
-      format: uuid
+      $ref: schemas/common.yaml#/uuid
     parsedRecordDto:
       $ref: schemas/external/parsedRecordDto.json
     initJobExecutionsRqDto:

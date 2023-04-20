@@ -2,7 +2,7 @@ package org.folio.qm.controller;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.rest.resource.RecordsEditorAsyncApi;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.impl.DeferredResultCacheService;
@@ -20,7 +20,7 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
   private final DeferredResultCacheService deferredResultCacheService;
 
   @Override
-  public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarc quickMarc) {
+  public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarcEdit quickMarc) {
     var updateActionResult = deferredResultCacheService.getUpdateActionResult(id);
     marcRecordsService.updateById(id, quickMarc, updateActionResult);
     return updateActionResult;

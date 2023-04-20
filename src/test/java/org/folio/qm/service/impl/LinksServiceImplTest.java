@@ -21,7 +21,8 @@ import org.folio.qm.client.LinksClient.InstanceLink;
 import org.folio.qm.client.LinksClient.InstanceLinks;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -85,38 +86,6 @@ class LinksServiceImplTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("setLinksTestData")
-  void testRecordLinksSet(List<InstanceLink> links, List<FieldItem> fieldItemsMock, Integer expectedLinkedFieldsCount) {
-    var instanceLinks = new InstanceLinks(links, LINKING_RULE_ID);
-    var linkingRules = singletonList(new LinkingRulesClient.LinkingRuleDto()
-      .setId(LINKING_RULE_ID)
-      .setBibField(BIB_TAG));
-
-    when(linksClient.fetchLinksByInstanceId(any())).thenReturn(Optional.of(instanceLinks));
-    when(rulesService.getLinkingRules()).thenReturn(linkingRules);
-
-    var record = getQuickMarc(fieldItemsMock);
-    service.setRecordLinks(record);
-
-    var linkedFields = record.getFields().stream()
-      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
-      .collect(Collectors.toList());
-    assertThat(linkedFields)
-      .hasSize(expectedLinkedFieldsCount);
-
-    for (int i = 0; i < linkedFields.size(); i++) {
-      var linkedField = linkedFields.get(i);
-      assertThat(linkedField.getAuthorityId())
-        .isEqualTo(links.get(i).getAuthorityId());
-      assertThat(linkedField.getAuthorityNaturalId())
-        .isEqualTo(links.get(i).getAuthorityNaturalId());
-      assertThat(linkedField.getLinkingRuleId())
-        .isEqualTo(links.get(i).getLinkingRuleId());
-    }
-  }
-
-
   public static Stream<Arguments> updateLinksTestData() {
     return Stream.of(
       arguments(List.of(
@@ -125,43 +94,6 @@ class LinksServiceImplTest {
       ), 1),
       arguments(Collections.emptyList(), 0)
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource("updateLinksTestData")
-  void testRecordLinksUpdated(List<FieldItem> fieldsMock, Integer expectedLinkUpdates) {
-    var quickMarcMock = getQuickMarc(fieldsMock);
-
-    service.updateRecordLinks(quickMarcMock);
-
-    var expectedLinks = fieldsMock.stream()
-      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
-      .map(fieldItem -> new InstanceLink()
-        .setInstanceId(quickMarcMock.getExternalId())
-        .setAuthorityId(fieldItem.getAuthorityId())
-        .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
-        .setLinkingRuleId(fieldItem.getLinkingRuleId()))
-      .collect(Collectors.toList());
-    var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
-
-    assertThat(expectedLinks).hasSize(expectedLinkUpdates);
-    verify(linksClient).putLinksByInstanceId(quickMarcMock.getExternalId(), expectedInstanceLinks);
-  }
-
-  @ParameterizedTest
-  @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
-  void testRecordLinksSetNotBib(MarcFormat marcFormat) {
-    var quickMarc = new QuickMarc().marcFormat(marcFormat);
-    service.setRecordLinks(quickMarc);
-    verifyNoInteractions(linksClient);
-  }
-
-  @ParameterizedTest
-  @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
-  void testRecordLinksUpdateNotBib(MarcFormat marcFormat) {
-    var quickMarc = new QuickMarc().marcFormat(marcFormat);
-    service.updateRecordLinks(quickMarc);
-    verifyNoInteractions(linksClient);
   }
 
   private static FieldItem getFieldItem() {
@@ -184,8 +116,82 @@ class LinksServiceImplTest {
       LINKING_RULE_ID);
   }
 
-  private QuickMarc getQuickMarc(List<FieldItem> fieldItems) {
-    return new QuickMarc().marcFormat(MarcFormat.BIBLIOGRAPHIC)
+  @ParameterizedTest
+  @MethodSource("setLinksTestData")
+  void testRecordLinksSet(List<InstanceLink> links, List<FieldItem> fieldItemsMock, Integer expectedLinkedFieldsCount) {
+    var instanceLinks = new InstanceLinks(links, LINKING_RULE_ID);
+    var linkingRules = singletonList(new LinkingRulesClient.LinkingRuleDto()
+      .setId(LINKING_RULE_ID)
+      .setBibField(BIB_TAG));
+
+    when(linksClient.fetchLinksByInstanceId(any())).thenReturn(Optional.of(instanceLinks));
+    when(rulesService.getLinkingRules()).thenReturn(linkingRules);
+
+    var record = getQuickMarcView(fieldItemsMock);
+    service.setRecordLinks(record);
+
+    var linkedFields = record.getFields().stream()
+      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
+      .collect(Collectors.toList());
+    assertThat(linkedFields)
+      .hasSize(expectedLinkedFieldsCount);
+
+    for (int i = 0; i < linkedFields.size(); i++) {
+      var linkedField = linkedFields.get(i);
+      assertThat(linkedField.getAuthorityId())
+        .isEqualTo(links.get(i).getAuthorityId());
+      assertThat(linkedField.getAuthorityNaturalId())
+        .isEqualTo(links.get(i).getAuthorityNaturalId());
+      assertThat(linkedField.getLinkingRuleId())
+        .isEqualTo(links.get(i).getLinkingRuleId());
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("updateLinksTestData")
+  void testRecordLinksUpdated(List<FieldItem> fieldsMock, Integer expectedLinkUpdates) {
+    var quickMarcMock = getQuickMarcEdit(fieldsMock);
+
+    service.updateRecordLinks(quickMarcMock);
+
+    var expectedLinks = fieldsMock.stream()
+      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
+      .map(fieldItem -> new InstanceLink()
+        .setInstanceId(quickMarcMock.getExternalId())
+        .setAuthorityId(fieldItem.getAuthorityId())
+        .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
+        .setLinkingRuleId(fieldItem.getLinkingRuleId()))
+      .collect(Collectors.toList());
+    var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
+
+    assertThat(expectedLinks).hasSize(expectedLinkUpdates);
+    verify(linksClient).putLinksByInstanceId(quickMarcMock.getExternalId(), expectedInstanceLinks);
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
+  void testRecordLinksSetNotBib(MarcFormat marcFormat) {
+    var quickMarc = new QuickMarcView().marcFormat(marcFormat);
+    service.setRecordLinks(quickMarc);
+    verifyNoInteractions(linksClient);
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
+  void testRecordLinksUpdateNotBib(MarcFormat marcFormat) {
+    var quickMarc = new QuickMarcEdit().marcFormat(marcFormat);
+    service.updateRecordLinks(quickMarc);
+    verifyNoInteractions(linksClient);
+  }
+
+  private QuickMarcView getQuickMarcView(List<FieldItem> fieldItems) {
+    return new QuickMarcView().marcFormat(MarcFormat.BIBLIOGRAPHIC)
+      .externalId(UUID.randomUUID())
+      .fields(fieldItems);
+  }
+
+  private QuickMarcEdit getQuickMarcEdit(List<FieldItem> fieldItems) {
+    return new QuickMarcEdit().marcFormat(MarcFormat.BIBLIOGRAPHIC)
       .externalId(UUID.randomUUID())
       .fields(fieldItems);
   }

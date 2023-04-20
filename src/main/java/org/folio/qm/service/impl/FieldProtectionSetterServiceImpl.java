@@ -11,7 +11,7 @@ import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
 import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.service.FieldProtectionSetterService;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
   private final FieldProtectionSettingsClient dicsClient;
 
   @Override
-  public void applyFieldProtection(QuickMarc qmRecord) {
+  public void applyFieldProtection(QuickMarcView qmRecord) {
     var fieldProtectionSettings = dicsClient.getFieldProtectionSettings();
     qmRecord.getFields().forEach(field -> setProtectedStatus(field, fieldProtectionSettings));
   }

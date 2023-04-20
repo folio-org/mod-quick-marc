@@ -1,10 +1,11 @@
 package org.folio.qm.service;
 
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.QuickMarcView;
 
 public interface LinksService {
 
-  void setRecordLinks(QuickMarc qmRecord);
+  void setRecordLinks(QuickMarcView qmRecord);
 
-  void updateRecordLinks(QuickMarc qmRecord);
+  void updateRecordLinks(QuickMarcEdit qmRecord);
 }

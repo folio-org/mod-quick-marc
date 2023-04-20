@@ -6,7 +6,8 @@
   "properties": {
     "id": {
       "description": "UUID",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "initialRecords": {
       "description": "List of raw records",

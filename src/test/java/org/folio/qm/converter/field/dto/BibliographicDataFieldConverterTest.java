@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,14 +46,13 @@ class BibliographicDataFieldConverterTest {
         new FieldItem().tag("010")
           .indicators(List.of("\\", "\\"))
           .content("$a 34005678 $9 2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")
-          .authorityId(UUID.fromString("2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b"))
+          .linkDetails(new LinkDetails().authorityId(UUID.fromString("2c4750ae-fb1f-4f6f-8ef9-9ccd9ff1bf3b")))
       ),
       arguments(new DataFieldImpl("014", '0', ' '),
         new String[] {"9", "not-valid-authority-uiid"},
         new FieldItem().tag("014")
           .indicators(List.of("0", "\\"))
           .content("$9 not-valid-authority-uiid")
-          .authorityId(null)
       )
     );
   }

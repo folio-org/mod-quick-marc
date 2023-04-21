@@ -1,4 +1,10 @@
 ## v3.1.0 xxxx-xx-xx
+### Breaking changes
+* Add support of link status and errorCause ([MODQM-318](https://issues.folio.org/browse/MODQM-318))
+
+### APIs versions
+* Requires `instance-authority-links` `v2.1`
+* Provides `records-editor.records v4.0`
 
 ### Features
 * Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))

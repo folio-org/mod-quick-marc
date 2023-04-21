@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MARC Field link details Schema",
+  "description": "MARC Field link details Schema",
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "authorityId": {
+      "description": "Id of the authority that controls subfields",
+      "$ref": "uuid.json",
+      "example": "c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1"
+    },
+    "authorityNaturalId": {
+      "description": "Natural id of the authority that controls subfields",
+      "type": "string",
+      "example": "n1234567890"
+    },
+    "linkingRuleId": {
+      "description": "Linking rule ID by which the link was created",
+      "type": "integer"
+    },
+    "status": {
+      "description": "Link status",
+      "type": "string",
+      "readOnly": true
+    },
+    "errorCause": {
+      "description": "Cause of error status",
+      "type": "string",
+      "readOnly": true
+    }
+  }
+}

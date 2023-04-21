@@ -39,5 +39,7 @@ public interface LinksClient {
     String authorityNaturalId;
     UUID instanceId;
     Integer linkingRuleId;
+    String status;
+    String errorCause;
   }
 }

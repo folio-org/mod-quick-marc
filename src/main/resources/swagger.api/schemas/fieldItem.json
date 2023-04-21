@@ -32,19 +32,10 @@
       "default": false,
       "example": true
     },
-    "authorityId": {
-      "description": "Id of the authority that controls subfields",
-      "$ref": "uuid.json",
-      "example": "c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1"
-    },
-    "authorityNaturalId": {
-      "description": "Natural id of the authority that controls subfields",
-      "type": "string",
-      "example": "n1234567890"
-    },
-    "linkingRuleId": {
-      "description": "Linking rule ID by which the link was created",
-      "type": "integer"
+    "linkDetails": {
+      "description": "Link-related properties",
+      "type": "object",
+      "$ref": "linkDetails.json"
     }
   },
   "required": [

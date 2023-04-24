@@ -104,6 +104,9 @@ class LinksServiceImplTest {
         getFieldItem(),
         getFieldItemLinked()
       ), 1),
+      arguments(singletonList(
+        getFieldItemLinkedWithError()
+      ), 1),
       arguments(Collections.emptyList(), 0)
     );
   }
@@ -113,11 +116,14 @@ class LinksServiceImplTest {
   }
 
   private static FieldItem getFieldItem(String authorityId) {
-    return getFieldItem().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345");
+    return getFieldItem()
+      .linkDetails(new LinkDetails().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345"));
   }
 
   private static FieldItem getFieldItemLinked() {
-    return getFieldItem(AUTHORITY_ID).authorityNaturalId("12345").linkingRuleId(LINKING_RULE_ID);
+    var fieldItem = getFieldItem(AUTHORITY_ID);
+    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID);
+    return fieldItem;
   }
 
   private static FieldItem getFieldItemLinkedWithError() {
@@ -173,20 +179,6 @@ class LinksServiceImplTest {
       assertThat(linkDetails.getErrorCause())
         .isEqualTo(links.get(i).getErrorCause());
     }
-  }
-
-
-  public static Stream<Arguments> updateLinksTestData() {
-    return Stream.of(
-      arguments(List.of(
-        getFieldItem(),
-        getFieldItemLinked()
-      ), 1),
-      arguments(singletonList(
-        getFieldItemLinkedWithError()
-      ), 1),
-      arguments(Collections.emptyList(), 0)
-    );
   }
 
   @ParameterizedTest

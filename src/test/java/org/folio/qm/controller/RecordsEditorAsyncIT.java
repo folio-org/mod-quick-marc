@@ -27,9 +27,9 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.JOB_EXEC
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
@@ -53,7 +53,7 @@ import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
@@ -69,16 +69,16 @@ import org.springframework.test.web.servlet.ResultMatcher;
 class RecordsEditorAsyncIT extends BaseIT {
 
   @ParameterizedTest
-  @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
+  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateQuickMarcRecord(String filePath) throws Exception {
     log.info("===== Verify PUT record: Successful =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
-    if (filePath.equals(QM_RECORD_BIB_PATH)) {
+    if (filePath.equals(QM_RECORD_EDIT_BIB_PATH)) {
       mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
     }
 
-    QuickMarc quickMarcJson = readQuickMarc(filePath)
+    QuickMarcEdit quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -93,7 +93,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andDo(log())
       .andExpect(status().isAccepted());
 
-    if (filePath.equals(QM_RECORD_BIB_PATH)) {
+    if (filePath.equals(QM_RECORD_EDIT_BIB_PATH)) {
       wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
     } else {
       wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
@@ -107,7 +107,7 @@ class RecordsEditorAsyncIT extends BaseIT {
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -134,7 +134,7 @@ class RecordsEditorAsyncIT extends BaseIT {
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -173,7 +173,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     mockPut(changeManagerResourceByIdPath(wrongUuid), "{}", SC_NOT_FOUND, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(wrongUuid)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -187,7 +187,7 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordIdsNotEqual() throws Exception {
     log.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -203,7 +203,7 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordTagIsInvalid() throws Exception {
     log.info("===== Verify PUT record: Invalid MARC tag.The tag has alphabetic symbols =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -235,7 +235,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     var field = getFieldWithIndicators(Collections.singletonList(" "));
     var titleField = getFieldWithValue("245", "title");
-    QuickMarc quickMarcJson =
+    QuickMarcEdit quickMarcJson =
       getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
         .marcFormat(MarcFormat.BIBLIOGRAPHIC)
         .relatedRecordVersion("1")
@@ -254,7 +254,7 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() throws Exception {
     log.info("===== Verify PUT record: Invalid fixed length field items =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -281,7 +281,7 @@ class RecordsEditorAsyncIT extends BaseIT {
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -298,13 +298,13 @@ class RecordsEditorAsyncIT extends BaseIT {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
+  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
     log.info("===== Verify PUT record: 001 tag check =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(filePath)
+    QuickMarcEdit quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 

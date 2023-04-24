@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 
 public class TestEntitiesUtils {
 
@@ -18,9 +18,14 @@ public class TestEntitiesUtils {
   public static final String PARSED_RECORDS_DIR = "mockdata/response";
   public static final String DI_EVENT_DIR = "mockdata/request/di-event";
   public static final String DI_COMPLETE_AUTHORITY_DELETE = DI_EVENT_DIR + "/complete-event-with-authority-delete.json";
-  public static final String QM_RECORD_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBib.json";
-  public static final String QM_RECORD_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldings.json";
-  public static final String QM_RECORD_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthority.json";
+  public static final String QM_RECORD_EDIT_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBibEdit.json";
+  public static final String QM_RECORD_CREATE_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBibCreate.json";
+  public static final String QM_RECORD_VIEW_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBibView.json";
+  public static final String QM_RECORD_EDIT_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsEdit.json";
+  public static final String QM_RECORD_CREATE_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsCreate.json";
+  public static final String QM_RECORD_VIEW_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsView.json";
+  public static final String QM_RECORD_EDIT_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthorityEdit.json";
+  public static final String QM_RECORD_VIEW_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthorityView.json";
   public static final String PROTECTION_SETTINGS_PATH =
     "mockdata/request/change-manager/protection-settings";
   public static final String FIELD_PROTECTION_SETTINGS_PATH =
@@ -49,8 +54,8 @@ public class TestEntitiesUtils {
     return new FieldItem().tag(tag).content(value).indicators(List.of(" ", " "));
   }
 
-  public static QuickMarc getQuickMarcJsonWithMinContent(FieldItem... fields) {
-    return new QuickMarc().leader("01542ccm a22002533  4500").fields(Arrays.asList(fields));
+  public static QuickMarcEdit getQuickMarcJsonWithMinContent(FieldItem... fields) {
+    return new QuickMarcEdit().leader("01542ccm a22002533  4500").fields(Arrays.asList(fields));
   }
 
 }

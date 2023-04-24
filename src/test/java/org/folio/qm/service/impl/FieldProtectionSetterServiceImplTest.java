@@ -11,7 +11,7 @@ import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
 import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,21 +70,6 @@ class FieldProtectionSetterServiceImplTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("testData")
-  void testFieldProtectionSettingsSet(MarcFieldProtectionSetting setting, FieldItem fieldItem) {
-    var settingsCollection = new MarcFieldProtectionSettingsCollection();
-    settingsCollection.addMarcFieldProtectionSettingsItem(setting);
-    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
-
-    var record = new QuickMarc().fields(List.of(fieldItem));
-    service.applyFieldProtection(record);
-
-    assertThat(record.getFields())
-      .extracting("tag", "isProtected")
-      .contains(tuple(setting.getField(), true));
-  }
-
   public static Stream<Arguments> nonProtectedTestData() {
     return Stream.of(
       arguments(
@@ -95,13 +80,28 @@ class FieldProtectionSetterServiceImplTest {
   }
 
   @ParameterizedTest
+  @MethodSource("testData")
+  void testFieldProtectionSettingsSet(MarcFieldProtectionSetting setting, FieldItem fieldItem) {
+    var settingsCollection = new MarcFieldProtectionSettingsCollection();
+    settingsCollection.addMarcFieldProtectionSettingsItem(setting);
+    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
+
+    var record = new QuickMarcView().fields(List.of(fieldItem));
+    service.applyFieldProtection(record);
+
+    assertThat(record.getFields())
+      .extracting("tag", "isProtected")
+      .contains(tuple(setting.getField(), true));
+  }
+
+  @ParameterizedTest
   @MethodSource("nonProtectedTestData")
   void testNonProtectedFieldProtectionSettingsSet(MarcFieldProtectionSetting setting, FieldItem fieldItem) {
     var settingsCollection = new MarcFieldProtectionSettingsCollection();
     settingsCollection.addMarcFieldProtectionSettingsItem(setting);
     when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
 
-    var record = new QuickMarc().fields(List.of(fieldItem));
+    var record = new QuickMarcView().fields(List.of(fieldItem));
     service.applyFieldProtection(record);
 
     assertThat(record.getFields())

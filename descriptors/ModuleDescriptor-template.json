@@ -101,18 +101,6 @@
           "permissionsRequired": []
         }
       ]
-    },
-    {
-      "id": "_jsonSchemas",
-      "version": "1.0",
-      "interfaceType": "multiple",
-      "handlers": [
-        {
-          "methods": ["GET"],
-          "pathPattern": "/_/jsonSchemas",
-          "permissionsRequired": []
-        }
-      ]
     }
   ],
   "permissionSets": [

@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.QuickMarc;
 
 public abstract class FieldValidationRule implements ValidationRule {
 
@@ -22,7 +22,7 @@ public abstract class FieldValidationRule implements ValidationRule {
   public static final String IS_REQUIRED_TAG_ERROR_MSG = "Is required tag";
 
   @Override
-  public Optional<ValidationError> validate(QuickMarc qmRecord) {
+  public Optional<ValidationError> validate(BaseMarcRecord qmRecord) {
     return validate(qmRecord.getFields());
   }
 
@@ -32,7 +32,7 @@ public abstract class FieldValidationRule implements ValidationRule {
     var matchPredicate = tagCodePattern.asMatchPredicate();
     return fieldItems.stream()
       .filter(fieldItem -> matchPredicate.test(fieldItem.getTag()))
-      .collect(Collectors.toList());
+      .toList();
   }
 
   protected BiFunction<String, List<FieldItem>, Optional<ValidationError>> onlyOneRequiredCondition() {
@@ -41,8 +41,7 @@ public abstract class FieldValidationRule implements ValidationRule {
         return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG_ERROR_MSG));
       } else if (fields.size() != 1) {
         return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG_ERROR_MSG));
-      } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty(
-        (CharSequence) fields.get(0).getContent())) {
+      } else if (fields.get(0).getContent() instanceof CharSequence charSequence && StringUtils.isEmpty(charSequence)) {
         return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
       } else {
         return Optional.empty();
@@ -56,8 +55,7 @@ public abstract class FieldValidationRule implements ValidationRule {
         return Optional.empty();
       } else if (fields.size() != 1) {
         return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG_ERROR_MSG));
-      } else if (fields.get(0).getContent() instanceof CharSequence && StringUtils.isEmpty(
-        (CharSequence) fields.get(0).getContent())) {
+      } else if (fields.get(0).getContent() instanceof CharSequence charSequence && StringUtils.isEmpty(charSequence)) {
         return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
       }
 

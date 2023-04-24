@@ -25,7 +25,8 @@ import org.folio.qm.client.LinksClient.InstanceLinks;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -97,6 +98,48 @@ class LinksServiceImplTest {
     );
   }
 
+  public static Stream<Arguments> updateLinksTestData() {
+    return Stream.of(
+      arguments(List.of(
+        getFieldItem(),
+        getFieldItemLinked()
+      ), 1),
+      arguments(Collections.emptyList(), 0)
+    );
+  }
+
+  private static FieldItem getFieldItem() {
+    return new FieldItem().tag(BIB_TAG).indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
+  }
+
+  private static FieldItem getFieldItem(String authorityId) {
+    return getFieldItem().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345");
+  }
+
+  private static FieldItem getFieldItemLinked() {
+    return getFieldItem(AUTHORITY_ID).authorityNaturalId("12345").linkingRuleId(LINKING_RULE_ID);
+  }
+
+  private static FieldItem getFieldItemLinkedWithError() {
+    var fieldItem = getFieldItem(AUTHORITY_ID);
+    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID).status(LINK_STATUS_ERROR).errorCause(LINK_ERROR_CAUSE);
+    return fieldItem;
+  }
+
+  private static InstanceLink getInstanceLink(UUID authorityId, String status, String errorCause) {
+    return new InstanceLink(RandomUtils.nextInt(),
+      authorityId,
+      "12345",
+      UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
+      LINKING_RULE_ID,
+      status,
+      errorCause);
+  }
+
+  private static InstanceLink getInstanceLink(UUID authorityId) {
+    return getInstanceLink(authorityId, LINK_STATUS_ACTUAL, EMPTY);
+  }
+
   @ParameterizedTest
   @MethodSource("setLinksTestData")
   void testRecordLinksSet(List<InstanceLink> links, List<FieldItem> fieldItemsMock, Integer expectedLinkedFieldsCount) {
@@ -108,7 +151,7 @@ class LinksServiceImplTest {
     when(linksClient.fetchLinksByInstanceId(any())).thenReturn(Optional.of(instanceLinks));
     when(rulesService.getLinkingRules()).thenReturn(linkingRules);
 
-    var record = getQuickMarc(fieldItemsMock);
+    var record = getQuickMarcView(fieldItemsMock);
     service.setRecordLinks(record);
 
     var linkedFields = record.getFields().stream()
@@ -149,7 +192,7 @@ class LinksServiceImplTest {
   @ParameterizedTest
   @MethodSource("updateLinksTestData")
   void testRecordLinksUpdated(List<FieldItem> fieldsMock, Integer expectedLinkUpdates) {
-    var quickMarcMock = getQuickMarc(fieldsMock);
+    var quickMarcMock = getQuickMarcEdit(fieldsMock);
 
     service.updateRecordLinks(quickMarcMock);
 
@@ -170,7 +213,7 @@ class LinksServiceImplTest {
   @ParameterizedTest
   @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
   void testRecordLinksSetNotBib(MarcFormat marcFormat) {
-    var quickMarc = new QuickMarc().marcFormat(marcFormat);
+    var quickMarc = new QuickMarcView().marcFormat(marcFormat);
     service.setRecordLinks(quickMarc);
     verifyNoInteractions(linksClient);
   }
@@ -178,48 +221,19 @@ class LinksServiceImplTest {
   @ParameterizedTest
   @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
   void testRecordLinksUpdateNotBib(MarcFormat marcFormat) {
-    var quickMarc = new QuickMarc().marcFormat(marcFormat);
+    var quickMarc = new QuickMarcEdit().marcFormat(marcFormat);
     service.updateRecordLinks(quickMarc);
     verifyNoInteractions(linksClient);
   }
 
-  private static FieldItem getFieldItem() {
-    return new FieldItem().tag(BIB_TAG).indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
+  private QuickMarcView getQuickMarcView(List<FieldItem> fieldItems) {
+    return new QuickMarcView().marcFormat(MarcFormat.BIBLIOGRAPHIC)
+      .externalId(UUID.randomUUID())
+      .fields(fieldItems);
   }
 
-  private static FieldItem getFieldItem(String authorityId) {
-    return getFieldItem()
-      .linkDetails(new LinkDetails().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345"));
-  }
-
-  private static FieldItem getFieldItemLinked() {
-    var fieldItem = getFieldItem(AUTHORITY_ID);
-    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID);
-    return fieldItem;
-  }
-
-  private static FieldItem getFieldItemLinkedWithError() {
-    var fieldItem = getFieldItem(AUTHORITY_ID);
-    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID).status(LINK_STATUS_ERROR).errorCause(LINK_ERROR_CAUSE);
-    return fieldItem;
-  }
-
-  private static InstanceLink getInstanceLink(UUID authorityId, String status, String errorCause) {
-    return new InstanceLink(RandomUtils.nextInt(),
-      authorityId,
-      "12345",
-      UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
-      LINKING_RULE_ID,
-      status,
-      errorCause);
-  }
-
-  private static InstanceLink getInstanceLink(UUID authorityId) {
-    return getInstanceLink(authorityId, LINK_STATUS_ACTUAL, EMPTY);
-  }
-
-  private QuickMarc getQuickMarc(List<FieldItem> fieldItems) {
-    return new QuickMarc().marcFormat(MarcFormat.BIBLIOGRAPHIC)
+  private QuickMarcEdit getQuickMarcEdit(List<FieldItem> fieldItems) {
+    return new QuickMarcEdit().marcFormat(MarcFormat.BIBLIOGRAPHIC)
       .externalId(UUID.randomUUID())
       .fields(fieldItems);
   }

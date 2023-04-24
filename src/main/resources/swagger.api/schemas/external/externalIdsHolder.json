@@ -6,7 +6,8 @@
   "properties": {
     "instanceId": {
       "description": "instance id",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "instanceHrid": {
       "description": "instance hrid",
@@ -14,7 +15,8 @@
     },
     "holdingsId": {
       "description": "holdings id",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "holdingsHrid": {
       "description": "holdings hrid",
@@ -22,7 +24,8 @@
     },
     "authorityId": {
       "description": "authority id",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "authorityHrid": {
       "description": "authority hrid",

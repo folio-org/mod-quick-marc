@@ -45,8 +45,9 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_STA
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_BIB_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_HOLDINGS_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
@@ -72,7 +73,8 @@ import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcCreate;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.extension.ClearTable;
 import org.folio.qm.support.types.IntegrationTest;
@@ -114,13 +116,6 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.fields[14].linkDetails.errorCause").value(LINK_ERROR_CAUSE));
 
     checkParseRecordDtoId();
-  }
-
-  private void checkParseRecordDtoId() {
-    var serveEvents = wireMockServer.getAllServeEvents();
-    var changeManagerResponse = serveEvents.get(serveEvents.size() - 1).getResponse().getBodyAsString();
-    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
-    assertThat(parsedRecordDto.getId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
   }
 
   @Test
@@ -349,9 +344,7 @@ class RecordsEditorIT extends BaseIT {
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
 
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
@@ -390,9 +383,7 @@ class RecordsEditorIT extends BaseIT {
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
 
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
@@ -424,9 +415,7 @@ class RecordsEditorIT extends BaseIT {
     String jobExecution = "mockdata/request/change-manager/job-execution/jobExecution_invalid_user_id.json";
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isUnprocessableEntity())
@@ -438,7 +427,7 @@ class RecordsEditorIT extends BaseIT {
   void testReturn400WhenNoHeader() throws Exception {
     log.info("===== Verify POST record: Bad request =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -454,9 +443,7 @@ class RecordsEditorIT extends BaseIT {
   void testReturn422WhenCreateHoldingsWithMultiply852() throws Exception {
     log.info("===== Verify POST record: Multiply 852 =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
 
     quickMarcJson.getFields().add(new FieldItem().tag("852").content("$b content"));
 
@@ -470,9 +457,7 @@ class RecordsEditorIT extends BaseIT {
   void testReturn422WhenRecordWithMultiple001() throws Exception {
     log.info("===== Verify POST record: Multiple 001 =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
 
     quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
 
@@ -492,14 +477,19 @@ class RecordsEditorIT extends BaseIT {
         .withFault(Fault.CONNECTION_RESET_BY_PEER)
       ));
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_BIB_PATH)
-      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
-      .externalId(EXISTED_EXTERNAL_ID);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
 
     postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
       .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
       .andExpect(jsonPath("$.message").value(containsString("Connection reset executing")));
+  }
+
+  private void checkParseRecordDtoId() {
+    var serveEvents = wireMockServer.getAllServeEvents();
+    var changeManagerResponse = serveEvents.get(serveEvents.size() - 1).getResponse().getBodyAsString();
+    ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
+    assertThat(parsedRecordDto.getId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
   }
 }

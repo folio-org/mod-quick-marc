@@ -29,5 +29,10 @@
       "type": "string",
       "readOnly": true
     }
-  }
+  },
+  "required": [
+    "authorityId",
+    "authorityNaturalId",
+    "linkingRuleId"
+  ]
 }

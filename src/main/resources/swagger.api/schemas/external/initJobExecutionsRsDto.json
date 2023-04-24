@@ -6,7 +6,8 @@
   "properties": {
     "parentJobExecutionId": {
       "description": "UUID of the JobExecution entity which is parent for all JobExecution entities in a scope of one file upload process",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "jobExecutions": {
       "description": "Array of initialized JobExecution entities",

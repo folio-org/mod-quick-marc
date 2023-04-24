@@ -34,7 +34,7 @@
   "provides": [
     {
       "id": "records-editor.records",
-      "version": "3.3",
+      "version": "4.0",
       "handlers": [
         {
           "methods": ["GET"],
@@ -98,18 +98,6 @@
         {
           "methods": ["GET", "DELETE"],
           "pathPattern": "/_/tenant/{id}",
-          "permissionsRequired": []
-        }
-      ]
-    },
-    {
-      "id": "_jsonSchemas",
-      "version": "1.0",
-      "interfaceType": "multiple",
-      "handlers": [
-        {
-          "methods": ["GET"],
-          "pathPattern": "/_/jsonSchemas",
           "permissionsRequired": []
         }
       ]

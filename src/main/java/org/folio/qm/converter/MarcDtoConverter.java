@@ -13,7 +13,8 @@ import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecord;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.domain.dto.RecordState;
 import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
+public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarcView> {
 
   private static final Map<MarcFormat, Function<ExternalIdsHolder, UUID>> EXTERNAL_ID_EXTRACTORS = Map.of(
     MarcFormat.BIBLIOGRAPHIC, ExternalIdsHolder::getInstanceId,
@@ -44,7 +45,7 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
   private final MarcFieldsConverter fieldsConverter;
 
   @Override
-  public QuickMarc convert(@NonNull ParsedRecordDto source) {
+  public QuickMarcView convert(@NonNull ParsedRecordDto source) {
     var parsedRecord = source.getParsedRecord();
     var marcRecord = extractMarcRecord(parsedRecord);
 
@@ -52,7 +53,7 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
     var leader = convertLeader(marcRecord);
     var fields = fieldsConverter.convertDtoFields(marcRecord.getVariableFields(), marcRecord.getLeader(), format);
 
-    return new QuickMarc()
+    return new QuickMarcView()
       .leader(leader)
       .fields(fields)
       .marcFormat(format)
@@ -62,7 +63,7 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarc> {
       .externalHrid(EXTERNAL_HRID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
       .suppressDiscovery(source.getAdditionalInfo().getSuppressDiscovery())
       .updateInfo(new UpdateInfo()
-        .recordState(source.getRecordState())
+        .recordState(RecordState.fromValue(source.getRecordState().getValue()))
         .updateDate(source.getMetadata().getUpdatedDate()));
   }
 

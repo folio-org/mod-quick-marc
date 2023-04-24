@@ -1,20 +1,23 @@
 package org.folio.qm.converter;
 
+import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
+import static org.folio.qm.util.MarcUtils.encodeToMarcDateTime;
+import static org.folio.qm.util.MarcUtils.getFieldByTag;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.domain.dto.AdditionalInfo;
-import org.folio.qm.domain.dto.ExternalIdsHolder;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecord;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.util.QmMarcJsonWriter;
@@ -27,27 +30,33 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
+public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, ParsedRecordDto> {
 
   private final MarcFactory factory;
   private final ObjectMapper objectMapper;
   private final MarcTypeMapper typeMapper;
   private final MarcFieldsConverter fieldsConverter;
 
+  protected static <T extends BaseMarcRecord> T updateRecordTimestamp(T quickMarc) {
+    final var currentTime = encodeToMarcDateTime(LocalDateTime.now());
+    getFieldByTag(quickMarc, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD)
+      .ifPresentOrElse(field -> field.setContent(currentTime),
+        () -> quickMarc.addFieldsItem(
+          new FieldItem().tag(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD).content(currentTime))
+      );
+    return quickMarc;
+  }
+
   @Override
-  public ParsedRecordDto convert(@NonNull QuickMarc source) {
+  public ParsedRecordDto convert(@NonNull T source) {
     var format = source.getMarcFormat();
-    var content = convertToParsedContent(source, format);
     return new ParsedRecordDto()
-      .id(source.getParsedRecordDtoId())
       .recordType(typeMapper.toDto(format))
-      .externalIdsHolder(convertExternalIdsHolder(source))
-      .relatedRecordVersion(source.getRelatedRecordVersion())
-      .parsedRecord(new ParsedRecord().id(source.getParsedRecordId()).content(content))
+      .parsedRecord(new ParsedRecord().content(convertToParsedContent(source, format)))
       .additionalInfo(new AdditionalInfo().suppressDiscovery(source.getSuppressDiscovery()));
   }
 
-  private JsonNode convertToParsedContent(QuickMarc source, MarcFormat format) {
+  private JsonNode convertToParsedContent(T source, MarcFormat format) {
     var marcRecord = toMarcRecord(source.getLeader(), source.getFields(), format);
     try (ByteArrayOutputStream os = new ByteArrayOutputStream();
          QmMarcJsonWriter writer = new QmMarcJsonWriter(os)) {
@@ -56,27 +65,6 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
     } catch (IOException e) {
       throw new ConverterException(e);
     }
-  }
-
-  protected ExternalIdsHolder convertExternalIdsHolder(QuickMarc quickMarc) {
-    var externalIdsHolder = new ExternalIdsHolder();
-    switch (quickMarc.getMarcFormat()) {
-      case BIBLIOGRAPHIC:
-        externalIdsHolder.setInstanceId(quickMarc.getExternalId());
-        externalIdsHolder.setInstanceHrid(quickMarc.getExternalHrid());
-        break;
-      case HOLDINGS:
-        externalIdsHolder.setHoldingsId(quickMarc.getExternalId());
-        externalIdsHolder.setHoldingsHrid(quickMarc.getExternalHrid());
-        break;
-      case AUTHORITY:
-        externalIdsHolder.setAuthorityId(quickMarc.getExternalId());
-        externalIdsHolder.setAuthorityHrid(quickMarc.getExternalHrid());
-        break;
-      default:
-        break;
-    }
-    return externalIdsHolder;
   }
 
   private Record toMarcRecord(String leaderString, List<FieldItem> fields, MarcFormat format) {
@@ -90,5 +78,4 @@ public class MarcQmConverter implements Converter<QuickMarc, ParsedRecordDto> {
   private Leader convertLeader(String leaderString) {
     return factory.newLeader(restoreBlanks(leaderString));
   }
-
 }

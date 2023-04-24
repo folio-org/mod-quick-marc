@@ -5,7 +5,8 @@
   "properties": {
     "id": {
       "description": "Unique identifier",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "jobProfileInfo": {
       "description": "Related JobProfile information",

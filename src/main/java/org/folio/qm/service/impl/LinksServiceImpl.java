@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
 import org.folio.qm.client.LinksClient.InstanceLinks;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.service.LinkingRulesService;
 import org.folio.qm.service.LinksService;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class LinksServiceImpl implements LinksService {
   private final LinkingRulesService linkingRulesService;
 
   @Override
-  public void setRecordLinks(QuickMarc qmRecord) {
+  public void setRecordLinks(QuickMarcView qmRecord) {
     if (!verifyFormat(qmRecord)) {
       return;
     }
@@ -29,7 +31,7 @@ public class LinksServiceImpl implements LinksService {
   }
 
   @Override
-  public void updateRecordLinks(QuickMarc qmRecord) {
+  public void updateRecordLinks(QuickMarcEdit qmRecord) {
     if (!verifyFormat(qmRecord)) {
       return;
     }
@@ -38,11 +40,11 @@ public class LinksServiceImpl implements LinksService {
     linksClient.putLinksByInstanceId(qmRecord.getExternalId(), instanceLinks);
   }
 
-  private boolean verifyFormat(QuickMarc quickMarc) {
+  private boolean verifyFormat(BaseMarcRecord quickMarc) {
     return MarcFormat.BIBLIOGRAPHIC.equals(quickMarc.getMarcFormat());
   }
 
-  private InstanceLinks extractLinks(QuickMarc quickMarc) {
+  private InstanceLinks extractLinks(QuickMarcEdit quickMarc) {
     var links = quickMarc.getFields().stream()
       .filter(fieldItem -> fieldItem.getAuthorityId() != null)
       .map(fieldItem -> new InstanceLink()
@@ -55,7 +57,7 @@ public class LinksServiceImpl implements LinksService {
     return new InstanceLinks(links, links.size());
   }
 
-  private void populateLinks(QuickMarc qmRecord, InstanceLinks instanceLinks) {
+  private void populateLinks(QuickMarcView qmRecord, InstanceLinks instanceLinks) {
     var linkingRules = linkingRulesService.getLinkingRules();
     instanceLinks.getLinks().forEach(instanceLink ->
       linkingRules.stream()

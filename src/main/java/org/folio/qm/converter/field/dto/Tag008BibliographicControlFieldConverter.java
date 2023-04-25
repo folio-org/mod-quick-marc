@@ -8,7 +8,7 @@ import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_IN
 import static org.folio.qm.converter.elements.Constants.TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.TYPE;
-import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
+import static org.folio.qm.util.MarcUtils.normalizeFixedLengthString;
 
 import java.util.LinkedHashMap;
 import org.folio.qm.converter.elements.Tag008Configuration;
@@ -29,7 +29,7 @@ public class Tag008BibliographicControlFieldConverter implements VariableFieldCo
     var implDefined1 = leader.getImplDefined1();
     var configuration = Tag008Configuration.resolveContentType(typeOfRecord, implDefined1[0]);
 
-    var content = masqueradeBlanks(field.getData());
+    var content = normalizeFixedLengthString(field.getData(), TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH);
     var contentMap = new LinkedHashMap<>();
     contentMap.put(TYPE, Character.toString(typeOfRecord));
     contentMap.put(BLVL, change(implDefined1[0]));
@@ -43,8 +43,7 @@ public class Tag008BibliographicControlFieldConverter implements VariableFieldCo
   public boolean canProcess(VariableField field, MarcFormat marcFormat) {
     return field instanceof ControlField
       && field.getTag().equals(TAG_008_CONTROL_FIELD)
-      && marcFormat == MarcFormat.BIBLIOGRAPHIC
-      && ((ControlField) field).getData().length() == TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH;
+      && marcFormat == MarcFormat.BIBLIOGRAPHIC;
   }
 
   private String change(char c) {

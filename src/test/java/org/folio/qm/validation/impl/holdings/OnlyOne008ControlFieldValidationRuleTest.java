@@ -17,6 +17,7 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
+import org.folio.qm.validation.impl.common.OnlyOne008ControlFieldValidationRule;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 

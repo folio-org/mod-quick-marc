@@ -1,9 +1,10 @@
-package org.folio.qm.validation.impl.holdings;
+package org.folio.qm.validation.impl.common;
 
 import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -17,7 +18,6 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
-import org.folio.qm.validation.impl.common.OnlyOne008ControlFieldValidationRule;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
@@ -29,13 +29,6 @@ class OnlyOne008ControlFieldValidationRuleTest {
   void testGeneralInformationControlFieldValidationRuleForHoldings() {
     testGeneralInformationControlFieldValidationRule("Testing Holdings General Information Validation rule",
       QM_RECORD_HOLDINGS_PATH);
-  }
-
-  private void testGeneralInformationControlFieldValidationRule(String s, String qmRecordHoldings) {
-    logger.info(s);
-    var rule = new OnlyOne008ControlFieldValidationRule();
-    QuickMarc quickMarc = getMockAsObject(qmRecordHoldings, QuickMarc.class);
-    assertDoesNotThrow(() -> rule.validate(quickMarc.getFields()));
   }
 
   @Test
@@ -56,18 +49,6 @@ class OnlyOne008ControlFieldValidationRuleTest {
       "Testing Holdings General Information Validation rule - two 008 fields", QM_RECORD_HOLDINGS_PATH);
   }
 
-  private void testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(String log, String qmRecordPath) {
-    logger.info(log);
-    var rule = new OnlyOne008ControlFieldValidationRule();
-    QuickMarc quickMarc = getMockAsObject(qmRecordPath, QuickMarc.class);
-    List<FieldItem> fields = quickMarc.getFields();
-    fields.add(new FieldItem().tag("008").content("dsdsds"));
-    Optional<ValidationError> validationError = rule.validate(fields);
-    assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("008"));
-    assertThat(validationError.get().getMessage(), Is.is(IS_UNIQUE_TAG_ERROR_MSG));
-  }
-
   @Test
   void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForAuthority() {
     testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(
@@ -78,5 +59,58 @@ class OnlyOne008ControlFieldValidationRuleTest {
   void testGeneralInformationControlFieldValidationRuleInvalidAmountOfFieldForBib() {
     testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(
       "Testing Bib General Information Validation rule - two 008 fields", QM_RECORD_BIB_PATH);
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleMissingFieldForHoldings() {
+    testGeneralInformationControlFieldValidationRuleMissingField(
+      "Testing Holdings General Information Validation rule - missing 008 field", QM_RECORD_HOLDINGS_PATH);
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleMissingFieldForAuthority() {
+    testGeneralInformationControlFieldValidationRuleMissingField(
+      "Testing Authority General Information Validation rule - missing 008 field", QM_RECORD_AUTHORITY_PATH);
+  }
+
+  @Test
+  void testGeneralInformationControlFieldValidationRuleMissingFieldForBib() {
+    testGeneralInformationControlFieldValidationRuleMissingField(
+      "Testing Bib General Information Validation rule - missing 008 field", QM_RECORD_BIB_PATH);
+  }
+
+  private void testGeneralInformationControlFieldValidationRule(String s, String qmRecordHoldings) {
+    logger.info(s);
+    var rule = new OnlyOne008ControlFieldValidationRule();
+    QuickMarc quickMarc = getMockAsObject(qmRecordHoldings, QuickMarc.class);
+    assertDoesNotThrow(() -> rule.validate(quickMarc.getFields()));
+  }
+
+  private void testGeneralInformationControlFieldValidationRuleInvalidAmountOfField(String log, String qmRecordPath) {
+    logger.info(log);
+    var rule = new OnlyOne008ControlFieldValidationRule();
+
+    QuickMarc quickMarc = getMockAsObject(qmRecordPath, QuickMarc.class);
+    List<FieldItem> fields = quickMarc.getFields();
+    fields.add(new FieldItem().tag("008").content("$a test value"));
+
+    Optional<ValidationError> validationError = rule.validate(fields);
+    assertTrue(validationError.isPresent());
+    assertThat(validationError.get().getTag(), Is.is("008"));
+    assertThat(validationError.get().getMessage(), Is.is(IS_UNIQUE_TAG_ERROR_MSG));
+  }
+
+  private void testGeneralInformationControlFieldValidationRuleMissingField(String log, String qmRecordPath) {
+    logger.info(log);
+    var rule = new OnlyOne008ControlFieldValidationRule();
+
+    QuickMarc quickMarc = getMockAsObject(qmRecordPath, QuickMarc.class);
+    List<FieldItem> fields = quickMarc.getFields();
+    fields.removeIf(field -> field.getTag().equals("008"));
+
+    Optional<ValidationError> validationError = rule.validate(fields);
+    assertTrue(validationError.isPresent());
+    assertThat(validationError.get().getTag(), Is.is("008"));
+    assertThat(validationError.get().getMessage(), Is.is(IS_REQUIRED_TAG_ERROR_MSG));
   }
 }

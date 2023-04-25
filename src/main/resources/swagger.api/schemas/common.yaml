@@ -164,6 +164,12 @@ quickMarcEdit:
         relatedRecordVersion:
           description: Information related to version of the record
           type: string
+      required:
+        - parsedRecordId
+        - parsedRecordDtoId
+        - externalId
+        - externalHrid
+        - relatedRecordVersion
 
 quickMarcCreate:
   allOf:

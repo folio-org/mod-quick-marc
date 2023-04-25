@@ -11,9 +11,11 @@ import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.rest.resource.RecordsEditorApi;
 import org.folio.qm.service.MarcRecordsService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequestMapping(value = "/records-editor")
 @RequiredArgsConstructor

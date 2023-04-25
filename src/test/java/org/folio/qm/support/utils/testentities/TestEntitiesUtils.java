@@ -55,7 +55,12 @@ public class TestEntitiesUtils {
   }
 
   public static QuickMarcEdit getQuickMarcJsonWithMinContent(FieldItem... fields) {
-    return new QuickMarcEdit().leader("01542ccm a22002533  4500").fields(Arrays.asList(fields));
+    return new QuickMarcEdit().leader("01542ccm a22002533  4500").fields(Arrays.asList(fields))
+      .relatedRecordVersion("1")
+      .parsedRecordId(UUID.randomUUID())
+      .parsedRecordDtoId(UUID.randomUUID())
+      .externalId(UUID.randomUUID())
+      .externalHrid("hr0001");
   }
 
 }

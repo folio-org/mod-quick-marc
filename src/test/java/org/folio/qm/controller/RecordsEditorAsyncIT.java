@@ -47,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -63,6 +64,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.util.ReflectionUtils;
 
 @Log4j2
 @IntegrationTest
@@ -314,6 +316,26 @@ class RecordsEditorAsyncIT extends BaseIT {
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(errorMessageMatch(equalTo(IS_UNIQUE_TAG_ERROR_MSG)));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"relatedRecordVersion", "externalHrid", "externalId", "parsedRecordDtoId", "parsedRecordId"})
+  void testUpdateReturn400WhenRecordDoNotHaveRequiredFields(String fieldName) throws Exception {
+    log.info("===== Verify PUT record: required field check =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    var quickMarcEdit = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
+
+    // set field to null
+    Arrays.stream(ReflectionUtils.getAllDeclaredMethods(QuickMarcEdit.class))
+      .filter(method -> method.getName().equals(fieldName))
+      .findFirst()
+      .ifPresent(method -> ReflectionUtils.invokeMethod(method, quickMarcEdit, (Object) null));
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcEdit)
+      .andExpect(status().isBadRequest())
+      .andExpect(errorMessageMatch(equalTo(String.format("Parameter '%s' must not be null", fieldName))));
   }
 
   @Test

@@ -1,7 +1,10 @@
 package org.folio.qm.service.impl;
 
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_ERROR_CAUSE;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_STATUS_ERROR;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -20,6 +23,7 @@ import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
 import org.folio.qm.client.LinksClient.InstanceLinks;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
@@ -40,6 +44,7 @@ class LinksServiceImplTest {
   private static final String AUTHORITY_ID = "b9a5f035-de63-4e2c-92c2-07240c88b817";
   private static final int LINKING_RULE_ID = 1;
   private static final String BIB_TAG = "650";
+  private static final String LINK_STATUS_ACTUAL = "ACTUAL";
 
   @Mock
   private LinksClient linksClient;
@@ -82,6 +87,13 @@ class LinksServiceImplTest {
           getFieldItem(),
           getFieldItem()),
         0
+      ),
+      arguments(
+        List.of(
+          getInstanceLink(UUID.fromString(AUTHORITY_ID), LINK_STATUS_ERROR, LINK_ERROR_CAUSE)),
+        List.of(
+          getFieldItem(AUTHORITY_ID)),
+        1
       )
     );
   }
@@ -92,6 +104,9 @@ class LinksServiceImplTest {
         getFieldItem(),
         getFieldItemLinked()
       ), 1),
+      arguments(singletonList(
+        getFieldItemLinkedWithError()
+      ), 1),
       arguments(Collections.emptyList(), 0)
     );
   }
@@ -101,19 +116,34 @@ class LinksServiceImplTest {
   }
 
   private static FieldItem getFieldItem(String authorityId) {
-    return getFieldItem().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345");
+    return getFieldItem()
+      .linkDetails(new LinkDetails().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345"));
   }
 
   private static FieldItem getFieldItemLinked() {
-    return getFieldItem(AUTHORITY_ID).authorityNaturalId("12345").linkingRuleId(LINKING_RULE_ID);
+    var fieldItem = getFieldItem(AUTHORITY_ID);
+    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID);
+    return fieldItem;
   }
 
-  private static InstanceLink getInstanceLink(UUID authorityId) {
+  private static FieldItem getFieldItemLinkedWithError() {
+    var fieldItem = getFieldItem(AUTHORITY_ID);
+    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID).status(LINK_STATUS_ERROR).errorCause(LINK_ERROR_CAUSE);
+    return fieldItem;
+  }
+
+  private static InstanceLink getInstanceLink(UUID authorityId, String status, String errorCause) {
     return new InstanceLink(RandomUtils.nextInt(),
       authorityId,
       "12345",
       UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
-      LINKING_RULE_ID);
+      LINKING_RULE_ID,
+      status,
+      errorCause);
+  }
+
+  private static InstanceLink getInstanceLink(UUID authorityId) {
+    return getInstanceLink(authorityId, LINK_STATUS_ACTUAL, EMPTY);
   }
 
   @ParameterizedTest
@@ -131,19 +161,23 @@ class LinksServiceImplTest {
     service.setRecordLinks(record);
 
     var linkedFields = record.getFields().stream()
-      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
+      .filter(fieldItem -> fieldItem.getLinkDetails() != null)
       .collect(Collectors.toList());
     assertThat(linkedFields)
       .hasSize(expectedLinkedFieldsCount);
 
     for (int i = 0; i < linkedFields.size(); i++) {
-      var linkedField = linkedFields.get(i);
-      assertThat(linkedField.getAuthorityId())
+      var linkDetails = linkedFields.get(i).getLinkDetails();
+      assertThat(linkDetails.getAuthorityId())
         .isEqualTo(links.get(i).getAuthorityId());
-      assertThat(linkedField.getAuthorityNaturalId())
+      assertThat(linkDetails.getAuthorityNaturalId())
         .isEqualTo(links.get(i).getAuthorityNaturalId());
-      assertThat(linkedField.getLinkingRuleId())
+      assertThat(linkDetails.getLinkingRuleId())
         .isEqualTo(links.get(i).getLinkingRuleId());
+      assertThat(linkDetails.getStatus())
+        .isEqualTo(links.get(i).getStatus());
+      assertThat(linkDetails.getErrorCause())
+        .isEqualTo(links.get(i).getErrorCause());
     }
   }
 
@@ -155,12 +189,12 @@ class LinksServiceImplTest {
     service.updateRecordLinks(quickMarcMock);
 
     var expectedLinks = fieldsMock.stream()
-      .filter(fieldItem -> fieldItem.getAuthorityId() != null)
+      .filter(fieldItem -> fieldItem.getLinkDetails() != null)
       .map(fieldItem -> new InstanceLink()
         .setInstanceId(quickMarcMock.getExternalId())
-        .setAuthorityId(fieldItem.getAuthorityId())
-        .setAuthorityNaturalId(fieldItem.getAuthorityNaturalId())
-        .setLinkingRuleId(fieldItem.getLinkingRuleId()))
+        .setAuthorityId(fieldItem.getLinkDetails().getAuthorityId())
+        .setAuthorityNaturalId(fieldItem.getLinkDetails().getAuthorityNaturalId())
+        .setLinkingRuleId(fieldItem.getLinkDetails().getLinkingRuleId()))
       .collect(Collectors.toList());
     var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
 

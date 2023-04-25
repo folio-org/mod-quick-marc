@@ -43,6 +43,8 @@ public class TestEntitiesUtils {
   public static final String AUTHORITY_ID = "b9a5f035-de63-4e2c-92c2-07240c88b817";
   public static final String AUTHORITY_NATURAL_ID = "12345";
   public static final int LINKING_RULE_ID = 1;
+  public static final String LINK_STATUS_ERROR = "ERROR";
+  public static final String LINK_ERROR_CAUSE = "test";
 
   public static FieldItem getFieldWithIndicators(List<String> indicators) {
     return new FieldItem().tag(TESTED_TAG_NAME).content("$333 content").indicators(indicators);

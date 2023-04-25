@@ -236,8 +236,9 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     var field = getFieldWithIndicators(Collections.singletonList(" "));
     var titleField = getFieldWithValue("245", "title");
+    var sourceField = getFieldWithValue("008", "source");
     QuickMarc quickMarcJson =
-      getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
+      getQuickMarcJsonWithMinContent(field, field, titleField, sourceField).parsedRecordDtoId(UUID.randomUUID())
         .marcFormat(MarcFormat.BIBLIOGRAPHIC)
         .relatedRecordVersion("1")
         .parsedRecordId(VALID_PARSED_RECORD_ID)

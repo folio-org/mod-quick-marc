@@ -43,12 +43,14 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINKING_
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
+import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -78,6 +80,8 @@ import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -462,11 +466,12 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
-  @Test
-  void testReturn422WhenRecordWithMultiple001() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
+  void testReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
     log.info("===== Verify POST record: Multiple 001 =====");
 
-    QuickMarc quickMarcJson = readQuickMarc(QM_RECORD_HOLDINGS_PATH)
+    QuickMarc quickMarcJson = readQuickMarc(filePath)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -476,6 +481,23 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_BIB_PATH, QM_RECORD_HOLDINGS_PATH, QM_RECORD_AUTHORITY_PATH})
+  void testReturn422WhenRecordMissing008(String filePath) throws Exception {
+    log.info("===== Verify POST record: Missing 008 =====");
+
+    QuickMarc quickMarcJson = readQuickMarc(filePath)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    quickMarcJson.getFields().removeIf(field -> field.getTag().equals("008"));
+
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.message").value(IS_REQUIRED_TAG_ERROR_MSG));
   }
 
   @Test

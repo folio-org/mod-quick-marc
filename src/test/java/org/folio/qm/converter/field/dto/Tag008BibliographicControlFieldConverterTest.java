@@ -25,15 +25,16 @@ class Tag008BibliographicControlFieldConverterTest {
       arguments("007", "a".repeat(40), MarcFormat.BIBLIOGRAPHIC),
       arguments("006", "a".repeat(40), MarcFormat.BIBLIOGRAPHIC),
       arguments("035", "a".repeat(40), MarcFormat.BIBLIOGRAPHIC),
-      arguments("008", "a".repeat(39), MarcFormat.BIBLIOGRAPHIC),
-      arguments("008", "a".repeat(41), MarcFormat.BIBLIOGRAPHIC),
       arguments("008", "a".repeat(40), MarcFormat.HOLDINGS),
       arguments("008", "a".repeat(40), MarcFormat.AUTHORITY)
     );
   }
 
   @ParameterizedTest
-  @EnumSource(value = Tag008FieldTestData.class, mode = EnumSource.Mode.EXCLUDE, names = {"HOLDINGS", "AUTHORITY"})
+  @EnumSource(value = Tag008FieldTestData.class,
+              mode = EnumSource.Mode.EXCLUDE,
+              names = {"HOLDINGS", "HOLDINGS_WITH_GT_LEN", "HOLDINGS_WITH_LT_LEN",
+                       "AUTHORITY", "AUTHORITY_WITH_GT_LEN", "AUTHORITY_WITH_LT_LEN"})
   void testConvertField(Tag008FieldTestData testData) {
     var controlField = new ControlFieldImpl("008", testData.getDtoData());
     var leader = new LeaderImpl(testData.getLeader());

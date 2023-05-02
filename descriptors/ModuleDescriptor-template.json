@@ -45,7 +45,8 @@
             "users.item.get",
             "converter-storage.field-protection-settings.get",
             "instance-authority-links.instances.collection.get",
-            "instance-authority.linking-rules.collection.get"
+            "instance-authority.linking-rules.collection.get",
+            "linking-rules.instance-authority.get"
           ]
         },
         {

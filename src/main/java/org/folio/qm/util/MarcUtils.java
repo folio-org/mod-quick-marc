@@ -1,7 +1,5 @@
 package org.folio.qm.util;
 
-import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
@@ -9,10 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
 
 public final class MarcUtils {
   public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
@@ -40,16 +38,6 @@ public final class MarcUtils {
     return LocalDateTime.parse(representation, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
-  public static QuickMarc updateRecordTimestamp(QuickMarc quickMarc) {
-    final var currentTime = encodeToMarcDateTime(LocalDateTime.now());
-    getFieldByTag(quickMarc, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD)
-      .ifPresentOrElse(field -> field.setContent(currentTime),
-        () -> quickMarc.addFieldsItem(
-          new FieldItem().tag(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD).content(currentTime))
-      );
-    return quickMarc;
-  }
-
   /**
    * This method encode Java {@link java.time.LocalDateTime} value in the MARC date-time format for
    * <a href="https://www.loc.gov/marc/bibliographic/bd005.html">Date and Time of Latest Transaction Field (005)</a>.
@@ -61,7 +49,7 @@ public final class MarcUtils {
     return localDateTime.format(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
-  public static Optional<FieldItem> getFieldByTag(QuickMarc quickMarc, String tag) {
+  public static Optional<FieldItem> getFieldByTag(BaseMarcRecord quickMarc, String tag) {
     return quickMarc.getFields().stream()
       .filter(field -> tag.equals(field.getTag()))
       .findFirst();

@@ -1,4 +1,13 @@
-## v3.1.0 xxxx-xx-xx
+## v4.0.0 xxxx-xx-xx
+### Breaking changes
+* Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))
+* Separate quickMarc schema for different actions ([MODQM-325](https://issues.folio.org/browse/MODQM-325))
+* Add support of link status and errorCause ([MODQM-318](https://issues.folio.org/browse/MODQM-318))
+
+### APIs versions
+* Provides `records-editor.records` `v4.0`
+* Requires `instance-authority-links` `v2.1`
+* Removed `_jsonSchemas`
 
 ### Features
 * Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))

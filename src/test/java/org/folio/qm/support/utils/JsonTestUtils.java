@@ -2,14 +2,13 @@ package org.folio.qm.support.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 
 @UtilityClass
 public class JsonTestUtils {
@@ -22,8 +21,8 @@ public class JsonTestUtils {
     .build();
 
   @SneakyThrows
-  public static QuickMarc readQuickMarc(String filename) {
-    return MAPPER.readValue(InputOutputTestUtils.readFile(filename), QuickMarc.class);
+  public static <T extends BaseMarcRecord> T readQuickMarc(String filename, Class<T> quickMarcType) {
+    return MAPPER.readValue(InputOutputTestUtils.readFile(filename), quickMarcType);
   }
 
   @SneakyThrows
@@ -32,18 +31,8 @@ public class JsonTestUtils {
   }
 
   @SneakyThrows
-  public static <T> T getObjectFromJsonNode(JsonNode json, Class<T> entityClass) {
-    return MAPPER.treeToValue(json, entityClass);
-  }
-
-  @SneakyThrows
   public static <T> T getMockAsObject(String mockPath, Class<T> entityClass) {
     return getObjectFromJson(InputOutputTestUtils.readFile(mockPath), entityClass);
-  }
-
-  @SneakyThrows
-  public static ObjectNode getMockAsJsonNode(String fullPath) {
-    return (ObjectNode) MAPPER.readTree(InputOutputTestUtils.readFile(fullPath));
   }
 
   @SneakyThrows

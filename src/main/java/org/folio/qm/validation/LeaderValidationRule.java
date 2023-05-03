@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.folio.qm.converter.elements.Constants;
 import org.folio.qm.converter.elements.LeaderItem;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 
 public abstract class LeaderValidationRule implements ValidationRule {
 
   @Override
-  public Optional<ValidationError> validate(QuickMarc qmRecord) {
+  public Optional<ValidationError> validate(BaseMarcRecord qmRecord) {
     return validate(qmRecord.getLeader());
   }
 

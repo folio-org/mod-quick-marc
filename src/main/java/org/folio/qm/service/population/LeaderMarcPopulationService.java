@@ -4,12 +4,12 @@ import static org.folio.qm.converter.elements.Constants.LEADER_LENGTH;
 
 import java.util.List;
 import org.folio.qm.converter.elements.LeaderItem;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 
 public abstract class LeaderMarcPopulationService implements MarcPopulationService {
 
   @Override
-  public void populate(QuickMarc qmRecord) {
+  public void populate(BaseMarcRecord qmRecord) {
     var initialLeader = qmRecord.getLeader();
     if (LEADER_LENGTH != initialLeader.length()) {
       return;

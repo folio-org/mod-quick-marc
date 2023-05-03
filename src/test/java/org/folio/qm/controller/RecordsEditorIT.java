@@ -52,6 +52,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOH
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_ID;
+import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -82,6 +83,8 @@ import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -453,11 +456,12 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
-  @Test
-  void testReturn422WhenRecordWithMultiple001() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
+  void testReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
     log.info("===== Verify POST record: Multiple 001 =====");
 
-    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
+    QuickMarcCreate quickMarcJson = readQuickMarc(filePath, QuickMarcCreate.class);
 
     quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
 
@@ -465,6 +469,21 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
+  void testReturn422WhenRecordMissing008(String filePath) throws Exception {
+    log.info("===== Verify POST record: Missing 008 =====");
+
+    QuickMarcCreate quickMarcJson = readQuickMarc(filePath, QuickMarcCreate.class);
+
+    quickMarcJson.getFields().removeIf(field -> field.getTag().equals("008"));
+
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.message").value(IS_REQUIRED_TAG_ERROR_MSG));
   }
 
   @Test

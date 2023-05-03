@@ -1,14 +1,12 @@
 package org.folio.qm.util;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
-import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -58,11 +56,29 @@ public final class MarcUtils {
   }
 
   public static String restoreBlanks(String sourceString) {
-    return sourceString.replace(BLANK_REPLACEMENT, SPACE);
+    return sourceString.replace('\\', ' ');
   }
 
   public static String masqueradeBlanks(String sourceString) {
-    return sourceString.replace(SPACE, BLANK_REPLACEMENT);
+    return sourceString.replace(' ', '\\');
+  }
+
+  /**
+   * Returns string with provided length and replaced spaces by '\\'. Trims sourceString to length or append '\\'.
+   */
+  public static String normalizeFixedLengthString(String sourceString, int length) {
+    if (length <= 0 || length == Integer.MAX_VALUE) {
+      throw new IllegalArgumentException("Length must be > 0 and < 2^31-1");
+    }
+    var source = masqueradeBlanks(StringUtils.trimToEmpty(sourceString));
+    var sourceLength = source.length();
+    if (sourceLength == length) {
+      return source;
+    } else if (sourceLength > length) {
+      return source.substring(0, length);
+    } else {
+      return source + StringUtils.repeat('\\', length - sourceLength);
+    }
   }
 
   public static boolean isValidUuid(String id) {

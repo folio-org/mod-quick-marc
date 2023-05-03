@@ -36,6 +36,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PA
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithIndicators;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getFieldWithValue;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.getQuickMarcJsonWithMinContent;
+import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -237,8 +238,9 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     var field = getFieldWithIndicators(Collections.singletonList(" "));
     var titleField = getFieldWithValue("245", "title");
-    QuickMarcEdit quickMarcJson =
-      getQuickMarcJsonWithMinContent(field, field, titleField).parsedRecordDtoId(UUID.randomUUID())
+    var sourceField = getFieldWithValue("008", "source");
+    var quickMarcJson =
+      getQuickMarcJsonWithMinContent(field, field, titleField, sourceField).parsedRecordDtoId(UUID.randomUUID())
         .marcFormat(MarcFormat.BIBLIOGRAPHIC)
         .relatedRecordVersion("1")
         .parsedRecordId(VALID_PARSED_RECORD_ID)
@@ -316,6 +318,23 @@ class RecordsEditorAsyncIT extends BaseIT {
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
       .andExpect(errorMessageMatch(equalTo(IS_UNIQUE_TAG_ERROR_MSG)));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
+  void testUpdateReturn422WhenRecordMissed008(String filePath) throws Exception {
+    log.info("===== Verify PUT record: 008 tag check =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    var quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class);
+
+    // Now we remove the 008 field from the record and try to update existing record
+    quickMarcJson.getFields().removeIf(field -> field.getTag().equals("008"));
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(errorMessageMatch(equalTo(IS_REQUIRED_TAG_ERROR_MSG)));
   }
 
   @ParameterizedTest

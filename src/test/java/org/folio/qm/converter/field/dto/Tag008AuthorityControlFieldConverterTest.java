@@ -12,6 +12,7 @@ import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.marc4j.marc.impl.ControlFieldImpl;
 import org.marc4j.marc.impl.LeaderImpl;
@@ -26,18 +27,19 @@ class Tag008AuthorityControlFieldConverterTest {
       arguments("007", "a".repeat(40), MarcFormat.AUTHORITY),
       arguments("006", "a".repeat(40), MarcFormat.AUTHORITY),
       arguments("035", "a".repeat(40), MarcFormat.AUTHORITY),
-      arguments("008", "a".repeat(39), MarcFormat.AUTHORITY),
-      arguments("008", "a".repeat(41), MarcFormat.AUTHORITY),
       arguments("008", "a".repeat(40), MarcFormat.HOLDINGS),
       arguments("008", "a".repeat(40), MarcFormat.BIBLIOGRAPHIC)
     );
   }
 
-  @Test
-  void testConvertField() {
-    var field = new ControlFieldImpl("008", Tag008FieldTestData.AUTHORITY.getDtoData());
-    var actualQmField = converter.convert(field, new LeaderImpl(Tag008FieldTestData.AUTHORITY.getLeader()));
-    assertEquals(Tag008FieldTestData.AUTHORITY.getQmContent(), actualQmField.getContent());
+  @ParameterizedTest
+  @EnumSource(value = Tag008FieldTestData.class,
+              names = {"AUTHORITY", "AUTHORITY_WITH_GT_LEN", "AUTHORITY_WITH_LT_LEN"},
+              mode = EnumSource.Mode.INCLUDE)
+  void testConvertField(Tag008FieldTestData tag008FieldTestData) {
+    var field = new ControlFieldImpl("008", tag008FieldTestData.getDtoData());
+    var actualQmField = converter.convert(field, new LeaderImpl(tag008FieldTestData.getLeader()));
+    assertEquals(tag008FieldTestData.getQmContent(), actualQmField.getContent());
   }
 
   @Test

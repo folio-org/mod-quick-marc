@@ -33,8 +33,8 @@
   ],
   "provides": [
     {
-      "id": "records-editor.records",
-      "version": "4.0",
+      "id": "records-editor",
+      "version": "5.0",
       "handlers": [
         {
           "methods": ["GET"],

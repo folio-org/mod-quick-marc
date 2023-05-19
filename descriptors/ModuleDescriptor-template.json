@@ -33,7 +33,7 @@
   ],
   "provides": [
     {
-      "id": "records-editor",
+      "id": "marc-records-editor",
       "version": "5.0",
       "handlers": [
         {

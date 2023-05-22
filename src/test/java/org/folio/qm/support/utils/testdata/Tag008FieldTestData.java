@@ -9,7 +9,8 @@ import java.util.Map;
 public enum Tag008FieldTestData {
 
   BIB_BOOKS("abcdefghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500", getBooksContent()),
-  BIB_BOOKS_NO_DATE_ENTERED(getCurrentDate() + "ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500", getBooksNoDateEnteredContent()),
+  BIB_BOOKS_NO_DATE_ENTERED(getCurrentDate() + "ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500",
+    getBooksNoDateEnteredContent()),
   BIB_BOOKS_WITH_EMPTY_ITEMS("abcdefghijklmnopqrabcde     klmn opstuvw", "00158caa a2200073   4500",
     getBooksWithEmptyItemsContent()),
   BIB_BOOKS_WITH_LT_LEN("abcdefgh", "00158caa a2200073   4500", getBooksWithLtLenContent()),
@@ -22,7 +23,8 @@ public enum Tag008FieldTestData {
   BIB_UNKNOWN("abcdefghijklmnopqrabcdefghijklmnopqstuvw", "00158cha a2200073   4500", getUnknownContent()),
   BIB_VISUAL("abcdefghijklmnopqrabc d     ef   ghstuvw", "00158cga a2200073   4500", getVisualContent()),
   HOLDINGS("9301235u    8   0   uu     1    ", "00158cga a2200073   4500", getHoldingsContent()),
-  HOLDINGS_NO_DATE_ENTERED(getCurrentDate() + "5u    8   0   uu     1    ", "00158cga a2200073   4500", getHoldingsNoDateEnteredContent()),
+  HOLDINGS_NO_DATE_ENTERED(getCurrentDate() + "5u    8   0   uu     1    ", "00158cga a2200073   4500",
+    getHoldingsNoDateEnteredContent()),
   HOLDINGS_WITH_LT_LEN("9301235u", "00158cga a2200073   4500", getHoldingsLtLenContent()),
   HOLDINGS_WITH_GT_LEN("9301235u    8   0   uu     1    qwerty", "00158cga a2200073   4500", getHoldingsContent()),
   AUTHORITY("810824n| azannaabn   a      |b aaa      ", "00158cga a2200073   4500", getAuthorityContent()),

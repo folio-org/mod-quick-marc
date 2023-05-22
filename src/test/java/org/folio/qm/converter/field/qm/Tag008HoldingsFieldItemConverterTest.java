@@ -9,6 +9,8 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.marc4j.marc.ControlField;
 
 @UnitTest
@@ -16,11 +18,14 @@ class Tag008HoldingsFieldItemConverterTest {
 
   private final Tag008HoldingsFieldItemConverter converter = new Tag008HoldingsFieldItemConverter();
 
-  @Test
-  void testConvertField() {
-    var fieldItem = new FieldItem().tag("008").content(Tag008FieldTestData.HOLDINGS.getQmContent());
+  @ParameterizedTest
+  @EnumSource(value = Tag008FieldTestData.class,
+    mode = EnumSource.Mode.INCLUDE,
+    names = {"HOLDINGS", "HOLDINGS_NO_DATE_ENTERED"})
+  void testConvertField(Tag008FieldTestData testData) {
+    var fieldItem = new FieldItem().tag("008").content(testData.getQmContent());
     var actualQmField = converter.convert(fieldItem);
-    assertEquals(Tag008FieldTestData.HOLDINGS.getDtoData(), ((ControlField) actualQmField).getData());
+    assertEquals(testData.getDtoData(), ((ControlField) actualQmField).getData());
   }
 
   @Test

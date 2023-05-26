@@ -30,11 +30,14 @@ class Tag008BibliographicControlFieldConverterTest {
     );
   }
 
+  //some bib test data excluded because it's for another direction conversion with replacements
   @ParameterizedTest
   @EnumSource(value = Tag008FieldTestData.class,
-              mode = EnumSource.Mode.EXCLUDE,
-              names = {"HOLDINGS", "HOLDINGS_NO_DATE_ENTERED", "HOLDINGS_WITH_GT_LEN", "HOLDINGS_WITH_LT_LEN",
-                       "AUTHORITY", "AUTHORITY_WITH_GT_LEN", "AUTHORITY_WITH_LT_LEN"})
+    mode = EnumSource.Mode.EXCLUDE,
+    names = {"BIB_BOOKS_NO_DATE_ENTERED", "BIB_BOOKS_DATE_ENTERED_ALPHABETIC", "BIB_BOOKS_DATE_ENTERED_SHORT",
+      "BIB_BOOKS_DATE_ENTERED_INVALID",
+      "HOLDINGS", "HOLDINGS_NO_DATE_ENTERED", "HOLDINGS_WITH_GT_LEN", "HOLDINGS_WITH_LT_LEN",
+      "AUTHORITY", "AUTHORITY_WITH_GT_LEN", "AUTHORITY_WITH_LT_LEN"})
   void testConvertField(Tag008FieldTestData testData) {
     var controlField = new ControlFieldImpl("008", testData.getDtoData());
     var leader = new LeaderImpl(testData.getLeader());

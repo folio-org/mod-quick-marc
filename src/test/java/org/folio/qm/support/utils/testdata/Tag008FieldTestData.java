@@ -8,20 +8,26 @@ import java.util.Map;
 
 public enum Tag008FieldTestData {
 
-  BIB_BOOKS("abcdefghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500", getBooksContent()),
+  BIB_BOOKS("123456ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500", getBooksContent()),
   BIB_BOOKS_NO_DATE_ENTERED(getCurrentDate() + "ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500",
     getBooksNoDateEnteredContent()),
-  BIB_BOOKS_WITH_EMPTY_ITEMS("abcdefghijklmnopqrabcde     klmn opstuvw", "00158caa a2200073   4500",
+  BIB_BOOKS_DATE_ENTERED_ALPHABETIC(getCurrentDate() + "ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500",
+    getBooksAlphabeticDateEnteredContent()),
+  BIB_BOOKS_DATE_ENTERED_SHORT(getCurrentDate() + "ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500",
+    getBooksShortDateEnteredContent()),
+  BIB_BOOKS_DATE_ENTERED_INVALID(getCurrentDate() + "ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500",
+    getBooksInvalidDateEnteredContent()),
+  BIB_BOOKS_WITH_EMPTY_ITEMS("123456ghijklmnopqrabcde     klmn opstuvw", "00158caa a2200073   4500",
     getBooksWithEmptyItemsContent()),
-  BIB_BOOKS_WITH_LT_LEN("abcdefgh", "00158caa a2200073   4500", getBooksWithLtLenContent()),
-  BIB_CONTINUING("abcdefghijklmnopqrab cdefghijk   lmstuvw", "00158csb a2200073   4500", getContinuingContent()),
-  BIB_FILED("abcdefghijklmnopqr    ab  c d      stuvw", "00158cma a2200073   4500", getFiledContent()),
-  BIB_MAPS("abcdefghijklmnopqrabcdef g  hi j klstuvw", "00158cea a2200073   4500", getMapsContent()),
-  BIB_MIXED("abcdefghijklmnopqr     a           stuvw", "00158cpa a2200073   4500", getMixedContent()),
-  BIB_SCORES("abcdefghijklmnopqrabcdefghijklmn o stuvw", "00158cca a2200073   4500", getScoresContent()),
-  BIB_SOUND("abcdefghijklmnopqrabcdefghijklmn o stuvw", "00158cia a2200073   4500", getSoundContent()),
-  BIB_UNKNOWN("abcdefghijklmnopqrabcdefghijklmnopqstuvw", "00158cha a2200073   4500", getUnknownContent()),
-  BIB_VISUAL("abcdefghijklmnopqrabc d     ef   ghstuvw", "00158cga a2200073   4500", getVisualContent()),
+  BIB_BOOKS_WITH_LT_LEN("123456gh", "00158caa a2200073   4500", getBooksWithLtLenContent()),
+  BIB_CONTINUING("123456ghijklmnopqrab cdefghijk   lmstuvw", "00158csb a2200073   4500", getContinuingContent()),
+  BIB_FILED("123456ghijklmnopqr    ab  c d      stuvw", "00158cma a2200073   4500", getFiledContent()),
+  BIB_MAPS("123456ghijklmnopqrabcdef g  hi j klstuvw", "00158cea a2200073   4500", getMapsContent()),
+  BIB_MIXED("123456ghijklmnopqr     a           stuvw", "00158cpa a2200073   4500", getMixedContent()),
+  BIB_SCORES("123456ghijklmnopqrabcdefghijklmn o stuvw", "00158cca a2200073   4500", getScoresContent()),
+  BIB_SOUND("123456ghijklmnopqrabcdefghijklmn o stuvw", "00158cia a2200073   4500", getSoundContent()),
+  BIB_UNKNOWN("123456ghijklmnopqrabcdefghijklmnopqstuvw", "00158cha a2200073   4500", getUnknownContent()),
+  BIB_VISUAL("123456ghijklmnopqrabc d     ef   ghstuvw", "00158cga a2200073   4500", getVisualContent()),
   HOLDINGS("9301235u    8   0   uu     1    ", "00158cga a2200073   4500", getHoldingsContent()),
   HOLDINGS_NO_DATE_ENTERED(getCurrentDate() + "5u    8   0   uu     1    ", "00158cga a2200073   4500",
     getHoldingsNoDateEnteredContent()),
@@ -42,7 +48,7 @@ public enum Tag008FieldTestData {
     this.qmContent = qmContent;
   }
 
-  private static String getCurrentDate() {
+  public static String getCurrentDate() {
     return new SimpleDateFormat("yyMMdd").format(Calendar.getInstance().getTime());
   }
 
@@ -156,27 +162,8 @@ public enum Tag008FieldTestData {
   }
 
   private static Map<String, Object> getBooksContent() {
-    Map<String, Object> content = new LinkedHashMap<>();
-    content.put("Type", "a");
-    content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
-    content.put("DtSt", "g");
-    content.put("Date1", "hijk");
-    content.put("Date2", "lmno");
-    content.put("Ctry", "pqr");
-    content.put("Lang", "stu");
-    content.put("MRec", "v");
-    content.put("Srce", "w");
-    content.put("Ills", List.of("a", "b", "c", "d"));
-    content.put("Audn", "e");
-    content.put("Form", "f");
-    content.put("Cont", List.of("g", "h", "i", "j"));
-    content.put("GPub", "k");
-    content.put("Conf", "l");
-    content.put("Fest", "m");
-    content.put("Indx", "n");
-    content.put("LitF", "o");
-    content.put("Biog", "p");
+    Map<String, Object> content = getBooksNoDateEnteredContent();
+    content.put("Entered", "123456");
     return content;
   }
 
@@ -204,11 +191,29 @@ public enum Tag008FieldTestData {
     return content;
   }
 
+  private static Map<String, Object> getBooksAlphabeticDateEnteredContent() {
+    Map<String, Object> content = getBooksNoDateEnteredContent();
+    content.put("Entered", "abcdef");
+    return content;
+  }
+
+  private static Map<String, Object> getBooksShortDateEnteredContent() {
+    Map<String, Object> content = getBooksNoDateEnteredContent();
+    content.put("Entered", "123");
+    return content;
+  }
+
+  private static Map<String, Object> getBooksInvalidDateEnteredContent() {
+    Map<String, Object> content = getBooksNoDateEnteredContent();
+    content.put("Entered", "000000");
+    return content;
+  }
+
   private static Map<String, Object> getBooksWithEmptyItemsContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "a");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -233,7 +238,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "a");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "h\\\\\\");
     content.put("Date2", "\\\\\\\\");
@@ -258,7 +263,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "s");
     content.put("BLvl", "b");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -284,7 +289,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "m");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -303,7 +308,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "e");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -325,7 +330,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "p");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -341,7 +346,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "c");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -364,7 +369,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "i");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -387,7 +392,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "h");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");
@@ -403,7 +408,7 @@ public enum Tag008FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "g");
     content.put("BLvl", "a");
-    content.put("Entered", "abcdef");
+    content.put("Entered", "123456");
     content.put("DtSt", "g");
     content.put("Date1", "hijk");
     content.put("Date2", "lmno");

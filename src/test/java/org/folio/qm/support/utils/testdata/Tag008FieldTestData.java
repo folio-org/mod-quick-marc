@@ -34,6 +34,8 @@ public enum Tag008FieldTestData {
   HOLDINGS_WITH_LT_LEN("9301235u", "00158cga a2200073   4500", getHoldingsLtLenContent()),
   HOLDINGS_WITH_GT_LEN("9301235u    8   0   uu     1    qwerty", "00158cga a2200073   4500", getHoldingsContent()),
   AUTHORITY("810824n| azannaabn   a      |b aaa      ", "00158cga a2200073   4500", getAuthorityContent()),
+  AUTHORITY_NO_DATE_ENTERED(getCurrentDate() + "n| azannaabn   a      |b aaa      ", "00158cga a2200073   4500",
+    getAuthorityNoDateEntContent()),
   AUTHORITY_WITH_LT_LEN("810824n| ", "00158cga a2200073   4500", getAuthorityLtLenContent()),
   AUTHORITY_WITH_GT_LEN("810824n| azannaabn   a      |b aaa      dasdasdasdas", "00158cga a2200073   4500",
     getAuthorityContent());
@@ -52,9 +54,8 @@ public enum Tag008FieldTestData {
     return new SimpleDateFormat("yyMMdd").format(Calendar.getInstance().getTime());
   }
 
-  private static Map<String, Object> getAuthorityContent() {
+  private static Map<String, Object> getAuthorityNoDateEntContent() {
     Map<String, Object> content = new LinkedHashMap<>();
-    content.put("Date Ent", "810824");
     content.put("Geo Subd", "n");
     content.put("Roman", "|");
     content.put("Lang", "\\");
@@ -77,6 +78,12 @@ public enum Tag008FieldTestData {
     content.put("Undef_34", "\\\\\\\\");
     content.put("Mod Rec Est", "\\");
     content.put("Source", "\\");
+    return content;
+  }
+
+  private static Map<String, Object> getAuthorityContent() {
+    Map<String, Object> content = getAuthorityNoDateEntContent();
+    content.put("Date Ent", "810824");
     return content;
   }
 

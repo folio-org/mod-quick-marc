@@ -1,3 +1,10 @@
+## v5.0.0 xxxx-xx-xx
+### Features
+* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
+
+### APIs versions
+* Provides `marc-records-editor` `v5.1`
+
 ## v4.0.0 xxxx-xx-xx
 ### Breaking changes
 * Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))

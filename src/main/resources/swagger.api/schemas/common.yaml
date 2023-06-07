@@ -281,3 +281,66 @@ creationStatus:
           type: string
           format: date-time
           example: '2020-07-14T12:20:10.000'
+
+srsFieldItem:
+  type: object
+  description: MARC Field content
+  properties:
+    ind1:
+      minLength: 1
+      maxLength: 1
+      type: string
+    ind2:
+      minLength: 1
+      maxLength: 1
+      type: string
+    subfields:
+      description: MARC record's fields
+      type: array
+      items:
+        type: object
+        description: Subfield tag
+        additionalProperties:
+          type: string
+          description: Subfield content
+    linkDetails:
+      description: MARC Field link details Schema
+      $ref: '#/linkDetails'
+  required:
+    - ind1
+    - ind2
+    - subfields
+
+baseSrsMarcRecord:
+  type: object
+  title: Base MARC record for source-record-storage
+  description: Base MARC record for source-record-storage
+  properties:
+    leader:
+      type: string
+      description: MARC record's leader
+      minLength: 24
+      maxLength: 24
+    fields:
+      description: MARC record's fields
+      type: array
+      items:
+        type: object
+        description: MARC Field
+        additionalProperties:
+          type: object
+          description: MARC Field content
+          $ref: '#/srsFieldItem'
+  required:
+    - leader
+    - fields
+
+entitiesLinksSuggestions:
+  type: object
+  description: Collection of srs MARC records
+  properties:
+    records:
+      description: MARC srs record collection
+      type: array
+      items:
+        $ref: '#/baseSrsMarcRecord'

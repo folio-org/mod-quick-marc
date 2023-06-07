@@ -80,10 +80,10 @@ public interface LinksSuggestionsMapper {
 
     var subfieldsPares = stringSubfields.split("[$]");
     for (String subfieldPare : subfieldsPares) {
-      var subfield = subfieldPare.split("\\s");
+      var subfield = subfieldPare.split("\\s", 2);
       if (subfield.length == 2) {
         var tag = subfield[0];
-        var content = subfield[1];
+        var content = subfield[1].trim();
         listOfSubfields.add(Map.of(tag, content));
       }
     }

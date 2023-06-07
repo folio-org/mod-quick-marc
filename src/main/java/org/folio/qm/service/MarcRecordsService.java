@@ -50,5 +50,13 @@ public interface MarcRecordsService {
    * @return {@link UUID} qmParsedRecordId of record
    */
   CreationStatus createNewRecord(QuickMarcCreate quickMarc);
+
+  /**
+   * This method make a proxy request to the 'mod-entities-links' endpoint.
+   *
+   * @param quickMarcView QuickMarc object
+   * @return {@link QuickMarcView} with suggested links
+   */
+  QuickMarcView suggestLinks(QuickMarcView quickMarcView);
 }
 

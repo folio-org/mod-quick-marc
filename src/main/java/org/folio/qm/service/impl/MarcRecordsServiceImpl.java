@@ -1,15 +1,18 @@
 package org.folio.qm.service.impl;
 
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
 import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
@@ -22,6 +25,7 @@ import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
+import org.folio.qm.mapper.LinksSuggestionsMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.ChangeManagerService;
 import org.folio.qm.service.DataImportJobService;
@@ -47,16 +51,19 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private final ChangeManagerService changeManagerService;
   private final DataImportJobService dataImportJobService;
-  private final UsersClient usersClient;
+  private final DefaultValuesPopulationService defaultValuesPopulationService;
+  private final FieldProtectionSetterService protectionSetterService;
+  private final ConversionService conversionService;
   private final ValidationService validationService;
   private final StatusService statusService;
-  private final FieldProtectionSetterService protectionSetterService;
-  private final DefaultValuesPopulationService defaultValuesPopulationService;
   private final LinksService linksService;
 
+  private final UsersClient usersClient;
+  private final LinksSuggestionsClient linksSuggestionsClient;
+
+  private final LinksSuggestionsMapper linksSuggestionsMapper;
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
-  private final ConversionService conversionService;
 
   private final FolioExecutionContext folioExecutionContext;
 
@@ -114,6 +121,17 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var status = runImportAndGetStatus(recordDto, CREATE);
     log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
     return status;
+  }
+
+  @Override
+  public QuickMarcView suggestLinks(QuickMarcView quickMarcView) {
+    var srsRecords = linksSuggestionsMapper.map(List.of(quickMarcView));
+    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(srsRecords);
+    var quickMarcRecordsWithSuggestions = linksSuggestionsMapper.map(srsRecordsWithSuggestions);
+    if (isNotEmpty(quickMarcRecordsWithSuggestions)) {
+      return quickMarcRecordsWithSuggestions.get(0);
+    }
+    return quickMarcView;
   }
 
   private QuickMarcCreate prepareRecord(QuickMarcCreate quickMarc) {

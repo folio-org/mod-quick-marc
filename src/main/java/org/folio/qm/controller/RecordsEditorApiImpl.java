@@ -40,4 +40,9 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
     return ResponseEntity.status(CREATED).body(status);
   }
 
+  @Override
+  public ResponseEntity<QuickMarcView> linksSuggestionPost(QuickMarcView quickMarcView) {
+    var quickMarc = marcRecordsService.suggestLinks(quickMarcView);
+    return ResponseEntity.ok(quickMarc);
+  }
 }

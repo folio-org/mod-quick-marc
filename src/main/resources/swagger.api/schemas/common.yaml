@@ -306,10 +306,6 @@ srsFieldItem:
     linkDetails:
       description: MARC Field link details Schema
       $ref: '#/linkDetails'
-  required:
-    - ind1
-    - ind2
-    - subfields
 
 baseSrsMarcRecord:
   type: object

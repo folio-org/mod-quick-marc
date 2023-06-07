@@ -1,5 +1,6 @@
 package org.folio.qm.mapper;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
@@ -24,7 +25,7 @@ class LinksSuggestionsMapperTest {
   private static final LinksSuggestionsMapper MAPPER = Mappers.getMapper(LinksSuggestionsMapper.class);
 
   @Test
-  void shouldConvertToQuickMarcSuccessfullyWhenAllFieldsArePresent() {
+  void shouldConvertSrsToQuickMarcSuccessfully() {
     var expectedTag = "100";
     var expectedIndicators = List.of("1", "2");
     var linkDetails = new LinkDetails().status("ACTUAL");
@@ -57,7 +58,7 @@ class LinksSuggestionsMapperTest {
   }
 
   @Test
-  void shouldConvertToSrsSuccessfullyWhenAllFieldsArePresent() {
+  void shouldConvertQuickMarcToSrsSuccessfully() {
     var quickMarcTag = "100";
     var quickMarcIndicators = List.of("1", "2");
     var linkDetails = new LinkDetails().status("ACTUAL");
@@ -82,6 +83,20 @@ class LinksSuggestionsMapperTest {
       .linkDetails(linkDetails)
       .subfields(expectedSubfields)
     );
+
+    var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().get(0);
+    assertThat(srsRecord)
+      .hasFieldOrPropertyWithValue("leader", LEADER)
+      .hasFieldOrPropertyWithValue("fields", List.of(expectedField));
+  }
+
+  @Test
+  void shouldConvertQuickMarcToSrsSuccessfullyWhenContentIsEmpty() {
+    var quickMarcTag = "100";
+    var quickMarcField = new FieldItem().tag(quickMarcTag);
+
+    var quickMarcRecord = new QuickMarcView().leader(LEADER).addFieldsItem(quickMarcField);
+    var expectedField = Map.of(quickMarcTag, new SrsFieldItem().subfields(emptyList()));
 
     var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().get(0);
     assertThat(srsRecord)

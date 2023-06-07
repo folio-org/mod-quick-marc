@@ -1,6 +1,5 @@
 package org.folio.qm.mapper;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
@@ -96,7 +95,7 @@ class LinksSuggestionsMapperTest {
     var quickMarcField = new FieldItem().tag(quickMarcTag);
 
     var quickMarcRecord = new QuickMarcView().leader(LEADER).addFieldsItem(quickMarcField);
-    var expectedField = Map.of(quickMarcTag, new SrsFieldItem().subfields(emptyList()));
+    var expectedField = Map.of(quickMarcTag, new SrsFieldItem());
 
     var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().get(0);
     assertThat(srsRecord)

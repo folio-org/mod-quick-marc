@@ -61,7 +61,7 @@ class LinksSuggestionsMapperTest {
     var quickMarcTag = "100";
     var quickMarcIndicators = List.of("1", "2");
     var linkDetails = new LinkDetails().status("ACTUAL");
-    var quickMarcContent = "$a test a subfield $0 test0 $9 test9";
+    var quickMarcContent = "$a test a subfield $0 test0  $0 test0 $9 test9";
     var quickMarcField = new FieldItem()
       .tag(quickMarcTag)
       .linkDetails(linkDetails)
@@ -87,6 +87,20 @@ class LinksSuggestionsMapperTest {
     assertThat(srsRecord)
       .hasFieldOrPropertyWithValue("leader", LEADER)
       .hasFieldOrPropertyWithValue("fields", List.of(expectedField));
+  }
+
+  @Test
+  void shouldConvertSrsToQuickMarcSuccessfullyWhenContentIsEmpty() {
+    var expectedTag = "100";
+    var srsField = Map.of(expectedTag, new SrsFieldItem().subfields(null));
+    var srsRecord = new BaseSrsMarcRecord().leader(LEADER).addFieldsItem(srsField);
+    var srsRecordCollection = new EntitiesLinksSuggestions().addRecordsItem(srsRecord);
+
+    var quickMarcRecord = MAPPER.map(srsRecordCollection).get(0);
+    var quickMarcField = quickMarcRecord.getFields().get(0);
+    assertThat(quickMarcRecord).hasFieldOrPropertyWithValue("leader", LEADER);
+    assertThat(quickMarcField)
+      .hasFieldOrPropertyWithValue("tag", expectedTag);
   }
 
   @Test

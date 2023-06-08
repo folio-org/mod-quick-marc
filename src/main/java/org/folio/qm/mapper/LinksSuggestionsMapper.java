@@ -1,5 +1,6 @@
 package org.folio.qm.mapper;
 
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.util.ArrayList;
@@ -63,6 +64,9 @@ public interface LinksSuggestionsMapper {
 
   default String mapSubfields(List<Map<String, String>> subfields) {
     StringBuilder content = new StringBuilder();
+    if (isEmpty(subfields)) {
+      return null;
+    }
     for (Map<String, String> subfieldMap : subfields) {
       var subfield = subfieldMap.entrySet().iterator().next();
       if (!content.isEmpty()) {

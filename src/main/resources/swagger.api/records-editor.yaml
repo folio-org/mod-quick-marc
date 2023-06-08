@@ -123,6 +123,35 @@ paths:
           description: UUID of ParsedRecord to be created
           schema:
             $ref: '#/components/schemas/UUID'
+  /links/suggestion:
+    post:
+      tags:
+        - records-editor
+      responses:
+        '201':
+          description: MARC Record status created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/quickMarcView'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Internal server error, e.g. due to misconfiguration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/quickMarcView'
+        required: true
 components:
   schemas:
     quickMarcView:
@@ -131,6 +160,8 @@ components:
       $ref: schemas/common.yaml#/quickMarcCreate
     creationStatus:
       $ref: schemas/common.yaml#/creationStatus
+    entitiesLinksSuggestions:
+      $ref: schemas/common.yaml#/entitiesLinksSuggestions
     error:
       type: object
     UUID:

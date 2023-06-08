@@ -1,11 +1,15 @@
-## v4.0.0 xxxx-xx-xx
+## v5.0.0 xxxx-xx-xx
+### Features
+* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
+
 ### Breaking changes
 * Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))
 * Separate quickMarc schema for different actions ([MODQM-325](https://issues.folio.org/browse/MODQM-325))
 * Add support of link status and errorCause ([MODQM-318](https://issues.folio.org/browse/MODQM-318))
 
 ### APIs versions
-* Provides `records-editor.records` `v4.0`
+* Provides `marc-records-editor` `v5.1`
+* Removed `records-editor.records` `v4.0`
 * Requires `instance-authority-links` `v2.1`
 * Removed `_jsonSchemas`
 

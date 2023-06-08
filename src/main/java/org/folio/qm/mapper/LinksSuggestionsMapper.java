@@ -1,7 +1,6 @@
 package org.folio.qm.mapper;
 
 import static java.util.Objects.nonNull;
-import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public interface LinksSuggestionsMapper {
     if (nonNull(content.getInd2())) {
       fieldItem.addIndicatorsItem(content.getInd2());
     }
-    if (isEmpty(content.getSubfields())) {
+    if (isNotEmpty(content.getSubfields())) {
       fieldItem.content(mapSubfields(content.getSubfields()));
     }
     return fieldItem.linkDetails(content.getLinkDetails());

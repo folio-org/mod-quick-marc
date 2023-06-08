@@ -1,5 +1,6 @@
 package org.folio.qm.mapper;
 
+import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
@@ -29,23 +30,30 @@ public interface LinksSuggestionsMapper {
   default QuickMarcView mapRecord(BaseSrsMarcRecord quickMarcRecord) {
     return new QuickMarcView()
       .leader(quickMarcRecord.getLeader())
-      .fields(quickMarcRecord.getFields().stream().map(this::mapField).toList());
+      .fields(quickMarcRecord.getFields().parallelStream().map(this::mapField).toList());
   }
 
   default BaseSrsMarcRecord mapRecord(QuickMarcView quickMarcRecord) {
     return new BaseSrsMarcRecord()
       .leader(quickMarcRecord.getLeader())
-      .fields(quickMarcRecord.getFields().stream().map(this::mapField).toList());
+      .fields(quickMarcRecord.getFields().parallelStream().map(this::mapField).toList());
   }
 
   default FieldItem mapField(Map<String, SrsFieldItem> fields) {
     var field = fields.entrySet().iterator().next();
     var content = field.getValue();
-    return new FieldItem().tag(field.getKey())
-      .addIndicatorsItem(content.getInd1())
-      .addIndicatorsItem(content.getInd2())
-      .content(mapSubfields(content.getSubfields()))
-      .linkDetails(content.getLinkDetails());
+
+    var fieldItem = new FieldItem().tag(field.getKey());
+    if (nonNull(content.getInd1())) {
+      fieldItem.addIndicatorsItem(content.getInd1());
+    }
+    if (nonNull(content.getInd2())) {
+      fieldItem.addIndicatorsItem(content.getInd2());
+    }
+    if (isEmpty(content.getSubfields())) {
+      fieldItem.content(mapSubfields(content.getSubfields()));
+    }
+    return fieldItem.linkDetails(content.getLinkDetails());
   }
 
   default Map<String, SrsFieldItem> mapField(FieldItem fieldItem) {
@@ -64,9 +72,6 @@ public interface LinksSuggestionsMapper {
 
   default String mapSubfields(List<Map<String, String>> subfields) {
     StringBuilder content = new StringBuilder();
-    if (isEmpty(subfields)) {
-      return null;
-    }
     for (Map<String, String> subfieldMap : subfields) {
       var subfield = subfieldMap.entrySet().iterator().next();
       if (!content.isEmpty()) {
@@ -82,13 +87,15 @@ public interface LinksSuggestionsMapper {
   default List<Map<String, String>> mapSubfields(String stringSubfields) {
     var listOfSubfields = new ArrayList<Map<String, String>>();
 
-    var subfieldsPairs = stringSubfields.split("[$]");
-    for (String subfieldPair : subfieldsPairs) {
-      var subfield = subfieldPair.split("\\s", 2);
-      if (subfield.length == 2) {
-        var tag = subfield[0];
-        var content = subfield[1].trim();
-        listOfSubfields.add(Map.of(tag, content));
+    if (stringSubfields.contains("$")) {
+      var subfieldsPairs = stringSubfields.split("[$]");
+      for (String subfieldPair : subfieldsPairs) {
+        var subfield = subfieldPair.split("\\s", 2);
+        if (subfield.length == 2) {
+          var tag = subfield[0];
+          var content = subfield[1].trim();
+          listOfSubfields.add(Map.of(tag, content));
+        }
       }
     }
     return listOfSubfields;

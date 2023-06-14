@@ -73,15 +73,8 @@ public class KafkaTopicsInitializer {
 
   private NewTopic toKafkaTopic(String topic) {
     List<FolioKafkaProperties.KafkaTopic> topics = folioKafkaProperties.getTopics();
-    int replicas;
-    int partitions;
-    if (topics.isEmpty()) {
-      replicas = 1;
-      partitions = 1;
-    } else {
-      replicas = topics.get(0).getReplicationFactor();
-      partitions = topics.get(0).getNumPartitions();
-    }
+    int replicas = topics.get(0).getReplicationFactor();
+    int partitions = topics.get(0).getNumPartitions();
 
     return TopicBuilder.name(topic)
       .replicas(replicas)

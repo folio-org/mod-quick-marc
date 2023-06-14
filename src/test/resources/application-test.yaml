@@ -38,6 +38,10 @@ folio:
   kafka:
     numberOfPartitions: 1
     replicationFactor: 1
+    topics:
+      - name: test
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
     listener:
       di-completed:
         concurrency: 1

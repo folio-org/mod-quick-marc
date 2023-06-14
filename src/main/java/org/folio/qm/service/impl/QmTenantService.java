@@ -5,6 +5,7 @@ import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.liquibase.FolioSpringLiquibase;
 import org.folio.spring.service.TenantService;
+import org.folio.spring.tools.kafka.KafkaAdminService;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,15 +17,17 @@ public class QmTenantService extends TenantService {
 
   private final KafkaTopicsInitializer kafkaTopicsInitializer;
   private final TenantsHolder tenantsHolder;
+  private final KafkaAdminService kafkaAdminService;
 
   public QmTenantService(JdbcTemplate jdbcTemplate,
                          TenantsHolder tenantsHolder,
                          KafkaTopicsInitializer kafkaTopicsInitializer,
                          FolioExecutionContext context,
-                         FolioSpringLiquibase folioSpringLiquibase) {
+                         FolioSpringLiquibase folioSpringLiquibase, KafkaAdminService kafkaAdminService) {
     super(jdbcTemplate, context, folioSpringLiquibase);
     this.kafkaTopicsInitializer = kafkaTopicsInitializer;
     this.tenantsHolder = tenantsHolder;
+    this.kafkaAdminService = kafkaAdminService;
   }
 
   @Override
@@ -35,6 +38,8 @@ public class QmTenantService extends TenantService {
 
   @Override
   protected void afterTenantDeletion(TenantAttributes tenantAttributes) {
-    tenantsHolder.remove(context.getTenantId());
+    String tenantId = context.getTenantId();
+    tenantsHolder.remove(tenantId);
+    kafkaAdminService.deleteTopics(tenantId);
   }
 }

@@ -9,6 +9,7 @@ import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
 import org.folio.qm.support.types.UnitTest;
 import org.folio.spring.FolioExecutionContext;
+import org.folio.spring.tools.kafka.KafkaAdminService;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,8 @@ class QmTenantServiceTest {
   private FolioExecutionContext context;
   @Mock
   private KafkaTopicsInitializer kafkaTopicsInitializer;
+  @Mock
+  private KafkaAdminService kafkaAdminService;
 
   @Test
   void initializeTenant_positive() {
@@ -49,5 +52,6 @@ class QmTenantServiceTest {
     qmTenantService.afterTenantDeletion(attributes);
 
     verify(tenantsHolder).remove(TENANT_ID);
+    verify(kafkaAdminService).deleteTopics(TENANT_ID);
   }
 }

@@ -64,6 +64,10 @@ folio:
   kafka:
     numberOfPartitions: ${NUMBER_OF_PARTITIONS:5}
     replicationFactor: ${REPLICATION_FACTOR:1}
+    topics:
+      - name: qm.di-completed
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
     listener:
       di-completed:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}

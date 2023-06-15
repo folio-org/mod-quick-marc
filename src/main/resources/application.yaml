@@ -65,7 +65,13 @@ folio:
     numberOfPartitions: ${NUMBER_OF_PARTITIONS:5}
     replicationFactor: ${REPLICATION_FACTOR:1}
     topics:
-      - name: qm.di-completed
+      - name: di-completed
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
+      - name: di-error
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
+      - name: qm-completed
         numPartitions: ${NUMBER_OF_PARTITIONS:1}
         replicationFactor: ${REPLICATION_FACTOR:1}
     listener:

@@ -29,13 +29,13 @@ public interface LinksSuggestionsMapper {
   default QuickMarcView mapRecord(BaseSrsMarcRecord quickMarcRecord) {
     return new QuickMarcView()
       .leader(quickMarcRecord.getLeader())
-      .fields(quickMarcRecord.getFields().parallelStream().map(this::mapField).toList());
+      .fields(quickMarcRecord.getFields().stream().map(this::mapField).toList());
   }
 
   default BaseSrsMarcRecord mapRecord(QuickMarcView quickMarcRecord) {
     return new BaseSrsMarcRecord()
       .leader(quickMarcRecord.getLeader())
-      .fields(quickMarcRecord.getFields().parallelStream().map(this::mapField).toList());
+      .fields(quickMarcRecord.getFields().stream().map(this::mapField).toList());
   }
 
   default FieldItem mapField(Map<String, SrsFieldItem> fields) {

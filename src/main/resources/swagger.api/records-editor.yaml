@@ -178,3 +178,4 @@ components:
       $ref: schemas/external/marcFieldProtectionSettingsCollection.json
     dataImportEventPayload:
       $ref: schemas/external/dataImportEventPayload.json
+

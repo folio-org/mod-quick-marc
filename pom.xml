@@ -21,7 +21,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
-
+    <folio-service-tools.version>3.1.0-SNAPSHOT</folio-service-tools.version>
     <folio-spring-base.version>7.0.0</folio-spring-base.version>
     <openapi-generator.version>6.5.0</openapi-generator.version>
     <mapstruct.version>1.5.3.Final</mapstruct.version>
@@ -195,6 +195,19 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.folio</groupId>
+      <artifactId>folio-service-tools-spring-dev</artifactId>
+      <version>${folio-service-tools.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.folio</groupId>
+      <artifactId>folio-service-tools-spring-test</artifactId>
+      <version>${folio-service-tools.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

@@ -6,10 +6,10 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.folio.qm.config.properties.FolioKafkaProperties;
 import org.folio.qm.messaging.domain.DataImportEventTypes;
 import org.folio.qm.messaging.domain.QmEventTypes;
 import org.folio.spring.FolioExecutionContext;
+import org.folio.spring.tools.kafka.FolioKafkaProperties;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
@@ -72,9 +72,13 @@ public class KafkaTopicsInitializer {
   }
 
   private NewTopic toKafkaTopic(String topic) {
+    List<FolioKafkaProperties.KafkaTopic> topics = folioKafkaProperties.getTopics();
+    int replicas = topics.get(0).getReplicationFactor();
+    int partitions = topics.get(0).getNumPartitions();
+
     return TopicBuilder.name(topic)
-      .replicas(folioKafkaProperties.getReplicationFactor())
-      .partitions(folioKafkaProperties.getNumberOfPartitions())
+      .replicas(replicas)
+      .partitions(partitions)
       .build();
   }
 

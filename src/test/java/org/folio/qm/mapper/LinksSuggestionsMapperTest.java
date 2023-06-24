@@ -61,7 +61,7 @@ class LinksSuggestionsMapperTest {
     var quickMarcTag = "100";
     var quickMarcIndicators = List.of("1", "2");
     var linkDetails = new LinkDetails().status("ACTUAL");
-    var quickMarcContent = "$a test a subfield $0 test0 $9 test9";
+    var quickMarcContent = "$a test a subfield $0test0 $9 test9";
     var quickMarcField = new FieldItem()
       .tag(quickMarcTag)
       .linkDetails(linkDetails)

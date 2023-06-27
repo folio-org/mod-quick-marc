@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.0.5</version>
+    <version>3.1.1</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -21,8 +21,9 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
+
     <folio-service-tools.version>3.1.0-SNAPSHOT</folio-service-tools.version>
-    <folio-spring-base.version>7.0.0</folio-spring-base.version>
+    <folio-spring-base.version>7.1.0</folio-spring-base.version>
     <openapi-generator.version>6.5.0</openapi-generator.version>
     <mapstruct.version>1.5.3.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -35,6 +36,7 @@
     <junit-extensions.version>2.6.0</junit-extensions.version>
     <jsonassert.version>1.5.1</jsonassert.version>
     <testcontainer.version>1.17.6</testcontainer.version>
+    <mockito.version>5.2.0</mockito.version>
 
     <sonar.exclusions>
       src/main/java/org/folio/qm/domain/entity/**,
@@ -142,6 +144,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-inline</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -324,7 +327,8 @@
             </goals>
             <configuration>
               <sources>
-                <source>${project.build.directory}/generated-sources</source>
+                <source>${project.build.directory}/generated-sources/annotations</source>
+                <source>${project.build.directory}/generated-sources/src/main/java</source>
               </sources>
             </configuration>
           </execution>

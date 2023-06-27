@@ -2,6 +2,7 @@ package org.folio.qm.mapper;
 
 import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.folio.qm.util.MarcUtils.extractSubfields;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.SrsFieldItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
+import org.marc4j.marc.impl.SubfieldImpl;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface LinksSuggestionsMapper {
@@ -62,8 +64,8 @@ public interface LinksSuggestionsMapper {
       srsContent.setInd1(indicators.get(0));
       srsContent.setInd2(indicators.get(1));
     }
-    if (fieldItem.getContent() instanceof String subfields) {
-      srsContent.setSubfields(mapSubfields(subfields));
+    if (fieldItem.getContent() instanceof String) {
+      srsContent.setSubfields(mapSubfields(fieldItem));
     }
     srsContent.setLinkDetails(fieldItem.getLinkDetails());
     return Map.of(fieldItem.getTag(), srsContent);
@@ -83,19 +85,11 @@ public interface LinksSuggestionsMapper {
     return content.toString();
   }
 
-  default List<Map<String, String>> mapSubfields(String stringSubfields) {
+  default List<Map<String, String>> mapSubfields(FieldItem fieldItem) {
     var listOfSubfields = new ArrayList<Map<String, String>>();
-
-    if (stringSubfields.contains("$")) {
-      var subfieldsPairs = stringSubfields.split("[$]");
-      for (String subfieldPair : subfieldsPairs) {
-        var subfield = subfieldPair.split("\\s", 2);
-        if (subfield.length == 2) {
-          var tag = subfield[0];
-          var content = subfield[1].trim();
-          listOfSubfields.add(Map.of(tag, content));
-        }
-      }
+    var subfields = extractSubfields(fieldItem, s -> new SubfieldImpl(s.charAt(1), s.substring(2).trim()));
+    for (var subfield : subfields) {
+      listOfSubfields.add(Map.of(String.valueOf(subfield.getCode()), subfield.getData()));
     }
     return listOfSubfields;
   }

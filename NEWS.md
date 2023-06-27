@@ -1,7 +1,4 @@
 ## v5.0.0 xxxx-xx-xx
-### Features
-* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
-
 ### Breaking changes
 * Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))
 * Separate quickMarc schema for different actions ([MODQM-325](https://issues.folio.org/browse/MODQM-325))
@@ -14,7 +11,12 @@
 * Removed `_jsonSchemas`
 
 ### Features
+* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
 * Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))
+
+### Dependencies
+* Bump `spring-boot-starter-parent` from `3.0.2` to `3.1.1`
+* Bump `folio-spring-base` from `6.0.1` to `7.0.0`
 
 ## v3.0.0 2023-02-22
 ### Breaking changes

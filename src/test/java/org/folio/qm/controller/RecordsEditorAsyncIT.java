@@ -127,7 +127,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(errorMessage)));
 
-    wireMockServer.verify(exactly(0), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
+    wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
   }
 
   @Test
@@ -166,7 +166,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andDo(log())
       .andExpect(errorMessageMatch(equalTo(expectedErrorMessage)));
 
-    wireMockServer.verify(exactly(1), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
+    wireMockServer.verify(exactly(2), putRequestedFor(urlEqualTo(linksByInstanceIdPath(EXISTED_EXTERNAL_ID))));
   }
 
   @Test
@@ -255,8 +255,28 @@ class RecordsEditorAsyncIT extends BaseIT {
   }
 
   @Test
+  void testUpdateQuickMarcRecordLinksUpdateValidationError() throws Exception {
+    log.info("===== Verify PUT record: Links update validation error =====");
+
+    mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_NOT_FOUND, wireMockServer);
+
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isBadRequest())
+      .andExpect(errorMessageMatch(equalTo("Failed to update links for marc record")));
+
+    wireMockServer
+      .verify(exactly(0), putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID))));
+  }
+
+  @Test
   void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() throws Exception {
     log.info("===== Verify PUT record: Invalid fixed length field items =====");
+
+    mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
     QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)

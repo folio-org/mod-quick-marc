@@ -52,9 +52,9 @@ public class LinksServiceImpl implements LinksService {
       var externalId = qmRecord.getExternalId();
       var instanceLinks = extractLinks(qmRecord);
       var updateRequest = linksClient.putLinksByInstanceId(externalId, instanceLinks);
-      if (!updateRequest.getStatusCode().is2xxSuccessful()) {
-        log.warn("updateRecordLinks:: updating links for qmRecord failed with status {}",
-          updateRequest.getStatusCode());
+      var updateStatus = updateRequest.getStatusCode();
+      if (!updateStatus.is2xxSuccessful()) {
+        log.warn("updateRecordLinks:: updating links for qmRecord failed with status {}", updateStatus.value());
         throw new ValidationException(extractUpdateError(updateRequest));
       }
     }

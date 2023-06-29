@@ -5,6 +5,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_ERROR_CAUSE;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_STATUS_ERROR;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -27,7 +29,11 @@ import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.exception.ValidationException;
 import org.folio.qm.support.types.UnitTest;
+import org.folio.tenant.domain.dto.Error;
+import org.folio.tenant.domain.dto.Errors;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,6 +42,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
@@ -184,6 +191,7 @@ class LinksServiceImplTest {
   @ParameterizedTest
   @MethodSource("updateLinksTestData")
   void testRecordLinksUpdated(List<FieldItem> fieldsMock, Integer expectedLinkUpdates) {
+    when(linksClient.putLinksByInstanceId(any(), any())).thenReturn(ResponseEntity.ok(new Errors()));
     var quickMarcMock = getQuickMarcEdit(fieldsMock);
 
     service.updateRecordLinks(quickMarcMock);
@@ -200,6 +208,18 @@ class LinksServiceImplTest {
 
     assertThat(expectedLinks).hasSize(expectedLinkUpdates);
     verify(linksClient).putLinksByInstanceId(quickMarcMock.getExternalId(), expectedInstanceLinks);
+  }
+
+  @Test
+  void testRecordLinksUpdatedWithErrors() {
+    var errorMessage = new Error("Authority was deleted");
+    var errors = new Errors().addErrorsItem(errorMessage);
+    when(linksClient.putLinksByInstanceId(any(), any())).thenReturn(ResponseEntity.badRequest().body(errors));
+
+    var quickMarcMock = getQuickMarcEdit();
+
+    var exception = assertThrows(ValidationException.class, () -> service.updateRecordLinks(quickMarcMock));
+    assertTrue(exception.getError().getMessage().contains(errorMessage.getMessage()));
   }
 
   @ParameterizedTest
@@ -230,4 +250,8 @@ class LinksServiceImplTest {
       .fields(fieldItems);
   }
 
+  private QuickMarcEdit getQuickMarcEdit() {
+    return new QuickMarcEdit().marcFormat(MarcFormat.BIBLIOGRAPHIC)
+      .externalId(UUID.randomUUID());
+  }
 }

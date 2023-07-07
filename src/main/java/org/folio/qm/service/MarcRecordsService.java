@@ -1,6 +1,7 @@
 package org.folio.qm.service;
 
 import java.util.UUID;
+import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
@@ -57,6 +58,6 @@ public interface MarcRecordsService {
    * @param quickMarcView QuickMarc object
    * @return {@link QuickMarcView} with suggested links
    */
-  QuickMarcView suggestLinks(QuickMarcView quickMarcView);
+  QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter);
 }
 

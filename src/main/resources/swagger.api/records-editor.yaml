@@ -127,6 +127,13 @@ paths:
     post:
       tags:
         - records-editor
+      parameters:
+        - name: authoritySearchParameter
+          in: query
+          required: false
+          description: Authority field to search by
+          schema:
+            $ref: "#/components/schemas/AuthoritySearchParameter"
       responses:
         '201':
           description: MARC Record status created
@@ -178,4 +185,9 @@ components:
       $ref: schemas/external/marcFieldProtectionSettingsCollection.json
     dataImportEventPayload:
       $ref: schemas/external/dataImportEventPayload.json
+    AuthoritySearchParameter:
+      description: Authority search parameter for link suggestions
+      type: string
+      enum: [ID, NATURAL_ID]
+      default: NATURAL_ID
 

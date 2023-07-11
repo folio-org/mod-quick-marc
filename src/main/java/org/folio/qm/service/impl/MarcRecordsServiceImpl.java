@@ -14,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
+import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
@@ -124,10 +125,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
-  public QuickMarcView suggestLinks(QuickMarcView quickMarcView) {
+  public QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter) {
     log.debug("suggestLinks:: trying to suggest links");
     var srsRecords = linksSuggestionsMapper.map(List.of(quickMarcView));
-    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(srsRecords);
+    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(srsRecords, authoritySearchParameter);
     var quickMarcRecordsWithSuggestions = linksSuggestionsMapper.map(srsRecordsWithSuggestions);
     if (isNotEmpty(quickMarcRecordsWithSuggestions)) {
       log.info("suggestLinks:: links was suggested");

@@ -5,7 +5,7 @@
 * Add support of link status and errorCause ([MODQM-318](https://issues.folio.org/browse/MODQM-318))
 
 ### APIs versions
-* Provides `marc-records-editor` `v5.1`
+* Provides `marc-records-editor` `v5.2`
 * Removed `records-editor.records` `v4.0`
 * Requires `instance-authority-links` `v2.1`
 * Removed `_jsonSchemas`
@@ -13,6 +13,7 @@
 ### Features
 * Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
 * Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))
+* Add "authoritySearchParameter" to "suggest links" endpoint ([MODQM-363](https://issues.folio.org/browse/MODQM-363))
 
 ### Dependencies
 * Bump `spring-boot-starter-parent` from `3.0.2` to `3.1.1`

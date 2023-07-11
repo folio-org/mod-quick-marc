@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcView;
@@ -41,8 +42,9 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
   }
 
   @Override
-  public ResponseEntity<QuickMarcView> linksSuggestionPost(QuickMarcView quickMarcView) {
-    var quickMarc = marcRecordsService.suggestLinks(quickMarcView);
+  public ResponseEntity<QuickMarcView> linksSuggestionPost(QuickMarcView quickMarcView,
+                                                           AuthoritySearchParameter authoritySearchParameter) {
+    var quickMarc = marcRecordsService.suggestLinks(quickMarcView, authoritySearchParameter);
     return ResponseEntity.ok(quickMarc);
   }
 }

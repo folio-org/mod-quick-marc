@@ -34,7 +34,7 @@
   "provides": [
     {
       "id": "marc-records-editor",
-      "version": "5.2",
+      "version": "5.3",
       "handlers": [
         {
           "methods": ["GET"],

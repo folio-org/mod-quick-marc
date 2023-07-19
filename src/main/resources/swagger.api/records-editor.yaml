@@ -134,6 +134,13 @@ paths:
           description: Authority field to search by
           schema:
             $ref: "#/components/schemas/AuthoritySearchParameter"
+        - name: ignoreAutoLinkingEnabled
+          in: query
+          required: false
+          description: Indicates if we need to ignore autoLinkingEnabled flag when filtering the fields for suggestions
+          schema:
+            type: boolean
+            default: false
       responses:
         '201':
           description: MARC Record status created

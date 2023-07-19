@@ -125,10 +125,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
-  public QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter) {
+  public QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter,
+                                    Boolean ignoreAutoLinkingEnabled) {
     log.debug("suggestLinks:: trying to suggest links");
     var srsRecords = linksSuggestionsMapper.map(List.of(quickMarcView));
-    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(srsRecords, authoritySearchParameter);
+    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(srsRecords, authoritySearchParameter,
+      ignoreAutoLinkingEnabled);
     var quickMarcRecordsWithSuggestions = linksSuggestionsMapper.map(srsRecordsWithSuggestions);
     if (isNotEmpty(quickMarcRecordsWithSuggestions)) {
       log.info("suggestLinks:: links was suggested");

@@ -58,6 +58,7 @@ public interface MarcRecordsService {
    * @param quickMarcView QuickMarc object
    * @return {@link QuickMarcView} with suggested links
    */
-  QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter);
+  QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter,
+                             Boolean ignoreAutoLinkingEnabled);
 }
 

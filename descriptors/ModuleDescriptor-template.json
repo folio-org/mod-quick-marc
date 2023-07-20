@@ -29,6 +29,10 @@
     {
       "id": "instance-authority-linking-rules",
       "version": "1.0"
+    },
+    {
+      "id": "instance-authority-links-suggestions",
+      "version": "1.2"
     }
   ],
   "provides": [

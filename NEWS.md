@@ -8,6 +8,7 @@
 * Provides `marc-records-editor` `v5.3`
 * Removed `records-editor.records` `v4.0`
 * Requires `instance-authority-links` `v2.1`
+* Requires `instance-authority-links-suggestions` `v1.2`
 * Removed `_jsonSchemas`
 
 ### Features

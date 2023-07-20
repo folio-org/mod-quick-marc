@@ -43,8 +43,9 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
 
   @Override
   public ResponseEntity<QuickMarcView> linksSuggestionPost(QuickMarcView quickMarcView,
-                                                           AuthoritySearchParameter authoritySearchParameter) {
-    var quickMarc = marcRecordsService.suggestLinks(quickMarcView, authoritySearchParameter);
+                                                           AuthoritySearchParameter authoritySearchParameter,
+                                                           Boolean ignoreAutoLinkingEnabled) {
+    var quickMarc = marcRecordsService.suggestLinks(quickMarcView, authoritySearchParameter, ignoreAutoLinkingEnabled);
     return ResponseEntity.ok(quickMarc);
   }
 }

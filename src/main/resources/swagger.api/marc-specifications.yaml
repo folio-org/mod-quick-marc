@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: quickMARC MARC Specifications
-  version: 5.0
+  version: 1.0
 servers:
   - url: /marc-specifications/
 paths:

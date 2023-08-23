@@ -1,0 +1,111 @@
+{
+  "tag": "008",
+  "format": "BIBLIOGRAPHIC",
+  "label": "General Information",
+  "url": "https://www.loc.gov/marc/bibliographic/bd008.html",
+  "repeatable": false,
+  "required": true,
+  "spec": {
+    "types": [
+      {
+        "code": "books",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "a"
+                ],
+                "7": [
+                  "a",
+                  "c",
+                  "d",
+                  "m"
+                ]
+              }
+            },
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "t"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "AccM",
+            "name": "Accompanying Matter",
+            "order": 1,
+            "position": 7,
+            "length": 6,
+            "isArray": true,
+            "readOnly": false
+          }
+        ]
+      },
+      {
+        "code": "continuing_resources",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "a"
+                ],
+                "7": [
+                  "a",
+                  "c",
+                  "d",
+                  "m"
+                ]
+              }
+            },
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "t"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "StartDate",
+            "name": "Date 1",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 1,
+            "position": 15,
+            "length": 3,
+            "isArray": true,
+            "readOnly": false
+          }
+        ]
+      }
+    ]
+  }
+}
+

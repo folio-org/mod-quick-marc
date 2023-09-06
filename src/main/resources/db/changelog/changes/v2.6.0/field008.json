@@ -153,7 +153,7 @@
             "position": 32,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "LitF",
@@ -335,7 +335,7 @@
             "position": 32,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "TrAr",
@@ -353,7 +353,7 @@
             "position": 34,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Lang",
@@ -474,7 +474,7 @@
             "position": 20,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "SrTp",
@@ -546,7 +546,7 @@
             "position": 30,
             "length": 3,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Alph",
@@ -662,7 +662,7 @@
             "position": 18,
             "length": 4,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Audn",
@@ -689,7 +689,7 @@
             "position": 24,
             "length": 2,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "File",
@@ -707,7 +707,7 @@
             "position": 27,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "GPub",
@@ -725,7 +725,7 @@
             "position": 29,
             "length": 6,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Lang",
@@ -835,7 +835,7 @@
             "position": 21,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Audn",
@@ -853,7 +853,7 @@
             "position": 23,
             "length": 5,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "GPub",
@@ -880,7 +880,7 @@
             "position": 30,
             "length": 3,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "TMat",
@@ -1015,7 +1015,7 @@
             "position": 24,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "CrTp",
@@ -1033,7 +1033,7 @@
             "position": 26,
             "length": 2,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "GPub",
@@ -1060,7 +1060,7 @@
             "position": 30,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Indx",
@@ -1078,7 +1078,7 @@
             "position": 32,
             "length": 1,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "SpFm",
@@ -1185,7 +1185,7 @@
             "position": 18,
             "length": 5,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Form",
@@ -1203,7 +1203,7 @@
             "position": 24,
             "length": 11,
             "isArray": false,
-            "readOnly": false
+            "readOnly": true
           },
           {
             "code": "Lang",

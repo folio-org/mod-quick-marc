@@ -340,3 +340,140 @@ entitiesLinksSuggestions:
       type: array
       items:
         $ref: '#/baseSrsMarcRecord'
+
+marcSpecificationCondition:
+  type: object
+  description: Specification condition definition
+  properties:
+    tag:
+      description: Field's tag
+      type: string
+      pattern: ^([0-9]{3})|(LDR)$
+      example: LDR
+    positions:
+      description: Map of condition definitions
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
+          minLength: 1
+          maxLength: 1
+          example: a
+  required:
+    - tag
+    - positions
+
+marcSpecificationItem:
+  type: object
+  description: Specification item definition
+  properties:
+    code:
+      description: Item code
+      type: string
+      example: Entered
+    name:
+      description: Item name
+      type: string
+      example: Date entered on file
+    order:
+      description: Item order
+      type: integer
+      example: 0
+    position:
+      description: Position in field
+      type: integer
+      example: 0
+    length:
+      description: Length from position
+      type: integer
+      example: 5
+    isArray:
+      description: Is item an array of values
+      type: boolean
+      example: false
+    readOnly:
+      description: Is item read only
+      type: boolean
+      example: true
+  required:
+    - code
+    - name
+    - order
+    - position
+    - length
+    - isArray
+    - readOnly
+
+marcSpecificationType:
+  type: object
+  description: Specification type definition
+  properties:
+    code:
+      description: Type codename
+      type: string
+      example: books
+    identifiedBy:
+      description: Conditions used to identify MARC specification type
+      type: object
+      properties:
+        or:
+          description: Single condition
+          type: array
+          items:
+            $ref: '#/marcSpecificationCondition'
+      required:
+        - or
+    items:
+      type: array
+      items:
+        $ref: '#/marcSpecificationItem'
+  required:
+    - code
+    - identifiedBy
+    - items
+
+marcSpecification:
+  type: object
+  description: MARC specification definition
+  properties:
+    tag:
+      description: Field's tag
+      type: string
+      pattern: ^[0-9]{3}$
+      example: 008
+    format:
+      description: MARC format
+      $ref: '#/marcFormat'
+    label:
+      description: Label of the specification
+      type: string
+    url:
+      description: Url to details about field spec
+      type: string
+      format: uri
+    repeatable:
+      description: If this field can appear multiple time in MARC record
+      type: boolean
+    required:
+      description: If this field is required in MARC record
+      type: boolean
+    spec:
+      type: object
+      description: Details of the specification
+      properties:
+        types:
+          description: Array of types
+          type: array
+          items:
+            $ref: '#/marcSpecificationType'
+      required:
+        - types
+  required:
+    - tag
+    - format
+    - label
+    - url
+    - repeatable
+    - required
+    - spec

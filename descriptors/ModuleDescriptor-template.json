@@ -98,6 +98,17 @@
       ]
     },
     {
+      "id": "marc-specifications",
+      "version": "1.0",
+      "handlers": [
+        {
+          "methods": ["GET"],
+          "pathPattern": "/marc-specifications/{recordType}/{fieldTag}",
+          "permissionsRequired": ["marc-specifications.item.get"]
+        }
+      ]
+    },
+    {
       "id": "_tenant",
       "version": "2.0",
       "interfaceType": "system",
@@ -116,6 +127,11 @@
     }
   ],
   "permissionSets": [
+    {
+      "permissionName": "marc-specifications.item.get",
+      "displayName": "marc-specifications - get a marc specification",
+      "description": "Get a marc specification"
+    },
     {
       "permissionName": "marc-records-editor.item.get",
       "displayName": "marc-records-editor - get a record",

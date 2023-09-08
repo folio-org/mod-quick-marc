@@ -21,9 +21,11 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
+    <marc-specifications.yaml.file>${project.basedir}/src/main/resources/swagger.api/marc-specifications.yaml</marc-specifications.yaml.file>
 
     <folio-service-tools.version>3.1.0-SNAPSHOT</folio-service-tools.version>
     <folio-spring-base.version>7.1.0</folio-spring-base.version>
+    <hypersistence-utils-hibernate-60.version>3.0.1</hypersistence-utils-hibernate-60.version>
     <openapi-generator.version>6.5.0</openapi-generator.version>
     <mapstruct.version>1.5.3.Final</mapstruct.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -64,7 +66,11 @@
       <artifactId>swagger-annotations</artifactId>
       <version>${swagger-annotations.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.hypersistence</groupId>
+      <artifactId>hypersistence-utils-hibernate-60</artifactId>
+      <version>${hypersistence-utils-hibernate-60.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -401,6 +407,38 @@
                 <interfaceOnly>true</interfaceOnly>
                 <useSpringBoot3>true</useSpringBoot3>
                 <responseWrapper>DeferredResult</responseWrapper>
+                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
+              </configOptions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>marc-specifications</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${marc-specifications.yaml.file}</inputSpec>
+              <output>${project.build.directory}/generated-sources</output>
+              <generatorName>spring</generatorName>
+              <modelPackage>${project.groupId}.qm.domain.dto</modelPackage>
+              <apiPackage>${project.groupId}.qm.rest.resource</apiPackage>
+              <generateApis>true</generateApis>
+              <generateApiTests>true</generateApiTests>
+              <generateApiDocumentation>true</generateApiDocumentation>
+              <generateModels>true</generateModels>
+              <generateModelTests>false</generateModelTests>
+              <generateSupportingFiles>true</generateSupportingFiles>
+              <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+              <generateModelDocumentation>true</generateModelDocumentation>
+              <importMappings>
+                <importMapping>error=org.folio.tenant.domain.dto.Error</importMapping>
+              </importMappings>
+              <configOptions>
+                <useTags>true</useTags>
+                <java8>true</java8>
+                <dateLibrary>java8</dateLibrary>
+                <interfaceOnly>true</interfaceOnly>
+                <useSpringBoot3>true</useSpringBoot3>
                 <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
               </configOptions>
             </configuration>

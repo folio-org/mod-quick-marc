@@ -19,7 +19,7 @@ public class MarcSpecificationsServiceImpl implements MarcSpecificationsService 
   private final MarcSpecificationRepository marcSpecificationRepository;
 
   @Override
-  public MarcSpecification findByMarcFormatAndFieldTag(RecordType recordType, String fieldTag) {
+  public MarcSpecification findByRecordTypeAndFieldTag(RecordType recordType, String fieldTag) {
     return marcSpecificationRepository.findByRecordTypeAndFieldTag(recordType, fieldTag)
         .orElseThrow(() -> new NotFoundException(String.format(MESSAGE_TEMPLATE, recordType, fieldTag)));
   }

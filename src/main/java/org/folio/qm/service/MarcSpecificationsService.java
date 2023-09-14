@@ -8,10 +8,10 @@ public interface MarcSpecificationsService {
   /**
    * This method retrieves Marc Specification JSON record from SRS by corresponding recordType and fieldTag name.
    *
-   * @param recordType  Marc format
-   * @param fieldTag field Tag
+   * @param recordType  Record type
+   * @param fieldTag Field Tag
    * @return {@link String} record
    */
-  MarcSpecification findByMarcFormatAndFieldTag(RecordType recordType, String fieldTag);
+  MarcSpecification findByRecordTypeAndFieldTag(RecordType recordType, String fieldTag);
 }
 

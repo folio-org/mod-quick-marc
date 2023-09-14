@@ -22,7 +22,7 @@ public class MarcSpecificationsApiImpl implements MarcSpecificationsApi {
   @Override
   public ResponseEntity<MarcSpec> getMarcSpecification(String recordType, String fieldTag) {
     MarcSpecification marcSpecification =
-      marcSpecificationsService.findByMarcFormatAndFieldTag(RecordType.fromValue(recordType), fieldTag);
+      marcSpecificationsService.findByRecordTypeAndFieldTag(RecordType.fromValue(recordType), fieldTag);
     return ResponseEntity.ok(marcSpecification.getMarcSpec());
   }
 }

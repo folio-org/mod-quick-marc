@@ -45,7 +45,9 @@ paths:
           required: true
           description: Record type
           schema:
-            $ref: '#/components/schemas/marcFormat'
+            type: string
+            enum: [bibliographic,holdings,authority]
+            example: bibliographic
         - name: fieldTag
           in: path
           required: true
@@ -56,8 +58,6 @@ paths:
             example: 008
 components:
   schemas:
-    marcFormat:
-      $ref: schemas/common.yaml#/marcFormat
     error:
       type: object
     marcSpec:

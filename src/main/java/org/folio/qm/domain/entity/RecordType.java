@@ -27,7 +27,7 @@ public enum RecordType {
   @JsonCreator
   public static RecordType fromValue(String value) {
     for (RecordType b : RecordType.values()) {
-      if (b.value.equals(value)) {
+      if (b.value.equalsIgnoreCase(value)) {
         return b;
       }
     }

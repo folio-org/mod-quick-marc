@@ -23,7 +23,7 @@ class MarcSpecificationsIT extends BaseIT {
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
-    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "008"))
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "001"))
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
   }

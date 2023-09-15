@@ -42,7 +42,19 @@
     <insert tableName="marc_specification">
       <column name="field_tag" value="008"/>
       <column name="record_type" value="MARC_BIBLIOGRAPHIC"/>
-      <column name="marc_spec" valueClobFile="field008.json"/>
+      <column name="marc_spec" valueClobFile="field008_bibliographic.json"/>
+    </insert>
+
+    <insert tableName="marc_specification">
+      <column name="field_tag" value="008"/>
+      <column name="record_type" value="MARC_AUTHORITY"/>
+      <column name="marc_spec" valueClobFile="field008_authority.json"/>
+    </insert>
+
+    <insert tableName="marc_specification">
+      <column name="field_tag" value="008"/>
+      <column name="record_type" value="MARC_HOLDINGS"/>
+      <column name="marc_spec" valueClobFile="field008_holdings.json"/>
     </insert>
   </changeSet>
 

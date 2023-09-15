@@ -1,8 +1,5 @@
 package org.folio.qm.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum RecordType {
 
   MARC_BIBLIOGRAPHIC("bibliographic"),
@@ -14,7 +11,6 @@ public enum RecordType {
     this.value = value;
   }
 
-  @JsonValue
   public String getValue() {
     return value;
   }
@@ -24,7 +20,6 @@ public enum RecordType {
     return String.valueOf(value);
   }
 
-  @JsonCreator
   public static RecordType fromValue(String value) {
     for (RecordType b : RecordType.values()) {
       if (b.value.equalsIgnoreCase(value)) {

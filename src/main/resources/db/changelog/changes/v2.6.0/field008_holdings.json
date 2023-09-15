@@ -1,0 +1,150 @@
+{
+  "tag": "008",
+  "format": "HOLDINGS",
+  "label": "General Information",
+  "url": "https://www.loc.gov/marc/bibliographic/bd008.html",
+  "repeatable": false,
+  "required": true,
+  "spec": {
+    "types": [
+      {
+        "code": "unknown",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "u",
+                  "v",
+                  "x",
+                  "y"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "AcqStatus",
+            "name": "AcqStatus",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "AcqMethod",
+            "name": "AcqMethod",
+            "order": 2,
+            "position": 7,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "AcqEndDate",
+            "name": "AcqEndDate",
+            "order": 3,
+            "position": 8,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Gen ret",
+            "name": "Gen ret",
+            "order": 4,
+            "position": 12,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Spec ret",
+            "name": "Spec ret",
+            "order": 5,
+            "position": 13,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Compl",
+            "name": "Compl",
+            "order": 6,
+            "position": 16,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Copies",
+            "name": "Copies",
+            "order": 7,
+            "position": 17,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Lend",
+            "name": "Lend",
+            "order": 8,
+            "position": 20,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Repro",
+            "name": "Repro",
+            "order": 9,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Lang",
+            "name": "Lang",
+            "order": 10,
+            "position": 22,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Sep/comp",
+            "name": "Sep/comp",
+            "order": 11,
+            "position": 25,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Rept date",
+            "name": "Rept date",
+            "order": 12,
+            "position": 26,
+            "length": 6,
+            "isArray": false,
+            "readOnly": false
+          }
+        ]
+      }
+    ]
+  }
+}
+

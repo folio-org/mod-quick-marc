@@ -33,7 +33,7 @@
     <swagger-annotations.version>2.2.8</swagger-annotations.version>
 
     <!-- Test properties-->
-    <wiremock.version>2.35.0</wiremock.version>
+    <wiremock.version>2.35.1</wiremock.version>
     <marc4j.version>2.9.2</marc4j.version>
     <junit-extensions.version>2.6.0</junit-extensions.version>
     <jsonassert.version>1.5.1</jsonassert.version>

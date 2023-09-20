@@ -48,7 +48,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -57,7 +57,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -237,7 +237,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -246,7 +246,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -417,7 +417,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -426,7 +426,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -601,7 +601,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -610,7 +610,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -807,7 +807,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -816,7 +816,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -971,7 +971,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -980,7 +980,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -1142,7 +1142,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -1151,7 +1151,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,
@@ -1330,7 +1330,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 1",
+            "code": "Date1",
             "name": "Start date",
             "order": 2,
             "position": 7,
@@ -1339,7 +1339,7 @@
             "readOnly": false
           },
           {
-            "code": "Date 2",
+            "code": "Date2",
             "name": "End date",
             "order": 3,
             "position": 11,

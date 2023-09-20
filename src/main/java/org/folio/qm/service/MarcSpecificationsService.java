@@ -1,17 +1,17 @@
 package org.folio.qm.service;
 
-import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.entity.MarcSpecification;
+import org.folio.qm.domain.entity.RecordType;
 
 public interface MarcSpecificationsService {
 
   /**
    * This method retrieves Marc Specification JSON record from SRS by corresponding recordType and fieldTag name.
    *
-   * @param marcFormat Marc format
-   * @param fieldTag field Tag
+   * @param recordType  Record type
+   * @param fieldTag Field Tag
    * @return {@link String} record
    */
-  MarcSpecification findByMarcFormatAndFieldTag(MarcFormat marcFormat, String fieldTag);
+  MarcSpecification findByRecordTypeAndFieldTag(RecordType recordType, String fieldTag);
 }
 

@@ -127,6 +127,12 @@ public class ErrorHandling {
     return buildBadRequestResponse(e.getMessage());
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleMethodArgumentTypeMismatchException(IllegalArgumentException e) {
+    return buildBadRequestResponse(e.getMessage());
+  }
+
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleConstraintViolationException(Exception e) {

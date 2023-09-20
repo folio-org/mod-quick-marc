@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.util.ErrorUtils;
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,15 @@ class MarcSpecificationsIT extends BaseIT {
   void testGetMarcSpecificationsNotFound() throws Exception {
     log.info("===== Verify GET MARC Specifications: Record Not Found =====");
 
-    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(MarcFormat.BIBLIOGRAPHIC.getValue(), "009"))
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "009"))
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
-    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(MarcFormat.HOLDINGS.getValue(), "008"))
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "001"))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_AUTHORITY.getValue(), "003"))
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
   }
@@ -31,9 +36,17 @@ class MarcSpecificationsIT extends BaseIT {
   void testGetMarcSpecificationsSuccess() throws Exception {
     log.info("===== Verify GET MARC Specifications: Successful =====");
 
-    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(MarcFormat.BIBLIOGRAPHIC.getValue(), "008"))
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "008"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.format").value(MarcFormat.BIBLIOGRAPHIC.getValue()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_AUTHORITY.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.format").value(MarcFormat.AUTHORITY.getValue()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.format").value(MarcFormat.HOLDINGS.getValue()));
   }
 
   @Test
@@ -44,7 +57,7 @@ class MarcSpecificationsIT extends BaseIT {
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
 
-    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(MarcFormat.BIBLIOGRAPHIC.getValue(), "08"))
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "08"))
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
   }

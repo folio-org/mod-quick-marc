@@ -44,12 +44,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -57,8 +57,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -71,7 +71,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -89,7 +89,7 @@
             "order": 6,
             "position": 22,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -98,7 +98,7 @@
             "order": 7,
             "position": 23,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -116,7 +116,7 @@
             "order": 9,
             "position": 28,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -125,7 +125,7 @@
             "order": 10,
             "position": 29,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -134,7 +134,7 @@
             "order": 11,
             "position": 30,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -143,7 +143,7 @@
             "order": 12,
             "position": 31,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -161,7 +161,7 @@
             "order": 14,
             "position": 33,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -170,7 +170,7 @@
             "order": 15,
             "position": 34,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -179,7 +179,7 @@
             "order": 16,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -188,7 +188,7 @@
             "order": 17,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -197,13 +197,13 @@
             "order": 18,
             "position": 39,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           }
         ]
       },
       {
-        "code": "music",
+        "code": "scores",
         "identifiedBy": {
           "or": [
             {
@@ -211,9 +211,7 @@
               "positions": {
                 "6": [
                   "c",
-                  "d",
-                  "i",
-                  "j"
+                  "d"
                 ]
               }
             }
@@ -235,12 +233,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -248,8 +246,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -262,7 +260,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -271,7 +269,7 @@
             "order": 5,
             "position": 18,
             "length": 2,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -280,7 +278,7 @@
             "order": 6,
             "position": 20,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -289,7 +287,7 @@
             "order": 7,
             "position": 21,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -298,7 +296,7 @@
             "order": 8,
             "position": 22,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -307,7 +305,7 @@
             "order": 9,
             "position": 23,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -343,7 +341,7 @@
             "order": 13,
             "position": 33,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -361,7 +359,7 @@
             "order": 15,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -370,7 +368,7 @@
             "order": 16,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -379,7 +377,187 @@
             "order": 17,
             "position": 39,
             "length": 1,
+            "isArray": false,
+            "readOnly": false
+          }
+        ]
+      },
+      {
+        "code": "sound_recordings",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "i",
+                  "j"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Comp",
+            "name": "Form of composition",
+            "order": 5,
+            "position": 18,
+            "length": 2,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "FMus",
+            "name": "Format of music",
+            "order": 6,
+            "position": 20,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Part",
+            "name": "Music parts",
+            "order": 7,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Audn",
+            "name": "Target audience",
+            "order": 8,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 9,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "AccM",
+            "name": "Accompanying matter",
+            "order": 10,
+            "position": 24,
+            "length": 6,
             "isArray": true,
+            "readOnly": false
+          },
+          {
+            "code": "LTxt",
+            "name": "Literary text for sound recordings",
+            "order": 11,
+            "position": 30,
+            "length": 2,
+            "isArray": true,
+            "readOnly": false
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 12,
+            "position": 32,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "TrAr",
+            "name": "Transposition and arrangement",
+            "order": 13,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 14,
+            "position": 34,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 15,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 16,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Src",
+            "name": "Cataloging source",
+            "order": 17,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
             "readOnly": false
           }
         ]
@@ -419,12 +597,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -432,8 +610,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -446,7 +624,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -455,7 +633,7 @@
             "order": 5,
             "position": 18,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -464,7 +642,7 @@
             "order": 6,
             "position": 19,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -482,7 +660,7 @@
             "order": 8,
             "position": 21,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -491,7 +669,7 @@
             "order": 9,
             "position": 22,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -500,7 +678,7 @@
             "order": 10,
             "position": 23,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -509,7 +687,7 @@
             "order": 11,
             "position": 24,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -527,7 +705,7 @@
             "order": 13,
             "position": 28,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -536,7 +714,7 @@
             "order": 14,
             "position": 29,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -554,7 +732,7 @@
             "order": 16,
             "position": 33,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -563,7 +741,7 @@
             "order": 17,
             "position": 34,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -572,7 +750,7 @@
             "order": 18,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -581,7 +759,7 @@
             "order": 19,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -590,7 +768,7 @@
             "order": 20,
             "position": 39,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           }
         ]
@@ -625,12 +803,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -638,8 +816,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -652,7 +830,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -670,7 +848,7 @@
             "order": 6,
             "position": 22,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -679,7 +857,7 @@
             "order": 7,
             "position": 23,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -697,7 +875,7 @@
             "order": 9,
             "position": 26,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -715,7 +893,7 @@
             "order": 11,
             "position": 28,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -733,7 +911,7 @@
             "order": 13,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -742,7 +920,7 @@
             "order": 14,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -751,7 +929,7 @@
             "order": 15,
             "position": 39,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           }
         ]
@@ -789,12 +967,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -802,8 +980,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -816,7 +994,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -843,7 +1021,7 @@
             "order": 7,
             "position": 22,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -861,7 +1039,7 @@
             "order": 9,
             "position": 28,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -870,7 +1048,7 @@
             "order": 10,
             "position": 29,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -888,7 +1066,7 @@
             "order": 12,
             "position": 33,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -897,7 +1075,7 @@
             "order": 13,
             "position": 34,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -906,7 +1084,7 @@
             "order": 14,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -915,7 +1093,7 @@
             "order": 15,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -924,7 +1102,7 @@
             "order": 16,
             "position": 39,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           }
         ]
@@ -960,12 +1138,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -973,8 +1151,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -987,7 +1165,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1023,7 +1201,7 @@
             "order": 8,
             "position": 25,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1041,7 +1219,7 @@
             "order": 10,
             "position": 28,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1050,7 +1228,7 @@
             "order": 11,
             "position": 29,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1068,7 +1246,7 @@
             "order": 13,
             "position": 31,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1095,7 +1273,7 @@
             "order": 16,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1104,7 +1282,7 @@
             "order": 17,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1113,7 +1291,7 @@
             "order": 18,
             "position": 39,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           }
         ]
@@ -1148,12 +1326,12 @@
             "order": 1,
             "position": 6,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
-            "code": "Start date",
-            "name": "Date 1",
+            "code": "Date1",
+            "name": "Start date",
             "order": 2,
             "position": 7,
             "length": 4,
@@ -1161,8 +1339,8 @@
             "readOnly": false
           },
           {
-            "code": "End date",
-            "name": "Date 2",
+            "code": "Date2",
+            "name": "End date",
             "order": 3,
             "position": 11,
             "length": 4,
@@ -1175,7 +1353,7 @@
             "order": 4,
             "position": 15,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1193,7 +1371,7 @@
             "order": 6,
             "position": 23,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1211,7 +1389,7 @@
             "order": 8,
             "position": 35,
             "length": 3,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1220,7 +1398,7 @@
             "order": 9,
             "position": 38,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           },
           {
@@ -1229,7 +1407,7 @@
             "order": 10,
             "position": 39,
             "length": 1,
-            "isArray": true,
+            "isArray": false,
             "readOnly": false
           }
         ]

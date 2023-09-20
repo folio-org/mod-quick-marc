@@ -33,7 +33,7 @@
           },
           {
             "code": "Geo Subd",
-            "name": "Geo Subd",
+            "name": "Direct or indirect geographic subdivision",
             "order": 1,
             "position": 6,
             "length": 1,
@@ -42,7 +42,7 @@
           },
           {
             "code": "Roman",
-            "name": "Roman",
+            "name": "Romanization scheme",
             "order": 2,
             "position": 7,
             "length": 1,
@@ -51,7 +51,7 @@
           },
           {
             "code": "Lang",
-            "name": "Lang",
+            "name": "Language of catalog",
             "order": 3,
             "position": 8,
             "length": 1,
@@ -60,7 +60,7 @@
           },
           {
             "code": "Kind rec",
-            "name": "Kind rec",
+            "name": "Kind of record",
             "order": 4,
             "position": 9,
             "length": 1,
@@ -69,7 +69,7 @@
           },
           {
             "code": "Cat Rules",
-            "name": "Cat Rules",
+            "name": "Descriptive cataloging rules",
             "order": 5,
             "position": 10,
             "length": 1,
@@ -78,7 +78,7 @@
           },
           {
             "code": "SH Sys",
-            "name": "SH Sys",
+            "name": "Subject heading system/thesaurus",
             "order": 6,
             "position": 11,
             "length": 1,
@@ -87,7 +87,7 @@
           },
           {
             "code": "Series",
-            "name": "Series",
+            "name": "Type of series",
             "order": 7,
             "position": 12,
             "length": 1,
@@ -96,7 +96,7 @@
           },
           {
             "code": "Numb Series",
-            "name": "Numb Series",
+            "name": "Numbered or unnumbered series",
             "order": 8,
             "position": 13,
             "length": 1,
@@ -105,7 +105,7 @@
           },
           {
             "code": "Main use",
-            "name": "Main use",
+            "name": "Heading use – main or added entry",
             "order": 9,
             "position": 14,
             "length": 1,
@@ -114,7 +114,7 @@
           },
           {
             "code": "Subj use",
-            "name": "Subj use",
+            "name": "Heading use – subject added entry",
             "order": 10,
             "position": 15,
             "length": 1,
@@ -123,7 +123,7 @@
           },
           {
             "code": "Series use",
-            "name": "Series use",
+            "name": "Heading use – series added entry",
             "order": 11,
             "position": 16,
             "length": 1,
@@ -132,7 +132,7 @@
           },
           {
             "code": "Type Subd",
-            "name": "Type Subd",
+            "name": "Type of subject subdivision",
             "order": 12,
             "position": 17,
             "length": 1,
@@ -141,7 +141,7 @@
           },
           {
             "code": "Undefined",
-            "name": "Undefined",
+            "name": "Undefined character positions",
             "order": 13,
             "position": 18,
             "length": 10,
@@ -150,7 +150,7 @@
           },
           {
             "code": "Govt Ag",
-            "name": "Govt Ag",
+            "name": "Type of government agency",
             "order": 14,
             "position": 28,
             "length": 1,
@@ -159,7 +159,7 @@
           },
           {
             "code": "RefEval",
-            "name": "RefEval",
+            "name": "Reference evaluation",
             "order": 15,
             "position": 29,
             "length": 1,
@@ -168,7 +168,7 @@
           },
           {
             "code": "Undefined",
-            "name": "Undefined",
+            "name": "Undefined character position",
             "order": 16,
             "position": 30,
             "length": 1,
@@ -177,7 +177,7 @@
           },
           {
             "code": "RecUpd",
-            "name": "RecUpd",
+            "name": "Record update in process",
             "order": 17,
             "position": 31,
             "length": 1,
@@ -186,7 +186,7 @@
           },
           {
             "code": "Pers Name",
-            "name": "Pers Name",
+            "name": "Undifferentiated personal name",
             "order": 18,
             "position": 32,
             "length": 1,
@@ -195,7 +195,7 @@
           },
           {
             "code": "Level Est",
-            "name": "Level Est",
+            "name": "Level of establishment",
             "order": 18,
             "position": 33,
             "length": 1,
@@ -204,7 +204,7 @@
           },
           {
             "code": "Undefined",
-            "name": "Undefined",
+            "name": "Undefined character positions",
             "order": 18,
             "position": 34,
             "length": 4,
@@ -213,7 +213,7 @@
           },
           {
             "code": "Mod Rec Est",
-            "name": "Mod Rec Est",
+            "name": "Modified record",
             "order": 18,
             "position": 38,
             "length": 1,
@@ -222,7 +222,7 @@
           },
           {
             "code": "Source",
-            "name": "Source",
+            "name": "Cataloging source",
             "order": 18,
             "position": 39,
             "length": 1,

@@ -36,7 +36,7 @@
           },
           {
             "code": "AcqStatus",
-            "name": "AcqStatus",
+            "name": "Receipt, acquisition, or access status",
             "order": 1,
             "position": 6,
             "length": 1,
@@ -45,7 +45,7 @@
           },
           {
             "code": "AcqMethod",
-            "name": "AcqMethod",
+            "name": "Method of acquisition",
             "order": 2,
             "position": 7,
             "length": 1,
@@ -54,7 +54,7 @@
           },
           {
             "code": "AcqEndDate",
-            "name": "AcqEndDate",
+            "name": "Expected acquisition end date",
             "order": 3,
             "position": 8,
             "length": 4,
@@ -63,25 +63,25 @@
           },
           {
             "code": "Gen ret",
-            "name": "Gen ret",
+            "name": "General retention policy",
             "order": 4,
             "position": 12,
-            "length": 3,
+            "length": 1,
             "isArray": false,
             "readOnly": false
           },
           {
             "code": "Spec ret",
-            "name": "Spec ret",
+            "name": "Specific retention policy",
             "order": 5,
             "position": 13,
             "length": 3,
-            "isArray": false,
+            "isArray": true,
             "readOnly": false
           },
           {
             "code": "Compl",
-            "name": "Compl",
+            "name": "Completeness",
             "order": 6,
             "position": 16,
             "length": 1,
@@ -90,7 +90,7 @@
           },
           {
             "code": "Copies",
-            "name": "Copies",
+            "name": "Number of copies reported",
             "order": 7,
             "position": 17,
             "length": 3,
@@ -99,7 +99,7 @@
           },
           {
             "code": "Lend",
-            "name": "Lend",
+            "name": "Lending policy",
             "order": 8,
             "position": 20,
             "length": 1,
@@ -108,7 +108,7 @@
           },
           {
             "code": "Repro",
-            "name": "Repro",
+            "name": "Reproduction policy",
             "order": 9,
             "position": 21,
             "length": 1,
@@ -117,7 +117,7 @@
           },
           {
             "code": "Lang",
-            "name": "Lang",
+            "name": "Language",
             "order": 10,
             "position": 22,
             "length": 3,
@@ -126,7 +126,7 @@
           },
           {
             "code": "Sep/comp",
-            "name": "Sep/comp",
+            "name": "Separate or composite copy report",
             "order": 11,
             "position": 25,
             "length": 1,
@@ -135,7 +135,7 @@
           },
           {
             "code": "Rept date",
-            "name": "Rept date",
+            "name": "Date of report",
             "order": 12,
             "position": 26,
             "length": 6,

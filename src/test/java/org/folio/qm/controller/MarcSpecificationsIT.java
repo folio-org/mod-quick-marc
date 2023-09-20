@@ -26,6 +26,10 @@ class MarcSpecificationsIT extends BaseIT {
     getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "001"))
       .andExpect(status().isNotFound())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_AUTHORITY.getValue(), "003"))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
   }
 
   @Test
@@ -35,6 +39,14 @@ class MarcSpecificationsIT extends BaseIT {
     getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "008"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.format").value(MarcFormat.BIBLIOGRAPHIC.getValue()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_AUTHORITY.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.format").value(MarcFormat.AUTHORITY.getValue()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.format").value(MarcFormat.HOLDINGS.getValue()));
   }
 
   @Test

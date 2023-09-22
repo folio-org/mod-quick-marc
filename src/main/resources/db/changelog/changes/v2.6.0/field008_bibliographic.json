@@ -111,7 +111,7 @@
             "readOnly": false
           },
           {
-            "code": "Gpub",
+            "code": "GPub",
             "name": "Government publication",
             "order": 9,
             "position": 28,
@@ -192,7 +192,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 18,
             "position": 39,
@@ -372,7 +372,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 17,
             "position": 39,
@@ -552,7 +552,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 17,
             "position": 39,
@@ -763,7 +763,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 20,
             "position": 39,
@@ -924,7 +924,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 15,
             "position": 39,
@@ -1097,7 +1097,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 16,
             "position": 39,
@@ -1286,7 +1286,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 18,
             "position": 39,
@@ -1402,7 +1402,7 @@
             "readOnly": false
           },
           {
-            "code": "Src",
+            "code": "Srce",
             "name": "Cataloging source",
             "order": 10,
             "position": 39,

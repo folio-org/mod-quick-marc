@@ -10,6 +10,7 @@ import org.folio.qm.config.properties.FolioKafkaProperties;
 import org.folio.qm.messaging.domain.DataImportEventTypes;
 import org.folio.qm.messaging.domain.QmEventTypes;
 import org.folio.spring.FolioExecutionContext;
+import org.folio.spring.tools.kafka.KafkaUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
@@ -79,6 +80,6 @@ public class KafkaTopicsInitializer {
   }
 
   private String getTenantTopicName(String topicName, String tenantId) {
-    return String.format("%s.Default.%s.%s", kafkaEnvId, tenantId, topicName);
+    return KafkaUtils.getTenantTopicNameWithNamespace(topicName, kafkaEnvId, tenantId, "Default");
   }
 }

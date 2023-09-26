@@ -1,0 +1,150 @@
+{
+  "tag": "008",
+  "format": "HOLDINGS",
+  "label": "General Information",
+  "url": "https://www.loc.gov/marc/bibliographic/bd008.html",
+  "repeatable": false,
+  "required": true,
+  "spec": {
+    "types": [
+      {
+        "code": "unknown",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "u",
+                  "v",
+                  "x",
+                  "y"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "AcqStatus",
+            "name": "Receipt, acquisition, or access status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "AcqMethod",
+            "name": "Method of acquisition",
+            "order": 2,
+            "position": 7,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "AcqEndDate",
+            "name": "Expected acquisition end date",
+            "order": 3,
+            "position": 8,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Gen ret",
+            "name": "General retention policy",
+            "order": 4,
+            "position": 12,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Spec ret",
+            "name": "Specific retention policy",
+            "order": 5,
+            "position": 13,
+            "length": 3,
+            "isArray": true,
+            "readOnly": false
+          },
+          {
+            "code": "Compl",
+            "name": "Completeness",
+            "order": 6,
+            "position": 16,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Copies",
+            "name": "Number of copies reported",
+            "order": 7,
+            "position": 17,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Lend",
+            "name": "Lending policy",
+            "order": 8,
+            "position": 20,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Repro",
+            "name": "Reproduction policy",
+            "order": 9,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 10,
+            "position": 22,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Sep/comp",
+            "name": "Separate or composite copy report",
+            "order": 11,
+            "position": 25,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Rept date",
+            "name": "Date of report",
+            "order": 12,
+            "position": 26,
+            "length": 6,
+            "isArray": false,
+            "readOnly": false
+          }
+        ]
+      }
+    ]
+  }
+}
+

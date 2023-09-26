@@ -29,9 +29,11 @@ public class ApiTestUtils {
   public static final String CHANGE_MANAGER_JOB_PROFILE_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/jobProfile";
   public static final String CHANGE_MANAGER_PARSE_RECORDS_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/records";
   public static final String FIELD_PROTECTION_SETTINGS_PATH = "/field-protection-settings/marc?limit=1000";
+  public static final String LINKING_RULES_FETCHING_PATH = "/linking-rules/instance-authority";
   public static final String USERS_PATH = "/users";
   public static final String LINKS_PATH = "/links";
   public static final String LINKS_INSTANCES_PATH = LINKS_PATH + "/instances";
+  public static final String MARC_SPECIFICATIONS_PATH = "/marc-specifications";
 
   public static final String EXTERNAL_ID = "externalId";
   public static final String QM_RECORD_ID = "qmRecordId";
@@ -56,6 +58,14 @@ public class ApiTestUtils {
 
   public static String recordsEditorPath(String parameter, UUID value) {
     return recordsEditorPath() + buildQuery(parameter, String.valueOf(value));
+  }
+
+  public static String marcSpecificationsPath() {
+    return MARC_SPECIFICATIONS_PATH;
+  }
+
+  public static String marcSpecificationsByrecordTypeAndFieldTag(String recordType, String fieldTag) {
+    return marcSpecificationsPath() + "/" + recordType + "/" + fieldTag;
   }
 
   public static String recordsEditorStatusPath() {

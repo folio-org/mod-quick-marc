@@ -6,6 +6,7 @@ import static org.folio.qm.converter.elements.Constants.SPECIFIC_ELEMENTS_END_IN
 import static org.folio.qm.converter.elements.Constants.TAG_006_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH;
 import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.ControlFieldItem.ENTERED;
 import static org.folio.qm.converter.elements.Tag008Configuration.getCommonItems;
 import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
@@ -13,7 +14,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import org.folio.qm.converter.elements.ControlFieldItem;
 import org.folio.qm.converter.elements.Tag008Configuration;
-import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.marc4j.marc.VariableField;
@@ -21,7 +21,7 @@ import org.marc4j.marc.impl.ControlFieldImpl;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Tag008BibliographicFieldItemConverter implements FieldItemConverter {
+public class Tag008BibliographicFieldItemConverter extends Tag008FieldItemConverter {
 
   @Override
   public VariableField convert(FieldItem field) {
@@ -39,6 +39,7 @@ public class Tag008BibliographicFieldItemConverter implements FieldItemConverter
     var type = contentMap.get(ControlFieldItem.TYPE.getName()).toString().charAt(0);
     var blvl = contentMap.get(BLVL).toString().charAt(0);
 
+    setDateEntered(ENTERED.getName(), contentMap);
     var itemConfig = Tag008Configuration.resolveContentType(type, blvl);
     var specificItemsString = getSpecificItemsString(contentMap, itemConfig);
     var commonItemsString = getCommonItemsString(contentMap);

@@ -24,29 +24,38 @@
     },
     {
       "id": "instance-authority-links",
+      "version": "2.1"
+    },
+    {
+      "id": "instance-authority-linking-rules",
       "version": "1.0"
+    },
+    {
+      "id": "instance-authority-links-suggestions",
+      "version": "1.2"
     }
   ],
   "provides": [
     {
-      "id": "records-editor.records",
-      "version": "3.3",
+      "id": "marc-records-editor",
+      "version": "5.3",
       "handlers": [
         {
           "methods": ["GET"],
           "pathPattern": "/records-editor/records",
-          "permissionsRequired": ["records-editor.records.item.get"],
+          "permissionsRequired": ["marc-records-editor.item.get"],
           "modulePermissions": [
             "change-manager.parsedrecords.get",
             "users.item.get",
             "converter-storage.field-protection-settings.get",
-            "instance-authority-links.instances.collection.get"
+            "instance-authority-links.instances.collection.get",
+            "instance-authority.linking-rules.collection.get"
           ]
         },
         {
           "methods": ["POST"],
           "pathPattern": "/records-editor/records",
-          "permissionsRequired": ["records-editor.records.item.post"],
+          "permissionsRequired": ["marc-records-editor.item.post"],
           "modulePermissions": [
             "change-manager.jobexecutions.post",
             "change-manager.jobexecutions.put",
@@ -56,7 +65,7 @@
         {
           "methods": ["PUT"],
           "pathPattern": "/records-editor/records/{id}",
-          "permissionsRequired": ["records-editor.records.item.put"],
+          "permissionsRequired": ["marc-records-editor.item.put"],
           "modulePermissions": [
             "change-manager.parsedrecords.put",
             "instance-authority-links.instances.collection.put"
@@ -65,7 +74,7 @@
         {
           "methods": ["DELETE"],
           "pathPattern": "/records-editor/records/{id}",
-          "permissionsRequired": ["records-editor.records.item.delete"],
+          "permissionsRequired": ["marc-records-editor.item.delete"],
           "modulePermissions": [
             "change-manager.jobexecutions.post",
             "change-manager.jobexecutions.put",
@@ -76,7 +85,26 @@
         {
           "methods": ["GET"],
           "pathPattern": "/records-editor/records/status",
-          "permissionsRequired": ["records-editor.records.status.item.get"]
+          "permissionsRequired": ["marc-records-editor.status.item.get"]
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/records-editor/links/suggestion",
+          "permissionsRequired": ["marc-records-editor.links.suggestion.post"],
+          "modulePermissions": [
+            "instance-authority-links.suggestions.post"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marc-specifications",
+      "version": "1.0",
+      "handlers": [
+        {
+          "methods": ["GET"],
+          "pathPattern": "/marc-specifications/{recordType}/{fieldTag}",
+          "permissionsRequired": ["marc-specifications.item.get"]
         }
       ]
     },
@@ -96,56 +124,55 @@
           "permissionsRequired": []
         }
       ]
-    },
-    {
-      "id": "_jsonSchemas",
-      "version": "1.0",
-      "interfaceType": "multiple",
-      "handlers": [
-        {
-          "methods": ["GET"],
-          "pathPattern": "/_/jsonSchemas",
-          "permissionsRequired": []
-        }
-      ]
     }
   ],
   "permissionSets": [
     {
-      "permissionName": "records-editor.records.item.get",
-      "displayName": "records-editor - get a record",
+      "permissionName": "marc-specifications.item.get",
+      "displayName": "marc-specifications - get a marc specification",
+      "description": "Get a marc specification"
+    },
+    {
+      "permissionName": "marc-records-editor.item.get",
+      "displayName": "marc-records-editor - get a record",
       "description": "Get a record"
     },
     {
-      "permissionName": "records-editor.records.item.post",
-      "displayName": "records-editor - create a new record",
+      "permissionName": "marc-records-editor.item.post",
+      "displayName": "marc-records-editor - create a new record",
       "description": "Create a new record"
     },
     {
-      "permissionName": "records-editor.records.item.put",
-      "displayName": "records-editor - update a record",
+      "permissionName": "marc-records-editor.item.put",
+      "displayName": "marc-records-editor - update a record",
       "description": "Update a record"
     },
     {
-      "permissionName": "records-editor.records.item.delete",
-      "displayName": "records-editor - delete a record",
+      "permissionName": "marc-records-editor.item.delete",
+      "displayName": "marc-records-editor - delete a record",
       "description": "Delete a record"
     },
     {
-      "permissionName": "records-editor.records.status.item.get",
-      "displayName": "records-editor - get record creation status",
+      "permissionName": "marc-records-editor.status.item.get",
+      "displayName": "marc-records-editor - get record creation status",
       "description": "Get record creation status"
     },
     {
-      "permissionName": "records-editor.all",
-      "displayName": "All records-editor permissions",
-      "description": "All permissions for the records-editor",
+      "permissionName": "marc-records-editor.links.suggestion.post",
+      "displayName": "marc-records-editor - get record creation status",
+      "description": "Suggest links for record collection"
+    },
+    {
+      "permissionName": "marc-records-editor.all",
+      "displayName": "All marc-records-editor permissions",
+      "description": "All permissions for the marc-records-editor",
       "subPermissions": [
-        "records-editor.records.item.get",
-        "records-editor.records.item.post",
-        "records-editor.records.item.put",
-        "records-editor.records.item.delete",
-        "records-editor.records.status.item.get"
+        "marc-records-editor.item.get",
+        "marc-records-editor.item.post",
+        "marc-records-editor.item.put",
+        "marc-records-editor.item.delete",
+        "marc-records-editor.status.item.get",
+        "marc-records-editor.links.suggestion.post"
       ]
     }
   ],

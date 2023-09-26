@@ -6,7 +6,8 @@
   "properties": {
     "id": {
       "description": "UUID",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "content": {
       "description": "Parsed record content, e.g. MARC record"

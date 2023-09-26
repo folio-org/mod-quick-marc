@@ -1,25 +1,32 @@
 package org.folio.qm.service.impl;
 
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
 import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
-import static org.folio.qm.util.MarcUtils.updateRecordTimestamp;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
+import org.folio.qm.domain.dto.AuthoritySearchParameter;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcCreate;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
+import org.folio.qm.mapper.LinksSuggestionsMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.ChangeManagerService;
 import org.folio.qm.service.DataImportJobService;
@@ -31,7 +38,7 @@ import org.folio.qm.service.ValidationService;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -45,25 +52,27 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private final ChangeManagerService changeManagerService;
   private final DataImportJobService dataImportJobService;
-  private final UsersClient usersClient;
+  private final DefaultValuesPopulationService defaultValuesPopulationService;
+  private final FieldProtectionSetterService protectionSetterService;
+  private final ConversionService conversionService;
   private final ValidationService validationService;
   private final StatusService statusService;
-  private final FieldProtectionSetterService protectionSetterService;
-  private final DefaultValuesPopulationService defaultValuesPopulationService;
   private final LinksService linksService;
 
+  private final UsersClient usersClient;
+  private final LinksSuggestionsClient linksSuggestionsClient;
+
+  private final LinksSuggestionsMapper linksSuggestionsMapper;
   private final CreationStatusMapper statusMapper;
   private final UserMapper userMapper;
-  private final Converter<QuickMarc, ParsedRecordDto> qmConverter;
-  private final Converter<ParsedRecordDto, QuickMarc> dtoConverter;
 
   private final FolioExecutionContext folioExecutionContext;
 
   @Override
-  public QuickMarc findByExternalId(UUID externalId) {
+  public QuickMarcView findByExternalId(UUID externalId) {
     log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
     var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    var quickMarc = dtoConverter.convert(parsedRecordDto);
+    var quickMarc = conversionService.convert(parsedRecordDto, QuickMarcView.class);
 
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
@@ -76,17 +85,18 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public CreationStatus deleteByExternalId(UUID externalId) {
     log.debug("deleteByExternalId:: trying to delete quickMarc by externalId: {}", externalId);
     var recordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    var status  = runImportAndGetStatus(recordDto, DELETE);
+    var status = runImportAndGetStatus(recordDto, DELETE);
     log.info("deleteByExternalId:: quickMarc deleted with status: {}", status.getStatus());
     return status;
   }
 
   @Override
-  public void updateById(UUID parsedRecordId, QuickMarc quickMarc, DeferredResult<ResponseEntity<Void>> updateResult) {
+  public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc,
+                         DeferredResult<ResponseEntity<Void>> updateResult) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
-    var parsedRecordDto = qmConverter.convert(updateRecordTimestamp(quickMarc));
+    var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
@@ -105,18 +115,38 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   @Override
-  public CreationStatus createNewRecord(QuickMarc quickMarc) {
+  public CreationStatus createNewRecord(QuickMarcCreate quickMarc) {
     log.debug("createNewRecord:: trying to create a new quickMarc");
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
-    var recordDto = qmConverter.convert(prepareRecord(quickMarc));
-    var status  = runImportAndGetStatus(recordDto, CREATE);
+    var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
+    var status = runImportAndGetStatus(recordDto, CREATE);
     log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
     return status;
   }
 
-  private QuickMarc prepareRecord(QuickMarc quickMarc) {
-    clearFields(quickMarc);
-    updateRecordTimestamp(quickMarc);
+  @Override
+  public QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter,
+                                    Boolean ignoreAutoLinkingEnabled) {
+    log.debug("suggestLinks:: trying to suggest links");
+    var srsRecords = linksSuggestionsMapper.map(List.of(quickMarcView));
+    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(srsRecords, authoritySearchParameter,
+      ignoreAutoLinkingEnabled);
+    var quickMarcRecordsWithSuggestions = linksSuggestionsMapper.map(srsRecordsWithSuggestions);
+    if (isNotEmpty(quickMarcRecordsWithSuggestions)) {
+      log.info("suggestLinks:: links was suggested");
+      return quickMarcRecordsWithSuggestions.get(0);
+    }
+    return quickMarcView;
+  }
+
+  private QuickMarcCreate prepareRecord(QuickMarcCreate quickMarc) {
+    final Predicate<FieldItem> field001Predicate = qmFields -> qmFields.getTag().equals("001");
+    final Predicate<FieldItem> field999Predicate = qmFields -> qmFields.getTag().equals("999");
+    final Predicate<FieldItem> emptyContentPredicate = qmFields -> {
+      final var content = qmFields.getContent();
+      return content instanceof String stringContent && StringUtils.isEmpty(stringContent);
+    };
+    quickMarc.getFields().removeIf(field001Predicate.or(field999Predicate).or(emptyContentPredicate));
     return quickMarc;
   }
 
@@ -127,20 +157,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       .orElseThrow(() -> new UnexpectedException(String.format(RECORD_NOT_FOUND_MESSAGE, jobId)));
   }
 
-  private void clearFields(QuickMarc quickMarc) {
-    final Predicate<FieldItem> field999Predicate = qmFields -> qmFields.getTag().equals("999");
-    final Predicate<FieldItem> emptyContentPredicate = qmFields -> {
-      final var content = qmFields.getContent();
-      return content instanceof String && StringUtils.isEmpty((String) content);
-    };
-    quickMarc.getFields().removeIf(field999Predicate.or(emptyContentPredicate));
-    quickMarc.setParsedRecordId(null);
-    quickMarc.setParsedRecordDtoId(null);
-    quickMarc.setExternalId(null);
-    quickMarc.setExternalHrid(null);
-  }
-
-  private void populateWithDefaultValuesAndValidateMarcRecord(QuickMarc quickMarc) {
+  private void populateWithDefaultValuesAndValidateMarcRecord(BaseMarcRecord quickMarc) {
     defaultValuesPopulationService.populate(quickMarc);
     var validationResult = validationService.validate(quickMarc);
     if (!validationResult.isValid()) {
@@ -148,7 +165,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  private void setUserInfo(QuickMarc quickMarc, ParsedRecordDto parsedRecordDto) {
+  private void setUserInfo(QuickMarcView quickMarc, ParsedRecordDto parsedRecordDto) {
     if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {
@@ -159,7 +176,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private Runnable updateLinksTask(FolioExecutionContext executionContext,
-                                   QuickMarc quickMarc,
+                                   QuickMarcEdit quickMarc,
                                    DeferredResult<ResponseEntity<Void>> updateResult) {
     var newContext = new DefaultFolioExecutionContext(executionContext.getFolioModuleMetadata(),
       executionContext.getAllHeaders());

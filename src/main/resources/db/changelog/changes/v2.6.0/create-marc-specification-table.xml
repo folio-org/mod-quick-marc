@@ -1,0 +1,68 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="MODQM-332@@create-marc-specification-table" author="phabas">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="marc_specification"/>
+            </not>
+        </preConditions>
+        <createTable tableName="marc_specification">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" primaryKeyName="pk_marc_specification" nullable="false"/>
+            </column>
+            <column name="field_tag" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="record_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marc_spec" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+  <changeSet id="MODQM-332@@add-create-marc-specification-table" author="phabas">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(id)
+        FROM marc_specification
+        WHERE field_tag = '008' and record_type='MARC_BIBLIOGRAPHIC';
+      </sqlCheck>
+    </preConditions>
+
+    <insert tableName="marc_specification">
+      <column name="field_tag" value="008"/>
+      <column name="record_type" value="MARC_BIBLIOGRAPHIC"/>
+      <column name="marc_spec" valueClobFile="field008_bibliographic.json"/>
+    </insert>
+
+    <insert tableName="marc_specification">
+      <column name="field_tag" value="008"/>
+      <column name="record_type" value="MARC_AUTHORITY"/>
+      <column name="marc_spec" valueClobFile="field008_authority.json"/>
+    </insert>
+
+    <insert tableName="marc_specification">
+      <column name="field_tag" value="008"/>
+      <column name="record_type" value="MARC_HOLDINGS"/>
+      <column name="marc_spec" valueClobFile="field008_holdings.json"/>
+    </insert>
+  </changeSet>
+
+  <!--Liquibase have some issues with loading valueClobFile into jsonb datatype so need to change type after loading json-->
+  <changeSet id="MODQM-332@alter-jsonb-marc-specification-table" author="phabas">
+    <sql dbms="postgresql">
+      ALTER TABLE marc_specification ALTER COLUMN marc_spec TYPE JSONB USING marc_spec::JSONB;
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

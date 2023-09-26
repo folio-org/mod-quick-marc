@@ -25,7 +25,6 @@ public interface LinksClient {
 
   @Value
   class InstanceLinks {
-
     List<InstanceLink> links;
     Integer totalRecords;
   }
@@ -35,13 +34,12 @@ public interface LinksClient {
   @NoArgsConstructor
   @AllArgsConstructor
   class InstanceLink {
-
     Integer id;
     UUID authorityId;
     String authorityNaturalId;
     UUID instanceId;
-    String bibRecordTag;
-    List<String> bibRecordSubfields;
     Integer linkingRuleId;
+    String status;
+    String errorCause;
   }
 }

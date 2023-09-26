@@ -17,6 +17,7 @@ spring:
       - job-profiles
       - qm-update-results
       - data-import-results
+      - linking-rules-results
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   kafka:
@@ -37,6 +38,10 @@ folio:
   kafka:
     numberOfPartitions: 1
     replicationFactor: 1
+    topics:
+      - name: test
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
     listener:
       di-completed:
         concurrency: 1

@@ -52,7 +52,7 @@ public class MarcFieldsConverter {
       .filter(converter -> converter.canProcess(field, marcFormat))
       .findFirst()
       .map(converter -> converter.convert(field, leader))
-      .orElseThrow(() -> new IllegalArgumentException("No data field converter found"))
+      .orElseThrow(() -> new IllegalArgumentException("No control field converter found"))
       .indicators(Collections.emptyList());
   }
 

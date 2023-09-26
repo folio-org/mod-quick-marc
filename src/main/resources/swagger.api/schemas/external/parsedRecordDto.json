@@ -6,7 +6,8 @@
   "properties": {
     "id": {
       "description": "UUID",
-      "$ref": "../uuid.json"
+      "type": "string",
+      "format": "uuid"
     },
     "externalIdsHolder": {
       "description": "Container for identifiers of external entities",
@@ -29,7 +30,7 @@
     },
     "recordState": {
       "description": "State of source record in QM workflow",
-      "$ref": "../recordState.json",
+      "$ref": "state.json",
       "default": "ACTUAL"
     },
     "additionalInfo": {

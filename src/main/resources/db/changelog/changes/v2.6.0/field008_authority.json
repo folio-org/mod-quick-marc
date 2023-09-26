@@ -1,0 +1,237 @@
+{
+  "tag": "008",
+  "format": "AUTHORITY",
+  "label": "General Information",
+  "url": "https://www.loc.gov/marc/bibliographic/bd008.html",
+  "repeatable": false,
+  "required": true,
+  "spec": {
+    "types": [
+      {
+        "code": "unknown",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "z"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Geo Subd",
+            "name": "Direct or indirect geographic subdivision",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Roman",
+            "name": "Romanization scheme",
+            "order": 2,
+            "position": 7,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Lang",
+            "name": "Language of catalog",
+            "order": 3,
+            "position": 8,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Kind rec",
+            "name": "Kind of record",
+            "order": 4,
+            "position": 9,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Cat Rules",
+            "name": "Descriptive cataloging rules",
+            "order": 5,
+            "position": 10,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "SH Sys",
+            "name": "Subject heading system/thesaurus",
+            "order": 6,
+            "position": 11,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Series",
+            "name": "Type of series",
+            "order": 7,
+            "position": 12,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Numb Series",
+            "name": "Numbered or unnumbered series",
+            "order": 8,
+            "position": 13,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Main use",
+            "name": "Heading use – main or added entry",
+            "order": 9,
+            "position": 14,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Subj use",
+            "name": "Heading use – subject added entry",
+            "order": 10,
+            "position": 15,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Series use",
+            "name": "Heading use – series added entry",
+            "order": 11,
+            "position": 16,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Type Subd",
+            "name": "Type of subject subdivision",
+            "order": 12,
+            "position": 17,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Undefined",
+            "name": "Undefined character positions",
+            "order": 13,
+            "position": 18,
+            "length": 10,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Govt Ag",
+            "name": "Type of government agency",
+            "order": 14,
+            "position": 28,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "RefEval",
+            "name": "Reference evaluation",
+            "order": 15,
+            "position": 29,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Undefined",
+            "name": "Undefined character position",
+            "order": 16,
+            "position": 30,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "RecUpd",
+            "name": "Record update in process",
+            "order": 17,
+            "position": 31,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Pers Name",
+            "name": "Undifferentiated personal name",
+            "order": 18,
+            "position": 32,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Level Est",
+            "name": "Level of establishment",
+            "order": 18,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Undefined",
+            "name": "Undefined character positions",
+            "order": 18,
+            "position": 34,
+            "length": 4,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Mod Rec Est",
+            "name": "Modified record",
+            "order": 18,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Source",
+            "name": "Cataloging source",
+            "order": 18,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false
+          }
+        ]
+      }
+    ]
+  }
+}
+

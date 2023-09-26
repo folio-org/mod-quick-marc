@@ -6,9 +6,9 @@ import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_AUTHORITY_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_HOLDINGS_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,7 +18,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.folio.qm.domain.dto.ParsedRecord;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapperImpl;
 import org.folio.qm.support.types.UnitTest;
@@ -35,26 +35,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MarcQmConverterTest {
 
-  private MarcQmConverter converter;
+  private MarcQmEditConverter converter;
   private MarcFieldsConverter fieldsConverter;
 
   @BeforeEach
   void setUp() {
     fieldsConverter = mock(MarcFieldsConverter.class);
-    converter = new MarcQmConverter(new MarcFactoryImpl(), new ObjectMapper(), new MarcTypeMapperImpl(),
+    converter = new MarcQmEditConverter(new MarcFactoryImpl(), new ObjectMapper(), new MarcTypeMapperImpl(),
       fieldsConverter);
   }
 
   @SneakyThrows
   @ParameterizedTest
   @CsvSource(value = {
-    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
-    PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
-    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_BIB_PATH + "," + "01705ccm a2200421   4500"
+    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_EDIT_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
+    PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_EDIT_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
+    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_EDIT_BIB_PATH + "," + "01750ccm a2200421   4500"
   })
   void testConvertDtoRecord(String parsedRecordDtoPath, String quickMarcJsonPath, String expectedLeader) {
     var expected = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
-    var qmRecord = getMockAsObject(quickMarcJsonPath, QuickMarc.class);
+    var qmRecord = getMockAsObject(quickMarcJsonPath, QuickMarcEdit.class);
     when(fieldsConverter.convertQmFields(any(), any())).thenReturn(extractMarcRecord(expected.getParsedRecord())
       .getVariableFields());
 

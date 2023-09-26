@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.LinkedList;
 import java.util.List;
 import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarc;
 import org.folio.qm.support.types.UnitTest;
 import org.junit.jupiter.api.Test;
 
@@ -27,13 +27,13 @@ class LeaderMarcPopulationServiceTest {
 
   private final LeaderMarcPopulationService populationService = new LeaderMarcPopulationService() {
     @Override
-    protected List<LeaderItem> getConstantLeaderItems() {
-      return COMMON_CONSTANT_LEADER_ITEMS;
+    public boolean supportFormat(MarcFormat marcFormat) {
+      return true;
     }
 
     @Override
-    public boolean supportFormat(MarcFormat marcFormat) {
-      return true;
+    protected List<LeaderItem> getConstantLeaderItems() {
+      return COMMON_CONSTANT_LEADER_ITEMS;
     }
   };
 
@@ -122,7 +122,6 @@ class LeaderMarcPopulationServiceTest {
     var quickMarc = getQuickMarc(leader);
     customPopulationService.populate(quickMarc);
 
-
     assertEquals(expected, quickMarc.getLeader());
   }
 
@@ -143,8 +142,8 @@ class LeaderMarcPopulationServiceTest {
     };
   }
 
-  private QuickMarc getQuickMarc(String leader) {
-    return new QuickMarc()
+  private BaseMarcRecord getQuickMarc(String leader) {
+    return new BaseMarcRecord()
       .leader(leader);
   }
 }

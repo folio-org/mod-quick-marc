@@ -1,19 +1,29 @@
 package org.folio.qm.util;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
-import static org.folio.qm.converter.elements.Constants.BLANK_REPLACEMENT;
-import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD;
+import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.folio.qm.converter.elements.Constants.CONCAT_CONDITION_PATTERN;
+import static org.folio.qm.converter.elements.Constants.SPLIT_PATTERN;
+import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.marc4j.marc.Subfield;
 
 public final class MarcUtils {
   public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
@@ -41,16 +51,6 @@ public final class MarcUtils {
     return LocalDateTime.parse(representation, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
-  public static QuickMarc updateRecordTimestamp(QuickMarc quickMarc) {
-    final var currentTime = encodeToMarcDateTime(LocalDateTime.now());
-    getFieldByTag(quickMarc, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD)
-      .ifPresentOrElse(field -> field.setContent(currentTime),
-        () -> quickMarc.addFieldsItem(
-          new FieldItem().tag(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD).content(currentTime))
-      );
-    return quickMarc;
-  }
-
   /**
    * This method encode Java {@link java.time.LocalDateTime} value in the MARC date-time format for
    * <a href="https://www.loc.gov/marc/bibliographic/bd005.html">Date and Time of Latest Transaction Field (005)</a>.
@@ -62,21 +62,63 @@ public final class MarcUtils {
     return localDateTime.format(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
-  public static Optional<FieldItem> getFieldByTag(QuickMarc quickMarc, String tag) {
+  public static Optional<FieldItem> getFieldByTag(BaseMarcRecord quickMarc, String tag) {
     return quickMarc.getFields().stream()
       .filter(field -> tag.equals(field.getTag()))
       .findFirst();
   }
 
   public static String restoreBlanks(String sourceString) {
-    return sourceString.replace(BLANK_REPLACEMENT, SPACE);
+    return sourceString.replace('\\', ' ');
   }
 
   public static String masqueradeBlanks(String sourceString) {
-    return sourceString.replace(SPACE, BLANK_REPLACEMENT);
+    return sourceString.replace(' ', '\\');
+  }
+
+  /**
+   * Returns string with provided length and replaced spaces by '\\'. Trims sourceString to length or append '\\'.
+   */
+  public static String normalizeFixedLengthString(String sourceString, int length) {
+    if (length <= 0 || length == Integer.MAX_VALUE) {
+      throw new IllegalArgumentException("Length must be > 0 and < 2^31-1");
+    }
+    var source = masqueradeBlanks(StringUtils.trimToEmpty(sourceString));
+    var sourceLength = source.length();
+    if (sourceLength == length) {
+      return source;
+    } else if (sourceLength > length) {
+      return source.substring(0, length);
+    } else {
+      return source + StringUtils.repeat('\\', length - sourceLength);
+    }
   }
 
   public static boolean isValidUuid(String id) {
     return UUID_REGEX.matcher(id).matches();
   }
+
+  public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction) {
+    var tokens = Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
+      .collect(Collectors.toCollection(LinkedList::new));
+
+    List<Subfield> subfields = new ArrayList<>();
+    while (!tokens.isEmpty()) {
+      String token = tokens.pop();
+      String subfieldString = token.concat(checkNextToken(tokens));
+      if (subfieldString.length() < TOKEN_MIN_LENGTH) {
+        throw new IllegalArgumentException("Subfield length");
+      }
+      subfields.add(subfieldFunction.apply(subfieldString));
+    }
+
+    return subfields;
+  }
+
+  private static String checkNextToken(LinkedList<String> tokens) {
+    return !tokens.isEmpty() && CONCAT_CONDITION_PATTERN.matcher(tokens.peek()).matches()
+           ? requireNonNull(tokens.poll()).concat(checkNextToken(tokens))
+           : EMPTY;
+  }
+
 }

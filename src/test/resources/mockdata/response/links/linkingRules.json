@@ -1,0 +1,470 @@
+[
+  {
+    "id": 1,
+    "bibField": "100",
+    "authorityField": "100",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "j",
+      "q"
+    ],
+    "validation": {
+      "existence": [
+        {
+          "t": false
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "bibField": "110",
+    "authorityField": "110",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c"
+    ],
+    "validation": {
+      "existence": [
+        {
+          "t": false
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "bibField": "111",
+    "authorityField": "111",
+    "authoritySubfields": [
+      "a",
+      "c",
+      "e",
+      "q"
+    ],
+    "validation": {
+      "existence": [
+        {
+          "t": false
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "bibField": "130",
+    "authorityField": "130",
+    "authoritySubfields": [
+      "a",
+      "d",
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ]
+  },
+  {
+    "id": 5,
+    "bibField": "240",
+    "authorityField": "100",
+    "authoritySubfields": [
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ],
+    "subfieldModifications": [
+      {
+        "source": "t",
+        "target": "a"
+      }
+    ],
+    "validation": {
+      "existence": [
+        {
+          "t": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "bibField": "240",
+    "authorityField": "110",
+    "authoritySubfields": [
+      "d",
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ],
+    "subfieldModifications": [
+      {
+        "source": "t",
+        "target": "a"
+      }
+    ],
+    "validation": {
+      "existence": [
+        {
+          "t": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "bibField": "240",
+    "authorityField": "111",
+    "authoritySubfields": [
+      "d",
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "n",
+      "p",
+      "s",
+      "t"
+    ],
+    "subfieldModifications": [
+      {
+        "source": "t",
+        "target": "a"
+      }
+    ],
+    "validation": {
+      "existence": [
+        {
+          "t": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 15,
+    "bibField": "700",
+    "authorityField": "100",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "j",
+      "q",
+      "f",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t",
+      "g"
+    ]
+  },
+  {
+    "id": 16,
+    "bibField": "710",
+    "authorityField": "110",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "f",
+      "h",
+      "k",
+      "l",
+      "m",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t",
+      "d",
+      "g",
+      "n"
+    ]
+  },
+  {
+    "id": 17,
+    "bibField": "711",
+    "authorityField": "111",
+    "authoritySubfields": [
+      "a",
+      "c",
+      "e",
+      "q",
+      "f",
+      "h",
+      "k",
+      "l",
+      "p",
+      "s",
+      "t",
+      "d",
+      "g",
+      "n"
+    ]
+  },
+  {
+    "id": 18,
+    "bibField": "730",
+    "authorityField": "130",
+    "authoritySubfields": [
+      "a",
+      "d",
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ]
+  },
+  {
+    "id": 19,
+    "bibField": "800",
+    "authorityField": "100",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "j",
+      "q",
+      "f",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t",
+      "g"
+    ]
+  },
+  {
+    "id": 20,
+    "bibField": "810",
+    "authorityField": "110",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "f",
+      "h",
+      "k",
+      "l",
+      "m",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t",
+      "d",
+      "g",
+      "n"
+    ]
+  },
+  {
+    "id": 21,
+    "bibField": "811",
+    "authorityField": "111",
+    "authoritySubfields": [
+      "a",
+      "c",
+      "e",
+      "q",
+      "f",
+      "h",
+      "k",
+      "l",
+      "p",
+      "s",
+      "t",
+      "d",
+      "g",
+      "n"
+    ]
+  },
+  {
+    "id": 22,
+    "bibField": "830",
+    "authorityField": "130",
+    "authoritySubfields": [
+      "a",
+      "d",
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ]
+  },
+  {
+    "id": 8,
+    "bibField": "600",
+    "authorityField": "100",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "g",
+      "j",
+      "q",
+      "f",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ]
+  },
+  {
+    "id": 9,
+    "bibField": "610",
+    "authorityField": "110",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "g",
+      "f",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ]
+  },
+  {
+    "id": 10,
+    "bibField": "611",
+    "authorityField": "111",
+    "authoritySubfields": [
+      "a",
+      "c",
+      "e",
+      "q",
+      "f",
+      "h",
+      "k",
+      "l",
+      "p",
+      "s",
+      "t",
+      "d",
+      "g",
+      "n"
+    ]
+  },
+  {
+    "id": 11,
+    "bibField": "630",
+    "authorityField": "130",
+    "authoritySubfields": [
+      "a",
+      "d",
+      "f",
+      "g",
+      "h",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "r",
+      "s",
+      "t"
+    ]
+  },
+  {
+    "id": 12,
+    "bibField": "650",
+    "authorityField": "150",
+    "authoritySubfields": [
+      "a",
+      "b",
+      "g"
+    ]
+  },
+  {
+    "id": 13,
+    "bibField": "651",
+    "authorityField": "151",
+    "authoritySubfields": [
+      "a",
+      "g"
+    ]
+  },
+  {
+    "id": 14,
+    "bibField": "655",
+    "authorityField": "155",
+    "authoritySubfields": [
+      "a"
+    ]
+  }
+]

@@ -29,6 +29,7 @@ spring:
       - job-profiles
       - qm-update-results
       - data-import-results
+      - linking-rules-results
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   cloud:
@@ -63,6 +64,16 @@ folio:
   kafka:
     numberOfPartitions: ${NUMBER_OF_PARTITIONS:5}
     replicationFactor: ${REPLICATION_FACTOR:1}
+    topics:
+      - name: di-completed
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
+      - name: di-error
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
+      - name: qm-completed
+        numPartitions: ${NUMBER_OF_PARTITIONS:1}
+        replicationFactor: ${REPLICATION_FACTOR:1}
     listener:
       di-completed:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}

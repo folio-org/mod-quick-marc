@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.util.MarcUtils;
 import org.marc4j.marc.DataField;
@@ -19,7 +20,12 @@ public class BibliographicDataFieldConverter extends CommonDataFieldConverter {
   @Override
   public FieldItem convert(DataField field, Leader leader) {
     var fieldItem = super.convert(field, leader);
-    extractAuthorityId(field.getSubfields()).ifPresent(fieldItem::setAuthorityId);
+    extractAuthorityId(field.getSubfields())
+      .ifPresent(authorityId -> {
+        var linkDetails = new LinkDetails();
+        linkDetails.setAuthorityId(authorityId);
+        fieldItem.setLinkDetails(linkDetails);
+      });
     return fieldItem;
   }
 

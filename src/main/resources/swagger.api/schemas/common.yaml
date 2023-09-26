@@ -1,0 +1,479 @@
+uuid:
+  type: string
+  format: uuid
+
+marcFormat:
+  type: string
+  description: MARC Format
+  enum: [
+    BIBLIOGRAPHIC,
+    HOLDINGS,
+    AUTHORITY
+  ]
+
+linkDetails:
+  description: Link-related fields
+  type: object
+  properties:
+    authorityId:
+      description: Id of the authority that controls subfields
+      $ref: '#/uuid'
+      example: c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1
+    authorityNaturalId:
+      description: Natural id of the authority that controls subfields
+      type: string
+      example: n1234567890
+    linkingRuleId:
+      description: Linking rule ID by which the link was created
+      type: integer
+      example: 1
+    status:
+      description: Link status
+      type: string
+      readOnly: true
+      example: ACTUAL
+    errorCause:
+      description: Cause of error status
+      type: string
+      readOnly: true
+      example: Optimistic locking
+  required:
+    - authorityId
+    - authorityNaturalId
+    - linkingRuleId
+    - status
+  example:
+    authorityId: c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1
+    authorityNaturalId: n1234567890
+    linkingRuleId: 1
+    status: ERROR
+    errorCause: Optimistic locking
+
+
+fieldItem:
+  description: MARC Field
+  type: object
+  properties:
+    tag:
+      description: Field's tag
+      type: string
+      pattern: ^[0-9]{3}$
+      example: 001
+    content:
+      description: Field's content
+      type: object
+      example: $a 393893 $b Mike
+    indicators:
+      description: Field's indicators
+      type: array
+      items:
+        type: string
+        minLength: 1
+        maxLength: 1
+      minItems: 0
+      maxItems: 2
+    isProtected:
+      description: Flag indicates if the field data is protected
+      type: boolean
+      readOnly: true
+      example: true
+    linkDetails:
+      description: MARC Field link details Schema
+      $ref: '#/linkDetails'
+  required:
+    - tag
+    - content
+  example:
+    tag: 100
+    content: $a 393893 $b Mike
+    indicators:
+      - 1
+      - 2
+    isProtected: true
+
+baseMarcRecord:
+  type: object
+  title: Base MARC record for QuickMARC
+  description: Base MARC record for QuickMARC
+  properties:
+    leader:
+      type: string
+      description: MARC record's leader
+      minLength: 24
+      maxLength: 24
+    fields:
+      description: MARC record's fields
+      type: array
+      items:
+        $ref: '#/fieldItem'
+    suppressDiscovery:
+      type: boolean
+      default: false
+      description: Flag indicates if the record is displayed during a search
+    marcFormat:
+      $ref: '#/marcFormat'
+      description: MARC Format
+  discriminator:
+    propertyName: _actionType
+    mapping:
+      view: '#/quickMarcView'
+      edit: '#/quickMarcEdit'
+      create: '#/quickMarcCreate'
+  required:
+    - marcFormat
+    - leader
+    - fields
+
+quickMarcView:
+  allOf:
+    - $ref: '#/baseMarcRecord'
+    - type: object
+      properties:
+        parsedRecordId:
+          description: MARC record Id
+          $ref: '#/uuid'
+        parsedRecordDtoId:
+          description: ParsedRecordDto identifier
+          $ref: '#/uuid'
+        externalId:
+          description: Identifier of external entity
+          $ref: '#/uuid'
+        externalHrid:
+          description: HRID of external entity
+          type: string
+        updateInfo:
+          $ref: '#/updateInfo'
+
+quickMarcEdit:
+  allOf:
+    - $ref: '#/baseMarcRecord'
+    - type: object
+      properties:
+        parsedRecordId:
+          description: MARC record Id
+          $ref: '#/uuid'
+        parsedRecordDtoId:
+          description: ParsedRecordDto identifier
+          $ref: '#/uuid'
+        externalId:
+          description: Identifier of external entity
+          $ref: '#/uuid'
+        externalHrid:
+          description: HRID of external entity
+          type: string
+        relatedRecordVersion:
+          description: Information related to version of the record
+          type: string
+      required:
+        - parsedRecordId
+        - parsedRecordDtoId
+        - externalId
+        - externalHrid
+        - relatedRecordVersion
+
+quickMarcCreate:
+  allOf:
+    - $ref: '#/baseMarcRecord'
+    - type: object
+
+userInfo:
+  type: object
+  description: User Display Information
+  properties:
+    userId:
+      description: ID of the user
+      $ref: '#/uuid'
+      readOnly: true
+    username:
+      description: Username of the user
+      type: string
+      readOnly: true
+    lastName:
+      type: string
+      readOnly: true
+      description: Last name of the user
+    firstName:
+      type: string
+      readOnly: true
+      description: First name of the user
+    middleName:
+      type: string
+      readOnly: true
+      description: Middle name or initial of the user
+  example:
+    userId: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
+    username: john-doe
+    lastName: Doe
+    firstName: John
+    middleName: X.
+
+recordState:
+  type: string
+  description: State of source record
+  enum: [
+    ACTUAL,
+    IN_PROGRESS,
+    ERROR
+  ]
+
+updateInfo:
+  type: object
+  description: Record metadata
+  properties:
+    recordState:
+      description: State of source record
+      $ref: '#/recordState'
+    updateDate:
+      description: Date and time of last successful update of the record
+      type: string
+      format: date-time
+    updatedBy:
+      description: Information about the user who last updated the record (when available)
+      $ref: '#/userInfo'
+
+creationStatus:
+  description: Status of MARC bibliographic record creation
+  type: object
+  properties:
+    qmRecordId:
+      description: ID of ParsedRecord to be created
+      type: string
+      format: uuid
+      example: c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1
+    externalId:
+      description: ID of created external record
+      type: string
+      format: uuid
+      example: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
+    marcId:
+      description: ID of created MARC record
+      type: string
+      format: uuid
+      example: 55a76b7b-841d-45b9-9e64-d0827b9e2480
+    jobExecutionId:
+      description: ID of job
+      type: string
+      format: uuid
+      example: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
+    status:
+      type: string
+      description: Status of creation
+      example: CREATED
+      enum:
+        - NEW
+        - IN_PROGRESS
+        - CREATED
+        - ERROR
+    errorMessage:
+      type: string
+      description: Error message for 'ERROR' status
+      example: Failed to create instance
+    metadata:
+      type: object
+      properties:
+        createdAt:
+          description: Date and time of creation of the status
+          type: string
+          format: date-time
+          example: '2020-07-14T12:20:10.000'
+        updatedAt:
+          description: Date and time of last successful update of the status
+          type: string
+          format: date-time
+          example: '2020-07-14T12:20:10.000'
+
+srsFieldItem:
+  type: object
+  description: MARC Field content
+  properties:
+    ind1:
+      minLength: 1
+      maxLength: 1
+      type: string
+    ind2:
+      minLength: 1
+      maxLength: 1
+      type: string
+    subfields:
+      description: MARC record's fields
+      type: array
+      items:
+        type: object
+        description: Subfield tag
+        additionalProperties:
+          type: string
+          description: Subfield content
+    linkDetails:
+      description: MARC Field link details Schema
+      $ref: '#/linkDetails'
+
+baseSrsMarcRecord:
+  type: object
+  title: Base MARC record for source-record-storage
+  description: Base MARC record for source-record-storage
+  properties:
+    leader:
+      type: string
+      description: MARC record's leader
+      minLength: 24
+      maxLength: 24
+    fields:
+      description: MARC record's fields
+      type: array
+      items:
+        type: object
+        description: MARC Field
+        additionalProperties:
+          type: object
+          description: MARC Field content
+          $ref: '#/srsFieldItem'
+  required:
+    - leader
+    - fields
+
+entitiesLinksSuggestions:
+  type: object
+  description: Collection of srs MARC records
+  properties:
+    records:
+      description: MARC srs record collection
+      type: array
+      items:
+        $ref: '#/baseSrsMarcRecord'
+
+marcSpecificationCondition:
+  type: object
+  description: Specification condition definition
+  properties:
+    tag:
+      description: Field's tag
+      type: string
+      pattern: ^([0-9]{3})|(LDR)$
+      example: LDR
+    positions:
+      description: Map of condition definitions
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
+          minLength: 1
+          maxLength: 1
+          example: a
+  required:
+    - tag
+    - positions
+
+marcSpecificationItem:
+  type: object
+  description: Specification item definition
+  properties:
+    code:
+      description: Item code
+      type: string
+      example: Entered
+    name:
+      description: Item name
+      type: string
+      example: Date entered on file
+    order:
+      description: Item order
+      type: integer
+      example: 0
+    position:
+      description: Position in field
+      type: integer
+      example: 0
+    length:
+      description: Length from position
+      type: integer
+      example: 5
+    isArray:
+      description: Is item an array of values
+      type: boolean
+      example: false
+    readOnly:
+      description: Is item read only
+      type: boolean
+      example: true
+  required:
+    - code
+    - name
+    - order
+    - position
+    - length
+    - isArray
+    - readOnly
+
+marcSpecificationType:
+  type: object
+  description: Specification type definition
+  properties:
+    code:
+      description: Type codename
+      type: string
+      example: books
+    identifiedBy:
+      description: Conditions used to identify MARC specification type
+      type: object
+      properties:
+        or:
+          description: Single condition
+          type: array
+          items:
+            $ref: '#/marcSpecificationCondition'
+      required:
+        - or
+    items:
+      type: array
+      items:
+        $ref: '#/marcSpecificationItem'
+  required:
+    - code
+    - identifiedBy
+    - items
+
+marcSpecification:
+  type: object
+  description: MARC specification definition
+  properties:
+    tag:
+      description: Field's tag
+      type: string
+      pattern: ^[0-9]{3}$
+      example: 008
+    format:
+      description: MARC format
+      $ref: '#/marcFormat'
+    label:
+      description: Label of the specification
+      type: string
+    url:
+      description: Url to details about field spec
+      type: string
+      format: uri
+    repeatable:
+      description: If this field can appear multiple time in MARC record
+      type: boolean
+    required:
+      description: If this field is required in MARC record
+      type: boolean
+    spec:
+      type: object
+      description: Details of the specification
+      properties:
+        types:
+          description: Array of types
+          type: array
+          items:
+            $ref: '#/marcSpecificationType'
+      required:
+        - types
+  required:
+    - tag
+    - format
+    - label
+    - url
+    - repeatable
+    - required
+    - spec

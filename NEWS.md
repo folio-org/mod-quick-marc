@@ -1,8 +1,29 @@
-## v3.1.0 xxxx-xx-xx
+## v5.0.0 xxxx-xx-xx
+### Breaking changes
+* Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))
+* Separate quickMarc schema for different actions ([MODQM-325](https://issues.folio.org/browse/MODQM-325))
+* Add support of link status and errorCause ([MODQM-318](https://issues.folio.org/browse/MODQM-318))
+
+### APIs versions
+* Provides `marc-records-editor` `v5.3`
+* Removed `records-editor.records` `v4.0`
+* Requires `instance-authority-links` `v2.1`
+* Requires `instance-authority-links-suggestions` `v1.2`
+* Removed `_jsonSchemas`
+* Provides `marc-specifications` `v1.0`
 
 ### Features
+* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
 * Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))
+* Add "authoritySearchParameter" to "suggest links" endpoint ([MODQM-363](https://issues.folio.org/browse/MODQM-363))
+* Add "ignoreAutoLinkingEnabled" to "suggest links" endpoint ([MODQM-363](https://issues.folio.org/browse/MODQM-364))
+* Implement MARC field specifications endpoint ([MODQM-332](https://issues.folio.org/browse/MODQM-332))
 
+### Dependencies
+* Bump `spring-boot-starter-parent` from `3.0.2` to `3.1.1`
+* Bump `folio-spring-base` from `6.0.1` to `7.0.0`
+* Added `hypersistence-utils-hibernate-60` `3.0.1`
+git
 ## v3.0.0 2023-02-22
 ### Breaking changes
 * Migration to Spring Boot v3.0.0 and Java 17 ([MODQM-302](https://issues.folio.org/browse/MODQM-302))

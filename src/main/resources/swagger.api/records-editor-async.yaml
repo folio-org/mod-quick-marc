@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: quickMARC Record Editor
-  version: 1.1.0
+  version: 5.0
 servers:
   - url: /records-editor/
 paths:
@@ -10,9 +10,9 @@ paths:
       tags:
         - records-editor-async
       responses:
-        "202":
+        '202':
           description: MARC record accepted for updating
-        "400":
+        '400':
           description:
             Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
@@ -20,41 +20,41 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "409":
+                $ref: '#/components/schemas/error'
+        '409':
           description: Update failed due to optimistic locking
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "500":
+                $ref: '#/components/schemas/error'
+        '500':
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
       description: Edit MARC record
       operationId: putRecord
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/quickMarc"
+              $ref: '#/components/schemas/quickMarcEdit'
         required: true
       parameters:
         - name: id
           in: path
           required: true
           schema:
-            "$ref": "#/components/schemas/UUID"
+            '$ref': '#/components/schemas/UUID'
           description: The UUID of a record
     delete:
       tags:
         - records-editor-async
       responses:
-        "204":
+        '204':
           description: MARC record successfully deleted
-        "400":
+        '400':
           description:
             Bad request, e.g. malformed request body or query parameter.
             Details of the error (e.g. name of the parameter or line/character number
@@ -62,19 +62,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "404":
+                $ref: '#/components/schemas/error'
+        '404':
           description: MARC record with a given ID not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
-        "500":
+                $ref: '#/components/schemas/error'
+        '500':
           description: Internal server error, e.g. due to misconfiguration
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: '#/components/schemas/error'
       description: Delete MARC record by externalId
       operationId: deleteRecordByExternalId
       parameters:
@@ -83,15 +83,12 @@ paths:
           required: true
           description: UUID of the external that is related to the MARC record
           schema:
-            $ref: "#/components/schemas/UUID"
+            $ref: '#/components/schemas/UUID'
 components:
   schemas:
-    quickMarc:
-      $ref: schemas/quickMarc.json
-    creationStatus:
-      $ref: schemas/creationStatus.json
+    quickMarcEdit:
+      $ref: 'schemas/common.yaml#/quickMarcEdit'
     error:
       type: object
     UUID:
-      type: string
-      format: uuid
+      $ref: 'schemas/common.yaml#/uuid'

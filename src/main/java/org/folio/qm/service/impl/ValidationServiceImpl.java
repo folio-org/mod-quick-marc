@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.domain.dto.QuickMarc;
+import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
@@ -28,13 +28,13 @@ public class ValidationServiceImpl implements ValidationService {
   private final List<ValidationRule> validationRules;
 
   @Override
-  public ValidationResult validate(QuickMarc quickMarc) {
+  public ValidationResult validate(BaseMarcRecord quickMarc) {
     var validationErrors = validationRules.stream()
       .filter(rule -> rule.supportFormat(quickMarc.getMarcFormat()))
       .map(rule -> rule.validate(quickMarc))
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .collect(Collectors.toList());
+      .toList();
 
     if (validationErrors.isEmpty()) {
       return new ValidationResult(true, Collections.emptyList());
@@ -44,7 +44,7 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   @Override
-  public void validateIdsMatch(QuickMarc quickMarc, UUID parsedRecordId) {
+  public void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
     if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
       log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
         quickMarc.getParsedRecordId(), parsedRecordId);

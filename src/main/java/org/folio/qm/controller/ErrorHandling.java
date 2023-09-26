@@ -11,12 +11,12 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.StringUtils;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.JobProfileNotFoundException;
 import org.folio.qm.exception.QuickMarcException;
 import org.folio.spring.exception.NotFoundException;
 import org.folio.tenant.domain.dto.Error;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -43,7 +43,7 @@ public class ErrorHandling {
     if (status != -1) {
       var message = e.responseBody()
         .map(byteBuffer -> new String(byteBuffer.array(), UTF_8))
-        .orElse(StringUtils.EMPTY);
+        .orElse(e.getMessage());
       response.setStatus(status);
       log.warn(message);
       return buildErrors(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
@@ -69,10 +69,20 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(QuickMarcException.class)
-  public Error handleConverterException(QuickMarcException e, HttpServletResponse response) {
+  public Error handleQuickMarcException(QuickMarcException e, HttpServletResponse response) {
     var code = e.getStatus();
     response.setStatus(code);
     return e.getError();
+  }
+
+  @ExceptionHandler(ConversionFailedException.class)
+  public Error handleConverterException(ConversionFailedException e, HttpServletResponse response) {
+    var cause = e.getCause();
+    if (cause instanceof QuickMarcException quickMarcException) {
+      return handleQuickMarcException(quickMarcException, response);
+    } else {
+      return handleGlobalException(cause);
+    }
   }
 
   @ExceptionHandler(NotFoundException.class)
@@ -117,6 +127,12 @@ public class ErrorHandling {
     return buildBadRequestResponse(e.getMessage());
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleMethodArgumentTypeMismatchException(IllegalArgumentException e) {
+    return buildBadRequestResponse(e.getMessage());
+  }
+
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleConstraintViolationException(Exception e) {
@@ -133,7 +149,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public Error handleGlobalException(Exception e) {
+  public Error handleGlobalException(Throwable e) {
     log.error("Unexpected error occurred: ", e);
     return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
   }

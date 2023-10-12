@@ -1,4 +1,26 @@
-## v5.0.0 xxxx-xx-xx
+## v5.1.0 In Progress
+### Breaking changes
+* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+
+### New APIs versions
+* Provides `API_NAME vX.Y`
+* Requires `API_NAME vX.Y`
+
+### Features
+* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+
+### Bug fixes
+* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+
+### Tech Dept
+* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+
+### Dependencies
+* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
+* Add `LIB_NAME` `2.7.4`
+* Remove `LIB_NAME`
+
+## v5.0.0 2023-10-11
 ### Breaking changes
 * Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))
 * Separate quickMarc schema for different actions ([MODQM-325](https://issues.folio.org/browse/MODQM-325))
@@ -13,17 +35,26 @@
 * Provides `marc-specifications` `v1.0`
 
 ### Features
-* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-319](https://issues.folio.org/browse/MODQM-330))
+* Implement endpoint to suggest links for MARC-bibliographic record ([MODQM-330](https://issues.folio.org/browse/MODQM-330))
 * Edit/Derive a MARC bib - Support MARC LDR_19 values 'b' and 'c' ([MODQM-315](https://issues.folio.org/browse/MODQM-315))
 * Add "authoritySearchParameter" to "suggest links" endpoint ([MODQM-363](https://issues.folio.org/browse/MODQM-363))
 * Add "ignoreAutoLinkingEnabled" to "suggest links" endpoint ([MODQM-363](https://issues.folio.org/browse/MODQM-364))
 * Implement MARC field specifications endpoint ([MODQM-332](https://issues.folio.org/browse/MODQM-332))
+* Make 008 field required for all MARC records ([MODQM-326](https://issues.folio.org/browse/MODQM-326))
+* Normalize 008 field value during conversion ([MODQM-329](https://issues.folio.org/browse/MODQM-329))
+
+### Tech Dept
+* Change `records-editor.records` interface name to follow naming convention ([MODQM-329](https://issues.folio.org/browse/MODQM-329))
+* Added Kafka topic removal on tenant purging ([MODQM-349](https://issues.folio.org/browse/MODQM-349))
+* Allow Kafka tenant collection topics ([MODQM-382](https://issues.folio.org/browse/MODQM-382))
 
 ### Dependencies
 * Bump `spring-boot-starter-parent` from `3.0.2` to `3.1.1`
-* Bump `folio-spring-base` from `6.0.1` to `7.0.0`
-* Added `hypersistence-utils-hibernate-60` `3.0.1`
-git
+* Bump `folio-spring-base` from `6.0.1` to `7.2.0`
+* Bump `openapi-generator` from `6.5.0` to `7.0.1`
+* Bump `mapstruct` from `1.5.3.Final` to `1.5.5.Final`
+* Added `hypersistence-utils-hibernate-60` `3.5.3`
+
 ## v3.0.0 2023-02-22
 ### Breaking changes
 * Migration to Spring Boot v3.0.0 and Java 17 ([MODQM-302](https://issues.folio.org/browse/MODQM-302))

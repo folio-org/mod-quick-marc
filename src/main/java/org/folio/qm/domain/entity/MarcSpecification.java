@@ -1,5 +1,6 @@
 package org.folio.qm.domain.entity;
 
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +32,7 @@ public class MarcSpecification {
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
+  @Type(PostgreSQLEnumType.class)
   private RecordType recordType;
 
   @Column(nullable = false)

@@ -1,3 +1,16 @@
+## v5.0.1 2023-08-12
+### Bug fixes
+* Update hypersistence dependency to supported by Hibernate 6.2 ([MODQM-385](https://issues.folio.org/browse/MODQM-385))
+
+### Dependencies
+* Bump `spring-boot-starter-parent` from `3.1.1` to `3.1.6`
+* Bump `folio-spring-base` from `7.2.0` to `7.2.2`
+* Bump `openapi-generator` from `7.0.1` to `7.1.0`
+* Bump `swagger-annotations` from `2.2.16` to `2.2.19`
+* Bump `testcontainers` from `1.19.1` to `1.19.3`
+* Remove `hypersistence-utils-hibernate-60`
+* Add `hypersistence-utils-hibernate-62` `3.6.1`
+
 ## v5.0.0 2023-10-11
 ### Breaking changes
 * Update links interactions according to 'instance-authority-links' interface change to 2.0 ([MODQM-319](https://issues.folio.org/browse/MODQM-319))

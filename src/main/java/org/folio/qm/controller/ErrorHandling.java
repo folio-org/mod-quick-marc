@@ -128,7 +128,7 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST, code = HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentTypeMismatchException(IllegalArgumentException e) {
     log.error("IllegalArgumentException: {}", e.getMessage());
     return buildError(HttpStatus.BAD_REQUEST, INTERNAL, e.getMessage());

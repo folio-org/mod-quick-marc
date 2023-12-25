@@ -130,7 +130,8 @@ public class ErrorHandling {
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentTypeMismatchException(IllegalArgumentException e) {
-    return buildBadRequestResponse(e.getMessage());
+    log.error("IllegalArgumentException occurred: ", e);
+    return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
   }
 
   @ExceptionHandler(ConstraintViolationException.class)

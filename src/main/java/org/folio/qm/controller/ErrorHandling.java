@@ -81,7 +81,7 @@ public class ErrorHandling {
     if (cause instanceof QuickMarcException quickMarcException) {
       return handleQuickMarcException(quickMarcException, response);
     } else {
-      return handleGlobalException(cause);
+      return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
     }
   }
 
@@ -128,10 +128,10 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(value = HttpStatus.BAD_REQUEST, code = HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentTypeMismatchException(IllegalArgumentException e) {
     log.error("IllegalArgumentException: {}", e.getMessage());
-    return buildError(HttpStatus.BAD_REQUEST, INTERNAL, e.getMessage());
+    return buildBadRequestResponse(e.getMessage());
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
@@ -146,13 +146,6 @@ public class ErrorHandling {
   @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
   public Error handleAsyncRequestTimeoutException(AsyncRequestTimeoutException e) {
     return buildError(HttpStatus.REQUEST_TIMEOUT, INTERNAL, "Request timeout occurred");
-  }
-
-  @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public Error handleGlobalException(Throwable e) {
-    log.error("Unexpected error occurred: ", e);
-    return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
   }
 
   private Error buildBadRequestResponse(String message) {

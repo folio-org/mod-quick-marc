@@ -105,16 +105,12 @@ public final class MarcUtils {
       .collect(Collectors.toCollection(LinkedList::new));
 
     List<Subfield> subfields = new ArrayList<>();
-    log.warn("Numbers of tokens: {}", tokens.size());
-    log.debug("Numbers of tokens: {}", tokens.size());
     log.error("Numbers of tokens: {}", tokens.size());
     while (!tokens.isEmpty()) {
       String token = tokens.pop();
       String subfieldString = token.concat(checkNextToken(tokens));
       if (subfieldString.length() < TOKEN_MIN_LENGTH) {
-        log.warn("Subfield length is less than 2 characters: {}", subfieldString);
-        log.debug("Subfield length is less than 2 characters: {}", subfieldString);
-        log.error("Subfield length is less than 2 characters: {}", subfieldString);
+        log.error("Subfield less than 2 : {}", subfieldString);
         throw new IllegalArgumentException("Subfield length");
       }
       subfields.add(subfieldFunction.apply(subfieldString));

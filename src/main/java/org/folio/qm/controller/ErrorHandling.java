@@ -1,7 +1,6 @@
 package org.folio.qm.controller;
 
 import static feign.Util.UTF_8;
-import static feign.Util.checkArgument;
 import static org.folio.qm.util.ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED;
 import static org.folio.qm.util.ErrorUtils.ErrorType.INTERNAL;
 import static org.folio.qm.util.ErrorUtils.ErrorType.UNKNOWN;

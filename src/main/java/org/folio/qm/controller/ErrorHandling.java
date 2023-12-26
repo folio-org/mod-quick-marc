@@ -1,6 +1,7 @@
 package org.folio.qm.controller;
 
 import static feign.Util.UTF_8;
+import static feign.Util.checkArgument;
 import static org.folio.qm.util.ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED;
 import static org.folio.qm.util.ErrorUtils.ErrorType.INTERNAL;
 import static org.folio.qm.util.ErrorUtils.ErrorType.UNKNOWN;
@@ -77,8 +78,9 @@ public class ErrorHandling {
 
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Error handleIllegalArgumentException(IllegalArgumentException e) {
+  public Error handleIllegalArgumentException(IllegalArgumentException e, HttpServletResponse response) {
     log.error("IllegalArgumentException in the IllegalArgument Handler: {}", e.getMessage());
+    response.setStatus(HttpStatus.BAD_REQUEST.value());
     return buildBadRequestResponse(e.getMessage());
   }
 
@@ -86,11 +88,10 @@ public class ErrorHandling {
   public Error handleConverterException(ConversionFailedException e, HttpServletResponse response) {
     var cause = e.getCause();
     if (cause instanceof QuickMarcException quickMarcException) {
-      log.error("QuickMarcException: {}", quickMarcException.getMessage());
       return handleQuickMarcException(quickMarcException, response);
     } else if (cause instanceof IllegalArgumentException illegalArgumentException) {
       log.error("IllegalArgumentException in the Converter Exception: {}", cause.getMessage());
-      return handleIllegalArgumentException(illegalArgumentException);
+      return handleIllegalArgumentException(illegalArgumentException, response);
     } else {
       log.error("ConversionFailedException: {}", e.getMessage());
       return handleGlobalException(cause);

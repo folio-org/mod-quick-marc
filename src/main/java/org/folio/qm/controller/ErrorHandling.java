@@ -71,6 +71,7 @@ public class ErrorHandling {
   @ExceptionHandler(QuickMarcException.class)
   public Error handleQuickMarcException(QuickMarcException e, HttpServletResponse response) {
     var code = e.getStatus();
+    log.error("QuickMarcException: {}", e.getMessage());
     response.setStatus(code);
     return e.getError();
   }
@@ -79,15 +80,18 @@ public class ErrorHandling {
   public Error handleConverterException(ConversionFailedException e, HttpServletResponse response) {
     var cause = e.getCause();
     if (cause instanceof QuickMarcException quickMarcException) {
+      log.error("QuickMarcException: {}", quickMarcException.getMessage());
       return handleQuickMarcException(quickMarcException, response);
     } else {
-      return buildError(HttpStatus.INTERNAL_SERVER_ERROR, UNKNOWN, e.getMessage());
+      log.error("ConversionFailedException: {}", e.getMessage());
+      return handleGlobalException(cause);
     }
   }
 
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public Error handleNotFoundException(NotFoundException e) {
+    log.error("NotFoundException: {}", e.getMessage());
     return buildError(HttpStatus.NOT_FOUND, INTERNAL, e.getMessage());
   }
 

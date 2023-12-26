@@ -124,6 +124,7 @@ public class ErrorHandling {
   @ExceptionHandler(JobProfileNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleJobProfileNotFoundException(JobProfileNotFoundException e) {
+    log.error("JobProfileNotFoundException: {}", e.getMessage());
     return buildBadRequestResponse(e.getMessage());
   }
 

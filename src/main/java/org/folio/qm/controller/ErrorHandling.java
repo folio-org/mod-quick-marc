@@ -78,7 +78,6 @@ public class ErrorHandling {
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleIllegalArgumentException(IllegalArgumentException e, HttpServletResponse response) {
-    log.error("IllegalArgumentException in the IllegalArgument Handler: {}", e.getMessage());
     response.setStatus(HttpStatus.BAD_REQUEST.value());
     return buildBadRequestResponse(e.getMessage());
   }
@@ -89,10 +88,8 @@ public class ErrorHandling {
     if (cause instanceof QuickMarcException quickMarcException) {
       return handleQuickMarcException(quickMarcException, response);
     } else if (cause instanceof IllegalArgumentException illegalArgumentException) {
-      log.error("IllegalArgumentException in the Converter Exception: {}", cause.getMessage());
       return handleIllegalArgumentException(illegalArgumentException, response);
     } else {
-      log.error("ConversionFailedException: {}", e.getMessage());
       return handleGlobalException(cause);
     }
   }

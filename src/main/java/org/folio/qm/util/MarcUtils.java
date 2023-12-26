@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
@@ -26,7 +25,6 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.marc4j.marc.Subfield;
 
-@Log4j2
 public final class MarcUtils {
   public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
     ParsedRecordDto.RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
@@ -109,7 +107,6 @@ public final class MarcUtils {
       String token = tokens.pop();
       String subfieldString = token.concat(checkNextToken(tokens));
       if (subfieldString.length() < TOKEN_MIN_LENGTH) {
-        log.error("Subfield less than 2 : {}", subfieldString);
         throw new IllegalArgumentException("Subfield length");
       }
       subfields.add(subfieldFunction.apply(subfieldString));

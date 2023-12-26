@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.AdditionalInfo;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
@@ -29,7 +28,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-@Log4j2
 @Component
 @RequiredArgsConstructor
 public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, ParsedRecordDto> {
@@ -65,7 +63,6 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
       writer.write(marcRecord);
       return objectMapper.readTree(os.toByteArray());
     } catch (IOException e) {
-      log.error("Error while converting MARC record to JSON", e);
       throw new ConverterException(e);
     }
   }

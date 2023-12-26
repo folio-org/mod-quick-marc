@@ -71,7 +71,6 @@ public class ErrorHandling {
   @ExceptionHandler(QuickMarcException.class)
   public Error handleQuickMarcException(QuickMarcException e, HttpServletResponse response) {
     var code = e.getStatus();
-    log.error("QuickMarcException: {}", e.getMessage());
     response.setStatus(code);
     return e.getError();
   }
@@ -101,7 +100,6 @@ public class ErrorHandling {
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public Error handleNotFoundException(NotFoundException e) {
-    log.error("NotFoundException: {}", e.getMessage());
     return buildError(HttpStatus.NOT_FOUND, INTERNAL, e.getMessage());
   }
 
@@ -138,7 +136,6 @@ public class ErrorHandling {
   @ExceptionHandler(JobProfileNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleJobProfileNotFoundException(JobProfileNotFoundException e) {
-    log.error("JobProfileNotFoundException: {}", e.getMessage());
     return buildBadRequestResponse(e.getMessage());
   }
 

@@ -105,7 +105,6 @@ public final class MarcUtils {
       .collect(Collectors.toCollection(LinkedList::new));
 
     List<Subfield> subfields = new ArrayList<>();
-    log.error("Numbers of tokens: {}", tokens.size());
     while (!tokens.isEmpty()) {
       String token = tokens.pop();
       String subfieldString = token.concat(checkNextToken(tokens));

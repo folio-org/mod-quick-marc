@@ -48,10 +48,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
+
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -355,6 +357,25 @@ class RecordsEditorAsyncIT extends BaseIT {
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcEdit)
       .andExpect(status().isBadRequest())
       .andExpect(errorMessageMatch(equalTo(String.format("Parameter '%s' must not be null", fieldName))));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
+  void testUpdateReturn400WhenRecordHaveIncorrectFieldContent(String filePath) throws Exception {
+    log.info("===== Verify PUT record: Subfield length check =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarcEdit quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    // Now change the content of the field to wrong one
+    quickMarcJson.getFields().get(6).setContent("$a");
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isBadRequest())
+      .andExpect(errorMessageMatch(equalTo("Subfield length")));
   }
 
   @Test

@@ -75,11 +75,20 @@ public class ErrorHandling {
     return e.getError();
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Error handleIllegalArgumentException(IllegalArgumentException e, HttpServletResponse response) {
+    response.setStatus(HttpStatus.BAD_REQUEST.value());
+    return buildBadRequestResponse(e.getMessage());
+  }
+
   @ExceptionHandler(ConversionFailedException.class)
   public Error handleConverterException(ConversionFailedException e, HttpServletResponse response) {
     var cause = e.getCause();
     if (cause instanceof QuickMarcException quickMarcException) {
       return handleQuickMarcException(quickMarcException, response);
+    } else if (cause instanceof IllegalArgumentException illegalArgumentException) {
+      return handleIllegalArgumentException(illegalArgumentException, response);
     } else {
       return handleGlobalException(cause);
     }
@@ -123,13 +132,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(JobProfileNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Error handleMethodArgumentTypeMismatchException(JobProfileNotFoundException e) {
-    return buildBadRequestResponse(e.getMessage());
-  }
-
-  @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Error handleMethodArgumentTypeMismatchException(IllegalArgumentException e) {
+  public Error handleJobProfileNotFoundException(JobProfileNotFoundException e) {
     return buildBadRequestResponse(e.getMessage());
   }
 

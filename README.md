@@ -11,14 +11,14 @@ Spring-based module that provides API for quickMARC - in-app editor for MARC rec
 ## Additional information
 quickMARC API provides the following URLs:
 
-| Method | URL                                                                                                      | Permissions                               | Description                                                    | 
-|--------|----------------------------------------------------------------------------------------------------------|-------------------------------------------|----------------------------------------------------------------|
-| GET    | /records-editor/records?externalId={externalId}                                                          | marc-records-editor.item.get              | Retrieves QuickMarc by external id                             |
-| POST   | /records-editor/records                                                                                  | marc-records-editor.item.post             | Create a new MARC and Instance records                         |
-| PUT    | /records-editor/records/{recordId}                                                                       | marc-records-editor.item.get              | Updates SRS record                                             |
-| GET    | /records-editor/records/status?qmRecordId={qmRecordId}                                                   | marc-records-editor.status.item.get       | Retrieves status of MARC bibliographic record creation         |
-| POST   | /records-editor/links/suggestion?authoritySearchParameter={ID/NATURAL_ID}&ignoreAutoLinkingEnabled=false | marc-records-editor.links.suggestion.post | Suggest links for record collection                            |
-| GET    | /marc-specifications/{recordType}/{fieldTag}                                                             | marc-specifications.item.get              | Retrieves MARC specification by record type and MARC field tag |
+| Method | URL                                                                                                      | Permissions                               | Description                                                          | 
+|--------|----------------------------------------------------------------------------------------------------------|-------------------------------------------|----------------------------------------------------------------------|
+| GET    | /records-editor/records?externalId={externalId}                                                          | marc-records-editor.item.get              | Retrieves MARC record by external id                                 |
+| POST   | /records-editor/records                                                                                  | marc-records-editor.item.post             | Create a new MARC and mapped records (instance, holdings, authority) |
+| PUT    | /records-editor/records/{recordId}                                                                       | marc-records-editor.item.get              | Updates MARC and mapped records (instance, holdings, authority)      |
+| GET    | /records-editor/records/status?qmRecordId={qmRecordId}                                                   | marc-records-editor.status.item.get       | Retrieves status of records creation                                 |
+| POST   | /records-editor/links/suggestion?authoritySearchParameter={ID/NATURAL_ID}&ignoreAutoLinkingEnabled=false | marc-records-editor.links.suggestion.post | Suggest links for record collection                                  |
+| GET    | /marc-specifications/{recordType}/{fieldTag}                                                             | marc-specifications.item.get              | Retrieves MARC specification by record type and MARC field tag       |
 
 More detail can be found on quickMARC wiki-page: [WIKI quickMARC](https://wiki.folio.org/pages/viewpage.action?pageId=36571766).
 

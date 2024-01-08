@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.spring.FolioExecutionContext;
+import org.folio.spring.testing.type.UnitTest;
 import org.folio.spring.tools.kafka.KafkaAdminService;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.junit.jupiter.api.Test;

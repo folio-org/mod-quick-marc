@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

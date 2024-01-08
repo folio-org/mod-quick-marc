@@ -11,8 +11,8 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JO
 
 import java.util.UUID;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
-import org.folio.qm.support.extension.ClearTable;
-import org.folio.qm.support.types.IntegrationTest;
+import org.folio.spring.testing.extension.DatabaseCleanup;
+import org.folio.spring.testing.type.IntegrationTest;
 import org.junit.jupiter.api.Test;
 
 @IntegrationTest
@@ -21,27 +21,27 @@ class KafkaListenerIT extends BaseIT {
   private static final String DI_ERROR_EVENT = "mockdata/request/di-event/error-event.json";
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithInstance() {
     shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(
       "mockdata/request/di-event/complete-event-with-instance.json");
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithHoldings() {
     shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(
       "mockdata/request/di-event/complete-event-with-holdings.json");
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithAuthority() {
     shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(DI_COMPLETE_AUTHORITY_DELETE);
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithoutExternalId() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
@@ -58,7 +58,7 @@ class KafkaListenerIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithInvalidJson() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
@@ -75,7 +75,7 @@ class KafkaListenerIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportErrorEvent() {
     var statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
@@ -91,7 +91,7 @@ class KafkaListenerIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldDeleteRecordWhenReceivedDataImportCompletedEvent() {
     UUID statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
@@ -107,7 +107,7 @@ class KafkaListenerIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldDeleteRecordWhenReceivedDataImportErrorEvent() {
     UUID statusId = UUID.randomUUID();
     saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);

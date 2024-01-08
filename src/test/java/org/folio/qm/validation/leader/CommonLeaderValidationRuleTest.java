@@ -4,9 +4,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
+import org.folio.spring.testing.type.UnitTest;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
@@ -29,69 +29,69 @@ class CommonLeaderValidationRuleTest {
   void shouldValidateLeaderWithWrongLengthError() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_LENGTH);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getMessage(), Is.is("Wrong leader length"));
+    assertThat(validationError.get().message(), Is.is("Wrong leader length"));
   }
 
   @Test
   void shouldValidateNullLeaderWithWrongLengthError() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_LENGTH);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getMessage(), Is.is("Wrong leader length"));
+    assertThat(validationError.get().message(), Is.is("Wrong leader length"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnRecordLength() {
     Optional<ValidationError> validationError = rule.validate(LEADER_RECORD_LENGTH_WITH_CHARS);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getMessage(), Is.is("0-5 positions must be a number"));
+    assertThat(validationError.get().message(), Is.is("0-5 positions must be a number"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnCodingScheme() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CODING_SCHEME);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Character coding scheme"));
+    assertThat(validationError.get().tag(), Is.is("Character coding scheme"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnIndicatorCount() {
     Optional<ValidationError> validationError = rule.validate(WRONG_INDICATOR_COUNT);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Indicator count"));
+    assertThat(validationError.get().tag(), Is.is("Indicator count"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnSubfieldCodeLength() {
     Optional<ValidationError> validationError = rule.validate(WRONG_SUBFIELD_CODE_LENGTH);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Subfield code length"));
+    assertThat(validationError.get().tag(), Is.is("Subfield code length"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnEntryMap20() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_20);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Entry map"));
+    assertThat(validationError.get().tag(), Is.is("Entry map"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnEntryMap21() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_21);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Entry map"));
+    assertThat(validationError.get().tag(), Is.is("Entry map"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnEntryMap22() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_22);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Entry map"));
+    assertThat(validationError.get().tag(), Is.is("Entry map"));
   }
 
   @Test
   void shouldValidateLeaderWithErrorOnEntryMap23() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENTRY_MAP_23);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Entry map"));
+    assertThat(validationError.get().tag(), Is.is("Entry map"));
   }
 }

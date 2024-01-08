@@ -3,7 +3,9 @@ package org.folio.qm.support.utils.testdata;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public enum Tag006FieldTestData {
 
   BOOKS("aabcdefghijklmn op", getBooksContent()),
@@ -151,11 +153,4 @@ public enum Tag006FieldTestData {
     return content;
   }
 
-  public String getDtoData() {
-    return dtoData;
-  }
-
-  public Map<String, Object> getQmContent() {
-    return qmContent;
-  }
 }

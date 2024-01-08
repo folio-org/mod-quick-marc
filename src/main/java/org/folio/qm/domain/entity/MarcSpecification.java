@@ -1,7 +1,5 @@
 package org.folio.qm.domain.entity;
 
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +15,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.folio.qm.domain.dto.MarcSpec;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -32,13 +31,12 @@ public class MarcSpecification {
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  @Type(PostgreSQLEnumType.class)
   private RecordType recordType;
 
   @Column(nullable = false)
   private String fieldTag;
 
-  @Type(JsonBinaryType.class)
+  @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "jsonb", nullable = false)
   private MarcSpec marcSpec;
 
@@ -46,6 +44,11 @@ public class MarcSpecification {
   private Timestamp createdAt;
 
   private Timestamp updatedAt;
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -57,10 +60,5 @@ public class MarcSpecification {
     }
     MarcSpecification that = (MarcSpecification) o;
     return id != null && Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
   }
 }

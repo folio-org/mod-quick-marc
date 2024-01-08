@@ -31,7 +31,7 @@ public class KafkaConfig {
   public ConsumerFactory<String, DataImportEventPayload> dataImportConsumerFactory(KafkaProperties kafkaProperties,
                                                                                    Deserializer<DataImportEventPayload>
                                                                                      deserializer) {
-    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties());
+    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties(null));
     consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
     return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);
@@ -50,7 +50,7 @@ public class KafkaConfig {
   public ConsumerFactory<String, QmCompletedEventPayload> quickMarcConsumerFactory(KafkaProperties kafkaProperties,
                                                                                    Deserializer<QmCompletedEventPayload>
                                                                                      deserializer) {
-    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties());
+    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties(null));
     consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
     return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);

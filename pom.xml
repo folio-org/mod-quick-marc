@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.6</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <version>3.2.1</version>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>org.folio</groupId>
@@ -23,57 +24,46 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
     <marc-specifications.yaml.file>${project.basedir}/src/main/resources/swagger.api/marc-specifications.yaml</marc-specifications.yaml.file>
 
+    <folio-spring-support.version>7.3.0-SNAPSHOT</folio-spring-support.version>
     <folio-service-tools.version>3.1.0</folio-service-tools.version>
-    <folio-spring-base.version>7.2.2</folio-spring-base.version>
-    <hypersistence-utils-hibernate-62.version>3.6.1</hypersistence-utils-hibernate-62.version>
-    <openapi-generator.version>7.1.0</openapi-generator.version>
-    <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <commons-lang.version>2.6</commons-lang.version>
-    <lombok.mapstruct-binding.version>0.2.0</lombok.mapstruct-binding.version>
-    <swagger-annotations.version>2.2.19</swagger-annotations.version>
-
-    <!-- Test properties-->
-    <wiremock.version>3.0.1</wiremock.version>
     <marc4j.version>2.9.5</marc4j.version>
-    <junit-extensions.version>2.6.0</junit-extensions.version>
-    <jsonassert.version>1.5.1</jsonassert.version>
-    <testcontainer.version>1.19.3</testcontainer.version>
-    <mockito.version>5.2.0</mockito.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <lombok.mapstruct-binding.version>0.2.0</lombok.mapstruct-binding.version>
+
+    <!-- Plugin properties -->
+    <openapi-generator-plugin.version>7.2.0</openapi-generator-plugin.version>
+    <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+    <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
+    <maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.2.3</maven-failsafe-plugin.version>
+    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+    <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
+    <checkstyle.version>10.12.7</checkstyle.version>
+
 
     <sonar.exclusions>
       src/main/java/org/folio/qm/domain/entity/**,
       src/main/java/org/folio/qm/client/**,
       src/main/java/org/folio/qm/repository/**
     </sonar.exclusions>
-
-    <!-- Plugin properties -->
-    <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
-    <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
-    <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
-    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
-    <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.folio</groupId>
       <artifactId>folio-spring-base</artifactId>
-      <version>${folio-spring-base.version}</version>
+      <version>${folio-spring-support.version}</version>
     </dependency>
+
     <dependency>
-      <groupId>io.swagger.core.v3</groupId>
-      <artifactId>swagger-annotations</artifactId>
-      <version>${swagger-annotations.version}</version>
+      <groupId>org.folio</groupId>
+      <artifactId>folio-service-tools-spring-dev</artifactId>
+      <version>${folio-service-tools.version}</version>
     </dependency>
-    <dependency>
-      <groupId>io.hypersistence</groupId>
-      <artifactId>hypersistence-utils-hibernate-62</artifactId>
-      <version>${hypersistence-utils-hibernate-62.version}</version>
-    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
+      <artifactId>spring-boot-starter-cache</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.springframework.boot</groupId>
@@ -81,48 +71,45 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-cache</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jaxb-annotations</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jaxb-annotations</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>org.marc4j</groupId>
       <artifactId>marc4j</artifactId>
       <version>${marc4j.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct-processor</artifactId>
       <version>${mapstruct.version}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commons-lang.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <!-- Test dependencies -->
@@ -141,86 +128,20 @@
         </exclusion>
       </exclusions>
     </dependency>
+
     <dependency>
-      <groupId>com.github.tomakehurst</groupId>
-      <artifactId>wiremock-jre8-standalone</artifactId>
-      <version>${wiremock.version}</version>
+      <groupId>org.folio</groupId>
+      <artifactId>folio-spring-testing</artifactId>
+      <version>${folio-spring-support.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-inline</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.jayway.jsonpath</groupId>
-      <artifactId>json-path-assert</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.github.glytching</groupId>
-      <artifactId>junit-extensions</artifactId>
-      <version>${junit-extensions.version}</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>testcontainers</artifactId>
-      <version>${testcontainer.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${testcontainer.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>kafka</artifactId>
-      <version>${testcontainer.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>${testcontainer.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.skyscreamer</groupId>
-      <artifactId>jsonassert</artifactId>
-      <version>${jsonassert.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>folio-service-tools-spring-dev</artifactId>
-      <version>${folio-service-tools.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>folio-service-tools-spring-test</artifactId>
-      <version>${folio-service-tools.version}</version>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
-
 
   <build>
     <plugins>
@@ -262,7 +183,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>8.38</version>
+            <version>${checkstyle.version}</version>
           </dependency>
         </dependencies>
         <executions>
@@ -344,7 +265,7 @@
       <plugin>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>
-        <version>${openapi-generator.version}</version>
+        <version>${openapi-generator-plugin.version}</version>
         <executions>
           <execution>
             <id>records-editor</id>

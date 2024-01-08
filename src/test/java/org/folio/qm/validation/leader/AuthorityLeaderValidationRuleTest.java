@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.authority.AuthorityLeaderValidationRule;
+import org.folio.spring.testing.type.UnitTest;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
@@ -38,34 +38,34 @@ class AuthorityLeaderValidationRuleTest {
   void shouldValidateAuthorityLeaderWithErrorOnRecordStatus() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_STATUS);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Authority record status"));
+    assertThat(validationError.get().tag(), Is.is("Authority record status"));
   }
 
   @Test
   void shouldValidateAuthorityLeaderWithErrorOnRecordType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_TYPE);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Authority type of record"));
+    assertThat(validationError.get().tag(), Is.is("Authority type of record"));
   }
 
   @Test
   void shouldValidateAuthorityLeaderWithErrorOnUndefinedCharacter() {
     Optional<ValidationError> validationError = rule.validate(WRONG_UNDEFINED_CHARACTER);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Undefined character position"));
+    assertThat(validationError.get().tag(), Is.is("Undefined character position"));
   }
 
   @Test
   void shouldValidateAuthorityLeaderWithErrorOnEncodingLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENCODING_LEVEL);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Authority encoding level"));
+    assertThat(validationError.get().tag(), Is.is("Authority encoding level"));
   }
 
   @Test
   void shouldValidateAuthorityLeaderWithErrorOnPunctuationPolicy() {
     Optional<ValidationError> validationError = rule.validate(WRONG_PUNCTUATION_POLICY);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Punctuation policy"));
+    assertThat(validationError.get().tag(), Is.is("Punctuation policy"));
   }
 }

@@ -5,9 +5,9 @@ import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextCopyF
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 
 @UnitTest

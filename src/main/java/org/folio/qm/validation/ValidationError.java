@@ -1,10 +1,5 @@
 package org.folio.qm.validation;
 
-import lombok.Value;
+public record ValidationError(String tag, String message) {
 
-@Value
-public class ValidationError {
-
-  String tag;
-  String message;
 }

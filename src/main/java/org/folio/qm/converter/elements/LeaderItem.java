@@ -2,8 +2,11 @@ package org.folio.qm.converter.elements;
 
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public enum LeaderItem {
+
   //COMMON FIELDS FOR BIB, HOLDINGS AND AUTHORITY
   RECORD_LENGTH("Record length", 0, 5),
   CODING_SCHEME("Character coding scheme", 9, 1, '\\', ' ', '\u00A0', 'a'),
@@ -56,19 +59,4 @@ public enum LeaderItem {
     this.possibleValues = Arrays.stream(possibleValues).toList();
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public int getPosition() {
-    return position;
-  }
-
-  public int getLength() {
-    return length;
-  }
-
-  public List<Character> getPossibleValues() {
-    return possibleValues;
-  }
 }

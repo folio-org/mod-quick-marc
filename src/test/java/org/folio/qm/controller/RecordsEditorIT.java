@@ -3,7 +3,6 @@ package org.folio.qm.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -78,11 +77,11 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
-import org.folio.qm.support.extension.ClearTable;
-import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.integration.XOkapiHeaders;
+import org.folio.spring.testing.extension.DatabaseCleanup;
+import org.folio.spring.testing.type.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -266,7 +265,7 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testGetCreationStatus() throws Exception {
     log.info("===== Verify GET record status: Successful =====");
 
@@ -282,7 +281,7 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testGetCreationStatusHasProperlyFormattedDate() throws Exception {
     log.info("===== Verify GET record status: Successful =====");
 
@@ -292,7 +291,7 @@ class RecordsEditorIT extends BaseIT {
     var expectedDatePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+");
     getResultActions(recordsEditorStatusPath(QM_RECORD_ID, id.toString()))
       .andExpect(status().isOk())
-      .andExpect(content().string(hasJsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern))));
+      .andExpect(jsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern)));
   }
 
   @Test
@@ -341,7 +340,7 @@ class RecordsEditorIT extends BaseIT {
     QM_RECORD_CREATE_BIB_PATH + ", " + "mockdata/request/di-event/complete-event-with-instance.json"
   })
   @ParameterizedTest
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testPostQuickMarcValidRecordCreated(String requestBody, String eventBody) throws Exception {
     log.info("===== Verify POST holdings record: Successful =====");
 

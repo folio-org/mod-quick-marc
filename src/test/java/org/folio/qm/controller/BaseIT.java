@@ -22,17 +22,16 @@ import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
-import org.folio.qm.support.extension.EnableKafka;
-import org.folio.qm.support.extension.EnablePostgres;
-import org.folio.qm.support.extension.impl.DatabaseCleanupExtension;
-import org.folio.qm.support.extension.impl.WireMockInitializer;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
+import org.folio.spring.testing.extension.EnableKafka;
+import org.folio.spring.testing.extension.EnableOkapi;
+import org.folio.spring.testing.extension.EnablePostgres;
+import org.folio.spring.testing.extension.impl.OkapiConfiguration;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,27 +41,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+@EnableOkapi
 @EnableKafka
 @EnablePostgres
-@ExtendWith(DatabaseCleanupExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@ContextConfiguration(initializers = {WireMockInitializer.class})
 class BaseIT {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
   protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
 
+  protected static OkapiConfiguration okapiConfiguration;
   private static boolean dbInitialized = false;
 
-  @Autowired
-  protected WireMockServer wireMockServer;
   @Autowired
   protected FolioModuleMetadata metadata;
   @Autowired
@@ -73,8 +69,9 @@ class BaseIT {
   protected MockMvc mockMvc;
   @Autowired
   private CacheManager cacheManager;
+  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
 
-  @Value("${x-okapi-url}")
+  @Value("${folio.okapi-url}")
   private String okapiUrl;
 
   @BeforeEach

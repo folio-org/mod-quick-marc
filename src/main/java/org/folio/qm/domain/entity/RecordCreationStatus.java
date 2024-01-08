@@ -1,6 +1,5 @@
 package org.folio.qm.domain.entity;
 
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -33,7 +33,7 @@ public class RecordCreationStatus {
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  @Type(PostgreSQLEnumType.class)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
   private RecordCreationStatusEnum status;
 
   private String errorMessage;

@@ -7,14 +7,13 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.sql.Timestamp;
 import org.folio.qm.holder.TenantsHolder;
 import org.folio.qm.holder.impl.TenantsHolderImpl;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.util.TenantContextUtils;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.scope.EmptyFolioExecutionContextHolder;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,10 +25,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
-@ExtendWith({
-  MockitoExtension.class,
-  RandomBeansExtension.class
-})
+@ExtendWith(MockitoExtension.class)
 class CleanupServiceImplTest {
 
   private static final FolioExecutionContext CONTEXT = new EmptyFolioExecutionContextHolder(null)

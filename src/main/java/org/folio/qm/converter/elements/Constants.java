@@ -76,6 +76,7 @@ public final class Constants {
   public static final String TAG_006_CONTROL_FIELD = "006";
   public static final String TAG_007_CONTROL_FIELD = "007";
   public static final String TAG_008_CONTROL_FIELD = "008";
+  public static final String TAG_999_FIELD = "999";
   public static final String LCCN_CONTROL_FIELD = "010";
 
   public static final String BLANK_REPLACEMENT = "\\";

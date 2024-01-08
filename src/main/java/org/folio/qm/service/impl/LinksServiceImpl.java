@@ -61,7 +61,7 @@ public class LinksServiceImpl implements LinksService {
 
   private void populateLinks(QuickMarcView qmRecord, InstanceLinks instanceLinks) {
     var linkingRules = linkingRulesService.getLinkingRules();
-    instanceLinks.getLinks().forEach(instanceLink ->
+    instanceLinks.links().forEach(instanceLink ->
       linkingRules.stream()
         .filter(rule -> rule.getId().equals(instanceLink.getLinkingRuleId()))
         .findFirst().ifPresent(rule -> {

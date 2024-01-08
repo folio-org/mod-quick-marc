@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -41,7 +41,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals(EMPTY_CONTENT_ERROR_MSG, validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(EMPTY_CONTENT_ERROR_MSG, validationError.message()));
   }
 
   @Test
@@ -53,7 +53,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals(IS_UNIQUE_TAG_ERROR_MSG, validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_UNIQUE_TAG_ERROR_MSG, validationError.message()));
   }
 
   @Test
@@ -62,7 +62,7 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
     var validationResult = rule.validate(fields);
     assertThat(validationResult)
       .isPresent()
-      .hasValueSatisfying(validationError -> assertEquals(IS_REQUIRED_TAG_ERROR_MSG, validationError.getMessage()));
+      .hasValueSatisfying(validationError -> assertEquals(IS_REQUIRED_TAG_ERROR_MSG, validationError.message()));
   }
 
 }

@@ -16,8 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcEdit;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
+import org.folio.spring.testing.type.UnitTest;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
@@ -95,8 +95,8 @@ class OnlyOne008ControlFieldValidationRuleTest {
 
     Optional<ValidationError> validationError = rule.validate(fields);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("008"));
-    assertThat(validationError.get().getMessage(), Is.is(IS_UNIQUE_TAG_ERROR_MSG));
+    assertThat(validationError.get().tag(), Is.is("008"));
+    assertThat(validationError.get().message(), Is.is(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
   private void testGeneralInformationControlFieldValidationRuleMissingField(String log, String qmRecordPath) {
@@ -109,7 +109,7 @@ class OnlyOne008ControlFieldValidationRuleTest {
 
     Optional<ValidationError> validationError = rule.validate(fields);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("008"));
-    assertThat(validationError.get().getMessage(), Is.is(IS_REQUIRED_TAG_ERROR_MSG));
+    assertThat(validationError.get().tag(), Is.is("008"));
+    assertThat(validationError.get().message(), Is.is(IS_REQUIRED_TAG_ERROR_MSG));
   }
 }

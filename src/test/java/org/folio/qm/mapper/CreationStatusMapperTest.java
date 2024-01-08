@@ -2,8 +2,6 @@ package org.folio.qm.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.glytching.junit.extension.random.Random;
-import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -11,13 +9,15 @@ import java.util.UUID;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
-import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.testing.extension.Random;
+import org.folio.spring.testing.extension.impl.RandomParametersExtension;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 
 @UnitTest
-@ExtendWith(RandomBeansExtension.class)
+@ExtendWith(RandomParametersExtension.class)
 class CreationStatusMapperTest {
 
   private static final CreationStatusMapper MAPPER = Mappers.getMapper(CreationStatusMapper.class);

@@ -103,7 +103,7 @@ public class ErrorHandling {
   @ExceptionHandler(FieldsValidationException.class)
   @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
   public Object handleFieldsValidationException(FieldsValidationException e) {
-    var errors = e.getValidationResult().getErrors();
+    var errors = e.getValidationResult().errors();
     return errors.size() == 1 ? buildError(errors.get(0)) : buildErrors(errors);
   }
 

@@ -1,18 +1,18 @@
 package org.folio.qm.domain.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum RecordType {
 
   MARC_BIBLIOGRAPHIC("bibliographic"),
   MARC_HOLDINGS("holdings"),
   MARC_AUTHORITY("authority");
-  private String value;
+
+  private final String value;
 
   RecordType(String value) {
     this.value = value;
-  }
-
-  public String getValue() {
-    return value;
   }
 
   @Override

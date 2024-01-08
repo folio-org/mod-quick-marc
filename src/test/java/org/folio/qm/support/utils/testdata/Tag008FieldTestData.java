@@ -5,7 +5,9 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public enum Tag008FieldTestData {
 
   BIB_BOOKS("123456ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500", getBooksContent()),
@@ -432,15 +434,4 @@ public enum Tag008FieldTestData {
     return content;
   }
 
-  public String getDtoData() {
-    return dtoData;
-  }
-
-  public Map<String, Object> getQmContent() {
-    return qmContent;
-  }
-
-  public String getLeader() {
-    return leader;
-  }
 }

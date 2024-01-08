@@ -1,7 +1,7 @@
 package org.folio.qm.converter.field.qm;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.isNumeric;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

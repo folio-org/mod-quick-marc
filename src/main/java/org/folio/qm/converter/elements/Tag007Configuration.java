@@ -64,6 +64,7 @@ import static org.folio.qm.converter.elements.ControlFieldItem.VAL;
 import static org.folio.qm.converter.elements.ControlFieldItem.VIDEORECORDING_FORMAT;
 
 import java.util.List;
+import lombok.Getter;
 
 public enum Tag007Configuration {
 
@@ -104,9 +105,12 @@ public enum Tag007Configuration {
       CONFIGURATION_OF_CHANNELS)),
   UNKNOWN("Unknown", 'b', 1, asList(CATEGORY, VAL));
 
+  @Getter
   private final String name;
   private final char code;
+  @Getter
   private final int length;
+  @Getter
   private final List<ControlFieldItem> controlFieldItems;
 
   Tag007Configuration(String name, char code, int length, List<ControlFieldItem> controlFieldItems) {
@@ -125,15 +129,4 @@ public enum Tag007Configuration {
     return UNKNOWN;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public int getLength() {
-    return length;
-  }
-
-  public List<ControlFieldItem> getControlFieldItems() {
-    return controlFieldItems;
-  }
 }

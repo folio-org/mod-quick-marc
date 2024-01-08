@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="MODQM-322@@add-create-marc-authority-profile" author="psmahin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(id) FROM job_profile WHERE profile_id = '6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3';
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="job_profile">
+            <column name="profile_id" value="6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3"/>
+            <column name="profile_name" value="quickMARC - Default Create authority"/>
+            <column name="profile_action" value="CREATE"/>
+            <column name="record_type" value="MARC_AUTHORITY"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

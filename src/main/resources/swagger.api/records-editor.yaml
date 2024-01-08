@@ -57,6 +57,7 @@ paths:
     post:
       tags:
         - records-editor
+      operationId: createNewRecord
       responses:
         '201':
           description: MARC Record status created

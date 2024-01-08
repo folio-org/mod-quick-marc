@@ -24,6 +24,7 @@ public class TestEntitiesUtils {
   public static final String QM_RECORD_EDIT_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsEdit.json";
   public static final String QM_RECORD_CREATE_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsCreate.json";
   public static final String QM_RECORD_VIEW_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsView.json";
+  public static final String QM_RECORD_CREATE_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthorityCreate.json";
   public static final String QM_RECORD_EDIT_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthorityEdit.json";
   public static final String QM_RECORD_VIEW_AUTHORITY_PATH = PARSED_RECORDS_DIR + "/quickMarcAuthorityView.json";
   public static final String PROTECTION_SETTINGS_PATH =

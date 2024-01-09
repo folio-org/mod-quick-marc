@@ -342,7 +342,7 @@ class RecordsEditorIT extends BaseIT {
   @ParameterizedTest
   @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testPostQuickMarcValidRecordCreated(String requestBody, String eventBody) throws Exception {
-    log.info("===== Verify POST holdings record: Successful =====");
+    log.info("===== Verify POST record: Successful =====");
 
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 

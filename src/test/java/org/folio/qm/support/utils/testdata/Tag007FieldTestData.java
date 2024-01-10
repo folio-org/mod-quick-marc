@@ -2,7 +2,9 @@ package org.folio.qm.support.utils.testdata;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public enum Tag007FieldTestData {
 
   ELECTRONIC_RESOURCE("ca bcdefghijkl", getElectronicResourceContent()),
@@ -252,11 +254,4 @@ public enum Tag007FieldTestData {
     return content;
   }
 
-  public String getDtoData() {
-    return dtoData;
-  }
-
-  public Map<String, Object> getQmContent() {
-    return qmContent;
-  }
 }

@@ -1,6 +1,8 @@
 package org.folio.qm.service.impl;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
+import static org.folio.qm.converter.elements.Constants.TAG_999_FIELD;
 import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
 import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
@@ -18,6 +20,7 @@ import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
@@ -49,6 +52,13 @@ import org.springframework.web.context.request.async.DeferredResult;
 public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private static final String RECORD_NOT_FOUND_MESSAGE = "Record with id [%s] was not found";
+  private static final Predicate<FieldItem> FIELD_001_PREDICATE =
+    qmFields -> qmFields.getTag().equals(TAG_001_CONTROL_FIELD);
+  private static final Predicate<FieldItem> FIELD_999_PREDICATE = qmFields -> qmFields.getTag().equals(TAG_999_FIELD);
+  private static final Predicate<FieldItem> FIELD_EMPTY_PREDICATE = qmFields -> {
+    final var content = qmFields.getContent();
+    return content instanceof String stringContent && StringUtils.isEmpty(stringContent);
+  };
 
   private final ChangeManagerService changeManagerService;
   private final DataImportJobService dataImportJobService;
@@ -140,13 +150,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private QuickMarcCreate prepareRecord(QuickMarcCreate quickMarc) {
-    final Predicate<FieldItem> field001Predicate = qmFields -> qmFields.getTag().equals("001");
-    final Predicate<FieldItem> field999Predicate = qmFields -> qmFields.getTag().equals("999");
-    final Predicate<FieldItem> emptyContentPredicate = qmFields -> {
-      final var content = qmFields.getContent();
-      return content instanceof String stringContent && StringUtils.isEmpty(stringContent);
-    };
-    quickMarc.getFields().removeIf(field001Predicate.or(field999Predicate).or(emptyContentPredicate));
+    var fieldItemPredicate = FIELD_EMPTY_PREDICATE.or(FIELD_999_PREDICATE);
+    if (quickMarc.getMarcFormat() != MarcFormat.AUTHORITY) {
+      fieldItemPredicate = fieldItemPredicate.or(FIELD_001_PREDICATE);
+    }
+    quickMarc.getFields().removeIf(fieldItemPredicate);
     return quickMarc;
   }
 
@@ -181,6 +189,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var newContext = new DefaultFolioExecutionContext(executionContext.getFolioModuleMetadata(),
       executionContext.getAllHeaders());
     return () -> {
+      @SuppressWarnings("unchecked")
       var result = (ResponseEntity<Void>) updateResult.getResult();
       if (result == null || result.getStatusCode().isError()) {
         return;

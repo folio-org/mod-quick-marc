@@ -22,10 +22,10 @@ public final class ErrorUtils {
   }
 
   public static Error buildError(ValidationError validationError) {
-    var parameter = new Parameter().key(validationError.getTag());
+    var parameter = new Parameter().key(validationError.tag());
     return new Error()
       .type(ErrorType.INTERNAL.getTypeCode())
-      .message(validationError.getMessage())
+      .message(validationError.message())
       .parameters(List.of(parameter));
   }
 

@@ -6,7 +6,6 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import lombok.experimental.Accessors;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -23,10 +22,7 @@ public interface LinksClient {
   @PutMapping("/instances/{instanceId}")
   void putLinksByInstanceId(@PathVariable("instanceId") UUID instanceId, InstanceLinks instanceLinks);
 
-  @Value
-  class InstanceLinks {
-    List<InstanceLink> links;
-    Integer totalRecords;
+  record InstanceLinks(List<InstanceLink> links, Integer totalRecords) {
   }
 
   @Data

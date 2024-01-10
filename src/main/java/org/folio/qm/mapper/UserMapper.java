@@ -9,7 +9,7 @@ import org.mapstruct.NullValueCheckStrategy;
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface UserMapper {
 
-  @Mapping(target = "userId", expression = "java(java.util.UUID.fromString(userDto.getId()))")
+  @Mapping(target = "userId", expression = "java(java.util.UUID.fromString(userDto.id()))")
   @Mapping(target = "username", source = "username")
   @Mapping(target = "firstName", source = "personal.firstName")
   @Mapping(target = "lastName", source = "personal.lastName")

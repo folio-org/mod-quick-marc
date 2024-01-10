@@ -46,6 +46,7 @@ import static org.folio.qm.converter.elements.ControlFieldItem.VALUE;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public enum Tag008Configuration {
 
@@ -59,6 +60,7 @@ public enum Tag008Configuration {
   VISUAL("Visual Materials", Arrays.asList(TIME, AUDN, GPUB, FORM_MV, TMAT, TECH)),
   UNKNOWN("Unknown Type", Collections.singletonList(VALUE));
 
+  @Getter
   private final String name;
   private final List<ControlFieldItem> controlFieldItems;
 
@@ -72,38 +74,18 @@ public enum Tag008Configuration {
   }
 
   public static Tag008Configuration resolveContentType(char typeByte, char blvlByte) {
-    switch (typeByte) {
-      case 'a':
-        return Arrays.asList('b', 'i', 's').contains(blvlByte) ? CONTINUING : BOOKS;
-      case 't':
-        return BOOKS;
-      case 's':
-        return CONTINUING;
-      case 'm':
-        return FILES;
-      case 'e':
-      case 'f':
-        return MAPS;
-      case 'p':
-        return MIXED;
-      case 'i':
-      case 'j':
-        return SOUND;
-      case 'c':
-      case 'd':
-        return SCORES;
-      case 'g':
-      case 'k':
-      case 'o':
-      case 'r':
-        return VISUAL;
-      default:
-        return UNKNOWN;
-    }
-  }
-
-  public String getName() {
-    return name;
+    return switch (typeByte) {
+      case 'a' -> Arrays.asList('b', 'i', 's').contains(blvlByte) ? CONTINUING : BOOKS;
+      case 't' -> BOOKS;
+      case 's' -> CONTINUING;
+      case 'm' -> FILES;
+      case 'e', 'f' -> MAPS;
+      case 'p' -> MIXED;
+      case 'i', 'j' -> SOUND;
+      case 'c', 'd' -> SCORES;
+      case 'g', 'k', 'o', 'r' -> VISUAL;
+      default -> UNKNOWN;
+    };
   }
 
   public List<ControlFieldItem> getSpecificItems() {

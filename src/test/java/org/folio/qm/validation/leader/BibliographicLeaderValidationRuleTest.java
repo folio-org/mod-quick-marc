@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.bibliographic.BibliographicLeaderValidationRule;
+import org.folio.spring.testing.type.UnitTest;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,11 +28,11 @@ class BibliographicLeaderValidationRuleTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"01706ccm\\a2200361\\\\\\4500",
-    "01706ccm\\a2200361\\\\ 4500",
-    "01706ccm\\a2200361\\\\\u00A04500",
-    "01706ccm\\a2200361\\\\a4500",
-    "01706ccm\\a2200361\\\\b4500",
-    "01706ccm\\a2200361\\\\c4500"})
+                          "01706ccm\\a2200361\\\\ 4500",
+                          "01706ccm\\a2200361\\\\\u00A04500",
+                          "01706ccm\\a2200361\\\\a4500",
+                          "01706ccm\\a2200361\\\\b4500",
+                          "01706ccm\\a2200361\\\\c4500"})
   void shouldValidateBibliographicLeaderWithoutErrors(String validLeader) {
     var validationError = rule.validate(validLeader);
     assertTrue(validationError.isEmpty());
@@ -47,28 +47,28 @@ class BibliographicLeaderValidationRuleTest {
   void shouldValidateBibliographicLeaderWithErrorOnRecordStatus() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_RECORD_STATUS);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Bib record status"));
+    assertThat(validationError.get().tag(), Is.is("Bib record status"));
   }
 
   @Test
   void shouldValidateBibliographicLeaderWithErrorOnRecordType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIB_RECORD_TYPE);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Bib type of record"));
+    assertThat(validationError.get().tag(), Is.is("Bib type of record"));
   }
 
   @Test
   void shouldValidateBibliographicLeaderWithErrorOnBibliographicLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_BIBLIOGRAPHIC_LEVEL);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Bibliographic level"));
+    assertThat(validationError.get().tag(), Is.is("Bibliographic level"));
   }
 
   @Test
   void shouldValidateBibliographicLeaderWithErrorOnControlType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CONTROL_TYPE);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Type of control"));
+    assertThat(validationError.get().tag(), Is.is("Type of control"));
   }
 
   @Test
@@ -81,13 +81,13 @@ class BibliographicLeaderValidationRuleTest {
   void shouldValidateBibliographicLeaderWithErrorOnCatalogingForm() {
     Optional<ValidationError> validationError = rule.validate(WRONG_CATALOGING_FORM);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Descriptive cataloging form"));
+    assertThat(validationError.get().tag(), Is.is("Descriptive cataloging form"));
   }
 
   @Test
   void shouldValidateBibliographicLeaderWithErrorOnResourceRecordLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RESOURCE_RECORD_LEVEL);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Multipart resource record level"));
+    assertThat(validationError.get().tag(), Is.is("Multipart resource record level"));
   }
 }

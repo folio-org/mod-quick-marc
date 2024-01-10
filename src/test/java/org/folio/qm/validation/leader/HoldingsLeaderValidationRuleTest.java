@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.validation.ValidationError;
 import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
+import org.folio.spring.testing.type.UnitTest;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
@@ -38,34 +38,34 @@ class HoldingsLeaderValidationRuleTest {
   void shouldValidateHoldingsLeaderWithErrorOnRecordStatus() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_STATUS);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Holdings record status"));
+    assertThat(validationError.get().tag(), Is.is("Holdings record status"));
   }
 
   @Test
   void shouldValidateHoldingsLeaderWithErrorOnRecordType() {
     Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_TYPE);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Holdings type of record"));
+    assertThat(validationError.get().tag(), Is.is("Holdings type of record"));
   }
 
   @Test
   void shouldValidateHoldingsLeaderWithErrorOnUndefinedCharacter() {
     Optional<ValidationError> validationError = rule.validate(WRONG_UNDEFINED_CHARACTER);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Undefined character position"));
+    assertThat(validationError.get().tag(), Is.is("Undefined character position"));
   }
 
   @Test
   void shouldValidateHoldingsLeaderWithErrorOnEncodingLevel() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ENCODING_LEVEL);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Holdings encoding level"));
+    assertThat(validationError.get().tag(), Is.is("Holdings encoding level"));
   }
 
   @Test
   void shouldValidateHoldingsLeaderWithErrorOnItemInformation() {
     Optional<ValidationError> validationError = rule.validate(WRONG_ITEM_INFORMATION);
     assertTrue(validationError.isPresent());
-    assertThat(validationError.get().getTag(), Is.is("Item information"));
+    assertThat(validationError.get().tag(), Is.is("Item information"));
   }
 }

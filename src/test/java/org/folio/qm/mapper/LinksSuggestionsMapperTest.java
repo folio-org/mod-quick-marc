@@ -2,7 +2,6 @@ package org.folio.qm.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.util.List;
 import java.util.Map;
 import org.folio.qm.domain.dto.BaseSrsMarcRecord;
@@ -11,13 +10,11 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.SrsFieldItem;
-import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 
 @UnitTest
-@ExtendWith(RandomBeansExtension.class)
 class LinksSuggestionsMapperTest {
 
   private static final String LEADER = "test leader";

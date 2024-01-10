@@ -11,6 +11,7 @@ import static org.folio.qm.converter.elements.Tag008Configuration.VISUAL;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 public enum Tag006Configuration {
 
@@ -31,7 +32,9 @@ public enum Tag006Configuration {
   TWO_DIMENSIONAL_GRAPHIC("Two-dimensional nonprojectable graphic", 'k', VISUAL),
   UNKNOWN_MATERIAL("Unknown Type", '-', UNKNOWN);
 
+  @Getter
   private final String name;
+  @Getter
   private final char code;
   private final Tag008Configuration tag008Configuration;
 
@@ -48,14 +51,6 @@ public enum Tag006Configuration {
       }
     }
     return UNKNOWN_MATERIAL;
-  }
-
-  public char getCode() {
-    return code;
-  }
-
-  public String getName() {
-    return name;
   }
 
   public List<ControlFieldItem> getControlFieldItems() {

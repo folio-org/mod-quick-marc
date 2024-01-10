@@ -7,7 +7,7 @@
 * Requires `API_NAME vX.Y`
 
 ### Features
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+* support new Authority record creation ([MODQM-322](https://issues.folio.org/browse/MODQM-322)
 
 ### Bug fixes
 * Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
@@ -16,9 +16,19 @@
 * Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
 
 ### Dependencies
-* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
-* Add `LIB_NAME` `2.7.4`
-* Remove `LIB_NAME`
+* Bump `folio-spring-base` from `7.2.2` to `7.3.0-SNAPSHOT`
+* Add `folio-spring-testing` `7.3.0-SNAPSHOT`
+* Remove `folio-service-tools-spring-test`
+* Remove `hypersistence-utils`
+* Remove conflicting and unused dependencies:
+  * `postgresql`
+  * `commons-lang`
+  * `swagger-annotations`
+  * `wiremock`
+  * `junit-extensions`
+  * `jsonassert`
+  * `testcontainer`
+  * `mockito`
 
 ## v5.0.0 2023-10-11
 ### Breaking changes

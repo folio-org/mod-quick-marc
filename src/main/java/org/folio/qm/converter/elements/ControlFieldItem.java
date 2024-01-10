@@ -1,5 +1,8 @@
 package org.folio.qm.converter.elements;
 
+import lombok.Getter;
+
+@Getter
 public enum ControlFieldItem {
 
   ACCM("AccM", 7, 6, true),
@@ -160,23 +163,7 @@ public enum ControlFieldItem {
     this.array = array;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public int getPosition() {
-    return position;
-  }
-
-  public int getLength() {
-    return length;
-  }
-
-  public boolean isArray() {
-    return array;
-  }
-
-  private static class Constants {
+  private static final class Constants {
     private static final String POSITIVE_NEGATIVE_ASPECT = "Positive/negative aspect";
     private static final String DIMENSIONS_NAME = "Dimensions";
   }

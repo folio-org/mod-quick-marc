@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.entity.RecordType;
-import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.util.ErrorUtils;
+import org.folio.spring.testing.type.IntegrationTest;
 import org.junit.jupiter.api.Test;
 
 @Log4j2

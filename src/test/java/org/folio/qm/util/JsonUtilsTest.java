@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 
 @UnitTest
@@ -26,12 +26,14 @@ class JsonUtilsTest {
 
   @Test
   void shouldDeserializeObjectFromValidJsonString() {
-    final var jsonString = "{\n"
-      + "  \"sub\": \"john_doe\",\n"
-      + "  \"user_id\": \"00000000-0000-0000-0000-000000000000\",\n"
-      + "  \"iat\": 1614252390,\n"
-      + "  \"tenant\": \"test\"\n"
-      + "}";
+    final var jsonString = """
+      {
+        "sub": "john_doe",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "iat": 1614252390,
+        "tenant": "test"
+      }
+      """;
     assertDoesNotThrow(() -> {
       final var userInfo = JsonUtils.jsonToObject(jsonString, UserInfo.class);
       assertEquals("00000000-0000-0000-0000-000000000000", userInfo.getUserId());

@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.types.UnitTest;
 import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -20,8 +20,8 @@ class Tag008AuthorityFieldItemConverterTest {
 
   @ParameterizedTest
   @EnumSource(value = Tag008FieldTestData.class,
-    mode = EnumSource.Mode.INCLUDE,
-    names = {"AUTHORITY", "AUTHORITY_NO_DATE_ENTERED"})
+              mode = EnumSource.Mode.INCLUDE,
+              names = {"AUTHORITY", "AUTHORITY_NO_DATE_ENTERED"})
   void testConvertField(Tag008FieldTestData testData) {
     var fieldItem = new FieldItem().tag("008").content(testData.getQmContent());
     var actualQmField = converter.convert(fieldItem);

@@ -3,7 +3,6 @@ package org.folio.qm.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -45,6 +44,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_STA
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
@@ -77,13 +77,14 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
-import org.folio.qm.support.extension.ClearTable;
-import org.folio.qm.support.types.IntegrationTest;
 import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.integration.XOkapiHeaders;
+import org.folio.spring.testing.extension.DatabaseCleanup;
+import org.folio.spring.testing.type.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -264,7 +265,7 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testGetCreationStatus() throws Exception {
     log.info("===== Verify GET record status: Successful =====");
 
@@ -280,7 +281,7 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testGetCreationStatusHasProperlyFormattedDate() throws Exception {
     log.info("===== Verify GET record status: Successful =====");
 
@@ -290,7 +291,7 @@ class RecordsEditorIT extends BaseIT {
     var expectedDatePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+");
     getResultActions(recordsEditorStatusPath(QM_RECORD_ID, id.toString()))
       .andExpect(status().isOk())
-      .andExpect(content().string(hasJsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern))));
+      .andExpect(jsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern)));
   }
 
   @Test
@@ -333,10 +334,15 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is required")));
   }
 
-  @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testPostQuickMarcValidBibRecordCreated() throws Exception {
-    log.info("===== Verify POST bib record: Successful =====");
+  @CsvSource(value = {
+    QM_RECORD_CREATE_HOLDINGS_PATH + ", " + "mockdata/request/di-event/complete-event-with-holdings.json",
+    QM_RECORD_CREATE_AUTHORITY_PATH + ", " + "mockdata/request/di-event/complete-event-with-authority.json",
+    QM_RECORD_CREATE_BIB_PATH + ", " + "mockdata/request/di-event/complete-event-with-instance.json"
+  })
+  @ParameterizedTest
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
+  void testPostQuickMarcValidRecordCreated(String requestBody, String eventBody) throws Exception {
+    log.info("===== Verify POST record: Successful =====");
 
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 
@@ -347,7 +353,7 @@ class RecordsEditorIT extends BaseIT {
     mockPost(postRecordsPath, "", wireMockServer);
     mockPost(postRecordsPath, "", wireMockServer);
 
-    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
+    QuickMarcCreate quickMarcJson = readQuickMarc(requestBody, QuickMarcCreate.class);
 
     MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
       .andExpect(status().isCreated())
@@ -360,46 +366,7 @@ class RecordsEditorIT extends BaseIT {
 
     final var qmRecordId = response.getQmRecordId();
 
-    sendDataImportKafkaRecord("mockdata/request/di-event/complete-event-with-instance.json", DI_COMPLETE_TOPIC_NAME);
-    await().atMost(5, SECONDS)
-      .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
-        .isEqualTo(RecordCreationStatusEnum.CREATED));
-    var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
-    Assertions.assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
-      .hasFieldOrPropertyWithValue("id", qmRecordId)
-      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
-      .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
-  }
-
-  @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
-  void testPostQuickMarcValidHoldingsRecordCreated() throws Exception {
-    log.info("===== Verify POST holdings record: Successful =====");
-
-    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
-
-    final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
-    mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
-
-    final var postRecordsPath = String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, VALID_JOB_EXECUTION_ID);
-    mockPost(postRecordsPath, "", wireMockServer);
-    mockPost(postRecordsPath, "", wireMockServer);
-
-    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
-
-    MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
-      .andExpect(status().isCreated())
-      .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
-      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
-      .andReturn();
-
-    String resultResponse = result.getResponse().getContentAsString();
-    CreationStatus response = getObjectFromJson(resultResponse, CreationStatus.class);
-
-    final var qmRecordId = response.getQmRecordId();
-
-    sendDataImportKafkaRecord("mockdata/request/di-event/complete-event-with-holdings.json", DI_COMPLETE_TOPIC_NAME);
+    sendDataImportKafkaRecord(eventBody, DI_COMPLETE_TOPIC_NAME);
     await().atMost(5, SECONDS)
       .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(RecordCreationStatusEnum.CREATED));

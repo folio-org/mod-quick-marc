@@ -3,9 +3,9 @@ package org.folio.qm.exception;
 import lombok.Getter;
 import org.folio.qm.validation.ValidationResult;
 
+@Getter
 public class FieldsValidationException extends RuntimeException {
 
-  @Getter
   private final transient ValidationResult validationResult;
 
   public FieldsValidationException(ValidationResult validationResult) {

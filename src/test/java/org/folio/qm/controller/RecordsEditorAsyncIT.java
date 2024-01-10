@@ -57,8 +57,8 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
-import org.folio.qm.support.extension.ClearTable;
-import org.folio.qm.support.types.IntegrationTest;
+import org.folio.spring.testing.extension.DatabaseCleanup;
+import org.folio.spring.testing.type.IntegrationTest;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -377,7 +377,7 @@ class RecordsEditorAsyncIT extends BaseIT {
   }
 
   @Test
-  @ClearTable(RECORD_CREATION_STATUS_TABLE_NAME)
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testDeleteQuickMarcAuthorityRecord() throws Exception {
     log.info("===== Verify DELETE authority record: No Content");
 

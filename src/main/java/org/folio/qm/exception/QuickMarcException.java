@@ -2,9 +2,11 @@ package org.folio.qm.exception;
 
 import static org.folio.qm.util.ErrorUtils.buildError;
 
+import lombok.Getter;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.tenant.domain.dto.Error;
 
+@Getter
 public abstract class QuickMarcException extends RuntimeException {
 
   private final transient Error error;
@@ -14,16 +16,11 @@ public abstract class QuickMarcException extends RuntimeException {
   }
 
   protected QuickMarcException(Exception ex) {
-    if (ex instanceof QuickMarcException) {
-      QuickMarcException cex = (QuickMarcException) ex;
+    if (ex instanceof QuickMarcException cex) {
       this.error = cex.getError();
     } else {
       this.error = buildError(ErrorUtils.ErrorType.INTERNAL, ex.getClass().getSimpleName() + ": Generic Error");
     }
-  }
-
-  public Error getError() {
-    return error;
   }
 
   public abstract int getStatus();

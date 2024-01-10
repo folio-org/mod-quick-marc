@@ -1,6 +1,5 @@
 package org.folio.qm.domain.entity;
 
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -41,14 +39,17 @@ public class JobProfile {
   @NotNull
   @Column(name = "profile_action", nullable = false)
   @Enumerated(EnumType.STRING)
-  @Type(PostgreSQLEnumType.class)
   private JobProfileAction profileAction;
 
   @NotNull
   @Column(name = "record_type", nullable = false)
   @Enumerated(EnumType.STRING)
-  @Type(PostgreSQLEnumType.class)
   private RecordType recordType;
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -60,10 +61,5 @@ public class JobProfile {
     }
     JobProfile that = (JobProfile) o;
     return id != null && Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
   }
 }

@@ -5,14 +5,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.github.glytching.junit.extension.random.Random;
-import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.domain.repository.RecordCreationStatusRepository;
-import org.folio.qm.support.types.UnitTest;
+import org.folio.spring.testing.extension.Random;
+import org.folio.spring.testing.extension.impl.RandomParametersExtension;
+import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @UnitTest
 @ExtendWith({
   MockitoExtension.class,
-  RandomBeansExtension.class
+  RandomParametersExtension.class
 })
 class StatusServiceImplTest {
 

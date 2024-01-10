@@ -79,7 +79,7 @@ services:
     container_name: mod-quick-marc
     image: dev.folio/mod-quick-marc
     build:
-      context: ..\
+      context: ../
       dockerfile: Dockerfile
     ports:
       - "9138:8081"

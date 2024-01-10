@@ -9,6 +9,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.Getter;
+import lombok.Setter;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
@@ -16,10 +18,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
+@Setter
 @Component
 public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean implements OrderedFilter {
 
   private static final String ERROR_MSG = "x-okapi-user-id header must be provided";
+  @Getter
   private int order = 2;
 
   @Value("${management.endpoints.web.base-path}")
@@ -41,15 +45,4 @@ public class UserIdOkapiHeaderValidationFilter extends GenericFilterBean impleme
     chain.doFilter(request, response);
   }
 
-  public int getOrder() {
-    return this.order;
-  }
-
-  public void setOrder(int order) {
-    this.order = order;
-  }
-
-  public void setManagementBasePath(String managementBasePath) {
-    this.managementBasePath = managementBasePath;
-  }
 }

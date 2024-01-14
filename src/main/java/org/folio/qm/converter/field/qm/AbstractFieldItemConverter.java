@@ -15,14 +15,14 @@ public abstract class AbstractFieldItemConverter implements FieldItemConverter {
   @Override
   public VariableField convert(FieldItem field) {
     var tag = field.getTag();
-    String data = getFieldData(field);
+    var data = getFieldData(field);
     return new ControlFieldImpl(tag, data);
   }
 
   @NotNull
   private String getFieldData(FieldItem field) {
-    String indicator1 = String.valueOf(getIndicator(field, 0));
-    String indicator2 = String.valueOf(getIndicator(field, 1));
+    var indicator1 = String.valueOf(getIndicator(field, 0));
+    var indicator2 = String.valueOf(getIndicator(field, 1));
     var indicators = indicator1 + indicator2;
 
     var content = extractSubfields(field, this::subfieldFromString).stream()

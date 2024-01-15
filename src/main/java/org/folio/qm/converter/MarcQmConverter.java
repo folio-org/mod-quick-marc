@@ -7,10 +7,13 @@ import static org.folio.qm.util.MarcUtils.restoreBlanks;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.domain.dto.AdditionalInfo;
 import org.folio.qm.domain.dto.BaseMarcRecord;
@@ -61,10 +64,32 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
     try (ByteArrayOutputStream os = new ByteArrayOutputStream();
          QmMarcJsonWriter writer = new QmMarcJsonWriter(os)) {
       writer.write(marcRecord);
-      return objectMapper.readTree(os.toByteArray());
+
+      var jsonNode = objectMapper.readTree(os.toByteArray());
+      reorderContentTagsBasedOnSource(jsonNode, source.getFields());
+      return jsonNode;
     } catch (IOException e) {
       throw new ConverterException(e);
     }
+  }
+
+  private void reorderContentTagsBasedOnSource(JsonNode jsonNode, List<FieldItem> sourceFields) {
+    var fieldsArrayNode = (ArrayNode) jsonNode.path("fields");
+
+    Map<String, JsonNode> jsonNodesByTag = new HashMap<>();
+    fieldsArrayNode
+      .forEach(node -> jsonNodesByTag.put(node.fieldNames().next(), node));
+
+    var rearrangedArray = objectMapper.createArrayNode();
+    for (FieldItem fieldItem : sourceFields) {
+      JsonNode node = jsonNodesByTag.get(fieldItem.getTag());
+      if (node != null) {
+        rearrangedArray.add(node);
+      }
+    }
+
+    fieldsArrayNode.removeAll();
+    fieldsArrayNode.addAll(rearrangedArray);
   }
 
   private Record toMarcRecord(String leaderString, List<FieldItem> fields, MarcFormat format) {

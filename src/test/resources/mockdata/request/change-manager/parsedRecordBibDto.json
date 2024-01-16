@@ -9,9 +9,6 @@
     "content": {
       "fields": [
         {
-          "001": "393893"
-        },
-        {
           "005": "20141107001016.0"
         },
         {
@@ -19,6 +16,9 @@
         },
         {
           "007": "sa bcdefghijkl"
+        },
+        {
+          "001": "393893"
         },
         {
           "008": "abcdefghijklmnopqr bcdefghijklmn o stuvw"
@@ -491,7 +491,7 @@
           }
         }
       ],
-      "leader": "01706ccm a2200361   4500"
+      "leader": "01750ccm a2200421   4500"
     }
   },
   "additionalInfo": {

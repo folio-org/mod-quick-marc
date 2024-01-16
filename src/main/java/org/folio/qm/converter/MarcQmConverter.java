@@ -12,8 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.domain.dto.AdditionalInfo;
 import org.folio.qm.domain.dto.BaseMarcRecord;
@@ -76,15 +78,17 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
   private void reorderContentTagsBasedOnSource(JsonNode jsonNode, List<FieldItem> sourceFields) {
     var fieldsArrayNode = (ArrayNode) jsonNode.path("fields");
 
-    Map<String, JsonNode> jsonNodesByTag = new HashMap<>();
-    fieldsArrayNode
-      .forEach(node -> jsonNodesByTag.put(node.fieldNames().next(), node));
+    Map<String, Queue<JsonNode>> jsonNodesByTag = new HashMap<>();
+    fieldsArrayNode.forEach(node -> {
+      String tag = node.fieldNames().next();
+      jsonNodesByTag.computeIfAbsent(tag, k -> new LinkedList<>()).add(node);
+    });
 
     var rearrangedArray = objectMapper.createArrayNode();
     for (FieldItem fieldItem : sourceFields) {
-      JsonNode node = jsonNodesByTag.get(fieldItem.getTag());
-      if (node != null) {
-        rearrangedArray.add(node);
+      Queue<JsonNode> nodes = jsonNodesByTag.get(fieldItem.getTag());
+      if (nodes != null && !nodes.isEmpty()) {
+        rearrangedArray.add(nodes.poll());
       }
     }
 

@@ -65,9 +65,9 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
          QmMarcJsonWriter writer = new QmMarcJsonWriter(os)) {
       writer.write(marcRecord);
 
-      var jsonNode = objectMapper.readTree(os.toByteArray());
-      reorderContentTagsBasedOnSource(jsonNode, source.getFields());
-      return jsonNode;
+      var convertedContent = objectMapper.readTree(os.toByteArray());
+      reorderContentTagsBasedOnSource(convertedContent, source.getFields());
+      return convertedContent;
     } catch (IOException e) {
       throw new ConverterException(e);
     }

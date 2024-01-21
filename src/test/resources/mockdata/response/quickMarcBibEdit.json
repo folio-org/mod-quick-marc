@@ -9,6 +9,12 @@
   "_actionType": "edit",
   "fields": [
     {
+      "tag": "001",
+      "content": "393893",
+      "indicators": [],
+      "isProtected": "true"
+    },
+    {
       "tag": "005",
       "content": "20141107001016.0",
       "indicators": [],
@@ -60,12 +66,6 @@
       },
       "indicators": [],
       "isProtected": "false"
-    },
-    {
-      "tag": "001",
-      "content": "393893",
-      "indicators": [],
-      "isProtected": "true"
     },
     {
       "tag": "008",

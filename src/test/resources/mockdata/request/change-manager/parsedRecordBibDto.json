@@ -9,6 +9,9 @@
     "content": {
       "fields": [
         {
+          "001": "393893"
+        },
+        {
           "005": "20141107001016.0"
         },
         {
@@ -16,9 +19,6 @@
         },
         {
           "007": "sa bcdefghijkl"
-        },
-        {
-          "001": "393893"
         },
         {
           "008": "abcdefghijklmnopqr bcdefghijklmn o stuvw"

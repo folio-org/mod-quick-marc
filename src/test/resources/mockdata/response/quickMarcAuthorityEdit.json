@@ -27,6 +27,15 @@
       "isProtected": "false"
     },
     {
+      "tag": "041",
+      "content": "$a latitager $g ger",
+      "indicators": [
+        "0",
+        "\\"
+      ],
+      "isProtected": "false"
+    },
+    {
       "tag": "006",
       "content": {
         "Type": "c",
@@ -134,15 +143,6 @@
       "content": "$c UPB $d UPB $d NIC $d NIC",
       "indicators": [
         "\\",
-        "\\"
-      ],
-      "isProtected": "false"
-    },
-    {
-      "tag": "041",
-      "content": "$a latitager $g ger",
-      "indicators": [
-        "0",
         "\\"
       ],
       "isProtected": "false"

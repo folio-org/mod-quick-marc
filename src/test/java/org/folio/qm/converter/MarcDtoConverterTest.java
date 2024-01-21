@@ -40,9 +40,9 @@ class MarcDtoConverterTest {
   @SneakyThrows
   @ParameterizedTest
   @CsvSource(value = {
-    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_VIEW_AUTHORITY_PATH + "," + "06059cz\\\\a2201201n\\\\4500",
-    PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_VIEW_HOLDINGS_PATH + "," + "00241cx\\\\a2200109zn\\4500",
-    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_VIEW_BIB_PATH + "," + "01706ccm\\a2200361\\\\\\4500"
+    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_VIEW_AUTHORITY_PATH + "," + "01725cz\\\\a2200433n\\\\4500",
+    PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_VIEW_HOLDINGS_PATH + "," + "01717cx\\\\a2200433zn\\4500",
+    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_VIEW_BIB_PATH + "," + "01750ccm\\a2200421\\\\\\4500"
   })
   void testConvertDtoRecord(String parsedRecordDtoPath, String quickMarcJsonPath, String expectedLeader) {
     var parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);

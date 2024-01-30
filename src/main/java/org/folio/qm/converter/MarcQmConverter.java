@@ -68,7 +68,10 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
       writer.write(marcRecord);
 
       var convertedContent = objectMapper.readTree(os.toByteArray());
+      System.out.println("tsaghik convertedContent before: " + convertedContent);
+
       reorderContentTagsBasedOnSource(convertedContent, source.getFields());
+      System.out.println("tsaghik convertedContent after: " + convertedContent);
       return convertedContent;
     } catch (IOException e) {
       throw new ConverterException(e);
@@ -76,6 +79,7 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
   }
 
   private void reorderContentTagsBasedOnSource(JsonNode jsonNode, List<FieldItem> sourceFields) {
+    System.out.println("tsaghik entered reorderContentTagsBasedOnSource");
     var fieldsArrayNode = (ArrayNode) jsonNode.path("fields");
 
     Map<String, Queue<JsonNode>> jsonNodesByTag = new HashMap<>();

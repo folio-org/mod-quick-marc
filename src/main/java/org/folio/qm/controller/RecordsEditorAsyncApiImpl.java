@@ -25,6 +25,7 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
   public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarcEdit quickMarc) {
     var updateActionResult = deferredResultCacheService.getUpdateActionResult(id);
     marcRecordsService.updateById(id, quickMarc, updateActionResult);
+    System.out.println("tsaghik updateActionResult: " + updateActionResult);
     return updateActionResult;
   }
 

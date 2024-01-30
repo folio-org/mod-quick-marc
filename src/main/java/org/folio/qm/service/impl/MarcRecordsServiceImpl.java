@@ -107,6 +107,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
+    System.out.println("tsaghik parsedRecordDto: " + parsedRecordDto);
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);

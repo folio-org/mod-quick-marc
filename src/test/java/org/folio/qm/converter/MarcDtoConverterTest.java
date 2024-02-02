@@ -50,6 +50,7 @@ class MarcDtoConverterTest {
     var parsedRecordDto = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
     var expected = getMockAsObject(quickMarcJsonPath, QuickMarcView.class);
     when(fieldsConverter.convertDtoFields(any(), any(), any())).thenReturn(expected.getFields());
+    when(fieldsConverter.reorderFieldsBasedOnParsedRecordOrder(any(), any())).thenReturn(expected.getFields());
 
     QuickMarcView actual = converter.convert(parsedRecordDto);
 

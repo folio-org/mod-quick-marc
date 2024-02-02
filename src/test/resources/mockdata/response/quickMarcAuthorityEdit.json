@@ -9,10 +9,13 @@
   "_actionType": "edit",
   "fields": [
     {
-      "tag": "001",
-      "content": "393893",
-      "indicators": [],
-      "isProtected": "true"
+      "tag": "035",
+      "content": "$a (OCoLC)63611770",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "004",
@@ -121,13 +124,10 @@
       "isProtected": "false"
     },
     {
-      "tag": "035",
-      "content": "$a (OCoLC)63611770",
-      "indicators": [
-        "\\",
-        "\\"
-      ],
-      "isProtected": "false"
+      "tag": "001",
+      "content": "393893",
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "035",

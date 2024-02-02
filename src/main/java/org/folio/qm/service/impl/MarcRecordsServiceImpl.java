@@ -82,15 +82,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public QuickMarcView findByExternalId(UUID externalId) {
     log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
     var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    System.out.println("tsaghik Get parsedRecordDto: " + parsedRecordDto);
     var quickMarc = conversionService.convert(parsedRecordDto, QuickMarcView.class);
-    System.out.println("tsaghik quickMarc1: " + quickMarc);
-
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
     setUserInfo(quickMarc, parsedRecordDto);
     log.info("findByExternalId:: quickMarc loaded by externalId: {}", externalId);
-    System.out.println("tsaghik quickMarc2: " + quickMarc);
     return quickMarc;
   }
 
@@ -110,10 +106,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
-    System.out.println("tsaghik parsedRecordDto: " + parsedRecordDto);
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
-    System.out.println("tsaghik parsedRecordDto2: " + parsedRecordDto);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
   }
 

@@ -8,6 +8,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_R
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_VIEW_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_VIEW_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_VIEW_HOLDINGS_PATH;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MarcDtoConverterTest {
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private MarcDtoConverter converter;
   private MarcFieldsConverter fieldsConverter;
 
@@ -51,6 +53,7 @@ class MarcDtoConverterTest {
 
     QuickMarcView actual = converter.convert(parsedRecordDto);
 
+    assertEquals(expected, actual);
     assertThat(actual)
       .isNotNull()
       .hasFieldOrPropertyWithValue("leader", expectedLeader)
@@ -62,6 +65,7 @@ class MarcDtoConverterTest {
       .hasFieldOrPropertyWithValue("updateInfo.updateDate", expected.getUpdateInfo().getUpdateDate())
       .extracting(QuickMarcView::getFields).asList()
       .hasSize(expected.getFields().size());
+
   }
 
 }

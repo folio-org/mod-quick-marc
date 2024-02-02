@@ -21,6 +21,15 @@
       "isProtected": "false"
     },
     {
+      "tag": "505",
+      "content": "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+      "indicators": [
+        "0",
+        "\\"
+      ],
+      "isProtected": "false"
+    },
+    {
       "tag": "005",
       "content": "20141107001016.0",
       "indicators": [],
@@ -227,15 +236,6 @@
       "content": "$a v. $b facsims. $c 33 cm.",
       "indicators": [
         "\\",
-        "\\"
-      ],
-      "isProtected": "false"
-    },
-    {
-      "tag": "505",
-      "content": "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
-      "indicators": [
-        "0",
         "\\"
       ],
       "isProtected": "false"

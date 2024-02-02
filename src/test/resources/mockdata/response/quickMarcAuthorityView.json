@@ -8,10 +8,13 @@
   "_actionType": "view",
   "fields": [
     {
-      "tag": "001",
-      "content": "393893",
-      "indicators": [],
-      "isProtected": "true"
+      "tag": "035",
+      "content": "$a (OCoLC)63611770",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "isProtected": "false"
     },
     {
       "tag": "004",
@@ -23,6 +26,15 @@
       "tag": "005",
       "content": "20141107001016.0",
       "indicators": [],
+      "isProtected": "false"
+    },
+    {
+      "tag": "041",
+      "content": "$a latitager $g ger",
+      "indicators": [
+        "0",
+        "\\"
+      ],
       "isProtected": "false"
     },
     {
@@ -112,13 +124,10 @@
       "isProtected": "false"
     },
     {
-      "tag": "035",
-      "content": "$a (OCoLC)63611770",
-      "indicators": [
-        "\\",
-        "\\"
-      ],
-      "isProtected": "false"
+      "tag": "001",
+      "content": "393893",
+      "indicators": [],
+      "isProtected": "true"
     },
     {
       "tag": "035",
@@ -134,15 +143,6 @@
       "content": "$c UPB $d UPB $d NIC $d NIC",
       "indicators": [
         "\\",
-        "\\"
-      ],
-      "isProtected": "false"
-    },
-    {
-      "tag": "041",
-      "content": "$a latitager $g ger",
-      "indicators": [
-        "0",
         "\\"
       ],
       "isProtected": "false"

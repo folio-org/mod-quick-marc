@@ -73,8 +73,8 @@ public class MarcFieldsConverter {
   }
 
   public List<FieldItem> reorderFieldsBasedOnParsedRecordOrder(List<FieldItem> fieldItems, ParsedRecord parsedRecord) {
-    var tagsOrder =  extractTagsFromParsedRecord(parsedRecord);
-    return reorderMarcRecordFields(fieldItems, tagsOrder);
+    var parsedRecordTags =  extractTagsFromParsedRecord(parsedRecord);
+    return reorderMarcRecordFields(fieldItems, parsedRecordTags);
   }
 
   private List<String> extractTagsFromParsedRecord(ParsedRecord parsedRecord) {
@@ -90,7 +90,7 @@ public class MarcFieldsConverter {
     return tagList;
   }
 
-  private List<FieldItem> reorderMarcRecordFields(List<FieldItem> fields, List<String> parsedRecordFields) {
+  private List<FieldItem> reorderMarcRecordFields(List<FieldItem> fields, List<String> parsedRecordTags) {
     List<FieldItem> reorderedFields = new ArrayList<>();
 
     Map<String, Queue<FieldItem>> fieldItemQueueByTag = new HashMap<>();
@@ -98,7 +98,7 @@ public class MarcFieldsConverter {
       fieldItemQueueByTag.computeIfAbsent(fieldItem.getTag(), k -> new LinkedList<>()).add(fieldItem);
     }
 
-    for (String tag : parsedRecordFields) {
+    for (String tag : parsedRecordTags) {
       Queue<FieldItem> fieldItemQueue = fieldItemQueueByTag.get(tag);
       if (fieldItemQueue != null && !fieldItemQueue.isEmpty()) {
         reorderedFields.add(fieldItemQueue.poll());

@@ -8,3 +8,11 @@ updates:
       prefix: fix
       prefix-development: chore
       include: scope
+    groups:
+      spring:
+        patterns:
+          - "org.springframework*"
+          - "*folio-spring*"
+      plugins:
+        patterns:
+          - "*plugin*"

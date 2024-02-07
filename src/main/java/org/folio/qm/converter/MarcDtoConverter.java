@@ -52,10 +52,11 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarcVie
     var format = typeMapper.fromDto(source.getRecordType());
     var leader = convertLeader(marcRecord);
     var fields = fieldsConverter.convertDtoFields(marcRecord.getVariableFields(), marcRecord.getLeader(), format);
+    var reorderedFields = fieldsConverter.reorderFieldsBasedOnParsedRecordOrder(fields, parsedRecord);
 
     return new QuickMarcView()
       .leader(leader)
-      .fields(fields)
+      .fields(reorderedFields)
       .marcFormat(format)
       .parsedRecordId(parsedRecord.getId())
       .parsedRecordDtoId(source.getId())

@@ -16,6 +16,17 @@
           "004": "in00001"
         },
         {
+          "505": {
+            "ind1": "0",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement."
+              }
+            ]
+          }
+        },
+        {
           "005": "20141107001016.0"
         },
         {
@@ -283,17 +294,6 @@
           }
         },
         {
-          "505": {
-            "ind1": "0",
-            "ind2": " ",
-            "subfields": [
-              {
-                "a": "Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement."
-              }
-            ]
-          }
-        },
-        {
           "590": {
             "ind1": " ",
             "ind2": " ",
@@ -489,7 +489,7 @@
           }
         }
       ],
-      "leader": "00241cx\\\\a2200109zn\\4500"
+      "leader": "01717cx  a2200433zn 4500"
     }
   },
   "additionalInfo": {

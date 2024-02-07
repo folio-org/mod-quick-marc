@@ -83,7 +83,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
     var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
     var quickMarc = conversionService.convert(parsedRecordDto, QuickMarcView.class);
-
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
     setUserInfo(quickMarc, parsedRecordDto);

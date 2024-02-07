@@ -5,7 +5,7 @@
   "externalId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
   "externalHrid": "hold0001",
   "marcFormat": "HOLDINGS",
-  "leader": "00241cx\\\\a2200109zn\\4500",
+  "leader": "01717cx\\\\a2200433zn\\4500",
   "_actionType": "view",
   "fields": [
     {
@@ -18,6 +18,15 @@
       "tag": "004",
       "content": "in00001",
       "indicators": [],
+      "isProtected": "false"
+    },
+    {
+      "tag": "505",
+      "content": "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+      "indicators": [
+        "0",
+        "\\"
+      ],
       "isProtected": "false"
     },
     {
@@ -227,15 +236,6 @@
       "content": "$a v. $b facsims. $c 33 cm.",
       "indicators": [
         "\\",
-        "\\"
-      ],
-      "isProtected": "false"
-    },
-    {
-      "tag": "505",
-      "content": "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
-      "indicators": [
-        "0",
         "\\"
       ],
       "isProtected": "false"

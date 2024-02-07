@@ -30,11 +30,13 @@ import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
 class MarcQmConverterTest {
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private MarcQmEditConverter converter;
   private MarcFieldsConverter fieldsConverter;
 
@@ -70,6 +72,11 @@ class MarcQmConverterTest {
         expected.getAdditionalInfo().getSuppressDiscovery())
       .extracting(parsedRecordDto -> parsedRecordDto.getParsedRecord().getContent().toString())
       .matches(content -> content.contains(expectedLeader), "contains valid leader");
+
+    String expectedJson = objectMapper.writeValueAsString(expected.getParsedRecord().getContent());
+    String actualJson = objectMapper.writeValueAsString(actual.getParsedRecord().getContent());
+
+    JSONAssert.assertEquals(expectedJson, actualJson, true);
   }
 
   private Record extractMarcRecord(ParsedRecord parsedRecord) {

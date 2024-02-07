@@ -4,9 +4,18 @@
   "suppressDiscovery": false,
   "externalId": "b9a5f035-de63-4e2c-92c2-07240c89b817",
   "marcFormat": "BIBLIOGRAPHIC",
-  "leader": "01706ccm\\a2200361\\\\ 4500",
+  "leader": "01750ccm\\a2200421\\\\\\4500",
   "_actionType": "view",
   "fields": [
+    {
+      "tag": "066",
+      "content": "$c $1 $c (3",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "isProtected": "false"
+    },
     {
       "tag": "001",
       "content": "393893",
@@ -171,15 +180,6 @@
       "content": "$a M3 $b .M896",
       "indicators": [
         "0",
-        "\\"
-      ],
-      "isProtected": "false"
-    },
-    {
-      "tag": "066",
-      "content": "$c $1 $c (3",
-      "indicators": [
-        "\\",
         "\\"
       ],
       "isProtected": "false"

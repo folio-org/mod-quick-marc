@@ -9,6 +9,15 @@
   "_actionType": "edit",
   "fields": [
     {
+      "tag": "066",
+      "content": "$c $1 $c (3",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "isProtected": "false"
+    },
+    {
       "tag": "001",
       "content": "393893",
       "indicators": [],
@@ -172,15 +181,6 @@
       "content": "$a M3 $b .M896",
       "indicators": [
         "0",
-        "\\"
-      ],
-      "isProtected": "false"
-    },
-    {
-      "tag": "066",
-      "content": "$c $1 $c (3",
-      "indicators": [
-        "\\",
         "\\"
       ],
       "isProtected": "false"

@@ -369,7 +369,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .externalId(EXISTED_EXTERNAL_ID);
 
     // Now change the content of the field to wrong one
-    quickMarcJson.getFields().get(6).setContent("$a");
+    quickMarcJson.getFields().get(7).setContent("$a");
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isBadRequest())

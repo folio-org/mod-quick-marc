@@ -53,7 +53,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -106,7 +106,7 @@
             "length": 4,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No illustrations" },
               { "code": "a", "name": "Illustrations" },
@@ -134,7 +134,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Unknown or not specified" },
               { "code": "a", "name": "Preschool" },
@@ -155,7 +155,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -177,7 +177,7 @@
             "length": 4,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No specified nature of contents" },
               { "code": "a", "name": "Abstracts/summaries" },
@@ -217,7 +217,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not a government publication" },
               { "code": "a", "name": "Autonomous or semi-autonomous component" },
@@ -240,7 +240,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "Not a conference publication" },
               { "code": "1", "name": "Conference publication" }
@@ -254,7 +254,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "Not a festschrift" },
               { "code": "1", "name": "Festschrift" }
@@ -268,7 +268,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "No index" },
               { "code": "1", "name": "Index present" }
@@ -291,7 +291,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "Not fiction (not further specified)" },
               { "code": "1", "name": "Fiction (not further specified)" },
@@ -315,7 +315,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No biographical material" },
               { "code": "a", "name": "Autobiography" },
@@ -341,7 +341,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -359,7 +359,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -402,7 +402,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -455,7 +455,7 @@
             "length": 2,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\\\", "name": "No attempt to code" },
               { "code": "an", "name": "Anthems" },
               { "code": "bd", "name": "Ballads" },
@@ -539,7 +539,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "a", "name": "Full score" },
               { "code": "b", "name": "Miniature or study score" },
@@ -567,7 +567,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No parts in hand or not specified" },
               { "code": "d", "name": "Instrumental and vocal parts" },
@@ -585,7 +585,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Unknown or unspecified" },
               { "code": "a", "name": "Preschool" },
@@ -606,7 +606,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -627,7 +627,7 @@
             "length": 6,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No accompanying matter" },
               { "code": "a", "name": "Discography" },
@@ -653,7 +653,7 @@
             "length": 2,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Item is a music sound recording" },
               { "code": "a", "name": "Autobiography" },
@@ -695,7 +695,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not arrangement or transposition or not specified" },
               { "code": "a", "name": "Transposition" },
@@ -731,7 +731,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -749,7 +749,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -792,7 +792,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -845,7 +845,7 @@
             "length": 2,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\\\", "name": "No attempt to code" },
               { "code": "an", "name": "Anthems" },
               { "code": "bd", "name": "Ballads" },
@@ -929,7 +929,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "a", "name": "Full score" },
               { "code": "b", "name": "Miniature or study score" },
@@ -957,7 +957,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No parts in hand or not specified" },
               { "code": "d", "name": "Instrumental and vocal parts" },
@@ -975,7 +975,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Unknown or unspecified" },
               { "code": "a", "name": "Preschool" },
@@ -996,7 +996,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -1017,7 +1017,7 @@
             "length": 6,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No accompanying matter" },
               { "code": "a", "name": "Discography" },
@@ -1043,7 +1043,7 @@
             "length": 2,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Item is a music sound recording" },
               { "code": "a", "name": "Autobiography" },
@@ -1085,7 +1085,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not arrangement or transposition or not specified" },
               { "code": "a", "name": "Transposition" },
@@ -1121,7 +1121,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -1139,7 +1139,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -1194,7 +1194,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -1247,7 +1247,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No determinable frequency" },
               { "code": "a", "name": "Annual" },
@@ -1278,7 +1278,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "n", "name": "Normalized irregular" },
               { "code": "r", "name": "Regular" },
@@ -1303,7 +1303,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "d", "name": "Updating database" },
@@ -1328,7 +1328,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -1350,7 +1350,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -1372,7 +1372,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not specified" },
               { "code": "a", "name": "Abstracts/summaries" },
@@ -1411,7 +1411,7 @@
             "length": 3,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not specified" },
               { "code": "a", "name": "Abstracts/summaries" },
@@ -1450,7 +1450,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not a government publication" },
               { "code": "a", "name": "Autonomous or semi-autonomous component" },
@@ -1473,7 +1473,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "Not a conference publication" },
               { "code": "1", "name": "Conference publication" }
@@ -1496,7 +1496,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No alphabet or script given/No key title" },
               { "code": "a", "name": "Basic Roman" },
@@ -1523,7 +1523,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "Successive entry" },
               { "code": "1", "name": "Latest entry" },
@@ -1547,7 +1547,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -1565,7 +1565,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -1607,7 +1607,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -1669,7 +1669,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Unknown or not specified" },
               { "code": "a", "name": "Preschool" },
@@ -1690,7 +1690,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Unknown or not specified" },
               { "code": "o", "name": "Online" },
@@ -1714,7 +1714,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "a", "name": "Numeric data" },
               { "code": "b", "name": "Computer program" },
@@ -1748,7 +1748,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not a government publication" },
               { "code": "a", "name": "Autonomous or semi-autonomous component" },
@@ -1789,7 +1789,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -1807,7 +1807,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -1852,7 +1852,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -1923,7 +1923,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Unknown or not specified" },
               { "code": "a", "name": "Preschool" },
@@ -1953,7 +1953,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not a government publication" },
               { "code": "a", "name": "Autonomous or semi-autonomous component" },
@@ -1976,7 +1976,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -2007,7 +2007,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "a", "name": "Art original" },
               { "code": "b", "name": "Kit" },
@@ -2039,7 +2039,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "a", "name": "Animation" },
               { "code": "c", "name": "Animation and live action" },
@@ -2066,7 +2066,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -2084,7 +2084,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -2127,7 +2127,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -2180,7 +2180,7 @@
             "length": 4,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No relief shown" },
               { "code": "a", "name": "Contours" },
@@ -2205,7 +2205,7 @@
             "length": 2,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\\\", "name": "No attempt to code" },
               { "code": "##", "name": "Projection not specified" },
               { "code": "aa", "name": "Aitoff" },
@@ -2273,7 +2273,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "a", "name": "Single map" },
               { "code": "b", "name": "Map series" },
@@ -2303,7 +2303,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not a government publication" },
               { "code": "a", "name": "Autonomous or semi-autonomous component" },
@@ -2326,7 +2326,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -2357,7 +2357,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "0", "name": "No index" },
               { "code": "1", "name": "Index present" }
@@ -2380,7 +2380,7 @@
             "length": 2,
             "isArray": true,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "No specified special format characteristics" },
               { "code": "e", "name": "Manuscript" },
@@ -2411,7 +2411,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -2429,7 +2429,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },
@@ -2471,7 +2471,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "b", "name": "No dates given; B.C. date involved" },
               { "code": "c", "name": "Continuing resource currently published" },
@@ -2533,7 +2533,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "None of the following" },
               { "code": "a", "name": "Microfilm" },
@@ -2573,7 +2573,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "Not modified" },
               { "code": "d", "name": "Dashed-on information omitted" },
@@ -2591,7 +2591,7 @@
             "length": 1,
             "isArray": false,
             "readOnly": false,
-            "values": [
+            "allowedValues": [
               { "code": "\\", "name": "No attempt to code" },
               { "code": "#", "name": "National bibliographic agency" },
               { "code": "c", "name": "Cooperative cataloging program" },

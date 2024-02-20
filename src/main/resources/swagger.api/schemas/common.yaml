@@ -409,7 +409,7 @@ marcSpecificationItem:
       description: Is item read only
       type: boolean
       example: true
-    values:
+    allowedValues:
       type: array
       items:
         $ref: '#/marcSpecificationItemValue'

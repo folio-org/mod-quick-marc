@@ -1,0 +1,2607 @@
+{
+  "tag": "008",
+  "format": "BIBLIOGRAPHIC",
+  "label": "General Information",
+  "url": "https://www.loc.gov/marc/bibliographic/bd008.html",
+  "repeatable": false,
+  "required": true,
+  "spec": {
+    "types": [
+      {
+        "code": "books",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "a"
+                ],
+                "7": [
+                  "a",
+                  "c",
+                  "d",
+                  "m"
+                ]
+              }
+            },
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "t"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ills",
+            "name": "Illustrations",
+            "order": 5,
+            "position": 18,
+            "length": 4,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No illustrations" },
+              { "code": "a", "name": "Illustrations" },
+              { "code": "b", "name": "Maps" },
+              { "code": "c", "name": "Portraits" },
+              { "code": "d", "name": "Charts" },
+              { "code": "e", "name": "Plans" },
+              { "code": "f", "name": "Plates" },
+              { "code": "g", "name": "Music" },
+              { "code": "h", "name": "Facsimiles" },
+              { "code": "i", "name": "Coats of arms" },
+              { "code": "j", "name": "Genealogical tables" },
+              { "code": "k", "name": "Forms" },
+              { "code": "l", "name": "Samples" },
+              { "code": "m", "name": "Phonodisc, phonowire, etc." },
+              { "code": "o", "name": "Photographs" },
+              { "code": "p", "name": "Illuminations" }
+            ]
+          },
+          {
+            "code": "Audn",
+            "name": "Target audience",
+            "order": 6,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Unknown or not specified" },
+              { "code": "a", "name": "Preschool" },
+              { "code": "b", "name": "Primary" },
+              { "code": "c", "name": "Pre-adolescent" },
+              { "code": "d", "name": "Adolescent" },
+              { "code": "e", "name": "Adult" },
+              { "code": "f", "name": "Specialized" },
+              { "code": "g", "name": "General" },
+              { "code": "j", "name": "Juvenile" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 7,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "b", "name": "Microfiche" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "Cont",
+            "name": "Nature of contents",
+            "order": 8,
+            "position": 24,
+            "length": 4,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No specified nature of contents" },
+              { "code": "a", "name": "Abstracts/summaries" },
+              { "code": "b", "name": "Bibliographies" },
+              { "code": "c", "name": "Catalogs" },
+              { "code": "d", "name": "Dictionaries" },
+              { "code": "e", "name": "Encyclopedias" },
+              { "code": "f", "name": "Handbooks" },
+              { "code": "g", "name": "Legal articles" },
+              { "code": "i", "name": "Indexes" },
+              { "code": "j", "name": "Patent document" },
+              { "code": "k", "name": "Discographies" },
+              { "code": "l", "name": "Legislation" },
+              { "code": "m", "name": "Theses" },
+              { "code": "n", "name": "Surveys of literature in a subject area" },
+              { "code": "o", "name": "Reviews" },
+              { "code": "p", "name": "Programmed texts" },
+              { "code": "q", "name": "Filmographies" },
+              { "code": "r", "name": "Directories" },
+              { "code": "s", "name": "Statistics" },
+              { "code": "t", "name": "Technical reports" },
+              { "code": "u", "name": "Standards/specifications" },
+              { "code": "v", "name": "Legal cases and case notes" },
+              { "code": "w", "name": "Law reports and digests" },
+              { "code": "y", "name": "Yearbooks" },
+              { "code": "z", "name": "Treaties" },
+              { "code": "2", "name": "Offprints" },
+              { "code": "5", "name": "Calendars" },
+              { "code": "6", "name": "Comics/graphic novels" }
+            ]
+          },
+          {
+            "code": "GPub",
+            "name": "Government publication",
+            "order": 9,
+            "position": 28,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not a government publication" },
+              { "code": "a", "name": "Autonomous or semi-autonomous component" },
+              { "code": "c", "name": "Multilocal" },
+              { "code": "f", "name": "Federal/national" },
+              { "code": "i", "name": "International intergovernmental" },
+              { "code": "l", "name": "Local" },
+              { "code": "m", "name": "Multistate" },
+              { "code": "o", "name": "Government publication-level undetermined" },
+              { "code": "s", "name": "State, provincial, territorial, dependent, etc." },
+              { "code": "u", "name": "Unknown if item is government publication" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Conf",
+            "name": "Conference publication",
+            "order": 10,
+            "position": 29,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "Not a conference publication" },
+              { "code": "1", "name": "Conference publication" }
+            ]
+          },
+          {
+            "code": "Fest",
+            "name": "Festschrift",
+            "order": 11,
+            "position": 30,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "Not a festschrift" },
+              { "code": "1", "name": "Festschrift" }
+            ]
+          },
+          {
+            "code": "Indx",
+            "name": "Index",
+            "order": 12,
+            "position": 31,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "No index" },
+              { "code": "1", "name": "Index present" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 13,
+            "position": 32,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "LitF",
+            "name": "Literary form",
+            "order": 14,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "Not fiction (not further specified)" },
+              { "code": "1", "name": "Fiction (not further specified)" },
+              { "code": "d", "name": "Dramas" },
+              { "code": "e", "name": "Essays" },
+              { "code": "f", "name": "Novels" },
+              { "code": "h", "name": "Humor, satires, etc." },
+              { "code": "i", "name": "Letters" },
+              { "code": "j", "name": "Short stories" },
+              { "code": "m", "name": "Mixed forms" },
+              { "code": "p", "name": "Poetry" },
+              { "code": "s", "name": "Speeches" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          },
+          {
+            "code": "Biog",
+            "name": "Biography",
+            "order": 15,
+            "position": 34,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No biographical material" },
+              { "code": "a", "name": "Autobiography" },
+              { "code": "b", "name": "Individual biography" },
+              { "code": "c", "name": "Collective biography" },
+              { "code": "d", "name": "Contains biographical information" }
+            ]
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 16,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 17,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 18,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "scores",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "c",
+                  "d"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Comp",
+            "name": "Form of composition",
+            "order": 5,
+            "position": 18,
+            "length": 2,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\\\", "name": "No attempt to code" },
+              { "code": "an", "name": "Anthems" },
+              { "code": "bd", "name": "Ballads" },
+              { "code": "bg", "name": "Bluegrass music" },
+              { "code": "bl", "name": "Blues" },
+              { "code": "bt", "name": "Ballets" },
+              { "code": "ca", "name": "Chaconnes" },
+              { "code": "cb", "name": "Chants, Other religions" },
+              { "code": "cc", "name": "Chant, Christian" },
+              { "code": "cg", "name": "Concerti grossi" },
+              { "code": "ch", "name": "Chorales" },
+              { "code": "cl", "name": "Chorale preludes" },
+              { "code": "cn", "name": "Canons and rounds" },
+              { "code": "co", "name": "Concertos" },
+              { "code": "cp", "name": "Chansons, polyphonic" },
+              { "code": "cr", "name": "Carols" },
+              { "code": "cs", "name": "Chance compositions" },
+              { "code": "ct", "name": "Cantatas" },
+              { "code": "cy", "name": "Country music" },
+              { "code": "cz", "name": "Canzonas" },
+              { "code": "df", "name": "Dance forms" },
+              { "code": "dv", "name": "Divertimentos, serenades, cassations, divertissements, and notturni" },
+              { "code": "fg", "name": "Fugues" },
+              { "code": "fl", "name": "Flamenco" },
+              { "code": "fm", "name": "Folk music" },
+              { "code": "ft", "name": "Fantasias" },
+              { "code": "gm", "name": "Gospel music" },
+              { "code": "hy", "name": "Hymns" },
+              { "code": "jz", "name": "Jazz" },
+              { "code": "mc", "name": "Musical revues and comedies" },
+              { "code": "md", "name": "Madrigals" },
+              { "code": "mi", "name": "Minuets" },
+              { "code": "mo", "name": "Motets" },
+              { "code": "mp", "name": "Motion picture music" },
+              { "code": "mr", "name": "Marches" },
+              { "code": "ms", "name": "Masses" },
+              { "code": "mu", "name": "Multiple forms" },
+              { "code": "mz", "name": "Mazurkas" },
+              { "code": "nc", "name": "Nocturnes" },
+              { "code": "nn", "name": "Not applicable" },
+              { "code": "op", "name": "Operas" },
+              { "code": "or", "name": "Oratorios" },
+              { "code": "ov", "name": "Overtures" },
+              { "code": "pg", "name": "Program music" },
+              { "code": "pm", "name": "Passion music" },
+              { "code": "po", "name": "Polonaises" },
+              { "code": "pp", "name": "Popular music" },
+              { "code": "pr", "name": "Preludes" },
+              { "code": "ps", "name": "Passacaglias" },
+              { "code": "pt", "name": "Part-songs" },
+              { "code": "pv", "name": "Pavans" },
+              { "code": "rc", "name": "Rock music" },
+              { "code": "rd", "name": "Rondos" },
+              { "code": "rg", "name": "Ragtime music" },
+              { "code": "ri", "name": "Ricercars" },
+              { "code": "rp", "name": "Rhapsodies" },
+              { "code": "rq", "name": "Requiems" },
+              { "code": "sd", "name": "Square dance music" },
+              { "code": "sg", "name": "Songs" },
+              { "code": "sn", "name": "Sonatas" },
+              { "code": "sp", "name": "Symphonic poems" },
+              { "code": "st", "name": "Studies and exercises" },
+              { "code": "su", "name": "Suites" },
+              { "code": "sy", "name": "Symphonies" },
+              { "code": "tc", "name": "Toccatas" },
+              { "code": "tl", "name": "Teatro lirico" },
+              { "code": "ts", "name": "Trio-sonatas" },
+              { "code": "uu", "name": "Unknown" },
+              { "code": "vi", "name": "Villancicos" },
+              { "code": "vr", "name": "Variations" },
+              { "code": "wz", "name": "Waltzes" },
+              { "code": "za", "name": "Zarzuelas" },
+              { "code": "zz", "name": "Other" }
+            ]
+          },
+          {
+            "code": "FMus",
+            "name": "Format of music",
+            "order": 6,
+            "position": 20,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "a", "name": "Full score" },
+              { "code": "b", "name": "Miniature or study score" },
+              { "code": "c", "name": "Accompaniment reduced for keyboard" },
+              { "code": "d", "name": "Voice score with accompaniment omitted" },
+              { "code": "e", "name": "Condensed score or piano-conductor score" },
+              { "code": "g", "name": "Close score" },
+              { "code": "h", "name": "Chorus score" },
+              { "code": "i", "name": "Condensed score" },
+              { "code": "j", "name": "Performer-conductor part" },
+              { "code": "k", "name": "Vocal score" },
+              { "code": "l", "name": "Score" },
+              { "code": "m", "name": "Multiple score formats" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "p", "name": "Piano score" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Part",
+            "name": "Music parts",
+            "order": 7,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No parts in hand or not specified" },
+              { "code": "d", "name": "Instrumental and vocal parts" },
+              { "code": "e", "name": "Instrumental parts" },
+              { "code": "f", "name": "Vocal parts" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          },
+          {
+            "code": "Audn",
+            "name": "Target audience",
+            "order": 8,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Unknown or unspecified" },
+              { "code": "a", "name": "Preschool" },
+              { "code": "b", "name": "Primary" },
+              { "code": "c", "name": "Pre-adolescent" },
+              { "code": "d", "name": "Adolescent" },
+              { "code": "e", "name": "Adult" },
+              { "code": "f", "name": "Specialized" },
+              { "code": "g", "name": "General" },
+              { "code": "j", "name": "Juvenile" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 9,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "AccM",
+            "name": "Accompanying matter",
+            "order": 10,
+            "position": 24,
+            "length": 6,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No accompanying matter" },
+              { "code": "a", "name": "Discography" },
+              { "code": "b", "name": "Bibliography" },
+              { "code": "c", "name": "Thematic index" },
+              { "code": "d", "name": "Libretto or text" },
+              { "code": "e", "name": "Biography of composer or author" },
+              { "code": "f", "name": "Biography of performer or history of ensemble" },
+              { "code": "g", "name": "Technical and/or historical information on instruments" },
+              { "code": "h", "name": "Technical information on music" },
+              { "code": "i", "name": "Historical information" },
+              { "code": "k", "name": "Ethnological information" },
+              { "code": "r", "name": "Instructional materials" },
+              { "code": "s", "name": "Music" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "LTxt",
+            "name": "Literary text for sound recordings",
+            "order": 11,
+            "position": 30,
+            "length": 2,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Item is a music sound recording" },
+              { "code": "a", "name": "Autobiography" },
+              { "code": "b", "name": "Biography" },
+              { "code": "c", "name": "Conference proceedings" },
+              { "code": "d", "name": "Drama" },
+              { "code": "e", "name": "Essays" },
+              { "code": "f", "name": "Fiction" },
+              { "code": "g", "name": "Reporting" },
+              { "code": "h", "name": "History" },
+              { "code": "i", "name": "Instruction" },
+              { "code": "j", "name": "Language instruction" },
+              { "code": "k", "name": "Comedy" },
+              { "code": "l", "name": "Lectures, speeches" },
+              { "code": "m", "name": "Memoirs" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "o", "name": "Folktales" },
+              { "code": "p", "name": "Poetry" },
+              { "code": "r", "name": "Rehearsals" },
+              { "code": "s", "name": "Sounds" },
+              { "code": "t", "name": "Interviews" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 12,
+            "position": 32,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "TrAr",
+            "name": "Transposition and arrangement",
+            "order": 13,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not arrangement or transposition or not specified" },
+              { "code": "a", "name": "Transposition" },
+              { "code": "b", "name": "Arrangement" },
+              { "code": "c", "name": "Both transposed and arranged" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 14,
+            "position": 34,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 15,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 16,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 17,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "sound_recordings",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "i",
+                  "j"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Comp",
+            "name": "Form of composition",
+            "order": 5,
+            "position": 18,
+            "length": 2,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\\\", "name": "No attempt to code" },
+              { "code": "an", "name": "Anthems" },
+              { "code": "bd", "name": "Ballads" },
+              { "code": "bg", "name": "Bluegrass music" },
+              { "code": "bl", "name": "Blues" },
+              { "code": "bt", "name": "Ballets" },
+              { "code": "ca", "name": "Chaconnes" },
+              { "code": "cb", "name": "Chants, Other religions" },
+              { "code": "cc", "name": "Chant, Christian" },
+              { "code": "cg", "name": "Concerti grossi" },
+              { "code": "ch", "name": "Chorales" },
+              { "code": "cl", "name": "Chorale preludes" },
+              { "code": "cn", "name": "Canons and rounds" },
+              { "code": "co", "name": "Concertos" },
+              { "code": "cp", "name": "Chansons, polyphonic" },
+              { "code": "cr", "name": "Carols" },
+              { "code": "cs", "name": "Chance compositions" },
+              { "code": "ct", "name": "Cantatas" },
+              { "code": "cy", "name": "Country music" },
+              { "code": "cz", "name": "Canzonas" },
+              { "code": "df", "name": "Dance forms" },
+              { "code": "dv", "name": "Divertimentos, serenades, cassations, divertissements, and notturni" },
+              { "code": "fg", "name": "Fugues" },
+              { "code": "fl", "name": "Flamenco" },
+              { "code": "fm", "name": "Folk music" },
+              { "code": "ft", "name": "Fantasias" },
+              { "code": "gm", "name": "Gospel music" },
+              { "code": "hy", "name": "Hymns" },
+              { "code": "jz", "name": "Jazz" },
+              { "code": "mc", "name": "Musical revues and comedies" },
+              { "code": "md", "name": "Madrigals" },
+              { "code": "mi", "name": "Minuets" },
+              { "code": "mo", "name": "Motets" },
+              { "code": "mp", "name": "Motion picture music" },
+              { "code": "mr", "name": "Marches" },
+              { "code": "ms", "name": "Masses" },
+              { "code": "mu", "name": "Multiple forms" },
+              { "code": "mz", "name": "Mazurkas" },
+              { "code": "nc", "name": "Nocturnes" },
+              { "code": "nn", "name": "Not applicable" },
+              { "code": "op", "name": "Operas" },
+              { "code": "or", "name": "Oratorios" },
+              { "code": "ov", "name": "Overtures" },
+              { "code": "pg", "name": "Program music" },
+              { "code": "pm", "name": "Passion music" },
+              { "code": "po", "name": "Polonaises" },
+              { "code": "pp", "name": "Popular music" },
+              { "code": "pr", "name": "Preludes" },
+              { "code": "ps", "name": "Passacaglias" },
+              { "code": "pt", "name": "Part-songs" },
+              { "code": "pv", "name": "Pavans" },
+              { "code": "rc", "name": "Rock music" },
+              { "code": "rd", "name": "Rondos" },
+              { "code": "rg", "name": "Ragtime music" },
+              { "code": "ri", "name": "Ricercars" },
+              { "code": "rp", "name": "Rhapsodies" },
+              { "code": "rq", "name": "Requiems" },
+              { "code": "sd", "name": "Square dance music" },
+              { "code": "sg", "name": "Songs" },
+              { "code": "sn", "name": "Sonatas" },
+              { "code": "sp", "name": "Symphonic poems" },
+              { "code": "st", "name": "Studies and exercises" },
+              { "code": "su", "name": "Suites" },
+              { "code": "sy", "name": "Symphonies" },
+              { "code": "tc", "name": "Toccatas" },
+              { "code": "tl", "name": "Teatro lirico" },
+              { "code": "ts", "name": "Trio-sonatas" },
+              { "code": "uu", "name": "Unknown" },
+              { "code": "vi", "name": "Villancicos" },
+              { "code": "vr", "name": "Variations" },
+              { "code": "wz", "name": "Waltzes" },
+              { "code": "za", "name": "Zarzuelas" },
+              { "code": "zz", "name": "Other" }
+            ]
+          },
+          {
+            "code": "FMus",
+            "name": "Format of music",
+            "order": 6,
+            "position": 20,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "a", "name": "Full score" },
+              { "code": "b", "name": "Miniature or study score" },
+              { "code": "c", "name": "Accompaniment reduced for keyboard" },
+              { "code": "d", "name": "Voice score with accompaniment omitted" },
+              { "code": "e", "name": "Condensed score or piano-conductor score" },
+              { "code": "g", "name": "Close score" },
+              { "code": "h", "name": "Chorus score" },
+              { "code": "i", "name": "Condensed score" },
+              { "code": "j", "name": "Performer-conductor part" },
+              { "code": "k", "name": "Vocal score" },
+              { "code": "l", "name": "Score" },
+              { "code": "m", "name": "Multiple score formats" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "p", "name": "Piano score" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Part",
+            "name": "Music parts",
+            "order": 7,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No parts in hand or not specified" },
+              { "code": "d", "name": "Instrumental and vocal parts" },
+              { "code": "e", "name": "Instrumental parts" },
+              { "code": "f", "name": "Vocal parts" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          },
+          {
+            "code": "Audn",
+            "name": "Target audience",
+            "order": 8,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Unknown or unspecified" },
+              { "code": "a", "name": "Preschool" },
+              { "code": "b", "name": "Primary" },
+              { "code": "c", "name": "Pre-adolescent" },
+              { "code": "d", "name": "Adolescent" },
+              { "code": "e", "name": "Adult" },
+              { "code": "f", "name": "Specialized" },
+              { "code": "g", "name": "General" },
+              { "code": "j", "name": "Juvenile" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 9,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "AccM",
+            "name": "Accompanying matter",
+            "order": 10,
+            "position": 24,
+            "length": 6,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No accompanying matter" },
+              { "code": "a", "name": "Discography" },
+              { "code": "b", "name": "Bibliography" },
+              { "code": "c", "name": "Thematic index" },
+              { "code": "d", "name": "Libretto or text" },
+              { "code": "e", "name": "Biography of composer or author" },
+              { "code": "f", "name": "Biography of performer or history of ensemble" },
+              { "code": "g", "name": "Technical and/or historical information on instruments" },
+              { "code": "h", "name": "Technical information on music" },
+              { "code": "i", "name": "Historical information" },
+              { "code": "k", "name": "Ethnological information" },
+              { "code": "r", "name": "Instructional materials" },
+              { "code": "s", "name": "Music" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "LTxt",
+            "name": "Literary text for sound recordings",
+            "order": 11,
+            "position": 30,
+            "length": 2,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Item is a music sound recording" },
+              { "code": "a", "name": "Autobiography" },
+              { "code": "b", "name": "Biography" },
+              { "code": "c", "name": "Conference proceedings" },
+              { "code": "d", "name": "Drama" },
+              { "code": "e", "name": "Essays" },
+              { "code": "f", "name": "Fiction" },
+              { "code": "g", "name": "Reporting" },
+              { "code": "h", "name": "History" },
+              { "code": "i", "name": "Instruction" },
+              { "code": "j", "name": "Language instruction" },
+              { "code": "k", "name": "Comedy" },
+              { "code": "l", "name": "Lectures, speeches" },
+              { "code": "m", "name": "Memoirs" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "o", "name": "Folktales" },
+              { "code": "p", "name": "Poetry" },
+              { "code": "r", "name": "Rehearsals" },
+              { "code": "s", "name": "Sounds" },
+              { "code": "t", "name": "Interviews" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 12,
+            "position": 32,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "TrAr",
+            "name": "Transposition and arrangement",
+            "order": 13,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not arrangement or transposition or not specified" },
+              { "code": "a", "name": "Transposition" },
+              { "code": "b", "name": "Arrangement" },
+              { "code": "c", "name": "Both transposed and arranged" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 14,
+            "position": 34,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 15,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 16,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 17,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "continuing_resources",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "a"
+                ],
+                "7": [
+                  "b",
+                  "i",
+                  "s"
+                ]
+              }
+            },
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "s"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Freq",
+            "name": "Frequency",
+            "order": 5,
+            "position": 18,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No determinable frequency" },
+              { "code": "a", "name": "Annual" },
+              { "code": "b", "name": "Bimonthly" },
+              { "code": "c", "name": "Semiweekly" },
+              { "code": "d", "name": "Daily" },
+              { "code": "e", "name": "Biweekly" },
+              { "code": "f", "name": "Semiannual" },
+              { "code": "g", "name": "Biennial" },
+              { "code": "h", "name": "Triennial" },
+              { "code": "i", "name": "Three times a week" },
+              { "code": "j", "name": "Three times a month" },
+              { "code": "k", "name": "Continuously updated" },
+              { "code": "m", "name": "Monthly" },
+              { "code": "q", "name": "Quarterly" },
+              { "code": "s", "name": "Semimonthly" },
+              { "code": "t", "name": "Three times a year" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "w", "name": "Weekly" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Regl",
+            "name": "Regularity",
+            "order": 6,
+            "position": 19,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "n", "name": "Normalized irregular" },
+              { "code": "r", "name": "Regular" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "x", "name": "Completely irregular" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 7,
+            "position": 20,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "SrTp",
+            "name": "Type of continuing resource",
+            "order": 8,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "d", "name": "Updating database" },
+              { "code": "g", "name": "Magazine" },
+              { "code": "h", "name": "Blog" },
+              { "code": "j", "name": "Journal" },
+              { "code": "l", "name": "Updating loose-leaf" },
+              { "code": "m", "name": "Monographic series" },
+              { "code": "n", "name": "Newspaper" },
+              { "code": "p", "name": "Periodical" },
+              { "code": "r", "name": "Repository" },
+              { "code": "s", "name": "Newsletter" },
+              { "code": "t", "name": "Directory" },
+              { "code": "w", "name": "Updating Web site" }
+            ]
+          },
+          {
+            "code": "Orig",
+            "name": "Form of original item",
+            "order": 9,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "b", "name": "Microfiche" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "e", "name": "Newspaper format" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 10,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "b", "name": "Microfiche" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "EntW",
+            "name": "Nature of entire work",
+            "order": 11,
+            "position": 24,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not specified" },
+              { "code": "a", "name": "Abstracts/summaries" },
+              { "code": "b", "name": "Bibliographies" },
+              { "code": "c", "name": "Catalogs" },
+              { "code": "d", "name": "Dictionaries" },
+              { "code": "e", "name": "Encyclopedias" },
+              { "code": "f", "name": "Handbooks" },
+              { "code": "g", "name": "Legal articles" },
+              { "code": "h", "name": "Biography" },
+              { "code": "i", "name": "Indexes" },
+              { "code": "k", "name": "Discographies" },
+              { "code": "l", "name": "Legislation" },
+              { "code": "m", "name": "Theses" },
+              { "code": "n", "name": "Surveys of literature in a subject area" },
+              { "code": "o", "name": "Reviews" },
+              { "code": "p", "name": "Programmed texts" },
+              { "code": "q", "name": "Filmographies" },
+              { "code": "r", "name": "Directories" },
+              { "code": "s", "name": "Statistics" },
+              { "code": "t", "name": "Technical reports" },
+              { "code": "u", "name": "Standards/specifications" },
+              { "code": "v", "name": "Legal cases and case notes" },
+              { "code": "w", "name": "Law reports and digests" },
+              { "code": "y", "name": "Yearbooks" },
+              { "code": "z", "name": "Treaties" },
+              { "code": "5", "name": "Calendars" },
+              { "code": "6", "name": "Comics/graphic novels" }
+            ]
+          },
+          {
+            "code": "Cont",
+            "name": "Nature of contents",
+            "order": 12,
+            "position": 25,
+            "length": 3,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not specified" },
+              { "code": "a", "name": "Abstracts/summaries" },
+              { "code": "b", "name": "Bibliographies" },
+              { "code": "c", "name": "Catalogs" },
+              { "code": "d", "name": "Dictionaries" },
+              { "code": "e", "name": "Encyclopedias" },
+              { "code": "f", "name": "Handbooks" },
+              { "code": "g", "name": "Legal articles" },
+              { "code": "h", "name": "Biography" },
+              { "code": "i", "name": "Indexes" },
+              { "code": "k", "name": "Discographies" },
+              { "code": "l", "name": "Legislation" },
+              { "code": "m", "name": "Theses" },
+              { "code": "n", "name": "Surveys of literature in a subject area" },
+              { "code": "o", "name": "Reviews" },
+              { "code": "p", "name": "Programmed texts" },
+              { "code": "q", "name": "Filmographies" },
+              { "code": "r", "name": "Directories" },
+              { "code": "s", "name": "Statistics" },
+              { "code": "t", "name": "Technical reports" },
+              { "code": "u", "name": "Standards/specifications" },
+              { "code": "v", "name": "Legal cases and case notes" },
+              { "code": "w", "name": "Law reports and digests" },
+              { "code": "y", "name": "Yearbooks" },
+              { "code": "z", "name": "Treaties" },
+              { "code": "5", "name": "Calendars" },
+              { "code": "6", "name": "Comics/graphic novels" }
+            ]
+          },
+          {
+            "code": "GPub",
+            "name": "Government publication",
+            "order": 13,
+            "position": 28,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not a government publication" },
+              { "code": "a", "name": "Autonomous or semi-autonomous component" },
+              { "code": "c", "name": "Multilocal" },
+              { "code": "f", "name": "Federal/national" },
+              { "code": "i", "name": "International intergovernmental" },
+              { "code": "l", "name": "Local" },
+              { "code": "m", "name": "Multistate" },
+              { "code": "o", "name": "Government publication-level undetermined" },
+              { "code": "s", "name": "State, provincial, territorial, dependent, etc." },
+              { "code": "u", "name": "Unknown if item is government publication" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Conf",
+            "name": "Conference publication",
+            "order": 14,
+            "position": 29,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "Not a conference publication" },
+              { "code": "1", "name": "Conference publication" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 15,
+            "position": 30,
+            "length": 3,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Alph",
+            "name": "Original alphabet or script of title",
+            "order": 16,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No alphabet or script given/No key title" },
+              { "code": "a", "name": "Basic Roman" },
+              { "code": "b", "name": "Extended Roman" },
+              { "code": "c", "name": "Cyrillic" },
+              { "code": "d", "name": "Japanese" },
+              { "code": "e", "name": "Chinese" },
+              { "code": "f", "name": "Arabic" },
+              { "code": "g", "name": "Greek" },
+              { "code": "h", "name": "Hebrew" },
+              { "code": "i", "name": "Thai" },
+              { "code": "j", "name": "Devanagari" },
+              { "code": "k", "name": "Korean" },
+              { "code": "l", "name": "Tamil" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "S/L",
+            "name": "Entry convention",
+            "order": 17,
+            "position": 34,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "Successive entry" },
+              { "code": "1", "name": "Latest entry" },
+              { "code": "2", "name": "Integrated entry" }
+            ]
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 18,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 19,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 20,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "computer_files",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "m"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 5,
+            "position": 18,
+            "length": 4,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Audn",
+            "name": "Target audience",
+            "order": 6,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Unknown or not specified" },
+              { "code": "a", "name": "Preschool" },
+              { "code": "b", "name": "Primary" },
+              { "code": "c", "name": "Pre-adolescent" },
+              { "code": "d", "name": "Adolescent" },
+              { "code": "e", "name": "Adult" },
+              { "code": "f", "name": "Specialized" },
+              { "code": "g", "name": "General" },
+              { "code": "j", "name": "Juvenile" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 7,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Unknown or not specified" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 8,
+            "position": 24,
+            "length": 2,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "File",
+            "name": "Type of computer file",
+            "order": 9,
+            "position": 26,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "a", "name": "Numeric data" },
+              { "code": "b", "name": "Computer program" },
+              { "code": "c", "name": "Representational" },
+              { "code": "d", "name": "Document" },
+              { "code": "e", "name": "Bibliographic data" },
+              { "code": "f", "name": "Font" },
+              { "code": "g", "name": "Game" },
+              { "code": "h", "name": "Sound" },
+              { "code": "i", "name": "Interactive multimedia" },
+              { "code": "j", "name": "Online system or service" },
+              { "code": "m", "name": "Combination" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 10,
+            "position": 27,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "GPub",
+            "name": "Government publication",
+            "order": 11,
+            "position": 28,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not a government publication" },
+              { "code": "a", "name": "Autonomous or semi-autonomous component" },
+              { "code": "c", "name": "Multilocal" },
+              { "code": "f", "name": "Federal/national" },
+              { "code": "i", "name": "International intergovernmental" },
+              { "code": "l", "name": "Local" },
+              { "code": "m", "name": "Multistate" },
+              { "code": "o", "name": "Government publication-level undetermined" },
+              { "code": "s", "name": "State, provincial, territorial, dependent, etc." },
+              { "code": "u", "name": "Unknown if item is government publication" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 12,
+            "position": 29,
+            "length": 6,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 13,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 14,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 15,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "visual_materials",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "g",
+                  "k",
+                  "o",
+                  "r"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Time",
+            "name": "Running time for motion pictures and videorecordings",
+            "order": 5,
+            "position": 18,
+            "length": 3,
+            "isArray": true,
+            "readOnly": false
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 6,
+            "position": 21,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Audn",
+            "name": "Target audience",
+            "order": 7,
+            "position": 22,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Unknown or not specified" },
+              { "code": "a", "name": "Preschool" },
+              { "code": "b", "name": "Primary" },
+              { "code": "c", "name": "Pre-adolescent" },
+              { "code": "d", "name": "Adolescent" },
+              { "code": "e", "name": "Adult" },
+              { "code": "f", "name": "Specialized" },
+              { "code": "g", "name": "General" },
+              { "code": "j", "name": "Juvenile" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 8,
+            "position": 23,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "GPub",
+            "name": "Government publication",
+            "order": 9,
+            "position": 28,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not a government publication" },
+              { "code": "a", "name": "Autonomous or semi-autonomous component" },
+              { "code": "c", "name": "Multilocal" },
+              { "code": "f", "name": "Federal/national" },
+              { "code": "i", "name": "International intergovernmental" },
+              { "code": "l", "name": "Local" },
+              { "code": "m", "name": "Multistate" },
+              { "code": "o", "name": "Government publication-level undetermined" },
+              { "code": "s", "name": "State, provincial, territorial, dependent, etc." },
+              { "code": "u", "name": "Unknown if item is government publication" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 10,
+            "position": 29,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "b", "name": "Microfiche" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 11,
+            "position": 30,
+            "length": 3,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "TMat",
+            "name": "Type of visual material",
+            "order": 12,
+            "position": 33,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "a", "name": "Art original" },
+              { "code": "b", "name": "Kit" },
+              { "code": "c", "name": "Art reproduction" },
+              { "code": "d", "name": "Diorama" },
+              { "code": "f", "name": "Filmstrip" },
+              { "code": "g", "name": "Game" },
+              { "code": "i", "name": "Picture" },
+              { "code": "k", "name": "Graphic" },
+              { "code": "l", "name": "Technical drawing" },
+              { "code": "m", "name": "Motion picture" },
+              { "code": "n", "name": "Chart" },
+              { "code": "o", "name": "Flash card" },
+              { "code": "p", "name": "Microscope slide" },
+              { "code": "q", "name": "Model" },
+              { "code": "r", "name": "Realia" },
+              { "code": "s", "name": "Slide" },
+              { "code": "t", "name": "Transparency" },
+              { "code": "v", "name": "Videorecording" },
+              { "code": "w", "name": "Toy" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Tech",
+            "name": "Technique",
+            "order": 13,
+            "position": 34,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "a", "name": "Animation" },
+              { "code": "c", "name": "Animation and live action" },
+              { "code": "l", "name": "Live action" },
+              { "code": "n", "name": "Not applicable" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 14,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 15,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 16,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "maps",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "e",
+                  "f"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Relf",
+            "name": "Relief",
+            "order": 5,
+            "position": 18,
+            "length": 4,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No relief shown" },
+              { "code": "a", "name": "Contours" },
+              { "code": "b", "name": "Shading" },
+              { "code": "c", "name": "Gradient and bathymetric tints" },
+              { "code": "d", "name": "Hachures" },
+              { "code": "e", "name": "Bathymetry/soundings" },
+              { "code": "f", "name": "Form lines" },
+              { "code": "g", "name": "Spot heights" },
+              { "code": "i", "name": "Pictorially" },
+              { "code": "j", "name": "Land forms" },
+              { "code": "k", "name": "Bathymetry/isolines" },
+              { "code": "m", "name": "Rock drawings" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Proj",
+            "name": "Projection",
+            "order": 6,
+            "position": 22,
+            "length": 2,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\\\", "name": "No attempt to code" },
+              { "code": "##", "name": "Projection not specified" },
+              { "code": "aa", "name": "Aitoff" },
+              { "code": "ab", "name": "Gnomic" },
+              { "code": "ac", "name": "Lambert's azimuthal equal area" },
+              { "code": "ad", "name": "Orthographic" },
+              { "code": "ae", "name": "Azimuthal equidistant" },
+              { "code": "af", "name": "Stereographic" },
+              { "code": "ag", "name": "General vertical near-sided" },
+              { "code": "am", "name": "Modified stereographic for Alaska" },
+              { "code": "an", "name": "Chamberlin trimetric" },
+              { "code": "ap", "name": "Polar stereographic" },
+              { "code": "au", "name": "Azimuthal, specific type unknown" },
+              { "code": "az", "name": "Azimuthal, other" },
+              { "code": "ba", "name": "Gall" },
+              { "code": "bb", "name": "Goode's homolographic" },
+              { "code": "bc", "name": "Lambert's cylindrical equal area" },
+              { "code": "bd", "name": "Mercator" },
+              { "code": "be", "name": "Miller" },
+              { "code": "bf", "name": "Mollweide" },
+              { "code": "bg", "name": "Sinusoidal" },
+              { "code": "bh", "name": "Transverse Mercator" },
+              { "code": "bi", "name": "Gauss-Kruger" },
+              { "code": "bj", "name": "Equirectangular" },
+              { "code": "bk", "name": "Krovak" },
+              { "code": "bl", "name": "Cassini-Soldner" },
+              { "code": "bo", "name": "Oblique Mercator" },
+              { "code": "br", "name": "Robinson" },
+              { "code": "bs", "name": "Space oblique Mercator" },
+              { "code": "bu", "name": "Cylindrical, specific type unknown" },
+              { "code": "bz", "name": "Cylindrical, other" },
+              { "code": "ca", "name": "Albers equal area" },
+              { "code": "cb", "name": "Bonne" },
+              { "code": "cc", "name": "Lambert's conformal conic" },
+              { "code": "ce", "name": "Equidistant conic" },
+              { "code": "cp", "name": "Polyconic" },
+              { "code": "cu", "name": "Conic, specific type unknown" },
+              { "code": "cz", "name": "Conic, other" },
+              { "code": "da", "name": "Armadillo" },
+              { "code": "db", "name": "Butterfly" },
+              { "code": "dc", "name": "Eckert" },
+              { "code": "dd", "name": "Goode's homolosine" },
+              { "code": "de", "name": "Miller's bipolar oblique conformal conic" },
+              { "code": "df", "name": "Van Der Grinten" },
+              { "code": "dg", "name": "Dimaxion" },
+              { "code": "dh", "name": "Cordiform" },
+              { "code": "dl", "name": "Lambert conformal" },
+              { "code": "zz", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 7,
+            "position": 24,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "CrTp",
+            "name": "Type of cartographic material",
+            "order": 8,
+            "position": 25,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "a", "name": "Single map" },
+              { "code": "b", "name": "Map series" },
+              { "code": "c", "name": "Map serial" },
+              { "code": "d", "name": "Globe" },
+              { "code": "e", "name": "Atlas" },
+              { "code": "f", "name": "Separate supplement to another work" },
+              { "code": "g", "name": "Bound as part of another work" },
+              { "code": "u", "name": "Unknown" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 9,
+            "position": 26,
+            "length": 2,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "GPub",
+            "name": "Government publication",
+            "order": 10,
+            "position": 28,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not a government publication" },
+              { "code": "a", "name": "Autonomous or semi-autonomous component" },
+              { "code": "c", "name": "Multilocal" },
+              { "code": "f", "name": "Federal/national" },
+              { "code": "i", "name": "International intergovernmental" },
+              { "code": "l", "name": "Local" },
+              { "code": "m", "name": "Multistate" },
+              { "code": "o", "name": "Government publication-level undetermined" },
+              { "code": "s", "name": "State, provincial, territorial, dependent, etc." },
+              { "code": "u", "name": "Unknown if item is government publication" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 11,
+            "position": 29,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "b", "name": "Microfiche" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 12,
+            "position": 30,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Indx",
+            "name": "Index",
+            "order": 13,
+            "position": 31,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "0", "name": "No index" },
+              { "code": "1", "name": "Index present" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 14,
+            "position": 32,
+            "length": 1,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "SpFm",
+            "name": "Special format characteristics",
+            "order": 15,
+            "position": 33,
+            "length": 2,
+            "isArray": true,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "No specified special format characteristics" },
+              { "code": "e", "name": "Manuscript" },
+              { "code": "j", "name": "Picture card, post card" },
+              { "code": "k", "name": "Calendar" },
+              { "code": "l", "name": "Puzzle" },
+              { "code": "n", "name": "Game" },
+              { "code": "o", "name": "Wall map" },
+              { "code": "p", "name": "Playing cards" },
+              { "code": "r", "name": "Loose-leaf" },
+              { "code": "z", "name": "Other" }
+            ]
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 16,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 17,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 18,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "mixed_materials",
+        "identifiedBy": {
+          "or": [
+            {
+              "tag": "LDR",
+              "positions": {
+                "6": [
+                  "p"
+                ]
+              }
+            }
+          ]
+        },
+        "items": [
+          {
+            "code": "Entered",
+            "name": "Date entered on file",
+            "order": 0,
+            "position": 0,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "DtSt",
+            "name": "Type of date/Publication status",
+            "order": 1,
+            "position": 6,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "b", "name": "No dates given; B.C. date involved" },
+              { "code": "c", "name": "Continuing resource currently published" },
+              { "code": "d", "name": "Continuing resource ceased publication" },
+              { "code": "e", "name": "Detailed date" },
+              { "code": "i", "name": "Inclusive dates of collection" },
+              { "code": "k", "name": "Range of years of bulk of collection" },
+              { "code": "m", "name": "Multiple dates" },
+              { "code": "n", "name": "Dates unknown" },
+              { "code": "p", "name": "Date of distribution/release/issue and production/recording session when different" },
+              { "code": "q", "name": "Questionable date" },
+              { "code": "r", "name": "Reprint/reissue date and original date" },
+              { "code": "s", "name": "Single known date/probable date" },
+              { "code": "t", "name": "Publication date and copyright date" },
+              { "code": "u", "name": "Continuing resource status unknown" }
+            ]
+          },
+          {
+            "code": "Date1",
+            "name": "Start date",
+            "order": 2,
+            "position": 7,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Date2",
+            "name": "End date",
+            "order": 3,
+            "position": 11,
+            "length": 4,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Ctry",
+            "name": "Place of publication, production, or execution",
+            "order": 4,
+            "position": 15,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 5,
+            "position": 18,
+            "length": 5,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Form",
+            "name": "Form of item",
+            "order": 6,
+            "position": 23,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "None of the following" },
+              { "code": "a", "name": "Microfilm" },
+              { "code": "b", "name": "Microfiche" },
+              { "code": "c", "name": "Microopaque" },
+              { "code": "d", "name": "Large print" },
+              { "code": "f", "name": "Braille" },
+              { "code": "o", "name": "Online" },
+              { "code": "q", "name": "Direct electronic" },
+              { "code": "r", "name": "Regular print reproduction" },
+              { "code": "s", "name": "Electronic" }
+            ]
+          },
+          {
+            "code": "Und",
+            "name": "Undefined",
+            "order": 7,
+            "position": 24,
+            "length": 11,
+            "isArray": false,
+            "readOnly": true
+          },
+          {
+            "code": "Lang",
+            "name": "Language",
+            "order": 8,
+            "position": 35,
+            "length": 3,
+            "isArray": false,
+            "readOnly": false
+          },
+          {
+            "code": "MRec",
+            "name": "Modified record",
+            "order": 9,
+            "position": 38,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "Not modified" },
+              { "code": "d", "name": "Dashed-on information omitted" },
+              { "code": "o", "name": "Completely romanized/printed cards romanized" },
+              { "code": "r", "name": "Completely romanized/printed cards in script" },
+              { "code": "s", "name": "Shortened" },
+              { "code": "x", "name": "Missing characters" }
+            ]
+          },
+          {
+            "code": "Srce",
+            "name": "Cataloging source",
+            "order": 10,
+            "position": 39,
+            "length": 1,
+            "isArray": false,
+            "readOnly": false,
+            "values": [
+              { "code": "\\", "name": "No attempt to code" },
+              { "code": "#", "name": "National bibliographic agency" },
+              { "code": "c", "name": "Cooperative cataloging program" },
+              { "code": "d", "name": "Other" },
+              { "code": "u", "name": "Unknown" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+

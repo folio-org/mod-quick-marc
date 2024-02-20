@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet id="MODQM-405@@update-marc-specification-bibliographic" author="phabas">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="1">
+        SELECT COUNT(id)
+        FROM marc_specification
+        WHERE field_tag = '008'
+          and record_type = 'MARC_BIBLIOGRAPHIC';
+      </sqlCheck>
+    </preConditions>
+
+    <delete tableName="marc_specification">
+      <where>field_tag='008' and record_type='MARC_BIBLIOGRAPHIC'</where>
+    </delete>
+
+    <sql dbms="postgresql">
+      ALTER TABLE marc_specification ALTER COLUMN marc_spec TYPE text;
+    </sql>
+
+    <insert tableName="marc_specification">
+      <column name="field_tag" value="008"/>
+      <column name="record_type" value="MARC_BIBLIOGRAPHIC"/>
+      <column name="marc_spec" valueClobFile="field008_bibliographic.json"/>
+    </insert>
+  </changeSet>
+
+  <!--Liquibase have some issues with loading valueClobFile into jsonb datatype so need to change type after loading json-->
+  <changeSet id="MODQM-405@@alter-jsonb-marc-specification-table" author="phabas">
+    <sql dbms="postgresql">
+      ALTER TABLE marc_specification ALTER COLUMN marc_spec TYPE JSONB USING marc_spec::JSONB;
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

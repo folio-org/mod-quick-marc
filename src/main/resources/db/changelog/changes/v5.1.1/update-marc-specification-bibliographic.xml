@@ -5,6 +5,7 @@
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
   <changeSet id="MODQM-405@@update-marc-specification-bibliographic" author="phabas">
+    <!--Updates json data for MARC_BIBLIOGRAPHIC, added values property. Updates only if data exists.-->
     <preConditions onFail="MARK_RAN">
       <sqlCheck expectedResult="1">
         SELECT COUNT(id)

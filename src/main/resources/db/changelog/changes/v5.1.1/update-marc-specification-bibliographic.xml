@@ -14,26 +14,18 @@
       </sqlCheck>
     </preConditions>
 
-    <delete tableName="marc_specification">
-      <where>field_tag='008' and record_type='MARC_BIBLIOGRAPHIC'</where>
-    </delete>
-
     <sql dbms="postgresql">
       ALTER TABLE marc_specification ALTER COLUMN marc_spec TYPE text;
     </sql>
 
-    <insert tableName="marc_specification">
-      <column name="field_tag" value="008"/>
-      <column name="record_type" value="MARC_BIBLIOGRAPHIC"/>
+    <update tableName="marc_specification">
       <column name="marc_spec" valueClobFile="field008_bibliographic.json"/>
-    </insert>
-  </changeSet>
+      <where>field_tag='008' and record_type='MARC_BIBLIOGRAPHIC'</where>
+    </update>
 
-  <!--Liquibase have some issues with loading valueClobFile into jsonb datatype so need to change type after loading json-->
-  <changeSet id="MODQM-405@@alter-jsonb-marc-specification-table" author="phabas">
+    <!--Liquibase have some issues with loading valueClobFile into jsonb datatype so need to change type after loading json-->
     <sql dbms="postgresql">
       ALTER TABLE marc_specification ALTER COLUMN marc_spec TYPE JSONB USING marc_spec::JSONB;
     </sql>
   </changeSet>
-
 </databaseChangeLog>

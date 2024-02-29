@@ -5,4 +5,5 @@
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <include file="changes/v5.1.0/add-create-authority-job-profile.xml" relativeToChangelogFile="true"/>
+  <include file="changes/v5.1.0/update-marc-specification-bibliographic.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

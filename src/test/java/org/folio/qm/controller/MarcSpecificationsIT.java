@@ -47,6 +47,19 @@ class MarcSpecificationsIT extends BaseIT {
     getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_HOLDINGS.getValue(), "008"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.format").value(MarcFormat.HOLDINGS.getValue()));
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.spec.types[0].items[1].allowedValues[0].name").value("No attempt to code"));
+  }
+
+  @Test
+  void testGetMarcSpecificationsSuccess_allowedValuesExists() throws Exception {
+    log.info("===== Verify GET MARC Specifications allowedValues: Successful =====");
+
+    getResultActions(marcSpecificationsByrecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.spec.types[0].items[1].allowedValues[0].name").value("No attempt to code"));
   }
 
   @Test

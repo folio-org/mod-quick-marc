@@ -364,6 +364,19 @@ marcSpecificationCondition:
     - tag
     - positions
 
+marcSpecificationItemValue:
+  type: object
+  description: Specification item value definition
+  properties:
+    code:
+      description: Value code
+      type: string
+      example: e
+    name:
+      description: Value name
+      type: string
+      example: Detailed date
+
 marcSpecificationItem:
   type: object
   description: Specification item definition
@@ -396,6 +409,10 @@ marcSpecificationItem:
       description: Is item read only
       type: boolean
       example: true
+    allowedValues:
+      type: array
+      items:
+        $ref: '#/marcSpecificationItemValue'
   required:
     - code
     - name

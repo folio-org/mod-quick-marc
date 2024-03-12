@@ -90,7 +90,7 @@ public enum Tag006FieldTestData {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "e");
     content.put("Relf", List.of("a", "b", "c", "d"));
-    content.put("Proj", List.of("e", "f"));
+    content.put("Proj", "ef");
     content.put("CrTp", "g");
     content.put("GPub", "h");
     content.put("Form", "i");

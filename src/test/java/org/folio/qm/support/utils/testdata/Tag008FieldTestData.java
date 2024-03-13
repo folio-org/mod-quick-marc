@@ -326,7 +326,7 @@ public enum Tag008FieldTestData {
     content.put("MRec", "v");
     content.put("Srce", "w");
     content.put("Relf", List.of("a", "b", "c", "d"));
-    content.put("Proj", List.of("e", "f"));
+    content.put("Proj", "ef");
     content.put("CrTp", "g");
     content.put("GPub", "h");
     content.put("Form", "i");

@@ -6,13 +6,15 @@
 * Provides `API_NAME vX.Y`
 * Requires `API_NAME vX.Y`
 * Provides `marc-specifications` `v1.1`
+* Provides `marc-records-editor` `v5.4`
+
 
 ### Features
-* Update marc specification to support allowed values for 008 field positions ([MODQM-405](https://github.com/folio-org/mod-quick-marc/pull/244))
+* Update marc specification to support allowed values for 008 field positions ([MODQM-405](https://folio-org.atlassian.net/browse/MODQM-405))
 * support new Authority record creation ([MODQM-322](https://issues.folio.org/browse/MODQM-322)
 
 ### Bug fixes
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+* Change item type from an array to a string for 008 field ([MODQM-406](https://folio-org.atlassian.net/browse/MODQM-406))
 
 ### Tech Dept
 * Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))

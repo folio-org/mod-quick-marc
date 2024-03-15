@@ -69,7 +69,6 @@ public final class Constants {
 
   public static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
   public static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
-  public static final Pattern CONCAT_CONDITION_PATTERN = Pattern.compile("(?:[$]1\\s*|[$]\\d+[.,][^\\\\]*)$");
 
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
   public static final String TAG_001_CONTROL_FIELD = "001";

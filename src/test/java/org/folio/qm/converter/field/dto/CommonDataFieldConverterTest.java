@@ -26,6 +26,28 @@ class CommonDataFieldConverterTest {
   private static final MarcFormat[] SUPPORTED_FORMATS = {HOLDINGS, AUTHORITY};
   private final CommonDataFieldConverter converter = new CommonDataFieldConverter();
 
+  @ParameterizedTest
+  @MethodSource("fieldData")
+  void testConvertField(DataField dtoField, String[] dtoContent, FieldItem expectedQmField) {
+    for (int i = 0; i < dtoContent.length; i += 2) {
+      dtoField.addSubfield(new SubfieldImpl(dtoContent[i].charAt(0), dtoContent[i + 1]));
+    }
+    var actualQmField = converter.convert(dtoField, null);
+    assertEquals(expectedQmField.toString(), actualQmField.toString());
+  }
+
+  @ParameterizedTest
+  @MethodSource("dataFields")
+  void testCanProcessField(DataField dtoField) {
+    assertTrue(converter.canProcess(dtoField, SUPPORTED_FORMATS[(int) Math.round(Math.random())]));
+  }
+
+  @ParameterizedTest
+  @MethodSource("dataFields")
+  void testCannotProcessField(DataField dtoField) {
+    assertFalse(converter.canProcess(dtoField, MarcFormat.BIBLIOGRAPHIC));
+  }
+
   private static Stream<Arguments> fieldData() {
     return Stream.of(
       arguments(new DataFieldImpl("948", '1', '2'),
@@ -59,36 +81,22 @@ class CommonDataFieldConverterTest {
         new FieldItem().tag("014")
           .indicators(List.of("0", "\\"))
           .content("$9 not-valid-authority-uiid")
+      ),
+      arguments(new DataFieldImpl("100", ' ', ' '),
+        new String[] {"a", "$1"},
+        new FieldItem().tag("100").indicators(List.of("\\", "\\")).content("$a {dollar}1")
+      ),
+      arguments(new DataFieldImpl("100", ' ', ' '),
+        new String[] {"a", "Daniela - $$$"},
+        new FieldItem().tag("100").indicators(List.of("\\", "\\")).content("$a Daniela - {dollar}{dollar}{dollar}")
       )
     );
   }
 
-  public static Stream<Arguments> dataFields() {
+  private static Stream<Arguments> dataFields() {
     return IntStream.range(10, 999)
       .mapToObj(value -> String.format("%03d", value))
       .map(tag -> new DataFieldImpl(tag, '0', '0'))
       .map(Arguments::arguments);
-  }
-
-  @ParameterizedTest
-  @MethodSource("fieldData")
-  void testConvertField(DataField dtoField, String[] dtoContent, FieldItem expectedQmField) {
-    for (int i = 0; i < dtoContent.length; i += 2) {
-      dtoField.addSubfield(new SubfieldImpl(dtoContent[i].charAt(0), dtoContent[i + 1]));
-    }
-    var actualQmField = converter.convert(dtoField, null);
-    assertEquals(expectedQmField.toString(), actualQmField.toString());
-  }
-
-  @ParameterizedTest
-  @MethodSource("dataFields")
-  void testCanProcessField(DataField dtoField) {
-    assertTrue(converter.canProcess(dtoField, SUPPORTED_FORMATS[(int) Math.round(Math.random())]));
-  }
-
-  @ParameterizedTest
-  @MethodSource("dataFields")
-  void testCannotProcessField(DataField dtoField) {
-    assertFalse(converter.canProcess(dtoField, MarcFormat.BIBLIOGRAPHIC));
   }
 }

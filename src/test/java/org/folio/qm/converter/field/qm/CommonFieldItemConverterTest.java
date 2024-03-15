@@ -43,6 +43,21 @@ class CommonFieldItemConverterTest {
       arguments(new DataFieldImpl("999", 'f', 'f'),
         new String[] {"s", "a", "i", "b"},
         new FieldItem().tag("999").indicators(List.of("f", "f")).content("$s a $i b")
+      ),
+      arguments(new DataFieldImpl("100", ' ', ' '),
+        new String[] {"a", "Daniela Andrade - $$$", "b", "song lyrics"},
+        new FieldItem().tag("100").indicators(List.of("\\", "\\"))
+          .content("$a Daniela Andrade - {dollar}{dollar}{dollar} $b song lyrics")
+      ),
+      arguments(new DataFieldImpl("100", ' ', ' '),
+        new String[] {"a", "A$Ap Rocky"},
+        new FieldItem().tag("100").indicators(List.of("\\", "\\"))
+          .content("$a A{dollar}Ap Rocky")
+      ),
+      arguments(new DataFieldImpl("100", ' ', ' '),
+        new String[] {"a", "$1"},
+        new FieldItem().tag("100").indicators(List.of("\\", "\\"))
+          .content("$a{dollar}1")
       )
     );
   }

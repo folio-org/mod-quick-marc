@@ -1,8 +1,5 @@
 package org.folio.qm.util;
 
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.folio.qm.converter.elements.Constants.CONCAT_CONDITION_PATTERN;
 import static org.folio.qm.converter.elements.Constants.SPLIT_PATTERN;
 import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
 
@@ -10,14 +7,11 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
@@ -35,6 +29,8 @@ public final class MarcUtils {
     DateTimeFormatter.ofPattern("yyyyMMddHHmmss.S");
   private static final Pattern UUID_REGEX =
     Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+
+  private static final String DOLLAR_EXPRESSION = "{dollar}";
 
   private MarcUtils() {
   }
@@ -99,26 +95,19 @@ public final class MarcUtils {
   }
 
   public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction) {
-    var tokens = Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
-      .collect(Collectors.toCollection(LinkedList::new));
-
-    List<Subfield> subfields = new ArrayList<>();
-    while (!tokens.isEmpty()) {
-      String token = tokens.pop();
-      String subfieldString = token.concat(checkNextToken(tokens));
-      if (subfieldString.length() < TOKEN_MIN_LENGTH) {
-        throw new IllegalArgumentException("Subfield length");
-      }
-      subfields.add(subfieldFunction.apply(subfieldString));
-    }
-
-    return subfields;
+    return Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
+      .map(token -> {
+        if (token.length() < TOKEN_MIN_LENGTH) {
+          throw new IllegalArgumentException("Subfield length");
+        }
+        return token.replace(DOLLAR_EXPRESSION, "$");
+      })
+      .map(subfieldFunction)
+      .toList();
   }
 
-  private static String checkNextToken(LinkedList<String> tokens) {
-    return !tokens.isEmpty() && CONCAT_CONDITION_PATTERN.matcher(tokens.peek()).matches()
-           ? requireNonNull(tokens.poll()).concat(checkNextToken(tokens))
-           : EMPTY;
+  public static String convertDollar(String input) {
+    return input.replace("$", DOLLAR_EXPRESSION);
   }
 
 }

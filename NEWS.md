@@ -8,10 +8,10 @@
 * Provides `marc-specifications` `v1.1`
 * Provides `marc-records-editor` `v5.4`
 
-
 ### Features
 * Update marc specification to support allowed values for 008 field positions ([MODQM-405](https://folio-org.atlassian.net/browse/MODQM-405))
-* support new Authority record creation ([MODQM-322](https://issues.folio.org/browse/MODQM-322)
+* Support new Authority record creation ([MODQM-322](https://issues.folio.org/browse/MODQM-322)
+* Support `{dollar}` as input for a literal `$` ([MODQM-256](https://issues.folio.org/browse/MODQM-256)
 
 ### Bug fixes
 * Change item type from an array to a string for 008 field ([MODQM-406](https://folio-org.atlassian.net/browse/MODQM-406))

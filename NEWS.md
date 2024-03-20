@@ -1,10 +1,5 @@
 ## v5.1.0 In Progress
-### Breaking changes
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
-
 ### New APIs versions
-* Provides `API_NAME vX.Y`
-* Requires `API_NAME vX.Y`
 * Provides `marc-specifications` `v1.1`
 * Provides `marc-records-editor` `v5.4`
 
@@ -16,12 +11,11 @@
 ### Bug fixes
 * Change item type from an array to a string for 008 field ([MODQM-406](https://folio-org.atlassian.net/browse/MODQM-406))
 
-### Tech Dept
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
-
 ### Dependencies
-* Bump `folio-spring-base` from `7.2.2` to `7.3.0-SNAPSHOT`
-* Add `folio-spring-testing` `7.3.0-SNAPSHOT`
+* Bump `spring-boot` from `3.1.6` to `3.2.3`
+* Bump `folio-spring-base` from `7.2.2` to `8.1.0`
+* Bump `folio-service-tools` from `3.1.0` to `4.0.0`
+* Add `folio-spring-testing` `8.1.0`
 * Remove `folio-service-tools-spring-test`
 * Remove `hypersistence-utils`
 * Remove conflicting and unused dependencies:

@@ -25,9 +25,9 @@ class LinksSuggestionsMapperTest {
     var expectedTag = "100";
     var expectedIndicators = List.of("1", "2");
     var linkDetails = new LinkDetails().status("ACTUAL");
-    var expectedContent = "$a test a subfield $0 test0 $9 test9";
+    var expectedContent = "$a test {dollar} subfield $0 test0 $9 test9";
     var srsSubfields = List.of(
-      Map.of("a", "test a subfield"),
+      Map.of("a", "test $ subfield"),
       Map.of("0", "test0"),
       Map.of("9", "test9")
     );
@@ -58,7 +58,7 @@ class LinksSuggestionsMapperTest {
     var quickMarcTag = "100";
     var quickMarcIndicators = List.of("1", "2");
     var linkDetails = new LinkDetails().status("ACTUAL");
-    var quickMarcContent = "$a test a subfield $0test0 $9 test9";
+    var quickMarcContent = "$a test {dollar} subfield $0test0 $9 test9";
     var quickMarcField = new FieldItem()
       .tag(quickMarcTag)
       .linkDetails(linkDetails)
@@ -69,7 +69,7 @@ class LinksSuggestionsMapperTest {
       .addFieldsItem(quickMarcField);
 
     var expectedSubfields = List.of(
-      Map.of("a", "test a subfield"),
+      Map.of("a", "test $ subfield"),
       Map.of("0", "test0"),
       Map.of("9", "test9")
     );

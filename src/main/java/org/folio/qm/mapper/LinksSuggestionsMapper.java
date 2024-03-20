@@ -12,6 +12,7 @@ import org.folio.qm.domain.dto.EntitiesLinksSuggestions;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.SrsFieldItem;
+import org.folio.qm.util.MarcUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.marc4j.marc.impl.SubfieldImpl;
@@ -80,7 +81,7 @@ public interface LinksSuggestionsMapper {
       }
       content
         .append("$").append(subfield.getKey())
-        .append(" ").append(subfield.getValue());
+        .append(" ").append(MarcUtils.convertDollar(subfield.getValue()));
     }
     return content.toString();
   }

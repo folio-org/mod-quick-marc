@@ -1,4 +1,4 @@
-## v5.1.0 In Progress
+## v5.1.0 2024-03-20
 ### New APIs versions
 * Provides `marc-specifications` `v1.1`
 * Provides `marc-records-editor` `v5.4`

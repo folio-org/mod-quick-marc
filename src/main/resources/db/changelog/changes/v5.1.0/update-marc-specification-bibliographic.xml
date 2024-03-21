@@ -4,7 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-  <changeSet id="MODQM-405@@update-marc-specification-bibliographic" author="phabas">
+  <!--Updated changeset id should trigger liquibase to rerun this changest once again.-->
+  <changeSet id="MODQM-420@@update-marc-specification-bibliographic" author="phabas" runOnChange="true">
     <!--Updates json data for MARC_BIBLIOGRAPHIC, added allowedValues property. Updates only if data exists.-->
     <preConditions onFail="MARK_RAN">
       <sqlCheck expectedResult="1">

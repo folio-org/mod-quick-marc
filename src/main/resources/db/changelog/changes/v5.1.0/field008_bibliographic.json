@@ -1,7 +1,7 @@
 {
   "tag": "008",
   "format": "BIBLIOGRAPHIC",
-  "label": "General Information2",
+  "label": "General Information",
   "url": "https://www.loc.gov/marc/bibliographic/bd008.html",
   "repeatable": false,
   "required": true,

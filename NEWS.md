@@ -10,6 +10,7 @@
 
 ### Bug fixes
 * Change item type from an array to a string for 008 field ([MODQM-406](https://folio-org.atlassian.net/browse/MODQM-406))
+* Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))
 
 ### Dependencies
 * Bump `spring-boot` from `3.1.6` to `3.2.3`

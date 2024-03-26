@@ -99,7 +99,7 @@
     },
     {
       "id": "marc-specifications",
-      "version": "1.1",
+      "version": "1.2",
       "handlers": [
         {
           "methods": ["GET"],

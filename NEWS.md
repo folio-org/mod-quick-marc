@@ -1,3 +1,23 @@
+## v5.2.0 In Progress
+### Breaking changes
+
+### New APIs versions
+* Provides `marc-specifications` `v1.2`
+
+### Features
+* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+
+### Bug fixes
+* Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))
+
+### Tech Dept
+* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+
+### Dependencies
+* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
+* Add `LIB_NAME` `2.7.4`
+* Remove `LIB_NAME`
+
 ## v5.1.0 2024-03-20
 ### New APIs versions
 * Provides `marc-specifications` `v1.1`

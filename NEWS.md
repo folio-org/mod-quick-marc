@@ -9,6 +9,7 @@
 
 ### Bug fixes
 * Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))
+* Do not delete kafka topics if tenant collection topic feature is enabled ([MODQM-423](https://folio-org.atlassian.net/browse/MODQM-423))
 
 ### Tech Dept
 * Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))

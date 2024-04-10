@@ -1,4 +1,9 @@
-## v5.1.0 In Progress
+## v5.1.1 2024-04-10
+### Bug fixes
+* Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))
+* Do not delete kafka topics if tenant collection topic feature is enabled ([MODQM-423](https://folio-org.atlassian.net/browse/MODQM-423))
+
+## v5.1.0 2024-03-20
 ### New APIs versions
 * Provides `marc-specifications` `v1.1`
 * Provides `marc-records-editor` `v5.4`

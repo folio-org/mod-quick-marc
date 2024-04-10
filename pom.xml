@@ -23,7 +23,7 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
     <marc-specifications.yaml.file>${project.basedir}/src/main/resources/swagger.api/marc-specifications.yaml</marc-specifications.yaml.file>
 
-    <folio-service-tools.version>3.1.0</folio-service-tools.version>
+    <folio-service-tools.version>3.1.1</folio-service-tools.version>
     <folio-spring-base.version>7.2.2</folio-spring-base.version>
     <hypersistence-utils-hibernate-62.version>3.6.1</hypersistence-utils-hibernate-62.version>
     <openapi-generator.version>7.1.0</openapi-generator.version>

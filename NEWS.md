@@ -1,3 +1,7 @@
+## v5.0.2 2024-04-10
+### Bug fixes
+* Do not delete kafka topics if tenant collection topic feature is enabled ([MODQM-423](https://folio-org.atlassian.net/browse/MODQM-423))
+
 ## v5.0.1 2023-08-12
 ### Bug fixes
 * Update hypersistence dependency to supported by Hibernate 6.2 ([MODQM-385](https://issues.folio.org/browse/MODQM-385))

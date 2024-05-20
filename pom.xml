@@ -30,8 +30,8 @@
     <lombok.mapstruct-binding.version>0.2.0</lombok.mapstruct-binding.version>
 
     <!-- Plugin properties -->
-    <openapi-generator-plugin.version>7.5.0</openapi-generator-plugin.version>
-    <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+    <openapi-generator-plugin.version>7.6.0</openapi-generator-plugin.version>
+    <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
     <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
     <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>

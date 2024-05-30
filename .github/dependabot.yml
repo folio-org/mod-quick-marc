@@ -3,16 +3,14 @@ updates:
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
+      day: "sunday"
     commit-message:
       prefix: fix
       prefix-development: chore
       include: scope
     groups:
-      spring:
-        patterns:
-          - "org.springframework*"
-          - "*folio-spring*"
-      plugins:
-        patterns:
-          - "*plugin*"
+      dev-deps:
+        dependency-type: "development"
+      prod-deps:
+        dependency-type: "production"

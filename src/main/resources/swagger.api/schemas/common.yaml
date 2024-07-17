@@ -99,8 +99,6 @@ baseMarcRecord:
     leader:
       type: string
       description: MARC record's leader
-      minLength: 24
-      maxLength: 24
     fields:
       description: MARC record's fields
       type: array
@@ -494,3 +492,63 @@ marcSpecification:
     - repeatable
     - required
     - spec
+
+validatableRecord:
+  type: object
+  description: Validatable MARC Record
+  properties:
+    leader:
+      type: string
+      description: MARC record's leader
+    fields:
+      description: MARC record's fields
+      type: array
+      items:
+        type: object
+        properties:
+          tag:
+            description: Field's tag
+            type: string
+          content:
+            description: Field's content
+            type: object
+          indicators:
+            description: Field's indicators
+            type: array
+            items:
+              type: string
+    marcFormat:
+      $ref: '#/marcFormat'
+      description: MARC Format
+  required:
+    - marcFormat
+
+validationIssue:
+  type: object
+  description: Details of a validation issue
+  properties:
+    tag:
+      description: Associated tag for the issue identified
+      type: string
+    severity:
+      description: Level of impact of the discovered issue
+      type: string
+    definitionType:
+      description: Type of definition flagged during validation
+      type: string
+    helpUrl:
+      description: Help URL that is defined in the definition
+      type: string
+    message:
+      description: A concise summary of the identified issue
+      type: string
+
+validationResult:
+  type: object
+  description: Result of validation
+  properties:
+    issues:
+      description: List of issues
+      type: array
+      items:
+        $ref: '#/validationIssue'

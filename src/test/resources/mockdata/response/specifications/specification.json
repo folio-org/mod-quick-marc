@@ -1,0 +1,290 @@
+{
+  "specifications": [
+    {
+      "id": "6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3",
+      "title": "MARC Bibliographic Specification",
+      "family": "MARC",
+      "profile": "bibliographic",
+      "url": "https://www.loc.gov/marc/bibliographic/",
+      "fields": [
+        {
+          "id": "bc48a2e9-fa4b-4a1d-a8a5-96cb2d206410",
+          "tag": "000",
+          "label": "Leader",
+          "url": "https://www.loc.gov/marc/bibliographic/bdleader.html",
+          "repeatable": false,
+          "required": true,
+          "deprecated": false,
+          "scope": "system"
+        },
+        {
+          "id": "e50d17eb-bb1e-4d44-9fa4-d484f62bf59a",
+          "tag": "001",
+          "label": "Control Number",
+          "url": "https://www.loc.gov/marc/bibliographic/bd001.html",
+          "repeatable": false,
+          "required": true,
+          "deprecated": false,
+          "scope": "system"
+        },
+        {
+          "id": "f2b7ad73-8e82-4909-9e49-694c35b52454",
+          "tag": "245",
+          "label": "Title Statement",
+          "url": "https://www.loc.gov/marc/bibliographic/bd245.html",
+          "repeatable": false,
+          "required": true,
+          "deprecated": false,
+          "scope": "system",
+          "subfields": [
+            {
+              "id": "b6e694d2-c145-4e6a-80bf-d94c20438e8d",
+              "code": "6",
+              "label": "Linkage",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "ca1d798b-69d5-47d9-b3d7-5c875071d690",
+              "code": "7",
+              "label": "Data provenance",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "e19d8b60-7f93-4854-abff-2d4f2facdbd3",
+              "code": "8",
+              "label": "Field link and sequence number",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "b04adcd6-eb7c-416e-aca2-b53bfc4df209",
+              "code": "a",
+              "label": "Title",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "3ad0ee62-3301-4eb1-8da0-cba8ba546cc4",
+              "code": "b",
+              "label": "Remainder of title",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "c1d62db3-f0d4-4997-879c-5358dd021765",
+              "code": "c",
+              "label": "Statement of responsibility, etc.",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "b7d30862-2023-46c7-b5f8-18b257861a60",
+              "code": "d",
+              "label": "Designation of section",
+              "repeatable": true,
+              "required": false,
+              "deprecated": true,
+              "scope": "standard"
+            },
+            {
+              "id": "126d6b5a-f3b5-4edb-a580-951948dbbeae",
+              "code": "e",
+              "label": "Name of part/section",
+              "repeatable": true,
+              "required": false,
+              "deprecated": true,
+              "scope": "standard"
+            },
+            {
+              "id": "eb0f0e30-2ef1-4484-a8fb-4b42af742c9d",
+              "code": "f",
+              "label": "Inclusive dates",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "6e1d0171-72aa-44fd-9e6c-de6dc4b79fc4",
+              "code": "g",
+              "label": "Bulk dates",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "98b564ea-fe0f-4148-9e59-82ec1bd27511",
+              "code": "h",
+              "label": "Medium",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "9c3dee8e-cae8-47d9-ae2c-6ba54ba990c7",
+              "code": "k",
+              "label": "Form",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "ff54c880-700b-4c53-9235-1b63823921b2",
+              "code": "n",
+              "label": "Number of part/section of a work",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "9eba3b21-c43d-45b1-8b57-f74b51b7e804",
+              "code": "p",
+              "label": "Name of part/section of a work",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "6dfda3a9-f0b4-484e-93b0-317827f0e56c",
+              "code": "s",
+              "label": "Version",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            }
+          ],
+          "indicators": [
+            {
+              "id": "8feb7051-ef5f-48fb-885b-f3d549c43c82",
+              "order": 1,
+              "label": "Title added entry",
+              "codes": [
+                {
+                  "id": "d91557e8-801b-441e-b90f-898e2bf305bc",
+                  "code": "0",
+                  "label": "No added entry",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "2cf2f237-7d0a-4464-9f4d-daa7fe43084d",
+                  "code": "1",
+                  "label": "Added entry",
+                  "deprecated": false,
+                  "scope": "standard"
+                }
+              ]
+            },
+            {
+              "id": "5e1017cf-497c-433b-b988-f9e927349f7a",
+              "order": 2,
+              "label": "Nonfiling characters",
+              "codes": [
+                {
+                  "id": "227736f6-c8c5-484e-aa1a-3abe2f293c93",
+                  "code": "0",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "cb221d3d-14fd-4c92-9e0b-0f28818375c1",
+                  "code": "1",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "a42e8559-ae63-4f67-a951-8c6b01b49ae5",
+                  "code": "2",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "69dcc346-3a55-49d5-97ac-b51867bd4f21",
+                  "code": "3",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "27899c58-c661-4684-97f5-72379838ae8d",
+                  "code": "4",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "f45d88a1-c012-4801-8048-8ffe8dd723ed",
+                  "code": "5",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "06ec84cf-cfe0-4c93-ba08-64a4377b4cd9",
+                  "code": "6",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "c66ff48e-e45a-4226-a57e-2c4f3f4ef2b9",
+                  "code": "7",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "d17d72a1-547b-49f2-bccf-0deeb3b82a75",
+                  "code": "8",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                },
+                {
+                  "id": "a540402f-bc22-4ad4-9a88-34f2bdc5dcdb",
+                  "code": "9",
+                  "label": "Number of nonfiling characters",
+                  "deprecated": false,
+                  "scope": "standard"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "id": "c1b80d56-5f6f-4c0e-92df-6d2356eb379f",
+          "name": "Non-Repeatable Field",
+          "description": "Field is non-repeatable but exists more than once in a record",
+          "code": "nonRepeatableField",
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "totalRecords": 1
+}

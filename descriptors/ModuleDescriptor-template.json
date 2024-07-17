@@ -33,12 +33,16 @@
     {
       "id": "instance-authority-links-suggestions",
       "version": "1.2"
+    },
+    {
+      "id": "specification-storage",
+      "version": "1.0"
     }
   ],
   "provides": [
     {
       "id": "marc-records-editor",
-      "version": "5.4",
+      "version": "6.0",
       "handlers": [
         {
           "methods": ["GET"],
@@ -93,6 +97,15 @@
           "permissionsRequired": ["marc-records-editor.links.suggestion.post"],
           "modulePermissions": [
             "instance-authority-links.suggestions.post"
+          ]
+        }, {
+          "methods": ["POST"],
+          "pathPattern": "/records-editor/validate",
+          "permissionsRequired": [
+            "marc-records-editor.validate.post"
+          ],
+          "modulePermissions": [
+            "specification-storage.specifications.collection.get"
           ]
         }
       ]
@@ -163,6 +176,11 @@
       "description": "Suggest links for record collection"
     },
     {
+      "permissionName": "marc-records-editor.validate.post",
+      "displayName": "marc-records-editor - validate record",
+      "description": "Validate record"
+    },
+    {
       "permissionName": "marc-records-editor.all",
       "displayName": "All marc-records-editor permissions",
       "description": "All permissions for the marc-records-editor",
@@ -172,7 +190,8 @@
         "marc-records-editor.item.put",
         "marc-records-editor.item.delete",
         "marc-records-editor.status.item.get",
-        "marc-records-editor.links.suggestion.post"
+        "marc-records-editor.links.suggestion.post",
+        "marc-records-editor.validate.post"
       ]
     }
   ],

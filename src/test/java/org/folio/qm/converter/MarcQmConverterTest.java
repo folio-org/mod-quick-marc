@@ -43,8 +43,8 @@ class MarcQmConverterTest {
   @BeforeEach
   void setUp() {
     fieldsConverter = mock(MarcFieldsConverter.class);
-    converter = new MarcQmEditConverter(new MarcFactoryImpl(), new ObjectMapper(), new MarcTypeMapperImpl(),
-      fieldsConverter);
+    var recordConverter = new MarcQmToMarc4jConverter(new MarcFactoryImpl(), fieldsConverter);
+    converter = new MarcQmEditConverter(new ObjectMapper(), new MarcTypeMapperImpl(), recordConverter);
   }
 
   @SneakyThrows

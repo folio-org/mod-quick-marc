@@ -20,6 +20,7 @@ public class TestEntitiesUtils {
   public static final String DI_COMPLETE_AUTHORITY_DELETE = DI_EVENT_DIR + "/complete-event-with-authority-delete.json";
   public static final String QM_RECORD_EDIT_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBibEdit.json";
   public static final String QM_RECORD_CREATE_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBibCreate.json";
+  public static final String QM_RECORD_VALIDATE_PATH = PARSED_RECORDS_DIR + "/quickMarcValidate.json";
   public static final String QM_RECORD_VIEW_BIB_PATH = PARSED_RECORDS_DIR + "/quickMarcBibView.json";
   public static final String QM_RECORD_EDIT_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsEdit.json";
   public static final String QM_RECORD_CREATE_HOLDINGS_PATH = PARSED_RECORDS_DIR + "/quickMarcHoldingsCreate.json";

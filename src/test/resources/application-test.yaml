@@ -18,6 +18,7 @@ spring:
       - qm-update-results
       - data-import-results
       - linking-rules-results
+      - specifications
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   kafka:

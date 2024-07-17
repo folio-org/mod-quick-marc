@@ -5,21 +5,23 @@ import static org.folio.qm.util.ErrorUtils.buildInternalError;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.ExternalIdsHolder;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
-import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MarcQmEditConverter extends MarcQmConverter<QuickMarcEdit> {
 
-  public MarcQmEditConverter(MarcFactory factory, ObjectMapper objectMapper, MarcTypeMapper typeMapper,
-                             MarcFieldsConverter fieldsConverter) {
-    super(factory, objectMapper, typeMapper, fieldsConverter);
+  public MarcQmEditConverter(ObjectMapper objectMapper, MarcTypeMapper typeMapper,
+                             Converter<BaseMarcRecord, Record> recordConverter) {
+    super(objectMapper, typeMapper, recordConverter);
   }
 
   @Override

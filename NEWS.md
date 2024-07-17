@@ -3,9 +3,11 @@
 
 ### New APIs versions
 * Provides `marc-specifications` `v1.2`
+* Provides `marc-records-editor` `v5.5`
+* Requires `specification-storage` `v1.0`
 
 ### Features
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+* Implement endpoint to validate record based on MARC specification ([MODQM-433](https://issues.folio.org/browse/MODQM-433))
 
 ### Bug fixes
 * Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))

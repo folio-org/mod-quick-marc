@@ -29,6 +29,11 @@ logging:
   level:
     io.zonky.test.db.postgres: FATAL
 folio:
+  cache:
+    spec:
+      specifications:
+        maximum-size: 500
+        ttl: 24h
   environment: ${ENV:folio}
   logging:
     request:

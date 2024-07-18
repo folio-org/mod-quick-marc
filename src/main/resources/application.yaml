@@ -43,12 +43,12 @@ spring:
       continue-on-error: true
 folio:
   environment: ${ENV:folio}
+  cache:
+    spec:
+      specifications:
+        maximum-size: 500
+        ttl: 24h
   qm:
-    cache:
-      update:
-        max-size: 1000
-        duration:
-          min: 10
     creation-status:
       clear:
         initial-delay-ms: 3_600_000

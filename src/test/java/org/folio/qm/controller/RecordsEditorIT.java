@@ -48,6 +48,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECOR
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_VALIDATE_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
@@ -66,6 +67,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.http.Fault;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
@@ -76,6 +78,7 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.support.utils.testentities.TestEntitiesUtils;
 import org.folio.qm.util.ErrorUtils;
@@ -120,6 +123,23 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.fields[14].linkDetails.errorCause").value(LINK_ERROR_CAUSE));
 
     checkParseRecordDtoId();
+  }
+
+  @Test
+  void testValidateRecord() throws Exception {
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    var validatableRecord = readQuickMarc(QM_RECORD_VALIDATE_PATH, ValidatableRecord.class);
+
+    postResultActions("/records-editor/validate", validatableRecord, Map.of())
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.issues.size()").value(1))
+      .andExpect(jsonPath("$.issues[0].tag").value("245[1]"))
+      .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value(notNullValue()));
   }
 
   @Test

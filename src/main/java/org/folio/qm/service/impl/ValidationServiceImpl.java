@@ -8,13 +8,24 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.folio.qm.domain.ValidatableRecordDelegate;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.dto.ValidatableRecord;
+import org.folio.qm.domain.dto.ValidationIssue;
 import org.folio.qm.exception.ValidationException;
+import org.folio.qm.service.MarcSpecificationService;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.qm.validation.ValidationRule;
+import org.folio.rspec.domain.dto.SpecificationDto;
+import org.folio.rspec.domain.dto.SpecificationFieldDto;
+import org.folio.rspec.domain.dto.ValidationError;
+import org.folio.rspec.utils.SpecificationUtils;
+import org.folio.rspec.validation.SpecificationGuidedValidator;
+import org.marc4j.marc.Record;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +37,9 @@ public class ValidationServiceImpl implements ValidationService {
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
 
   private final List<ValidationRule> validationRules;
+  private final MarcSpecificationService marcSpecificationService;
+  private final SpecificationGuidedValidator specificationGuidedValidator;
+  private final Converter<BaseMarcRecord, Record> recordConverter;
 
   @Override
   public ValidationResult validate(BaseMarcRecord quickMarc) {
@@ -41,6 +55,28 @@ public class ValidationServiceImpl implements ValidationService {
     } else {
       return new ValidationResult(false, validationErrors);
     }
+  }
+
+  @Override
+  public List<ValidationIssue> validate(ValidatableRecord validatableRecord) {
+    var rec = recordConverter.convert(new ValidatableRecordDelegate(validatableRecord));
+    var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
+    return specificationGuidedValidator.validate(rec, specification).stream()
+      .map(validationError -> toValidationIssue(validationError, specification))
+      .toList();
+  }
+
+  private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {
+    var path = validationError.getPath();
+    var helpUrl = SpecificationUtils.findField(specification, path.substring(0, path.indexOf('[')))
+      .map(SpecificationFieldDto::getUrl)
+      .orElse(null);
+    return new ValidationIssue()
+      .tag(path.substring(0, path.indexOf(']') + 1))
+      .helpUrl(helpUrl)
+      .severity(validationError.getSeverity().getType())
+      .definitionType(validationError.getDefinitionType().getType())
+      .message(validationError.getMessage());
   }
 
   @Override

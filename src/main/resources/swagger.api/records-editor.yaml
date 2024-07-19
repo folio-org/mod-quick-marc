@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: quickMARC Record Editor
-  version: 5.0
+  version: 5.5
 servers:
   - url: /records-editor/
 paths:
@@ -167,32 +167,65 @@ paths:
             schema:
               $ref: '#/components/schemas/quickMarcView'
         required: true
+  /validate:
+    post:
+      tags:
+        - records-validator
+      responses:
+        '200':
+          description: MARC Record validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Internal server error, e.g. due to misconfiguration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/validatableRecord'
+        required: true
 components:
   schemas:
     quickMarcView:
-      $ref: schemas/common.yaml#/quickMarcView
+      $ref: 'schemas/common.yaml#/quickMarcView'
     quickMarcCreate:
-      $ref: schemas/common.yaml#/quickMarcCreate
+      $ref: 'schemas/common.yaml#/quickMarcCreate'
     creationStatus:
-      $ref: schemas/common.yaml#/creationStatus
+      $ref: 'schemas/common.yaml#/creationStatus'
     entitiesLinksSuggestions:
-      $ref: schemas/common.yaml#/entitiesLinksSuggestions
+      $ref: 'schemas/common.yaml#/entitiesLinksSuggestions'
+    validationResult:
+      $ref: 'schemas/common.yaml#/validationResult'
+    validatableRecord:
+      $ref: 'schemas/common.yaml#/validatableRecord'
     error:
       type: object
     UUID:
-      $ref: schemas/common.yaml#/uuid
+      $ref: 'schemas/common.yaml#/uuid'
     parsedRecordDto:
-      $ref: schemas/external/parsedRecordDto.json
+      $ref: 'schemas/external/parsedRecordDto.json'
     initJobExecutionsRqDto:
-      $ref: schemas/external/initJobExecutionsRqDto.json
+      $ref: 'schemas/external/initJobExecutionsRqDto.json'
     initJobExecutionsRsDto:
-      $ref: schemas/external/initJobExecutionsRsDto.json
+      $ref: 'schemas/external/initJobExecutionsRsDto.json'
     rawRecordsDto:
-      $ref: schemas/external/rawRecordsDto.json
+      $ref: 'schemas/external/rawRecordsDto.json'
     marcFieldProtectionSettingsCollection:
-      $ref: schemas/external/marcFieldProtectionSettingsCollection.json
+      $ref: 'schemas/external/marcFieldProtectionSettingsCollection.json'
     dataImportEventPayload:
-      $ref: schemas/external/dataImportEventPayload.json
+      $ref: 'schemas/external/dataImportEventPayload.json'
     AuthoritySearchParameter:
       description: Authority search parameter for link suggestions
       type: string

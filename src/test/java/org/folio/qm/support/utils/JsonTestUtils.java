@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 
 @UtilityClass
 public class JsonTestUtils {
@@ -21,7 +20,7 @@ public class JsonTestUtils {
     .build();
 
   @SneakyThrows
-  public static <T extends BaseMarcRecord> T readQuickMarc(String filename, Class<T> quickMarcType) {
+  public static <T> T readQuickMarc(String filename, Class<T> quickMarcType) {
     return MAPPER.readValue(InputOutputTestUtils.readFile(filename), quickMarcType);
   }
 

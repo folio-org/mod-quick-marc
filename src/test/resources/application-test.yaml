@@ -18,6 +18,7 @@ spring:
       - qm-update-results
       - data-import-results
       - linking-rules-results
+      - specifications
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   kafka:
@@ -28,6 +29,11 @@ logging:
   level:
     io.zonky.test.db.postgres: FATAL
 folio:
+  cache:
+    spec:
+      specifications:
+        maximum-size: 500
+        ttl: 24h
   environment: ${ENV:folio}
   logging:
     request:

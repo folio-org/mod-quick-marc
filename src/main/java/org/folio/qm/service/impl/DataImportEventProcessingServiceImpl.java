@@ -46,6 +46,8 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
     } catch (IllegalStateException e) {
       updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(e.getMessage());
     }
+    log.debug("[SLY-TEST-LOG]:[***]: processDataImportCompleted:: data [[{}]]", data);
+
     processDataImportEvent(data, updateBuilder.build());
   }
 
@@ -57,6 +59,7 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
     var updateBuilder = RecordCreationStatusUpdate.builder()
       .status(RecordCreationStatusEnum.ERROR)
       .errorMessage(errorMessage);
+    log.debug("[SLY-TEST-LOG]:[***]: processDataImportError:: data [[{}]]", data);
     processDataImportEvent(data, updateBuilder.build());
   }
 

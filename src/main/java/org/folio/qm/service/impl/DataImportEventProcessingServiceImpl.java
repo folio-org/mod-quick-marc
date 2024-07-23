@@ -47,7 +47,6 @@ public class DataImportEventProcessingServiceImpl implements EventProcessingServ
       updateBuilder.status(RecordCreationStatusEnum.ERROR).errorMessage(e.getMessage());
     }
     log.info("[SLY-TEST-LOG]:[***]: processDataImportCompleted:: data [[{}]]", data);
-
     processDataImportEvent(data, updateBuilder.build());
   }
 

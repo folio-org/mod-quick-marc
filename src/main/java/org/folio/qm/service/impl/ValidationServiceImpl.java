@@ -24,8 +24,6 @@ import org.folio.rspec.domain.dto.SpecificationFieldDto;
 import org.folio.rspec.domain.dto.ValidationError;
 import org.folio.rspec.utils.SpecificationUtils;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
-import org.marc4j.marc.Record;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +36,7 @@ public class ValidationServiceImpl implements ValidationService {
 
   private final List<ValidationRule> validationRules;
   private final MarcSpecificationService marcSpecificationService;
-  private final SpecificationGuidedValidator specificationGuidedValidator;
-  private final Converter<BaseMarcRecord, Record> recordConverter;
+  private final SpecificationGuidedValidator validatableRecordValidator;
 
   @Override
   public ValidationResult validate(BaseMarcRecord quickMarc) {
@@ -59,11 +56,22 @@ public class ValidationServiceImpl implements ValidationService {
 
   @Override
   public List<ValidationIssue> validate(ValidatableRecord validatableRecord) {
-    var rec = recordConverter.convert(new ValidatableRecordDelegate(validatableRecord));
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
-    return specificationGuidedValidator.validate(rec, specification).stream()
+    return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
+      .stream()
       .map(validationError -> toValidationIssue(validationError, specification))
       .toList();
+  }
+
+  @Override
+  public void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
+    if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
+      log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
+        quickMarc.getParsedRecordId(), parsedRecordId);
+      var error =
+        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
+      throw new ValidationException(error);
+    }
   }
 
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {
@@ -77,17 +85,6 @@ public class ValidationServiceImpl implements ValidationService {
       .severity(validationError.getSeverity().getType())
       .definitionType(validationError.getDefinitionType().getType())
       .message(validationError.getMessage());
-  }
-
-  @Override
-  public void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
-    if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
-      log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
-        quickMarc.getParsedRecordId(), parsedRecordId);
-      var error =
-        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
-      throw new ValidationException(error);
-    }
   }
 
 }

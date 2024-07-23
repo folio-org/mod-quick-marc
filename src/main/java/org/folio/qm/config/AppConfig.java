@@ -1,13 +1,16 @@
 package org.folio.qm.config;
 
+import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.rspec.i18n.TranslationProvider;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
+import org.folio.rspec.validation.validator.marc.model.MarcRecord;
 import org.folio.spring.i18n.config.TranslationConfiguration;
 import org.folio.spring.i18n.service.TranslationService;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 @Configuration
@@ -31,8 +34,9 @@ public class AppConfig {
     return new TranslationProviderImpl(resourceResolver, configuration);
   }
 
-  @Bean
-  public SpecificationGuidedValidator specificationGuidedValidator(TranslationProvider translationProvider) {
-    return new SpecificationGuidedValidator(translationProvider);
+  @Bean("validatableRecordValidator")
+  public SpecificationGuidedValidator validatableRecordValidator(TranslationProvider translationProvider,
+                                                                 Converter<BaseMarcRecord, MarcRecord> converter) {
+    return new SpecificationGuidedValidator(translationProvider, source -> converter.convert((BaseMarcRecord) source));
   }
 }

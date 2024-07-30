@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.folio.qm.domain.dto.DataImportEventPayload;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
+import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +62,24 @@ public class KafkaConfig {
     quickMarcKafkaListenerContainerFactory(
     ConsumerFactory<String, QmCompletedEventPayload> consumerFactory) {
     var factory = new ConcurrentKafkaListenerContainerFactory<String, QmCompletedEventPayload>();
+    factory.setConsumerFactory(consumerFactory);
+    return factory;
+  }
+
+  @Bean
+  public ConsumerFactory<String, SpecificationUpdatedEvent> specificationUpdatedConsumerFactory(
+    KafkaProperties kafkaProperties, Deserializer<SpecificationUpdatedEvent> deserializer) {
+    Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties(null));
+    consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+    return new DefaultKafkaConsumerFactory<>(consumerProperties, new StringDeserializer(), deserializer);
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, SpecificationUpdatedEvent>
+    specificationUpdatedKafkaListenerContainerFactory(
+    ConsumerFactory<String, SpecificationUpdatedEvent> consumerFactory) {
+    var factory = new ConcurrentKafkaListenerContainerFactory<String, SpecificationUpdatedEvent>();
     factory.setConsumerFactory(consumerFactory);
     return factory;
   }

@@ -69,6 +69,10 @@ folio:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
         topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.QM_COMPLETED}
         group-id: ${folio.environment}-mod-quick-marc-qm-group
+      specification-updated:
+        concurrency: ${KAFKA_EVENTS_CONCURRENCY:1}
+        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)(.*\.)specification-storage\.specification\.updated}
+        group-id: ${folio.environment}-mod-quick-marc-specification-group
 management:
   endpoints:
     web:

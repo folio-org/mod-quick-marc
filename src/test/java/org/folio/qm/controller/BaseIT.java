@@ -16,12 +16,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.spring.testing.extension.EnableKafka;
@@ -55,6 +57,8 @@ class BaseIT {
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
   protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
+  protected static final String SPECIFICATION_COMPLETE_TOPIC_NAME =
+    "folio.test.specification-storage.specification.updated";
 
   protected static OkapiConfiguration okapiConfiguration;
   private static boolean dbInitialized = false;
@@ -69,6 +73,8 @@ class BaseIT {
   protected MockMvc mockMvc;
   @Autowired
   private CacheManager cacheManager;
+  @Autowired
+  private ObjectMapper objectMapper;
   protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
 
   @Value("${folio.okapi-url}")
@@ -145,12 +151,18 @@ class BaseIT {
     sendKafkaRecord(jsonObject.toString(), BaseIT.QM_COMPLETE_TOPIC_NAME);
   }
 
+  @SneakyThrows
+  protected void sendSpecificationKafkaRecord(SpecificationUpdatedEvent eventPayload) {
+    var payload = objectMapper.writeValueAsString(eventPayload);
+    sendKafkaRecord(payload, BaseIT.SPECIFICATION_COMPLETE_TOPIC_NAME);
+  }
+
   protected void sendKafkaRecord(String eventPayload, String topicName) {
-    ProducerRecord<String, String> record = new ProducerRecord<>(topicName, eventPayload);
-    record.headers()
+    ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topicName, eventPayload);
+    producerRecord.headers()
       .add(createKafkaHeader(TENANT, TENANT_ID))
       .add(createKafkaHeader(URL, okapiUrl));
-    kafkaTemplate.send(record);
+    kafkaTemplate.send(producerRecord);
     kafkaTemplate.flush();
   }
 

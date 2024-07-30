@@ -5,8 +5,8 @@ import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -39,8 +39,8 @@ class SpecificationUpdatedEventDeserializerTest {
     var topic = "topic";
     var event = new SpecificationUpdatedEvent(UUID.randomUUID(), TENANT_ID);
     var serialized = objectMapper.writeValueAsBytes(event);
-    when(objectMapper.readValue(any(byte[].class), eq(SpecificationUpdatedEvent.class)))
-      .thenThrow(new IOException("test"));
+    doThrow(new IOException("test")).when(objectMapper)
+      .readValue(any(byte[].class), eq(SpecificationUpdatedEvent.class));
 
     var ex = assertThrows(SerializationException.class, () -> deserializer.deserialize(topic, serialized));
     assertThat(ex.getMessage()).contains(topic, "Can't deserialize data");

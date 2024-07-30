@@ -1,13 +1,17 @@
 package org.folio.qm.service.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.qm.config.CacheNames.SPECIFICATION_STORAGE_CACHE;
 import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 import org.folio.qm.client.SpecificationStorageClient;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.rspec.domain.dto.SpecificationDto;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.testing.extension.Random;
@@ -30,6 +34,14 @@ class MarcSpecificationServiceTest {
 
   @InjectMocks
   private MarcSpecificationServiceImpl service;
+
+  @Test
+  void getSpecification_invalidFormat() {
+    var ex = assertThrows(IllegalArgumentException.class, () -> service.getSpecification(MarcFormat.HOLDINGS));
+
+    assertThat(ex.getMessage()).isEqualTo("Unknown format: " + MarcFormat.HOLDINGS.name());
+    verifyNoInteractions(client);
+  }
 
   @Test
   void updateSpecificationCache(@Random SpecificationDto specificationDto) {

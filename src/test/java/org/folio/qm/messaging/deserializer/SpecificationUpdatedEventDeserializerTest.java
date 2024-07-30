@@ -36,11 +36,13 @@ class SpecificationUpdatedEventDeserializerTest {
   @Test
   @SneakyThrows
   void deserialize_error() {
+    var topic = "topic";
     var event = new SpecificationUpdatedEvent(UUID.randomUUID(), TENANT_ID);
     var serialized = objectMapper.writeValueAsBytes(event);
     when(objectMapper.readValue(any(byte[].class), eq(SpecificationUpdatedEvent.class)))
       .thenThrow(new IOException("test"));
 
-    assertThrows(SerializationException.class, () -> deserializer.deserialize("test", serialized));
+    var ex = assertThrows(SerializationException.class, () -> deserializer.deserialize(topic, serialized));
+    assertThat(ex.getMessage()).contains(topic, "Can't deserialize data");
   }
 }

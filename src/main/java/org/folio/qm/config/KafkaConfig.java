@@ -18,6 +18,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 @Configuration
 @EnableKafka
@@ -68,7 +69,8 @@ public class KafkaConfig {
 
   @Bean
   public ConsumerFactory<String, SpecificationUpdatedEvent> specificationUpdatedConsumerFactory(
-    KafkaProperties kafkaProperties, Deserializer<SpecificationUpdatedEvent> deserializer) {
+    KafkaProperties kafkaProperties) {
+    var deserializer = new JsonDeserializer<>(SpecificationUpdatedEvent.class, false);
     Map<String, Object> consumerProperties = new HashMap<>(kafkaProperties.buildConsumerProperties(null));
     consumerProperties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     consumerProperties.put(VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);

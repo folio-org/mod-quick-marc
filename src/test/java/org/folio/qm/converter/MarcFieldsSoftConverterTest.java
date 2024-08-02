@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
-class MarcFieldsConverterTest {
+class MarcFieldsSoftConverterTest {
 
   @Mock
   private FieldItemConverter fieldItemConverter;
@@ -30,7 +30,7 @@ class MarcFieldsConverterTest {
   private final List<FieldItemConverter> fieldItemConverters = new LinkedList<>();
 
   @InjectMocks
-  private MarcFieldsConverter converter;
+  private MarcFieldsSoftConverter converter;
 
   @BeforeEach
   public void init() {
@@ -46,7 +46,7 @@ class MarcFieldsConverterTest {
     when(fieldItemConverter.canProcess(fieldItem, marcFormat)).thenReturn(true);
     when(fieldItemConverter.convert(fieldItem, true)).thenReturn(expected);
 
-    var actual = converter.convertQmFieldsSoft(List.of(fieldItem), marcFormat);
+    var actual = converter.convertQmFields(List.of(fieldItem), marcFormat);
 
     assertThat(actual).containsOnly(expected);
     verify(fieldItemConverter).convert(fieldItem, true);

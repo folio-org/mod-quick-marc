@@ -60,7 +60,7 @@ class SpecificationKafkaListenerIT extends BaseIT {
     var validatableRecord = readQuickMarc(QM_RECORD_VALIDATE_PATH, ValidatableRecord.class);
     postResultActions("/records-editor/validate", validatableRecord, Map.of())
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.issues.size()").value(1));
+      .andExpect(jsonPath("$.issues.size()").value(2));
 
     //update specification in cache with additional rules
     var specificationEvent = new SpecificationUpdatedEvent(
@@ -71,6 +71,6 @@ class SpecificationKafkaListenerIT extends BaseIT {
     await().atMost(FIVE_SECONDS).pollInterval(TWO_HUNDRED_MILLISECONDS).untilAsserted(() ->
       postResultActions("/records-editor/validate", validatableRecord, Map.of())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.issues.size()").value(2)));
+        .andExpect(jsonPath("$.issues.size()").value(3)));
   }
 }

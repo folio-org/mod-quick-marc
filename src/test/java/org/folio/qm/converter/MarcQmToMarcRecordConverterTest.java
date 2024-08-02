@@ -29,7 +29,7 @@ class MarcQmToMarcRecordConverterTest {
     var source = new BaseMarcRecord().leader("test");
     var tag = "245";
 
-    when(fieldsConverter.convertQmFieldsSoft(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, '/', '/')));
+    when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, '/', '/')));
 
     var actual = converter.convert(source);
 

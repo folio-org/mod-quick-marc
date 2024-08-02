@@ -17,6 +17,7 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, MarcRecord> {
 
+  @Qualifier("marcFieldsSoftConverter")
   private final MarcFieldsConverter fieldsConverter;
 
   @Override
@@ -33,7 +35,7 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
     List<MarcControlField> controlFields = new ArrayList<>();
     List<MarcDataField> dataFields = new ArrayList<>();
 
-    var fields = fieldsConverter.convertQmFieldsSoft(source.getFields(), source.getMarcFormat()).stream()
+    var fields = fieldsConverter.convertQmFields(source.getFields(), source.getMarcFormat()).stream()
       .collect(Collectors.groupingBy(VariableField::getTag));
 
     for (var entry : fields.entrySet()) {

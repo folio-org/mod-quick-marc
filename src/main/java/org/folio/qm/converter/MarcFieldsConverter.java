@@ -19,29 +19,22 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.VariableField;
-import org.springframework.stereotype.Component;
 
-@Component
 @RequiredArgsConstructor
-public class MarcFieldsConverter {
+public abstract class MarcFieldsConverter {
 
   public static final String TAG_REGEX = "\\{(\\d{3})=([^}]+)";
+  /**
+   * Soft conversion means not throwing an exception in case of bad data, just ignore it.
+   * */
+  private final Boolean softConversion;
   private final List<FieldItemConverter> fieldItemConverters;
   private final List<VariableFieldConverter<DataField>> dataFieldConverters;
   private final List<VariableFieldConverter<ControlField>> controlFieldConverters;
 
   public List<VariableField> convertQmFields(List<FieldItem> fields, MarcFormat format) {
     return fields.stream()
-      .map(field -> toVariableField(field, format, false))
-      .toList();
-  }
-
-  /**
-   * Convert Quick Marc fields in soft mode, ignoring invalid data.
-   * */
-  public List<VariableField> convertQmFieldsSoft(List<FieldItem> fields, MarcFormat format) {
-    return fields.stream()
-      .map(field -> toVariableField(field, format, true))
+      .map(field -> toVariableField(field, format, softConversion))
       .toList();
   }
 

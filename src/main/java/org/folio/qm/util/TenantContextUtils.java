@@ -39,6 +39,11 @@ public class TenantContextUtils {
     return getContextFromKafkaHeaders(null, null, null, headers, moduleMetadata);
   }
 
+  public static FolioExecutionContext getFolioExecutionContextFromSpecification(MessageHeaders headers, String tenantId,
+                                                               FolioModuleMetadata moduleMetadata) {
+    return getContextFromKafkaHeaders(tenantId, null, null, headers, moduleMetadata);
+  }
+
   public static void runInFolioContext(FolioExecutionContext context, Runnable runnable) {
     try (var fec = new FolioExecutionContextSetter(context)) {
       runnable.run();

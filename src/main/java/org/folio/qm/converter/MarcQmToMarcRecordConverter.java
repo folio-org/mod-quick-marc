@@ -33,7 +33,7 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
     List<MarcControlField> controlFields = new ArrayList<>();
     List<MarcDataField> dataFields = new ArrayList<>();
 
-    var fields = fieldsConverter.convertQmFields(source.getFields(), source.getMarcFormat()).stream()
+    var fields = fieldsConverter.convertQmFieldsSoft(source.getFields(), source.getMarcFormat()).stream()
       .collect(Collectors.groupingBy(VariableField::getTag));
 
     for (var entry : fields.entrySet()) {

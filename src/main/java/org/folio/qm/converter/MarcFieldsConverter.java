@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.converter.field.FieldItemConverter;
@@ -33,8 +32,17 @@ public class MarcFieldsConverter {
 
   public List<VariableField> convertQmFields(List<FieldItem> fields, MarcFormat format) {
     return fields.stream()
-      .map(field -> toVariableField(field, format))
-      .collect(Collectors.toList());
+      .map(field -> toVariableField(field, format, false))
+      .toList();
+  }
+
+  /**
+   * Convert Quick Marc fields in soft mode, ignoring invalid data.
+   * */
+  public List<VariableField> convertQmFieldsSoft(List<FieldItem> fields, MarcFormat format) {
+    return fields.stream()
+      .map(field -> toVariableField(field, format, true))
+      .toList();
   }
 
   public List<FieldItem> convertDtoFields(List<VariableField> fields, Leader leader, MarcFormat marcFormat) {
@@ -44,14 +52,14 @@ public class MarcFieldsConverter {
     var dataFields = fields.stream()
       .filter(DataField.class::isInstance)
       .map(field -> dataFieldToQuickMarcField((DataField) field, leader, marcFormat));
-    return Stream.concat(controlFields, dataFields).collect(Collectors.toList());
+    return Stream.concat(controlFields, dataFields).toList();
   }
 
-  public VariableField toVariableField(FieldItem field, MarcFormat marcFormat) {
+  public VariableField toVariableField(FieldItem field, MarcFormat marcFormat, boolean soft) {
     return fieldItemConverters.stream()
       .filter(fieldItemConverter -> fieldItemConverter.canProcess(field, marcFormat))
       .findFirst()
-      .map(fieldItemConverter -> fieldItemConverter.convert(field))
+      .map(fieldItemConverter -> fieldItemConverter.convert(field, soft))
       .orElseThrow(() -> new IllegalArgumentException("Field converter not found"));
   }
 

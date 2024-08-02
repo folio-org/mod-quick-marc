@@ -94,14 +94,23 @@ public final class MarcUtils {
     return UUID_REGEX.matcher(id).matches();
   }
 
-  public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction) {
+  /**
+   * Extract subfields from FieldItem.
+   *
+   * @param field Quick Marc field.
+   * @param subfieldFunction Function to map string to subfield object.
+   * @param soft Indicates whether to throw exception on invalid data. soft=true doesn't throw.
+   * */
+  public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction,
+                                                boolean soft) {
     return Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
       .map(token -> {
-        if (token.length() < TOKEN_MIN_LENGTH) {
+        if (!soft && token.length() < TOKEN_MIN_LENGTH) {
           throw new IllegalArgumentException("Subfield length");
         }
         return token.replace(DOLLAR_EXPRESSION, "$");
       })
+      .filter(StringUtils::isNotBlank)
       .map(subfieldFunction)
       .toList();
   }

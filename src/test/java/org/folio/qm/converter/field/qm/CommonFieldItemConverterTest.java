@@ -1,23 +1,32 @@
 package org.folio.qm.converter.field.qm;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.util.MarcUtils;
 import org.folio.spring.testing.type.UnitTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.impl.DataFieldImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
+@ExtendWith(MockitoExtension.class)
 class CommonFieldItemConverterTest {
 
   private final CommonFieldItemConverter converter = new CommonFieldItemConverter();
@@ -84,6 +93,28 @@ class CommonFieldItemConverterTest {
     }
     var actualDtoField = converter.convert(qmField);
     assertEquals(expectedDtoField.toString(), actualDtoField.toString());
+  }
+
+  @Test
+  void testConvert() {
+    var field = new FieldItem().tag("245");
+    try (var marcUtils = Mockito.mockStatic(MarcUtils.class)) {
+      var actual = converter.convert(field);
+      marcUtils.verify(() -> MarcUtils.extractSubfields(eq(field), any(), eq(false)));
+
+      assertThat(actual.getTag()).isEqualTo(field.getTag());
+    }
+  }
+
+  @Test
+  void testConvertSoft() {
+    var field = new FieldItem().tag("245");
+    try (var marcUtils = Mockito.mockStatic(MarcUtils.class)) {
+      var actual = converter.convert(field, true);
+      marcUtils.verify(() -> MarcUtils.extractSubfields(eq(field), any(), eq(true)));
+
+      assertThat(actual.getTag()).isEqualTo(field.getTag());
+    }
   }
 
   @ParameterizedTest

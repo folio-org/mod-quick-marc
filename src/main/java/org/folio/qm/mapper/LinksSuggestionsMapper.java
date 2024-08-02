@@ -88,7 +88,8 @@ public interface LinksSuggestionsMapper {
 
   default List<Map<String, String>> mapSubfields(FieldItem fieldItem) {
     var listOfSubfields = new ArrayList<Map<String, String>>();
-    var subfields = extractSubfields(fieldItem, s -> new SubfieldImpl(s.charAt(1), s.substring(2).trim()));
+    var subfields = extractSubfields(
+      fieldItem, s -> new SubfieldImpl(s.charAt(1), s.substring(2).trim()), false);
     for (var subfield : subfields) {
       listOfSubfields.add(Map.of(String.valueOf(subfield.getCode()), subfield.getData()));
     }

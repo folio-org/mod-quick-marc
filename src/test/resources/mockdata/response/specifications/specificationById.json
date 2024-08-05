@@ -281,6 +281,57 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f2b7ad73-8e82-4909-9e49-694c35b52455",
+      "tag": "246",
+      "label": "Test Statement",
+      "url": "https://www.loc.gov/marc/bibliographic/bd246.html",
+      "repeatable": false,
+      "required": true,
+      "deprecated": false,
+      "scope": "system",
+      "subfields": [
+        {
+          "id": "b6e694d2-c145-4e6a-80bf-d94c20438e8d",
+          "code": "6",
+          "label": "Linkage",
+          "repeatable": false,
+          "required": false,
+          "deprecated": false,
+          "scope": "standard"
+        }
+      ],
+      "indicators": [
+        {
+          "id": "8feb7051-ef5f-48fb-885b-f3d549c43c82",
+          "order": 1,
+          "label": "Title added entry",
+          "codes": [
+            {
+              "id": "d91557e8-801b-441e-b90f-898e2bf305bc",
+              "code": "0",
+              "label": "No added entry",
+              "deprecated": false,
+              "scope": "standard"
+            }
+          ]
+        },
+        {
+          "id": "5e1017cf-497c-433b-b988-f9e927349f7a",
+          "order": 2,
+          "label": "Nonfiling characters",
+          "codes": [
+            {
+              "id": "227736f6-c8c5-484e-aa1a-3abe2f293c93",
+              "code": "0",
+              "label": "Number of nonfiling characters",
+              "deprecated": false,
+              "scope": "standard"
+            }
+          ]
+        }
+      ]
     }
   ],
   "rules": [

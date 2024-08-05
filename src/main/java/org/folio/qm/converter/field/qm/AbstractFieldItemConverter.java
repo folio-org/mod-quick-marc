@@ -12,8 +12,13 @@ public abstract class AbstractFieldItemConverter implements FieldItemConverter {
 
   @Override
   public VariableField convert(FieldItem field) {
+    return convert(field, false);
+  }
+
+  @Override
+  public VariableField convert(FieldItem field, boolean soft) {
     var dataField = new DataFieldImpl(field.getTag(), getIndicator(field, 0), getIndicator(field, 1));
-    dataField.getSubfields().addAll(extractSubfields(field, this::subfieldFromString));
+    dataField.getSubfields().addAll(extractSubfields(field, this::subfieldFromString, soft));
     return dataField;
   }
 

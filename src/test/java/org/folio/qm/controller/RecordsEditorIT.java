@@ -134,12 +134,12 @@ class RecordsEditorIT extends BaseIT {
 
     postResultActions("/records-editor/validate", validatableRecord, Map.of())
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.issues.size()").value(1))
-      .andExpect(jsonPath("$.issues[0].tag").value("245[1]"))
-      .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
-      .andExpect(jsonPath("$.issues[0].severity").value("error"))
-      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
-      .andExpect(jsonPath("$.issues[0].message").value(notNullValue()));
+      .andExpect(jsonPath("$.issues.size()").value(2))
+      .andExpect(jsonPath("$.issues[1].tag").value("245[1]"))
+      .andExpect(jsonPath("$.issues[1].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
+      .andExpect(jsonPath("$.issues[1].severity").value("error"))
+      .andExpect(jsonPath("$.issues[1].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[1].message").value(notNullValue()));
   }
 
   @Test

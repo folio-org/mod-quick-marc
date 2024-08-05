@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.converter.field.FieldItemConverter;
@@ -20,21 +19,23 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.VariableField;
-import org.springframework.stereotype.Component;
 
-@Component
 @RequiredArgsConstructor
-public class MarcFieldsConverter {
+public abstract class MarcFieldsConverter {
 
   public static final String TAG_REGEX = "\\{(\\d{3})=([^}]+)";
+  /**
+   * Soft conversion means not throwing an exception in case of bad data, just ignore it.
+   * */
+  private final Boolean softConversion;
   private final List<FieldItemConverter> fieldItemConverters;
   private final List<VariableFieldConverter<DataField>> dataFieldConverters;
   private final List<VariableFieldConverter<ControlField>> controlFieldConverters;
 
   public List<VariableField> convertQmFields(List<FieldItem> fields, MarcFormat format) {
     return fields.stream()
-      .map(field -> toVariableField(field, format))
-      .collect(Collectors.toList());
+      .map(field -> toVariableField(field, format, softConversion))
+      .toList();
   }
 
   public List<FieldItem> convertDtoFields(List<VariableField> fields, Leader leader, MarcFormat marcFormat) {
@@ -44,14 +45,14 @@ public class MarcFieldsConverter {
     var dataFields = fields.stream()
       .filter(DataField.class::isInstance)
       .map(field -> dataFieldToQuickMarcField((DataField) field, leader, marcFormat));
-    return Stream.concat(controlFields, dataFields).collect(Collectors.toList());
+    return Stream.concat(controlFields, dataFields).toList();
   }
 
-  public VariableField toVariableField(FieldItem field, MarcFormat marcFormat) {
+  public VariableField toVariableField(FieldItem field, MarcFormat marcFormat, boolean soft) {
     return fieldItemConverters.stream()
       .filter(fieldItemConverter -> fieldItemConverter.canProcess(field, marcFormat))
       .findFirst()
-      .map(fieldItemConverter -> fieldItemConverter.convert(field))
+      .map(fieldItemConverter -> fieldItemConverter.convert(field, soft))
       .orElseThrow(() -> new IllegalArgumentException("Field converter not found"));
   }
 

@@ -1,5 +1,7 @@
 package org.folio.qm.util;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,12 +10,14 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.UUID;
 import java.util.stream.Stream;
+import org.folio.qm.domain.dto.FieldItem;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.marc4j.marc.impl.SubfieldImpl;
 
 @UnitTest
 class MarcUtilsTest {
@@ -55,6 +59,23 @@ class MarcUtilsTest {
 
     assertThrows(IllegalArgumentException.class,
       () -> MarcUtils.normalizeFixedLengthString(sourceString, length));
+  }
+
+  @Test
+  void extractSubfields_emptyFieldContent() {
+    var field = new FieldItem().content(EMPTY);
+
+    assertThrows(IllegalArgumentException.class,
+      () -> MarcUtils.extractSubfields(field, s -> new SubfieldImpl(), false));
+  }
+
+  @Test
+  void extractSubfields_emptyFieldContent_soft() {
+    var field = new FieldItem().content(EMPTY);
+
+    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl(), true);
+
+    assertThat(subfields).isEmpty();
   }
 
 }

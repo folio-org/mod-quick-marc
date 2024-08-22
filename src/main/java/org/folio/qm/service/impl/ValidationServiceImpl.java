@@ -93,5 +93,4 @@ public class ValidationServiceImpl implements ValidationService {
       .message(validationError.getMessage());
   }
 
-  private static void convert()
 }

@@ -75,7 +75,7 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {
-    log.info("SLY_LOG:: validationError: {}",validationError);
+    log.info("SLY_LOG:: validationError: {}", validationError);
     var path = validationError.getPath();
     var helpUrl = SpecificationUtils.findField(specification, path.substring(0, path.indexOf('[')))
       .map(SpecificationFieldDto::getUrl)

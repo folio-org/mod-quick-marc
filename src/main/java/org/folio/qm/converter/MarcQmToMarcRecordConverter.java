@@ -84,7 +84,8 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
 
   private MarcIndicator toMarcIndicator(Reference fieldReference, char indicatorValue, int indicatorIndex) {
     var reference = Reference.forIndicator(fieldReference, indicatorIndex);
-    return new MarcIndicator(reference, indicatorValue);
+    char value = indicatorValue == 32 ? '#' : indicatorValue;
+    return new MarcIndicator(reference, value);
   }
 
   private MarcSubfield toMarcSubfield(Reference parentReference, List<Subfield> subfieldList, Subfield subfield) {

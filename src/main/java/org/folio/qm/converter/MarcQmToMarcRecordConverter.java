@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, MarcRecord> {
 
-  private static final char EMPTY_SPACE_VALUE = 32;
+  private static final char EMPTY_SPACE_VALUE = ' ';
   private static final char MARC_INDICATOR_EMPTY_VALUE = '#';
 
   @Qualifier("marcFieldsSoftConverter")

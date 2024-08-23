@@ -1,6 +1,7 @@
 package org.folio.qm.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,5 +38,21 @@ class MarcQmToMarcRecordConverterTest {
     assertThat(actual.dataFields()).hasSize(1);
     assertThat(actual.dataFields().get(0))
       .matches(field -> tag.equals(field.tag()) && field.subfields().isEmpty());
+  }
+
+  @Test
+  void convert_emptyFieldIndicatorContent() {
+    var source = new BaseMarcRecord().leader("test");
+    var tag = "245";
+
+    when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, ' ', ' ')));
+
+    var actual = converter.convert(source);
+
+    assertThat(actual).isNotNull();
+    assertThat(actual.dataFields()).hasSize(1);
+    assertThat(actual.dataFields().get(0).indicators()).isNotNull();
+    assertThat(actual.dataFields().get(0).indicators()).hasSize(2);
+    actual.dataFields().get(0).indicators().forEach(ind -> assertEquals('#', ind.value()));
   }
 }

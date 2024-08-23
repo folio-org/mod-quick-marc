@@ -56,12 +56,8 @@ public class ValidationServiceImpl implements ValidationService {
 
   @Override
   public List<ValidationIssue> validate(ValidatableRecord validatableRecord) {
-    log.info("SLY_LOG:: BEFORE - validatableRecord: {}", validatableRecord);
+    log.info("SLY_LOG:: BEFORE - validatableRecord: \n{}", validatableRecord);
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
-    validatableRecord.getFields().forEach(f ->
-      f.setIndicators(f.getIndicators().stream().map(ind -> ind.replace("\\", "#")).toList())
-    );
-    log.info("SLY_LOG:: AFTER - validatableRecord: {}", validatableRecord);
     return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
       .stream()
       .map(validationError -> toValidationIssue(validationError, specification))

@@ -9,7 +9,7 @@
 ### Features
 * Implement endpoint to validate record based on MARC specification ([MODQM-433](https://issues.folio.org/browse/MODQM-433))
 * Update cached specification on kafka event ([MODQM-436](https://issues.folio.org/browse/MODQM-436))
-* Update QM to MarcRecord converter to replace empty spaces to '#' in indicators ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
+* Show '\' in indicators to user while internally using '#' value for validation ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
 
 ### Bug fixes
 * Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))

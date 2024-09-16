@@ -11,6 +11,7 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.rest.resource.RecordsEditorApi;
 import org.folio.qm.service.MarcRecordsService;
+import org.folio.qm.service.ValidationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecordsEditorApiImpl implements RecordsEditorApi {
 
   private final MarcRecordsService marcRecordsService;
+  private final ValidationService validationService;
 
   @Override
   public ResponseEntity<QuickMarcView> getRecordByExternalId(UUID externalId, String lang) {
@@ -37,6 +39,7 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
 
   @Override
   public ResponseEntity<CreationStatus> createNewRecord(@Valid QuickMarcCreate quickMarc) {
+    validationService.validateMarcRecord(quickMarc);
     CreationStatus status = marcRecordsService.createNewRecord(quickMarc);
     return ResponseEntity.status(CREATED).body(status);
   }

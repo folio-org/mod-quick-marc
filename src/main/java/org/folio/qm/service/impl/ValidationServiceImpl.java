@@ -8,17 +8,21 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.folio.qm.converter.MarcQmToValidatableRecordConverter;
 import org.folio.qm.domain.ValidatableRecordDelegate;
 import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.domain.dto.ValidationIssue;
+import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.MarcSpecificationService;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.qm.validation.ValidationRule;
+import org.folio.rspec.domain.dto.SeverityType;
 import org.folio.rspec.domain.dto.SpecificationDto;
 import org.folio.rspec.domain.dto.SpecificationFieldDto;
 import org.folio.rspec.domain.dto.ValidationError;
@@ -26,6 +30,7 @@ import org.folio.rspec.utils.SpecificationUtils;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +42,7 @@ public class ValidationServiceImpl implements ValidationService {
   private final List<ValidationRule> validationRules;
   private final MarcSpecificationService marcSpecificationService;
   private final SpecificationGuidedValidator validatableRecordValidator;
+  private final MarcQmToValidatableRecordConverter converter;
 
   @Override
   public ValidationResult validate(BaseMarcRecord quickMarc) {
@@ -74,6 +80,18 @@ public class ValidationServiceImpl implements ValidationService {
     }
   }
 
+  @Override
+  public void validateMarcRecord(BaseMarcRecord marcRecord) {
+    if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
+      var validatableRecord = converter.convert(marcRecord);
+      var validationIssues = validate(validatableRecord);
+      if (containsErrorSeverityType(validationIssues)) {
+        throw new MarcRecordValidationException(
+          new org.folio.qm.domain.dto.ValidationResult().issues(validationIssues));
+      }
+    }
+  }
+
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {
     var path = validationError.getPath();
     var helpUrl = SpecificationUtils.findField(specification, path.substring(0, path.indexOf('[')))
@@ -87,4 +105,9 @@ public class ValidationServiceImpl implements ValidationService {
       .message(validationError.getMessage());
   }
 
+  private boolean containsErrorSeverityType(List<ValidationIssue> validationIssues) {
+    return !CollectionUtils.isEmpty(validationIssues) && validationIssues.stream()
+      .anyMatch(issue ->
+        issue.getSeverity() != null && issue.getSeverity().equalsIgnoreCase(SeverityType.ERROR.getType()));
+  }
 }

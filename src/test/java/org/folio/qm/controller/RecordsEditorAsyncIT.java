@@ -57,6 +57,7 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
+import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.testing.extension.DatabaseCleanup;
 import org.folio.spring.testing.type.IntegrationTest;
 import org.hamcrest.Matcher;
@@ -75,6 +76,12 @@ class RecordsEditorAsyncIT extends BaseIT {
   @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateQuickMarcRecord(String filePath) throws Exception {
     log.info("===== Verify PUT record: Successful =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     if (filePath.equals(QM_RECORD_EDIT_BIB_PATH)) {
@@ -107,6 +114,9 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordFailedInEvent() throws Exception {
     log.info("===== Verify PUT record: Failed in external modules =====");
 
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
@@ -133,6 +143,9 @@ class RecordsEditorAsyncIT extends BaseIT {
   @Test
   void testUpdateQuickMarcRecordFailedInEventByOptimisticLocking() throws Exception {
     log.info("==== Verify PUT record: Failed in external modules due to optimistic locking ====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
@@ -190,6 +203,9 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordIdsNotEqual() throws Exception {
     log.info("===== Verify PUT record: Request id and externalDtoId are not equal =====");
 
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
     QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
@@ -236,11 +252,17 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordInvalidBody() throws Exception {
     log.info("===== Verify PUT record: Invalid Request Body =====");
 
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
     var field = getFieldWithIndicators(Collections.singletonList(" "));
-    var titleField = getFieldWithValue("245", "title");
-    var sourceField = getFieldWithValue("008", "source");
+
+    var field245 = getFieldWithValue("245", "$a content");
+    var field246 = getFieldWithValue("246", "$a content");
+    var field001 = getFieldWithValue("001", "$a content");
+
     var quickMarcJson =
-      getQuickMarcJsonWithMinContent(field, field, titleField, sourceField).parsedRecordDtoId(UUID.randomUUID())
+      getQuickMarcJsonWithMinContent(field, field, field245, field246, field001).parsedRecordDtoId(UUID.randomUUID())
         .marcFormat(MarcFormat.BIBLIOGRAPHIC)
         .relatedRecordVersion("1")
         .parsedRecordId(VALID_PARSED_RECORD_ID)
@@ -248,7 +270,14 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isUnprocessableEntity())
-      .andExpect(jsonPath("$.message", containsString("Should have exactly 2 indicators")));
+      .andExpect(jsonPath("$.errors.size()").value(2))
+      .andExpect(jsonPath("$.errors[0].message").value("Should have exactly 2 indicators"))
+      .andExpect(jsonPath("$.errors[0].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.errors[0].parameters[0].key").value("333"))
+
+      .andExpect(jsonPath("$.errors[1].message").value("Is required tag"))
+      .andExpect(jsonPath("$.errors[1].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+      .andExpect(jsonPath("$.errors[1].parameters[0].key").value("008"));
 
     wireMockServer.verify(exactly(0),
       putRequestedFor(urlEqualTo(changeManagerResourceByIdPath(VALID_PARSED_RECORD_ID))));
@@ -257,6 +286,9 @@ class RecordsEditorAsyncIT extends BaseIT {
   @Test
   void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() throws Exception {
     log.info("===== Verify PUT record: Invalid fixed length field items =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
 
     QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
@@ -282,6 +314,9 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecordIgnoreElvlLeaderMismatch() throws Exception {
     log.info("===== Verify PUT record: Leader and ignore 008 Elvl mismatch =====");
 
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     mockPut(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), SC_ACCEPTED, wireMockServer);
 
@@ -302,13 +337,41 @@ class RecordsEditorAsyncIT extends BaseIT {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
+  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
     log.info("===== Verify PUT record: 001 tag check =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
     QuickMarcEdit quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    // Now we add the new 001 field to the record and try to update existing record
+    quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test value"));
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.issues.size()").value(1))
+      .andExpect(jsonPath("$.issues[0].tag").value("001[1]"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
+  }
+
+  @Test
+  void testUpdateReturn422WhenHoldingsRecordWithMultiple001() throws Exception {
+    log.info("===== Verify PUT record: 001 tag check =====");
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarcEdit quickMarcJson = readQuickMarc(QM_RECORD_EDIT_HOLDINGS_PATH, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
@@ -324,6 +387,12 @@ class RecordsEditorAsyncIT extends BaseIT {
   @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordMissed008(String filePath) throws Exception {
     log.info("===== Verify PUT record: 008 tag check =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 
@@ -361,6 +430,12 @@ class RecordsEditorAsyncIT extends BaseIT {
   @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateReturn400WhenRecordHaveIncorrectFieldContent(String filePath) throws Exception {
     log.info("===== Verify PUT record: Subfield length check =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 

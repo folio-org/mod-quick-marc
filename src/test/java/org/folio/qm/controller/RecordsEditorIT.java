@@ -364,6 +364,11 @@ class RecordsEditorIT extends BaseIT {
   void testPostQuickMarcValidRecordCreated(String requestBody, String eventBody) throws Exception {
     log.info("===== Verify POST record: Successful =====");
 
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
 
     final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
@@ -401,6 +406,9 @@ class RecordsEditorIT extends BaseIT {
   @Test
   void testReturn401WhenInvalidUserId() throws Exception {
     log.info("===== Verify POST record: User Id Invalid =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
 
     String jobExecution = "mockdata/request/change-manager/job-execution/jobExecution_invalid_user_id.json";
     mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, jobExecution, SC_UNPROCESSABLE_ENTITY, wireMockServer);
@@ -443,12 +451,11 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
-  @ParameterizedTest
-  @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
-  void testReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
+  @Test
+  void testReturn422WhenHoldingsRecordWithMultiple001() throws Exception {
     log.info("===== Verify POST record: Multiple 001 =====");
 
-    QuickMarcCreate quickMarcJson = readQuickMarc(filePath, QuickMarcCreate.class);
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
 
     quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
 
@@ -458,11 +465,33 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
+  @Test
+  void testReturn422WhenRecordWithMultiple001() throws Exception {
+    log.info("===== Verify POST record: Multiple 001 =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
+
+    quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
+
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.issues.size()").value(1))
+      .andExpect(jsonPath("$.issues[0].tag").value("001[1]"))
+      .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd001.html"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
   void testReturn422WhenRecordMissing008(String filePath) throws Exception {
     log.info("===== Verify POST record: Missing 008 =====");
-
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
     QuickMarcCreate quickMarcJson = readQuickMarc(filePath, QuickMarcCreate.class);
 
     quickMarcJson.getFields().removeIf(field -> field.getTag().equals("008"));
@@ -476,7 +505,8 @@ class RecordsEditorIT extends BaseIT {
   @Test
   void testReturn400WhenConnectionReset() throws Exception {
     log.info("===== Verify POST record: Connection reset =====");
-
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
     wireMockServer.stubFor(post(urlEqualTo(CHANGE_MANAGER_JOB_EXECUTION_PATH))
       .willReturn(aResponse()
         .withStatus(SC_OK)

@@ -71,6 +71,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+        '422':
+          description: MARC Record validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationResult'
         '500':
           description: Internal server error, e.g. due to misconfiguration
           content:

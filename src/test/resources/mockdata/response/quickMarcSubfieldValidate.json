@@ -1,0 +1,70 @@
+{
+  "marcFormat": "BIBLIOGRAPHIC",
+  "leader": "01706ccm\\a2200361\\\\ 4500",
+  "fields": [
+    {
+      "tag": "001",
+      "content": "393893"
+    },
+    {
+      "tag": "005",
+      "content": "20141107001016.0"
+    },
+    {
+      "tag": "010",
+      "content": "$a   2001000234",
+      "indicators": [
+        " ",
+        "\\"
+      ]
+    },
+    {
+      "tag": "1000",
+      "content": "$a Mozart, Wolfgang Amadeus, $d 1756-1791.",
+      "indicators": [
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag": "245",
+      "content": "$a Neue Ausgabe samtlicher Werke $6 non-repeatable field $6 non-repeatable field",
+      "indicators": [
+        "1",
+        "0"
+      ]
+    },
+    {
+      "tag": "245",
+      "content": "$a Neue Ausgabe samtlicher Werke additional $7 repeatable field $7 repeatable field $s non-repeatable field $s $s",
+      "indicators": [
+        "2",
+        "0"
+      ]
+    },
+    {
+      "tag": "245",
+      "content": "$a non-repeatable field $a non-repeatable field $s $s  ",
+      "indicators": [
+        "2",
+        "0"
+      ]
+    },
+    {
+      "tag": "246",
+      "content": "$6  $6 $6 non-repeatable field",
+      "indicators": [
+        "2",
+        "0"
+      ]
+    },
+    {
+      "tag": "998",
+      "content": "$a Works",
+      "indicators": [
+        "1",
+        "0"
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.rspec.validation.validator.marc.model.MarcControlField;
 import org.folio.rspec.validation.validator.marc.model.MarcDataField;
@@ -74,6 +75,7 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
   private List<MarcSubfield> convertSubfields(Reference parentReference, List<Subfield> subfields) {
     var marcSubfields = new ArrayList<MarcSubfield>();
     subfields.stream()
+      .filter(subfield -> StringUtils.isNotBlank(subfield.getData()))
       .collect(Collectors.groupingBy(Subfield::getCode))
       .forEach((code, subfieldList) -> subfieldList.forEach(subfield ->
         marcSubfields.add(toMarcSubfield(parentReference, subfieldList, subfield))));
@@ -91,7 +93,7 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
     var value = indicatorValidatableValue(indicatorValue);
     return new MarcIndicator(reference, value);
   }
-  
+
   private char indicatorValidatableValue(char indicatorValue) {
     return switch (indicatorValue) {
       case EMPTY_SPACE_VALUE, QUICK_MARC_INDICATOR_EMPTY_VALUE -> VALIDATION_INDICATOR_EMPTY_VALUE;

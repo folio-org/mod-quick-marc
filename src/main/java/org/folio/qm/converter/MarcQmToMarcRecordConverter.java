@@ -28,7 +28,8 @@ import org.springframework.stereotype.Component;
 public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, MarcRecord> {
 
   private static final char EMPTY_SPACE_VALUE = ' ';
-  private static final char MARC_INDICATOR_EMPTY_VALUE = '#';
+  private static final char QUICK_MARC_INDICATOR_EMPTY_VALUE = '\\';
+  private static final char VALIDATION_INDICATOR_EMPTY_VALUE = '#';
 
   @Qualifier("marcFieldsSoftConverter")
   private final MarcFieldsConverter fieldsConverter;
@@ -87,8 +88,16 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
 
   private MarcIndicator toMarcIndicator(Reference fieldReference, char indicatorValue, int indicatorIndex) {
     var reference = Reference.forIndicator(fieldReference, indicatorIndex);
-    var value = indicatorValue == EMPTY_SPACE_VALUE ? MARC_INDICATOR_EMPTY_VALUE : indicatorValue;
+    var value = indicatorValidatableValue(indicatorValue);
     return new MarcIndicator(reference, value);
+  }
+  
+  private char indicatorValidatableValue(char indicatorValue) {
+    return switch (indicatorValue) {
+      case EMPTY_SPACE_VALUE, QUICK_MARC_INDICATOR_EMPTY_VALUE -> VALIDATION_INDICATOR_EMPTY_VALUE;
+      case VALIDATION_INDICATOR_EMPTY_VALUE -> QUICK_MARC_INDICATOR_EMPTY_VALUE;
+      default -> indicatorValue;
+    };
   }
 
   private MarcSubfield toMarcSubfield(Reference parentReference, List<Subfield> subfieldList, Subfield subfield) {

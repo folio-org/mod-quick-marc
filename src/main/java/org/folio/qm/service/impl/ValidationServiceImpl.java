@@ -1,6 +1,7 @@
 package org.folio.qm.service.impl;
 
 import static org.folio.qm.util.ErrorUtils.buildError;
+import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.INVALID_INDICATOR;
 
 import java.util.Collections;
 import java.util.List;
@@ -97,12 +98,20 @@ public class ValidationServiceImpl implements ValidationService {
     var helpUrl = SpecificationUtils.findField(specification, path.substring(0, path.indexOf('[')))
       .map(SpecificationFieldDto::getUrl)
       .orElse(null);
+    var message = getValidationIssueMessage(validationError);
     return new ValidationIssue()
       .tag(path.substring(0, path.indexOf(']') + 1))
       .helpUrl(helpUrl)
       .severity(validationError.getSeverity().getType())
       .definitionType(validationError.getDefinitionType().getType())
-      .message(validationError.getMessage());
+      .message(message);
+  }
+
+  private String getValidationIssueMessage(ValidationError validationError) {
+    var originalMessage = validationError.getMessage();
+    return INVALID_INDICATOR.getCode().equals(validationError.getRuleCode())
+      ? originalMessage.replace('#', '\\')
+      : originalMessage;
   }
 
   private boolean containsErrorSeverityType(List<ValidationIssue> validationIssues) {

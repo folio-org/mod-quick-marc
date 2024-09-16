@@ -11,7 +11,7 @@ public class MarcQmToValidatableRecordConverter implements Converter<BaseMarcRec
 
   @Override
   public ValidatableRecord convert(BaseMarcRecord baseMarcRecord) {
-    var validatableRecordFields = baseMarcRecord.getFields() == null ? null : baseMarcRecord.getFields().stream()
+    var validatableRecordFields = baseMarcRecord.getFields().stream()
       .map(fieldItem -> new ValidatableRecordFieldsInner()
         .tag(fieldItem.getTag())
         .content(fieldItem.getContent())

@@ -340,6 +340,12 @@
           "description": "Field is required but missing in a record",
           "code": "missingField",
           "enabled": true
+        }, {
+          "id": "1aa070fd-d2b5-4def-bf3d-699895f13b88",
+          "name": "Non-Repeatable Subfield",
+          "description": "Subfield is non-repeatable but exists more than once in a record's field",
+          "code": "nonRepeatableSubfield",
+          "enabled": true
         }
       ]
     }

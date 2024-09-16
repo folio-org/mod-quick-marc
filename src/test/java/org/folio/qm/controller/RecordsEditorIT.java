@@ -49,6 +49,7 @@ import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECOR
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_CREATE_HOLDINGS_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_VALIDATE_PATH;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_VALIDATE_SUBFIELD_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.USER_JOHN_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_PARSED_RECORD_DTO_ID;
@@ -135,11 +136,52 @@ class RecordsEditorIT extends BaseIT {
     postResultActions("/records-editor/validate", validatableRecord, Map.of())
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.issues.size()").value(2))
+      .andExpect(jsonPath("$.issues[0].tag").value("246[0]"))
+      .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd246.html"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value("Field 246 is required."))
+
       .andExpect(jsonPath("$.issues[1].tag").value("245[1]"))
       .andExpect(jsonPath("$.issues[1].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
       .andExpect(jsonPath("$.issues[1].severity").value("error"))
       .andExpect(jsonPath("$.issues[1].definitionType").value("field"))
-      .andExpect(jsonPath("$.issues[1].message").value(notNullValue()));
+      .andExpect(jsonPath("$.issues[1].message").value("Field is non-repeatable."));
+  }
+
+  @Test
+  void testValidateRecordWithNonRepeatableSubfieldValidationError() throws Exception {
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    var validatableRecord = readQuickMarc(QM_RECORD_VALIDATE_SUBFIELD_PATH, ValidatableRecord.class);
+
+    postResultActions("/records-editor/validate", validatableRecord, Map.of())
+      .andExpect(status().isOk())
+
+      .andExpect(jsonPath("$.issues[0].tag").value("245[0]"))
+      .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("subfield"))
+      .andExpect(jsonPath("$.issues[0].message").value("Subfield '6' is non-repeatable."))
+
+      .andExpect(jsonPath("$.issues[1].tag").value("245[1]"))
+      .andExpect(jsonPath("$.issues[1].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
+      .andExpect(jsonPath("$.issues[1].severity").value("error"))
+      .andExpect(jsonPath("$.issues[1].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[1].message").value("Field is non-repeatable."))
+
+      .andExpect(jsonPath("$.issues[2].tag").value("245[2]"))
+      .andExpect(jsonPath("$.issues[2].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
+      .andExpect(jsonPath("$.issues[2].severity").value("error"))
+      .andExpect(jsonPath("$.issues[2].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[2].message").value("Field is non-repeatable."))
+
+      .andExpect(jsonPath("$.issues[3].tag").value("245[2]"))
+      .andExpect(jsonPath("$.issues[3].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd245.html"))
+      .andExpect(jsonPath("$.issues[3].severity").value("error"))
+      .andExpect(jsonPath("$.issues[3].definitionType").value("subfield"))
+      .andExpect(jsonPath("$.issues[3].message").value("Subfield 'a' is non-repeatable."));
   }
 
   @Test

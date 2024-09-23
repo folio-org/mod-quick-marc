@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.rest.resource.RecordsEditorAsyncApi;
 import org.folio.qm.service.MarcRecordsService;
-import org.folio.qm.service.ValidationService;
 import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,11 +20,10 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
 
   private final MarcRecordsService marcRecordsService;
   private final DeferredResultCacheService deferredResultCacheService;
-  private final ValidationService validationService;
 
   @Override
   public DeferredResult<ResponseEntity<Void>> putRecord(UUID id, QuickMarcEdit quickMarc) {
-    validationService.validateMarcRecord(quickMarc);
+    marcRecordsService.validateMarcRecord(quickMarc);
     var updateActionResult = deferredResultCacheService.getUpdateActionResult(id);
     marcRecordsService.updateById(id, quickMarc, updateActionResult);
     return updateActionResult;

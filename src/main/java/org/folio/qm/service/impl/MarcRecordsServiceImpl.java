@@ -16,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
+import org.folio.qm.converter.MarcQmToValidatableRecordConverter;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
@@ -25,8 +26,10 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.domain.dto.ValidationIssue;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
+import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.LinksSuggestionsMapper;
@@ -38,12 +41,14 @@ import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
+import org.folio.rspec.domain.dto.SeverityType;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
@@ -77,6 +82,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final UserMapper userMapper;
 
   private final FolioExecutionContext folioExecutionContext;
+  private final MarcQmToValidatableRecordConverter converter;
 
   @Override
   public QuickMarcView findByExternalId(UUID externalId) {
@@ -146,6 +152,24 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       return quickMarcRecordsWithSuggestions.get(0);
     }
     return quickMarcView;
+  }
+
+  @Override
+  public void validateMarcRecord(BaseMarcRecord marcRecord) {
+    if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
+      var validatableRecord = converter.convert(marcRecord);
+      var validationIssues = validationService.validate(validatableRecord);
+      if (containsErrorSeverityType(validationIssues)) {
+        throw new MarcRecordValidationException(
+          new org.folio.qm.domain.dto.ValidationResult().issues(validationIssues));
+      }
+    }
+  }
+
+  private boolean containsErrorSeverityType(List<ValidationIssue> validationIssues) {
+    return !CollectionUtils.isEmpty(validationIssues) && validationIssues.stream()
+      .anyMatch(issue ->
+        issue.getSeverity() != null && issue.getSeverity().equalsIgnoreCase(SeverityType.ERROR.getType()));
   }
 
   private QuickMarcCreate prepareRecord(QuickMarcCreate quickMarc) {

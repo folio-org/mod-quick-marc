@@ -2,7 +2,6 @@ package org.folio.qm.service;
 
 import java.util.UUID;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
@@ -61,12 +60,5 @@ public interface MarcRecordsService {
    */
   QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter,
                              Boolean ignoreAutoLinkingEnabled);
-
-  /**
-   * This method validates a MARC record based on the MARC specification.
-   *
-   * @param marcRecord MarcRecord object
-   */
-  void validateMarcRecord(BaseMarcRecord marcRecord);
 }
 

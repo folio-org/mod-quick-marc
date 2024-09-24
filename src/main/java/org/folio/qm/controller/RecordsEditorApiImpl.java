@@ -37,7 +37,6 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
 
   @Override
   public ResponseEntity<CreationStatus> createNewRecord(@Valid QuickMarcCreate quickMarc) {
-    marcRecordsService.validateMarcRecord(quickMarc);
     CreationStatus status = marcRecordsService.createNewRecord(quickMarc);
     return ResponseEntity.status(CREATED).body(status);
   }

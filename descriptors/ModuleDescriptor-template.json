@@ -51,7 +51,8 @@
           "modulePermissions": [
             "change-manager.parsedrecords.get",
             "users.item.get",
-            "converter-storage.field-protection-settings.get",
+            "converter-storage.field-protection-settings.item.get",
+            "converter-storage.field-protection-settings.collection.get",
             "instance-authority-links.instances.collection.get",
             "instance-authority.linking-rules.collection.get"
           ]
@@ -62,7 +63,7 @@
           "permissionsRequired": ["marc-records-editor.item.post"],
           "modulePermissions": [
             "change-manager.jobexecutions.post",
-            "change-manager.jobexecutions.put",
+            "change-manager.jobExecutions.jobProfile.item.put",
             "change-manager.records.post"
           ]
         },
@@ -81,7 +82,7 @@
           "permissionsRequired": ["marc-records-editor.item.delete"],
           "modulePermissions": [
             "change-manager.jobexecutions.post",
-            "change-manager.jobexecutions.put",
+            "change-manager.jobExecutions.jobProfile.item.put",
             "change-manager.parsedrecords.get",
             "change-manager.records.post"
           ]

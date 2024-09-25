@@ -3,7 +3,7 @@
 
 ### New APIs versions
 * Provides `marc-specifications` `v1.2`
-* Provides `marc-records-editor` `v5.5`
+* Provides `marc-records-editor` `v5.6`
 * Requires `specification-storage` `v1.0`
 
 ### Features

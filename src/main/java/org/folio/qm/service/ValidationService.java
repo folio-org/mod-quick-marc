@@ -15,4 +15,6 @@ public interface ValidationService {
   List<ValidationIssue> validate(ValidatableRecord validatableRecord);
 
   void validateIdsMatch(QuickMarcEdit quickMarc, UUID externalId);
+
+  void validateMarcRecord(BaseMarcRecord marcRecord);
 }

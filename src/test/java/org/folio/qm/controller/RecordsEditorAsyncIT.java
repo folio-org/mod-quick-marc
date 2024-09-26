@@ -367,7 +367,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
-  void testUpdateReturn200WhenRecordWithout001(String filePath) throws Exception {
+  void testUpdateReturn422WhenRecordWithout001Field(String filePath) throws Exception {
     log.info("===== Verify PUT record: 001 tag check =====");
 
     mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
@@ -386,7 +386,12 @@ class RecordsEditorAsyncIT extends BaseIT {
     quickMarcJson.getFields().removeIf(field -> field.getTag().equals("001"));
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
-      .andExpect(status().isOk());
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.issues.size()").value(1))
+      .andExpect(jsonPath("$.issues[0].tag").value("001[0]"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value("Field 001 is required."));
   }
 
   @Test

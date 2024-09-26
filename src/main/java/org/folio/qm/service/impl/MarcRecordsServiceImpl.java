@@ -103,7 +103,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc,
                          DeferredResult<ResponseEntity<Void>> updateResult) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
-    validationService.validateMarcRecord(quickMarc);
+    validationService.validateMarcRecord(quickMarc, true);
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
@@ -127,7 +127,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarcCreate quickMarc) {
     log.debug("createNewRecord:: trying to create a new quickMarc");
-    validationService.validateMarcRecord(quickMarc);
+    validationService.validateMarcRecord(quickMarc, false);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
     var status = runImportAndGetStatus(recordDto, CREATE);

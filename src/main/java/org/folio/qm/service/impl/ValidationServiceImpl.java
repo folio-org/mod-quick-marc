@@ -83,25 +83,30 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   @Override
-  public void validateMarcRecord(BaseMarcRecord marcRecord) {
+  public void validateMarcRecord(BaseMarcRecord marcRecord, boolean is001RequiredField) {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
       log.debug("validateMarcRecord:: validate a quickMarc record");
       var validatableRecord = converter.convert(marcRecord);
       var validationIssues = validate(validatableRecord);
-      if (containsErrorSeverityType(validationIssues)) {
+      if (containsErrorSeverityType(validationIssues, is001RequiredField)) {
         throw new MarcRecordValidationException(
           new org.folio.qm.domain.dto.ValidationResult().issues(validationIssues));
       }
     }
   }
 
-  private boolean containsErrorSeverityType(List<ValidationIssue> validationIssues) {
-    return !CollectionUtils.isEmpty(validationIssues) && validationIssues.stream()
-      .anyMatch(issue ->
-        issue.getSeverity() != null
-          && issue.getSeverity().equalsIgnoreCase(SeverityType.ERROR.getType())
-          && issue.getMessage() != null
-          && !issue.getMessage().equals(TAG_001_REQUIRED_ERROR_MESSAGE));
+  /**
+   * If the "is001RequiredField" flag equals false, the ValidationIssue with "Field 001 is required." message
+   * will not be considered as a validation error.
+   **/
+  private boolean containsErrorSeverityType(List<ValidationIssue> validationIssues, boolean is001RequiredField) {
+    if (CollectionUtils.isEmpty(validationIssues)) {
+      return false;
+    }
+    return validationIssues.stream()
+      .anyMatch(issue -> SeverityType.ERROR.getType().equalsIgnoreCase(issue.getSeverity())
+        && (is001RequiredField || !TAG_001_REQUIRED_ERROR_MESSAGE.equals(issue.getMessage()))
+      );
   }
 
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {

@@ -74,7 +74,7 @@ class ValidationServiceImplTest {
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, true));
   }
 
   @Test
@@ -91,7 +91,7 @@ class ValidationServiceImplTest {
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    var ex = assertThrows(MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord));
+    var ex = assertThrows(MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, true));
     var result = ex.getValidationResult().getIssues();
 
     assertNotNull(result);
@@ -112,7 +112,7 @@ class ValidationServiceImplTest {
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, true));
   }
 
   @Test
@@ -129,6 +129,6 @@ class ValidationServiceImplTest {
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, false));
   }
 }

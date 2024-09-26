@@ -16,5 +16,5 @@ public interface ValidationService {
 
   void validateIdsMatch(QuickMarcEdit quickMarc, UUID externalId);
 
-  void validateMarcRecord(BaseMarcRecord marcRecord);
+  void validateMarcRecord(BaseMarcRecord marcRecord, boolean is001RequiredField);
 }

@@ -39,7 +39,7 @@ import org.springframework.util.CollectionUtils;
 public class ValidationServiceImpl implements ValidationService {
 
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
-  public static final String TAG_001_REGEX = "^001\\[\\d+]";
+  public static final String TAG_001_REQUIRED_ERROR_MESSAGE = "Field 001 is required.";
 
   private final List<ValidationRule> validationRules;
   private final MarcSpecificationService marcSpecificationService;
@@ -100,7 +100,8 @@ public class ValidationServiceImpl implements ValidationService {
       .anyMatch(issue ->
         issue.getSeverity() != null
           && issue.getSeverity().equalsIgnoreCase(SeverityType.ERROR.getType())
-          && !issue.getTag().matches(TAG_001_REGEX));
+          && issue.getMessage() != null
+          && !issue.getMessage().equals(TAG_001_REQUIRED_ERROR_MESSAGE));
   }
 
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {

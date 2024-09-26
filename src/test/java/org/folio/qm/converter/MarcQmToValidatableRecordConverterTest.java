@@ -36,7 +36,7 @@ class MarcQmToValidatableRecordConverterTest {
   }
 
   @Test
-  void convertToValidatableRecordWithoutFieldItemss() {
+  void convertToValidatableRecordWithoutFieldItems() {
     var marcRecord = new BaseMarcRecord().leader("test").marcFormat(MarcFormat.BIBLIOGRAPHIC);
 
     var actual = converter.convert(marcRecord);

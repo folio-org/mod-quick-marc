@@ -493,11 +493,15 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
   }
 
-  @Test
-  void testReturn422WhenHoldingsRecordWithMultiple001() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
+  void testReturn422WhenRecordWithMultiple001(String filePath) throws Exception {
     log.info("===== Verify POST record: Multiple 001 =====");
 
-    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    QuickMarcCreate quickMarcJson = readQuickMarc(filePath, QuickMarcCreate.class);
 
     quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
 
@@ -505,27 +509,6 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(status().isUnprocessableEntity())
       .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
       .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
-  }
-
-  @Test
-  void testReturn422WhenRecordWithMultiple001() throws Exception {
-    log.info("===== Verify POST record: Multiple 001 =====");
-
-    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
-      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
-
-    QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
-
-    quickMarcJson.getFields().add(new FieldItem().tag("001").content("$a test content"));
-
-    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
-      .andExpect(status().isUnprocessableEntity())
-      .andExpect(jsonPath("$.issues.size()").value(1))
-      .andExpect(jsonPath("$.issues[0].tag").value("001[1]"))
-      .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd001.html"))
-      .andExpect(jsonPath("$.issues[0].severity").value("error"))
-      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
-      .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
   }
 
   @ParameterizedTest

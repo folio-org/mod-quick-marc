@@ -362,6 +362,34 @@ class RecordsEditorAsyncIT extends BaseIT {
   }
 
   @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
+  void testUpdateReturn422WhenRecordWithMultiple246(String filePath) throws Exception {
+    log.info("===== Verify PUT record: 246 tag check =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
+
+    mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
+
+    QuickMarcEdit quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class)
+      .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .externalId(EXISTED_EXTERNAL_ID);
+
+    // Now we add the new 001 field to the record and try to update existing record
+    quickMarcJson.getFields().add(new FieldItem().tag("246").content("$a test value"));
+
+    putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.issues[0].tag").value("246[1]"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
+  }
+
+  @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_HOLDINGS_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordMissed008(String filePath) throws Exception {
     log.info("===== Verify PUT record: 008 tag check =====");

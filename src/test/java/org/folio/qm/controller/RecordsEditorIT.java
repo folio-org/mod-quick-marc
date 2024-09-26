@@ -512,6 +512,29 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @ParameterizedTest
+  @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_AUTHORITY_PATH})
+  void testReturn422WhenRecordWithMultiple246(String filePath) throws Exception {
+    log.info("===== Verify POST record: Multiple 246 =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
+
+    QuickMarcCreate quickMarcJson = readQuickMarc(filePath, QuickMarcCreate.class);
+
+    quickMarcJson.getFields().add(new FieldItem().tag("246").content("$a test content"));
+
+    postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isUnprocessableEntity())
+      .andExpect(jsonPath("$.issues[0].tag").value("246[1]"))
+      .andExpect(jsonPath("$.issues[0].severity").value("error"))
+      .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+      .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
+  }
+
+  @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
   void testReturn422WhenRecordMissing008(String filePath) throws Exception {
     log.info("===== Verify POST record: Missing 008 =====");

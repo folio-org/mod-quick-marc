@@ -69,12 +69,12 @@ class ValidationServiceImplTest {
 
   @Test
   void validate_shouldValidateWithoutIssues() {
-    var record = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
     when(validatableRecordValidator.validate(any(), any())).thenReturn(Collections.emptyList());
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
-    when(converter.convert(record)).thenReturn(new ValidatableRecord());
+    when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(record));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord));
   }
 
   @Test
@@ -86,12 +86,12 @@ class ValidationServiceImplTest {
       .ruleCode(MISSING_SUBFIELD.getCode())
       .message(SUBFIELD_ERROR_MESSAGE)
       .build();
-    var record = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
-    when(converter.convert(record)).thenReturn(new ValidatableRecord());
+    when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    var ex = assertThrows(MarcRecordValidationException.class, () -> service.validateMarcRecord(record));
+    var ex = assertThrows(MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord));
     var result = ex.getValidationResult().getIssues();
 
     assertNotNull(result);
@@ -107,12 +107,12 @@ class ValidationServiceImplTest {
       .definitionType(DefinitionType.SUBFIELD)
       .ruleCode(UNDEFINED_SUBFIELD.getCode())
       .build();
-    var record = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
-    when(converter.convert(record)).thenReturn(new ValidatableRecord());
+    when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(record));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord));
   }
 
   @Test
@@ -124,11 +124,11 @@ class ValidationServiceImplTest {
       .ruleCode(MISSING_FIELD.getCode())
       .message(FIELD_ERROR_MESSAGE)
       .build();
-    var record = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
-    when(converter.convert(record)).thenReturn(new ValidatableRecord());
+    when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(record));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord));
   }
 }

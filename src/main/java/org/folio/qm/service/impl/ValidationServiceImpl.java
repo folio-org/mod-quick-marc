@@ -2,6 +2,7 @@ package org.folio.qm.service.impl;
 
 import static org.folio.qm.util.ErrorUtils.buildError;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.INVALID_INDICATOR;
+import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.UNDEFINED_INDICATOR;
 
 import java.util.Collections;
 import java.util.List;
@@ -116,7 +117,8 @@ public class ValidationServiceImpl implements ValidationService {
 
   private String getValidationIssueMessage(ValidationError validationError) {
     var originalMessage = validationError.getMessage();
-    return INVALID_INDICATOR.getCode().equals(validationError.getRuleCode())
+    var ruleCode = validationError.getRuleCode();
+    return INVALID_INDICATOR.getCode().equals(ruleCode) || UNDEFINED_INDICATOR.getCode().equals(ruleCode)
       ? originalMessage.replace('#', '\\')
       : originalMessage;
   }

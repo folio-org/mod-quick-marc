@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.INVALID_INDICATOR;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_FIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_SUBFIELD;
+import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.NON_REPEATABLE_FIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.UNDEFINED_SUBFIELD;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,6 +30,8 @@ import org.folio.rspec.validation.SpecificationGuidedValidator;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,7 +42,8 @@ class ValidationServiceImplTest {
 
   private static final String SUBFIELD_ERROR_MESSAGE = "Subfield 'a' is required.";
   private static final String FIELD_ERROR_MESSAGE = "Field 001 is required.";
-  private static final String VALIDATION_ERROR_PATH = "path[0]";
+  private static final String NON_REPEATABLE_FIELD_ERROR_MESSAGE = "Field is non-repeatable.";
+  private static final String VALIDATION_ERROR_PATH = "001[0]";
 
   private @Mock List<ValidationRule> validationRules;
   private @Mock MarcSpecificationService marcSpecificationService;
@@ -67,18 +71,20 @@ class ValidationServiceImplTest {
       .isEqualTo("Indicator must contain one character and can only accept numbers 0-9, letters a-z or a '\\'.");
   }
 
-  @Test
-  void validate_shouldValidateWithoutIssues() {
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void validate_shouldValidateWithoutIssues(boolean is001RequiredField) {
     var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
     when(validatableRecordValidator.validate(any(), any())).thenReturn(Collections.emptyList());
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, true));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, is001RequiredField));
   }
 
-  @Test
-  void validate_shouldThrowMarcRecordValidationException() {
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void validate_shouldThrowMarcRecordValidationException(boolean is001RequiredField) {
     var error = ValidationError.builder()
       .path(VALIDATION_ERROR_PATH)
       .severity(SeverityType.ERROR)
@@ -91,7 +97,8 @@ class ValidationServiceImplTest {
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    var ex = assertThrows(MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, true));
+    var ex = assertThrows(
+      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, is001RequiredField));
     var result = ex.getValidationResult().getIssues();
 
     assertNotNull(result);
@@ -99,8 +106,9 @@ class ValidationServiceImplTest {
     assertThat(result.get(0).getMessage()).isEqualTo(SUBFIELD_ERROR_MESSAGE);
   }
 
-  @Test
-  void validate_shouldIgnoreWarnValidationIssue() {
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void validate_shouldIgnoreWarnValidationIssue(boolean is001RequiredField) {
     var error = ValidationError.builder()
       .path(VALIDATION_ERROR_PATH)
       .severity(SeverityType.WARN)
@@ -112,7 +120,7 @@ class ValidationServiceImplTest {
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, true));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, is001RequiredField));
   }
 
   @Test
@@ -130,5 +138,27 @@ class ValidationServiceImplTest {
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
     assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, false));
+  }
+
+  @Test
+  void validate_shouldThrowValidationExceptionIf001NonRepeatableField() {
+    var error = ValidationError.builder()
+      .path(VALIDATION_ERROR_PATH)
+      .severity(SeverityType.ERROR)
+      .definitionType(DefinitionType.FIELD)
+      .ruleCode(NON_REPEATABLE_FIELD.getCode())
+      .message(NON_REPEATABLE_FIELD_ERROR_MESSAGE)
+      .build();
+    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
+    when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
+    when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
+
+    var ex = assertThrows(MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, false));
+    var result = ex.getValidationResult().getIssues();
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertThat(result.get(0).getMessage()).isEqualTo(NON_REPEATABLE_FIELD_ERROR_MESSAGE);
   }
 }

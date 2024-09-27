@@ -11,8 +11,11 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
+import org.folio.qm.domain.dto.ValidationResult;
+import org.folio.qm.exception.ConverterException;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.JobProfileNotFoundException;
+import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.exception.QuickMarcException;
 import org.folio.spring.exception.NotFoundException;
 import org.folio.tenant.domain.dto.Error;
@@ -76,8 +79,11 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleIllegalArgumentException(IllegalArgumentException e, HttpServletResponse response) {
+    var cause = e.getCause();
+    if (cause instanceof ConverterException converterException) {
+      return handleQuickMarcException(converterException, response);
+    }
     response.setStatus(HttpStatus.BAD_REQUEST.value());
     return buildBadRequestResponse(e.getMessage());
   }
@@ -105,6 +111,13 @@ public class ErrorHandling {
   public Object handleFieldsValidationException(FieldsValidationException e) {
     var errors = e.getValidationResult().errors();
     return errors.size() == 1 ? buildError(errors.get(0)) : buildErrors(errors);
+  }
+
+  @ExceptionHandler(MarcRecordValidationException.class)
+  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+  public ValidationResult handleMarcRecordValidationException(MarcRecordValidationException e) {
+    log.error("Marc record validation error occurred: ", e);
+    return e.getValidationResult();
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)

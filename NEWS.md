@@ -3,13 +3,14 @@
 
 ### New APIs versions
 * Provides `marc-specifications` `v1.2`
-* Provides `marc-records-editor` `v5.5`
+* Provides `marc-records-editor` `v6.0`
 * Requires `specification-storage` `v1.0`
 
 ### Features
 * Implement endpoint to validate record based on MARC specification ([MODQM-433](https://issues.folio.org/browse/MODQM-433))
 * Update cached specification on kafka event ([MODQM-436](https://issues.folio.org/browse/MODQM-436))
 * Show '\' in indicators to user while internally using '#' value for validation ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
+* Create and update endpoints modified to validate MARC record based on MARC specification ([MODQM-434](https://folio-org.atlassian.net/browse/MODQM-434))
 
 ### Bug fixes
 * Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))

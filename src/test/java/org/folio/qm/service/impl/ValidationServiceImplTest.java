@@ -1,7 +1,6 @@
 package org.folio.qm.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.INVALID_INDICATOR;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_FIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_SUBFIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.NON_REPEATABLE_FIELD;
@@ -21,15 +20,17 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.service.MarcSpecificationService;
-import org.folio.qm.validation.ValidationRule;
 import org.folio.rspec.domain.dto.DefinitionType;
 import org.folio.rspec.domain.dto.SeverityType;
 import org.folio.rspec.domain.dto.SpecificationDto;
 import org.folio.rspec.domain.dto.ValidationError;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
+import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
@@ -45,21 +46,23 @@ class ValidationServiceImplTest {
   private static final String NON_REPEATABLE_FIELD_ERROR_MESSAGE = "Field is non-repeatable.";
   private static final String VALIDATION_ERROR_PATH = "001[0]";
 
-  private @Mock List<ValidationRule> validationRules;
   private @Mock MarcSpecificationService marcSpecificationService;
   private @Mock SpecificationGuidedValidator validatableRecordValidator;
   private @Mock MarcQmToValidatableRecordConverter converter;
 
   private @InjectMocks ValidationServiceImpl service;
 
-  @Test
-  void validate_shouldModifyIndicatorErrorMessage() {
+  @EnumSource(value = MarcRuleCode.class,
+              mode = EnumSource.Mode.INCLUDE,
+              names = {"INVALID_INDICATOR", "UNDEFINED_INDICATOR"})
+  @ParameterizedTest
+  void validate_shouldModifyIndicatorErrorMessage(MarcRuleCode marcRuleCode) {
     var error = ValidationError.builder()
       .path(VALIDATION_ERROR_PATH)
       .severity(SeverityType.ERROR)
       .definitionType(DefinitionType.INDICATOR)
-      .ruleCode(INVALID_INDICATOR.getCode())
-      .message("Indicator must contain one character and can only accept numbers 0-9, letters a-z or a '#'.")
+      .ruleCode(marcRuleCode.getCode())
+      .message("Message that contains '#'.")
       .build();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
@@ -68,7 +71,7 @@ class ValidationServiceImplTest {
 
     assertThat(result).hasSize(1);
     assertThat(result.get(0).getMessage())
-      .isEqualTo("Indicator must contain one character and can only accept numbers 0-9, letters a-z or a '\\'.");
+      .isEqualTo("Message that contains '\\'.");
   }
 
   @ParameterizedTest

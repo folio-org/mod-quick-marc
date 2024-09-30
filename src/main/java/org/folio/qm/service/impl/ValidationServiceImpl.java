@@ -2,7 +2,6 @@ package org.folio.qm.service.impl;
 
 import static org.folio.qm.util.ErrorUtils.buildError;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.INVALID_INDICATOR;
-import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_FIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.UNDEFINED_INDICATOR;
 
 import java.util.Collections;
@@ -23,7 +22,7 @@ import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.MarcSpecificationService;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.qm.validation.ValidationIssueWithRuleCode;
+import org.folio.qm.validation.ValidationField;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.qm.validation.ValidationRule;
 import org.folio.rspec.domain.dto.SeverityType;
@@ -42,7 +41,7 @@ import org.springframework.util.CollectionUtils;
 public class ValidationServiceImpl implements ValidationService {
 
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
-  public static final String TAG_001_REGEX = "^001\\[\\d+]";
+  public static final String TAG_NAME_REGEX = "^%s\\[\\d+]";
 
   private final List<ValidationRule> validationRules;
   private final MarcSpecificationService marcSpecificationService;
@@ -86,43 +85,44 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   @Override
-  public void validateMarcRecord(BaseMarcRecord marcRecord, boolean is001RequiredField) {
+  public void validateMarcRecord(BaseMarcRecord marcRecord, List<ValidationField> validationFields) {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
       log.debug("validateMarcRecord:: validate a quickMarc record");
       var validatableRecord = converter.convert(marcRecord);
-      var validationIssues = getValidationIssuesWithRuleCode(validatableRecord);
-      if (containsErrorSeverityType(validationIssues, is001RequiredField)) {
+      var validationIssues = getValidationIssues(validatableRecord, validationFields);
+      if (!CollectionUtils.isEmpty(validationIssues)) {
         throw new MarcRecordValidationException(
           new org.folio.qm.domain.dto.ValidationResult()
-            .issues(validationIssues.stream().map(ValidationIssueWithRuleCode::validationIssue).toList()));
+            .issues(validationIssues));
       }
     }
   }
 
-  private List<ValidationIssueWithRuleCode> getValidationIssuesWithRuleCode(ValidatableRecord validatableRecord) {
+  private List<ValidationIssue> getValidationIssues(
+    ValidatableRecord validatableRecord, List<ValidationField> validationFields) {
+
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
     return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
       .stream()
-      .map(validationError -> toValidationIssueWithRuleCode(validationError, specification))
+      .filter(validationError -> containsErrorSeverityType(validationError, validationFields))
+      .map(validationError -> toValidationIssue(validationError, specification))
       .toList();
   }
 
-  /**
-   * If the "is001RequiredField" flag equals false, the ValidationIssue with 001 field and MISSING_FIELD rule code
-   * will not be considered as a validation error.
-   **/
   private boolean containsErrorSeverityType(
-    List<ValidationIssueWithRuleCode> validationIssues, boolean is001RequiredField) {
+    ValidationError validationError, List<ValidationField> validationFields) {
 
-    return !CollectionUtils.isEmpty(validationIssues) && validationIssues.stream()
-      .anyMatch(issue ->
-        issue.validationIssue() != null
-          && SeverityType.ERROR.getType().equalsIgnoreCase(issue.validationIssue().getSeverity())
-          && (is001RequiredField || !isMissing001Field(issue)));
+    return validationError != null
+      && SeverityType.ERROR.getType().equalsIgnoreCase(validationError.getSeverity().getType())
+      && !isSkippedField(validationError, validationFields);
   }
 
-  private boolean isMissing001Field(ValidationIssueWithRuleCode issue) {
-    return MISSING_FIELD.getCode().equals(issue.ruleCode()) && issue.validationIssue().getTag().matches(TAG_001_REGEX);
+  private boolean isSkippedField(ValidationError validationError, List<ValidationField> validationFields) {
+    return validationFields.stream()
+      .anyMatch(validationField ->
+        validationError.getPath().matches(String.format(TAG_NAME_REGEX, validationField.tagName()))
+          && validationField.isSkipped()
+          && validationError.getRuleCode().equals(validationField.ruleCode().getCode()));
   }
 
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {
@@ -137,13 +137,6 @@ public class ValidationServiceImpl implements ValidationService {
       .severity(validationError.getSeverity().getType())
       .definitionType(validationError.getDefinitionType().getType())
       .message(message);
-  }
-
-  private ValidationIssueWithRuleCode toValidationIssueWithRuleCode(
-    ValidationError validationError, SpecificationDto specification) {
-
-    var validationIssue = toValidationIssue(validationError, specification);
-    return new ValidationIssueWithRuleCode(validationIssue, validationError.getRuleCode());
   }
 
   private String getValidationIssueMessage(ValidationError validationError) {

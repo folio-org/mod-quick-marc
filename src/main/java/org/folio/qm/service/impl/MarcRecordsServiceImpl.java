@@ -38,6 +38,8 @@ import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
+import org.folio.qm.validation.ValidationField;
+import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
@@ -103,7 +105,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc,
                          DeferredResult<ResponseEntity<Void>> updateResult) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
-    validationService.validateMarcRecord(quickMarc, true);
+    var validationField = new ValidationField(TAG_001_CONTROL_FIELD, false, MarcRuleCode.MISSING_FIELD);
+    validationService.validateMarcRecord(quickMarc, List.of(validationField));
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
@@ -127,7 +130,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarcCreate quickMarc) {
     log.debug("createNewRecord:: trying to create a new quickMarc");
-    validationService.validateMarcRecord(quickMarc, false);
+    var validationField = new ValidationField(TAG_001_CONTROL_FIELD, true, MarcRuleCode.MISSING_FIELD);
+    validationService.validateMarcRecord(quickMarc, List.of(validationField));
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
     var status = runImportAndGetStatus(recordDto, CREATE);

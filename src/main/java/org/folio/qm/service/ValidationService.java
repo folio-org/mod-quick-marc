@@ -6,6 +6,7 @@ import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.domain.dto.ValidationIssue;
+import org.folio.qm.validation.ValidationField;
 import org.folio.qm.validation.ValidationResult;
 
 public interface ValidationService {
@@ -16,5 +17,5 @@ public interface ValidationService {
 
   void validateIdsMatch(QuickMarcEdit quickMarc, UUID externalId);
 
-  void validateMarcRecord(BaseMarcRecord marcRecord, boolean is001RequiredField);
+  void validateMarcRecord(BaseMarcRecord marcRecord, List<ValidationField> validationFields);
 }

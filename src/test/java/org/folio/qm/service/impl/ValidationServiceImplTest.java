@@ -163,7 +163,7 @@ class ValidationServiceImplTest {
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
 
     var ex = assertThrows(
-      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, Collections.emptyList()));
+      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, null));
     var result = ex.getValidationResult().getIssues();
 
     assertNotNull(result);

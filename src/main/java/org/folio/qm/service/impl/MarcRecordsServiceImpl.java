@@ -7,6 +7,7 @@ import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
 import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -38,7 +39,7 @@ import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
-import org.folio.qm.validation.ValidationField;
+import org.folio.qm.validation.SkippedValidationField;
 import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
@@ -105,8 +106,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc,
                          DeferredResult<ResponseEntity<Void>> updateResult) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
-    var validationField = new ValidationField(TAG_001_CONTROL_FIELD, false, MarcRuleCode.MISSING_FIELD);
-    validationService.validateMarcRecord(quickMarc, List.of(validationField));
+    validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
@@ -130,8 +130,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarcCreate quickMarc) {
     log.debug("createNewRecord:: trying to create a new quickMarc");
-    var validationField = new ValidationField(TAG_001_CONTROL_FIELD, true, MarcRuleCode.MISSING_FIELD);
-    validationService.validateMarcRecord(quickMarc, List.of(validationField));
+    var skippedValidationField = new SkippedValidationField(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
+    validationService.validateMarcRecord(quickMarc, List.of(skippedValidationField));
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
     var status = runImportAndGetStatus(recordDto, CREATE);

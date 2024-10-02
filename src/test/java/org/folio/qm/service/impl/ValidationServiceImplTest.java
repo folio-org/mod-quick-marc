@@ -10,18 +10,20 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import org.folio.qm.converter.MarcQmToValidatableRecordConverter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.service.MarcSpecificationService;
-import org.folio.qm.validation.ValidationField;
+import org.folio.qm.validation.SkippedValidationField;
 import org.folio.rspec.domain.dto.DefinitionType;
 import org.folio.rspec.domain.dto.SeverityType;
 import org.folio.rspec.domain.dto.SpecificationDto;
@@ -32,8 +34,9 @@ import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -76,20 +79,19 @@ class ValidationServiceImplTest {
   }
 
   @ParameterizedTest
-  @ValueSource(booleans = {true, false})
-  void validate_shouldValidateWithoutIssues(boolean isSkippedField) {
+  @MethodSource("getSkippedValidationFields")
+  void validate_shouldValidateWithoutIssues(List<SkippedValidationField> skippedValidationFields) {
     var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
     when(validatableRecordValidator.validate(any(), any())).thenReturn(Collections.emptyList());
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
-    var validationFields = List.of(new ValidationField(TAG_001_CONTROL_FIELD, isSkippedField, MISSING_FIELD));
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, validationFields));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, skippedValidationFields));
   }
 
   @ParameterizedTest
-  @ValueSource(booleans = {true, false})
-  void validate_shouldThrowMarcRecordValidationException(boolean isSkippedField) {
+  @MethodSource("getSkippedValidationFields")
+  void validate_shouldThrowMarcRecordValidationException(List<SkippedValidationField> skippedValidationFields) {
     var error = ValidationError.builder()
       .path(VALIDATION_ERROR_PATH)
       .severity(SeverityType.ERROR)
@@ -101,10 +103,9 @@ class ValidationServiceImplTest {
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
-    var validationFields = List.of(new ValidationField(TAG_001_CONTROL_FIELD, isSkippedField, MISSING_FIELD));
 
     var ex = assertThrows(
-      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, validationFields));
+      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, skippedValidationFields));
     var result = ex.getValidationResult().getIssues();
 
     assertNotNull(result);
@@ -113,8 +114,8 @@ class ValidationServiceImplTest {
   }
 
   @ParameterizedTest
-  @ValueSource(booleans = {true, false})
-  void validate_shouldIgnoreWarnValidationIssue(boolean isSkippedField) {
+  @MethodSource("getSkippedValidationFields")
+  void validate_shouldIgnoreWarnValidationIssue(List<SkippedValidationField> skippedValidationFields) {
     var error = ValidationError.builder()
       .path(VALIDATION_ERROR_PATH)
       .severity(SeverityType.WARN)
@@ -125,9 +126,8 @@ class ValidationServiceImplTest {
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
-    var validationFields = List.of(new ValidationField(TAG_001_CONTROL_FIELD, isSkippedField, MISSING_FIELD));
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, validationFields));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, skippedValidationFields));
   }
 
   @Test
@@ -143,9 +143,9 @@ class ValidationServiceImplTest {
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
-    var validationFields = List.of(new ValidationField(TAG_001_CONTROL_FIELD, true, MISSING_FIELD));
+    var skippedValidationFields = List.of(new SkippedValidationField(TAG_001_CONTROL_FIELD, MISSING_FIELD));
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, validationFields));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, skippedValidationFields));
   }
 
   @Test
@@ -161,10 +161,9 @@ class ValidationServiceImplTest {
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
-    var validationFields = List.of(new ValidationField(TAG_001_CONTROL_FIELD, false, MISSING_FIELD));
 
     var ex = assertThrows(
-      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, validationFields));
+      MarcRecordValidationException.class, () -> service.validateMarcRecord(marcRecord, Collections.emptyList()));
     var result = ex.getValidationResult().getIssues();
 
     assertNotNull(result);
@@ -194,10 +193,16 @@ class ValidationServiceImplTest {
       List.of(nonRepeatableFieldError, missingFieldError));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
-    var validationFields = List.of(
-      new ValidationField(TAG_001_CONTROL_FIELD, true, NON_REPEATABLE_FIELD),
-      new ValidationField(TAG_001_CONTROL_FIELD, true, MISSING_FIELD));
+    var skippedValidationFields = List.of(
+      new SkippedValidationField(TAG_001_CONTROL_FIELD, NON_REPEATABLE_FIELD),
+      new SkippedValidationField(TAG_001_CONTROL_FIELD, MISSING_FIELD));
 
-    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, validationFields));
+    assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, skippedValidationFields));
+  }
+
+  private static Stream<Arguments> getSkippedValidationFields() {
+    return Stream.of(
+      arguments(List.of(new SkippedValidationField(TAG_001_CONTROL_FIELD, MISSING_FIELD))),
+      arguments(Collections.emptyList()));
   }
 }

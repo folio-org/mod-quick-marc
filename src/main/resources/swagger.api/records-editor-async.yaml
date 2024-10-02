@@ -27,6 +27,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+        '422':
+          description: MARC Record validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationResult'
         '500':
           description: Internal server error, e.g. due to misconfiguration
           content:
@@ -88,6 +94,8 @@ components:
   schemas:
     quickMarcEdit:
       $ref: 'schemas/common.yaml#/quickMarcEdit'
+    validationResult:
+      $ref: 'schemas/common.yaml#/validationResult'
     error:
       type: object
     UUID:

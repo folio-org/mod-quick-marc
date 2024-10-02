@@ -19,7 +19,7 @@
 * Don't throw an exception on empty field content during record conversion on validation endpoint ([MODQM-438](https://folio-org.atlassian.net/browse/MODQM-438))
 
 ### Tech Dept
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+* Add module descriptor validator plugin ([MODQM-444](https://issues.folio.org/browse/MODQM-444))
 
 ### Dependencies
 * Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`

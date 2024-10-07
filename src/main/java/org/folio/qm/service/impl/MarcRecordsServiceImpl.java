@@ -39,7 +39,7 @@ import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
-import org.folio.qm.validation.SkippedValidationField;
+import org.folio.qm.validation.SkippedValidationError;
 import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
@@ -130,8 +130,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarcCreate quickMarc) {
     log.debug("createNewRecord:: trying to create a new quickMarc");
-    var skippedValidationField = new SkippedValidationField(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
-    validationService.validateMarcRecord(quickMarc, List.of(skippedValidationField));
+    var skippedValidationError = new SkippedValidationError(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
+    validationService.validateMarcRecord(quickMarc, List.of(skippedValidationError));
     populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
     var status = runImportAndGetStatus(recordDto, CREATE);

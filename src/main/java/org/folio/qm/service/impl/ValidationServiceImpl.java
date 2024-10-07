@@ -22,7 +22,7 @@ import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.MarcSpecificationService;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.qm.validation.SkippedValidationField;
+import org.folio.qm.validation.SkippedValidationError;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.qm.validation.ValidationRule;
 import org.folio.rspec.domain.dto.SeverityType;
@@ -85,11 +85,11 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   @Override
-  public void validateMarcRecord(BaseMarcRecord marcRecord, List<SkippedValidationField> skippedValidationFields) {
+  public void validateMarcRecord(BaseMarcRecord marcRecord, List<SkippedValidationError> skippedValidationErrors) {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
       log.debug("validateMarcRecord:: validate a quickMarc record");
       var validatableRecord = converter.convert(marcRecord);
-      var validationIssues = getValidationIssues(validatableRecord, skippedValidationFields);
+      var validationIssues = getValidationIssues(validatableRecord, skippedValidationErrors);
       if (!CollectionUtils.isEmpty(validationIssues)) {
         throw new MarcRecordValidationException(
           new org.folio.qm.domain.dto.ValidationResult()
@@ -99,31 +99,31 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   private List<ValidationIssue> getValidationIssues(
-    ValidatableRecord validatableRecord, List<SkippedValidationField> skippedValidationFields) {
+    ValidatableRecord validatableRecord, List<SkippedValidationError> skippedValidationErrors) {
 
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
     return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
       .stream()
-      .filter(validationError -> containsErrorSeverityType(validationError, skippedValidationFields))
+      .filter(validationError -> containsErrorSeverityType(validationError, skippedValidationErrors))
       .map(validationError -> toValidationIssue(validationError, specification))
       .toList();
   }
 
   private boolean containsErrorSeverityType(
-    ValidationError validationError, List<SkippedValidationField> skippedValidationFields) {
+    ValidationError validationError, List<SkippedValidationError> skippedValidationErrors) {
 
     return validationError != null
       && SeverityType.ERROR.getType().equalsIgnoreCase(validationError.getSeverity().getType())
-      && !isSkippedField(validationError, skippedValidationFields);
+      && !isSkippedError(validationError, skippedValidationErrors);
   }
 
-  private boolean isSkippedField(
-    ValidationError validationError, List<SkippedValidationField> skippedValidationFields) {
+  private boolean isSkippedError(
+    ValidationError validationError, List<SkippedValidationError> skippedValidationErrors) {
 
-    return !CollectionUtils.isEmpty(skippedValidationFields) && skippedValidationFields.stream()
-      .anyMatch(validationField ->
-        validationError.getPath().matches(String.format(TAG_NAME_REGEX, validationField.tagName()))
-          && validationError.getRuleCode().equals(validationField.ruleCode().getCode()));
+    return !CollectionUtils.isEmpty(skippedValidationErrors) && skippedValidationErrors.stream()
+      .anyMatch(skippedValidationError ->
+        validationError.getPath().matches(String.format(TAG_NAME_REGEX, skippedValidationError.tagName()))
+          && validationError.getRuleCode().equals(skippedValidationError.ruleCode().getCode()));
   }
 
   private ValidationIssue toValidationIssue(ValidationError validationError, SpecificationDto specification) {

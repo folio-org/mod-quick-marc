@@ -445,6 +445,56 @@ class RecordsEditorIT extends BaseIT {
       .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
   }
 
+  @CsvSource(value = {
+    QM_RECORD_CREATE_AUTHORITY_PATH + ", " + "mockdata/request/di-event/complete-event-with-authority.json",
+    QM_RECORD_CREATE_BIB_PATH + ", " + "mockdata/request/di-event/complete-event-with-instance.json"
+  })
+  @ParameterizedTest
+  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
+  void testPostQuickMarcValidRecordCreatedWithout001Field(String requestBody, String eventBody) throws Exception {
+    log.info("===== Verify POST record: Successful =====");
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
+      readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
+
+    mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
+      readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
+    mockPost(CHANGE_MANAGER_JOB_EXECUTION_PATH, JOB_EXECUTION_CREATED, wireMockServer);
+
+    final var updateJobExecutionProfile = String.format(CHANGE_MANAGER_JOB_PROFILE_PATH, VALID_JOB_EXECUTION_ID);
+    mockPut(updateJobExecutionProfile, SC_OK, wireMockServer);
+
+    final var postRecordsPath = String.format(CHANGE_MANAGER_PARSE_RECORDS_PATH, VALID_JOB_EXECUTION_ID);
+    mockPost(postRecordsPath, "", wireMockServer);
+    mockPost(postRecordsPath, "", wireMockServer);
+
+    QuickMarcCreate quickMarcJson = readQuickMarc(requestBody, QuickMarcCreate.class);
+    // remove the 001 field from the record and try to update existing record
+    quickMarcJson.getFields().removeIf(field -> field.getTag().equals("001"));
+
+    MvcResult result = postResultActions(recordsEditorPath(), quickMarcJson, JOHN_USER_ID_HEADER)
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.jobExecutionId").value(VALID_JOB_EXECUTION_ID.toString()))
+      .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
+      .andReturn();
+
+    String resultResponse = result.getResponse().getContentAsString();
+    CreationStatus response = getObjectFromJson(resultResponse, CreationStatus.class);
+
+    final var qmRecordId = response.getQmRecordId();
+
+    sendDataImportKafkaRecord(eventBody, DI_COMPLETE_TOPIC_NAME);
+    await().atMost(5, SECONDS)
+      .untilAsserted(() -> Assertions.assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
+        .isEqualTo(RecordCreationStatusEnum.CREATED));
+    var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
+    Assertions.assertThat(creationStatus)
+      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
+      .hasFieldOrPropertyWithValue("id", qmRecordId)
+      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
+      .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
+  }
+
   @Test
   void testReturn401WhenInvalidUserId() throws Exception {
     log.info("===== Verify POST record: User Id Invalid =====");

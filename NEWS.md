@@ -9,7 +9,8 @@
 ### Features
 * Implement endpoint to validate record based on MARC specification ([MODQM-433](https://issues.folio.org/browse/MODQM-433))
 * Update cached specification on kafka event ([MODQM-436](https://issues.folio.org/browse/MODQM-436))
-* Show '\' in indicators to user while internally using '#' value for validation ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
+* Return '\' instead '#' in validation message for invalid indicator rule ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
+* Return '\' instead '#' in validation message for undefined indicator rule ([MODQM-448](https://issues.folio.org/browse/MODQM-448))
 * Create and update endpoints modified to validate MARC record based on MARC specification ([MODQM-434](https://folio-org.atlassian.net/browse/MODQM-434))
 
 ### Bug fixes
@@ -18,7 +19,7 @@
 * Don't throw an exception on empty field content during record conversion on validation endpoint ([MODQM-438](https://folio-org.atlassian.net/browse/MODQM-438))
 
 ### Tech Dept
-* Description ([ISSUE_NUMBER](https://issues.folio.org/browse/ISSUE_NUMBER))
+* Add module descriptor validator plugin ([MODQM-444](https://issues.folio.org/browse/MODQM-444))
 
 ### Dependencies
 * Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`

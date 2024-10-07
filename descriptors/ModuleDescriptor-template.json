@@ -64,7 +64,8 @@
           "modulePermissions": [
             "change-manager.jobexecutions.post",
             "change-manager.jobExecutions.jobProfile.item.put",
-            "change-manager.records.post"
+            "change-manager.records.post",
+            "specification-storage.specifications.collection.get"
           ]
         },
         {
@@ -73,7 +74,8 @@
           "permissionsRequired": ["marc-records-editor.item.put"],
           "modulePermissions": [
             "change-manager.parsedrecords.put",
-            "instance-authority-links.instances.collection.put"
+            "instance-authority-links.instances.collection.put",
+            "specification-storage.specifications.collection.get"
           ]
         },
         {

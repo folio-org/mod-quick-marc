@@ -69,6 +69,6 @@ class MarcSpecificationServiceTest {
   }
 
   private SpecificationUpdatedEvent event() {
-    return new SpecificationUpdatedEvent(UUID.randomUUID(), TENANT_ID);
+    return new SpecificationUpdatedEvent(UUID.randomUUID(), TENANT_ID, SpecificationUpdatedEvent.UpdateExtent.PARTIAL);
   }
 }

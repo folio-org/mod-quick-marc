@@ -23,6 +23,8 @@ class Tag010FieldItemConverterTest {
   private static Stream<Arguments> fieldData() {
     return Stream.of(
       arguments("$a  2001000234", "  2001000234"),
+      arguments("$a2001000234", "  2001000234"),
+      arguments("$a 2001000234", "  2001000234"),
       arguments("$aa 2002003456  ", "a 2002003456"),
       arguments("$a sn2003045678 ", "sn2003045678"),
       arguments("$a 34005678", "   34005678 "),

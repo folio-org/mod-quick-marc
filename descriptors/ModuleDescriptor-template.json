@@ -51,7 +51,6 @@
           "modulePermissions": [
             "change-manager.parsedrecords.get",
             "users.item.get",
-            "converter-storage.field-protection-settings.item.get",
             "converter-storage.field-protection-settings.collection.get",
             "instance-authority-links.instances.collection.get",
             "instance-authority.linking-rules.collection.get"

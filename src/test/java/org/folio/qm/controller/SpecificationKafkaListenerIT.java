@@ -64,7 +64,8 @@ class SpecificationKafkaListenerIT extends BaseIT {
 
     //update specification in cache with additional rules
     var specificationEvent = new SpecificationUpdatedEvent(
-      UUID.fromString("6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3"), TENANT_ID);
+      UUID.fromString("6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3"), TENANT_ID,
+      SpecificationUpdatedEvent.UpdateExtent.PARTIAL);
     sendSpecificationKafkaRecord(specificationEvent);
 
     //validate record and verify new cached specification was used

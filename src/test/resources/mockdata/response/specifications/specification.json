@@ -424,6 +424,13 @@
           "description": "Subfield is non-repeatable but exists more than once in a record's field",
           "code": "nonRepeatableSubfield",
           "enabled": true
+        },
+        {
+          "id": "0a769f6a-fe60-4ef1-bfa6-bcdd88908d04",
+          "name": "Invalid LCCN Subfield Value",
+          "description": "Subfield value is not valid based on LCCN structure",
+          "code": "invalidLccnSubfieldValue",
+          "enabled": true
         }
       ]
     }

@@ -47,6 +47,7 @@ public class ValidationServiceImpl implements ValidationService {
   private final MarcSpecificationService marcSpecificationService;
   private final SpecificationGuidedValidator validatableRecordValidator;
   private final MarcQmToValidatableRecordConverter converter;
+  private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   @Override
   public ValidationResult validate(BaseMarcRecord quickMarc) {
@@ -66,6 +67,7 @@ public class ValidationServiceImpl implements ValidationService {
 
   @Override
   public List<ValidationIssue> validate(ValidatableRecord validatableRecord) {
+    defaultValuesPopulationService.populate(validatableRecord);
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
     return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
       .stream()
@@ -89,6 +91,10 @@ public class ValidationServiceImpl implements ValidationService {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
       log.debug("validateMarcRecord:: validate a quickMarc record");
       var validatableRecord = converter.convert(marcRecord);
+      if (validatableRecord == null) {
+        return;
+      }
+
       var validationIssues = getValidationIssues(validatableRecord, skippedValidationErrors);
       if (!CollectionUtils.isEmpty(validationIssues)) {
         throw new MarcRecordValidationException(

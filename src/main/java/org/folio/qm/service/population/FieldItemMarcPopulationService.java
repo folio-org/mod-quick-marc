@@ -11,11 +11,12 @@ public abstract class FieldItemMarcPopulationService implements MarcPopulationSe
     var fields = qmRecord.getFields();
     var format = qmRecord.getMarcFormat();
 
-    //fields.stream()
-    //  .filter(fieldItem -> canProcess(fieldItem, format))
+    fields.stream()
+      .filter(this::canProcess)
+      .forEach(fieldItem -> populateValues(fieldItem, format));
   }
 
-  protected abstract boolean canProcess(FieldItem field, MarcFormat marcFormat);
+  protected abstract boolean canProcess(FieldItem field);
 
   protected abstract void populateValues(FieldItem fieldItem, MarcFormat marcFormat);
 }

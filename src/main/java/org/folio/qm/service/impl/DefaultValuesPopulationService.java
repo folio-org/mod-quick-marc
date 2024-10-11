@@ -2,7 +2,6 @@ package org.folio.qm.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.service.population.MarcPopulationService;

@@ -23,7 +23,7 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
     <marc-specifications.yaml.file>${project.basedir}/src/main/resources/swagger.api/marc-specifications.yaml</marc-specifications.yaml.file>
 
-    <folio-spring-support.version>8.2.0-SNAPSHOT</folio-spring-support.version>
+    <folio-spring-support.version>8.2.0</folio-spring-support.version>
     <folio-service-tools.version>4.1.0-SNAPSHOT</folio-service-tools.version>
     <mod-record-specifications-validator.version>1.0.0-SNAPSHOT</mod-record-specifications-validator.version>
     <marc4j.version>2.9.5</marc4j.version>

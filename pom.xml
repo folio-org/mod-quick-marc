@@ -32,11 +32,11 @@
 
     <!-- Plugin properties -->
     <folio-module-descriptor-validator.version>1.0.0</folio-module-descriptor-validator.version>
-    <openapi-generator-plugin.version>7.8.0</openapi-generator-plugin.version>
+    <openapi-generator-plugin.version>7.9.0</openapi-generator-plugin.version>
     <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
     <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
-    <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.5.0</maven-failsafe-plugin.version>
+    <maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.5.1</maven-failsafe-plugin.version>
     <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
     <maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
     <checkstyle.version>10.18.2</checkstyle.version>

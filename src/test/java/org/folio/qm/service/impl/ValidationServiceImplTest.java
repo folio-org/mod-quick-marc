@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -53,6 +54,7 @@ class ValidationServiceImplTest {
   private @Mock MarcSpecificationService marcSpecificationService;
   private @Mock SpecificationGuidedValidator validatableRecordValidator;
   private @Mock MarcQmToValidatableRecordConverter converter;
+  private @Mock DefaultValuesPopulationService defaultValuesPopulationService;
 
   private @InjectMocks ValidationServiceImpl service;
 
@@ -73,6 +75,7 @@ class ValidationServiceImplTest {
 
     var result = service.validate(new ValidatableRecord());
 
+    verify(defaultValuesPopulationService).populate(any(ValidatableRecord.class));
     assertThat(result).hasSize(1);
     assertThat(result.get(0).getMessage())
       .isEqualTo("Message that contains '\\'.");

@@ -28,6 +28,75 @@
           "scope": "system"
         },
         {
+          "id": "90697d12-c0be-45cd-b36c-34e72c3a499e",
+          "tag": "010",
+          "label": "Library of Congress Control Number",
+          "url": "https://www.loc.gov/marc/authority/ad010.html",
+          "repeatable": false,
+          "required": false,
+          "deprecated": false,
+          "scope": "standard",
+          "subfields": [
+            {
+              "id": "ffaa8b81-428b-4e75-bfe4-5eb364d7cb08",
+              "code": "8",
+              "label": "Field link and sequence number",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "9ec1f363-64ec-41c1-99b4-d61fef6fdb5d",
+              "code": "a",
+              "label": "LC control number",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "415a7c20-175d-42a8-b89e-c55d04ecfc99",
+              "code": "z",
+              "label": "Canceled/invalid LC control number",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            }
+          ],
+          "indicators": [
+            {
+              "id": "3c2f1edb-d66d-4159-90a5-85c16f7c2399",
+              "order": 1,
+              "label": "Undefined",
+              "codes": [
+                {
+                  "id": "43ffb085-50d2-47e6-bf91-cf8b6b8f6b43",
+                  "code": "#",
+                  "label": "Undefined",
+                  "deprecated": false,
+                  "scope": "standard"
+                }
+              ]
+            },
+            {
+              "id": "336ab9d9-2414-401a-9f35-6858707acc37",
+              "order": 2,
+              "label": "Undefined",
+              "codes": [
+                {
+                  "id": "3579cfea-ceb4-4071-9177-8f5994f5b1e8",
+                  "code": "#",
+                  "label": "Undefined",
+                  "deprecated": false,
+                  "scope": "standard"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "f2b7ad73-8e82-4909-9e49-694c35b52454",
           "tag": "245",
           "label": "Title Statement",

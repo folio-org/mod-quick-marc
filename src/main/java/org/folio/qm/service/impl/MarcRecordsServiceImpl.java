@@ -106,9 +106,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc,
                          DeferredResult<ResponseEntity<Void>> updateResult) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
-    validationService.validateMarcRecord(quickMarc, Collections.emptyList());
-    validationService.validateIdsMatch(quickMarc, parsedRecordId);
-    populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
+    defaultValuesPopulationService.populate(quickMarc);
+    validateOnUpdate(parsedRecordId, quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
     changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
@@ -130,9 +129,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public CreationStatus createNewRecord(QuickMarcCreate quickMarc) {
     log.debug("createNewRecord:: trying to create a new quickMarc");
-    var skippedValidationError = new SkippedValidationError(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
-    validationService.validateMarcRecord(quickMarc, List.of(skippedValidationError));
-    populateWithDefaultValuesAndValidateMarcRecord(quickMarc);
+    defaultValuesPopulationService.populate(quickMarc);
+    validateOnCreate(quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
     var status = runImportAndGetStatus(recordDto, CREATE);
     log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
@@ -170,9 +168,20 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       .orElseThrow(() -> new UnexpectedException(String.format(RECORD_NOT_FOUND_MESSAGE, jobId)));
   }
 
-  private void populateWithDefaultValuesAndValidateMarcRecord(BaseMarcRecord quickMarc) {
-    defaultValuesPopulationService.populate(quickMarc);
-    var validationResult = validationService.validate(quickMarc);
+  private void validateOnCreate(QuickMarcCreate quickMarc) {
+    var skippedValidationError = new SkippedValidationError(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
+    validationService.validateMarcRecord(quickMarc, List.of(skippedValidationError));
+    validateMarcRecord(quickMarc);
+  }
+
+  private void validateOnUpdate(UUID parsedRecordId, QuickMarcEdit quickMarc) {
+    validationService.validateMarcRecord(quickMarc, Collections.emptyList());
+    validationService.validateIdsMatch(quickMarc, parsedRecordId);
+    validateMarcRecord(quickMarc);
+  }
+
+  private void validateMarcRecord(BaseMarcRecord marcRecord) {
+    var validationResult = validationService.validate(marcRecord);
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);
     }

@@ -275,6 +275,84 @@
           ]
         },
         {
+          "id": "e7ebd10b-9dd1-4ec0-b972-769eacaae621",
+          "tag": "010",
+          "label": "Library of Congress Control Number",
+          "url": "https://www.loc.gov/marc/bibliographic/bd010.html",
+          "repeatable": false,
+          "required": false,
+          "deprecated": false,
+          "scope": "standard",
+          "subfields": [
+            {
+              "id": "04465a3d-dbf2-499c-bd99-eb8e73c5ba5a",
+              "code": "8",
+              "label": "Field link and sequence number",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "d6437132-e41c-4f12-a244-7a40c5d8f551",
+              "code": "a",
+              "label": "LC control number",
+              "repeatable": false,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "8188880e-6929-4f77-9754-445759d5ef4b",
+              "code": "b",
+              "label": "NUCMC control number",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            },
+            {
+              "id": "f88d313d-cca9-4582-afb6-992f7f01d495",
+              "code": "z",
+              "label": "Canceled/invalid LC control number",
+              "repeatable": true,
+              "required": false,
+              "deprecated": false,
+              "scope": "standard"
+            }
+          ],
+          "indicators": [
+            {
+              "id": "0239145e-eb53-4c53-8a46-99de366c1709",
+              "order": 1,
+              "label": "Undefined",
+              "codes": [
+                {
+                  "id": "5fa2a45a-2383-4d93-9c02-c12b3f678344",
+                  "code": "#",
+                  "label": "Undefined",
+                  "deprecated": false,
+                  "scope": "standard"
+                }
+              ]
+            },
+            {
+              "id": "a615c4a9-8335-4495-bf08-05c74b057e85",
+              "order": 2,
+              "label": "Undefined",
+              "codes": [
+                {
+                  "id": "b5196bf4-deaf-4545-a027-3b7387380e4e",
+                  "code": "#",
+                  "label": "Undefined",
+                  "deprecated": false,
+                  "scope": "standard"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "f2b7ad73-8e82-4909-9e49-694c35b52455",
           "tag": "246",
           "label": "Test Statement",
@@ -345,6 +423,13 @@
           "name": "Non-Repeatable Subfield",
           "description": "Subfield is non-repeatable but exists more than once in a record's field",
           "code": "nonRepeatableSubfield",
+          "enabled": true
+        },
+        {
+          "id": "0a769f6a-fe60-4ef1-bfa6-bcdd88908d04",
+          "name": "Invalid LCCN Subfield Value",
+          "description": "Subfield value is not valid based on LCCN structure",
+          "code": "invalidLccnSubfieldValue",
           "enabled": true
         }
       ]

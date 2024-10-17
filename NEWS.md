@@ -13,6 +13,7 @@
 * Return '\' instead '#' in validation message for undefined indicator rule ([MODQM-448](https://issues.folio.org/browse/MODQM-448))
 * Create and update endpoints modified to validate MARC record based on MARC specification ([MODQM-434](https://folio-org.atlassian.net/browse/MODQM-434))
 * Auto populate spaces into LCCN 010 a$ value on Marc create, edit and validate ([MODQM-447](https://folio-org.atlassian.net/browse/MODQM-447))
+* Update `source-manager-job-executions` to `v3.4` and` field-protection-settings` to `v1.2` with module permissions renaming ([MODQM-449](https://folio-org.atlassian.net/browse/MODQM-449))
 
 ### Bug fixes
 * Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))

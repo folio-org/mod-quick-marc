@@ -25,7 +25,7 @@ public class Tag010FieldItemPopulationService extends FieldItemMarcPopulationSer
   private static final Pattern LCCN_10_DIGITS_ONLY_PATTERN = Pattern.compile("\\d{10}");
   private static final Pattern LCCN_10_ONLY_LETTER_PREFIX_PATTERN = Pattern.compile("[a-z]\\d{10}");
   private static final Pattern LCCN_8_DIGITS_ONLY_PATTERN = Pattern.compile("\\d{8}");
-  private static final Pattern LCCN_8_ONE_OR_TWO_LETTER_PREFIX_PATTERN = Pattern.compile("([a-z][ |a-z]? ?)(\\d{8})");
+  private static final Pattern LCCN_8_ONE_OR_TWO_LETTER_PREFIX_PATTERN = Pattern.compile("([a-z][ a-z]? ?)(\\d{8})");
   private static final Pattern LCCN_8_NO_TRAILING_SPACE_PATTERN = Pattern.compile("[a-z]{3}\\d{8}");
   private static final Pattern D_8_S_DOLLAR_SIGN = Pattern.compile("\\d{8}\\s/.*$");
 

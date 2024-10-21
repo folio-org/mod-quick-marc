@@ -19,7 +19,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @UnitTest
 class Tag010FieldItemPopulationServiceTest {
 
-  private Tag010FieldItemPopulationService populationService = new Tag010FieldItemPopulationService();
+  private final Tag010FieldItemPopulationService populationService = new Tag010FieldItemPopulationService();
 
   @ParameterizedTest
   @MethodSource("fieldData")
@@ -35,15 +35,19 @@ class Tag010FieldItemPopulationServiceTest {
     return Stream.of(
       arguments("$a  2001000234", "$a  2001000234"),
       arguments("$a2001000234", "$a  2001000234"),
+      arguments("$ah2001050268", "$ah 2001050268"),
+      arguments("$a h2001050268", "$ah 2001050268"),
       arguments("$a 2001000234", "$a  2001000234"),
       arguments("$aa 2002003456  ", "$aa 2002003456"),
       arguments("$a sn2003045678 ", "$asn2003045678"),
       arguments("$a 34005678", "$a   34005678 "),
-      arguments("$a   34005678 /M", "$a   34005678 /M"),
-      arguments("$ae  45000067 ", "$ae  45000067 "),
-      arguments("$a  sn 85000678 ", "$asn 85000678 "),
-      arguments("$a agr25000003  ", "$aagr25000003 "),
-      arguments("$aagr25000003 /M", "$aagr25000003 /M")
+      arguments("$a mnc34005678", "$amnc34005678 "),
+      arguments("$a   h34005678", "$ah  34005678 "),
+      arguments("$a  h 34005678", "$ah  34005678 "),
+      arguments("$a   ha34005678", "$aha 34005678 "),
+      arguments("$a  sn 85000678", "$asn 85000678 "),
+      arguments("$a  e  45000067", "$ae  45000067 "),
+      arguments("$a agr25000003  ", "$aagr25000003 ")
     );
   }
 

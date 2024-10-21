@@ -27,7 +27,6 @@ public class Tag010FieldItemPopulationService extends FieldItemMarcPopulationSer
   private static final Pattern LCCN_8_DIGITS_ONLY_PATTERN = Pattern.compile("\\d{8}");
   private static final Pattern LCCN_8_ONE_OR_TWO_LETTER_PREFIX_PATTERN = Pattern.compile("([a-z][ a-z]? ?)(\\d{8})");
   private static final Pattern LCCN_8_NO_TRAILING_SPACE_PATTERN = Pattern.compile("[a-z]{3}\\d{8}");
-  private static final Pattern LCCN_8_NO_PREFIX_WITH_TRAILING_DOLLAR_SIGN = Pattern.compile("\\d{8}\\s/.*$");
 
   @Override
   protected boolean canProcess(FieldItem field) {
@@ -63,8 +62,6 @@ public class Tag010FieldItemPopulationService extends FieldItemMarcPopulationSer
       enrichedLccn = repeat(SPACE_CHARACTER, LCCN_OLD_PREFIX_LENGTH).concat(lccnString).concat(SPACE);
     } else if (LCCN_8_NO_TRAILING_SPACE_PATTERN.matcher(lccnString).matches()) {
       enrichedLccn = lccnString.concat(SPACE);
-    } else if (LCCN_8_NO_PREFIX_WITH_TRAILING_DOLLAR_SIGN.matcher(lccnString).matches()) {
-      enrichedLccn = repeat(SPACE_CHARACTER, LCCN_OLD_PREFIX_LENGTH).concat(lccnString);
     } else {
       var matcher = LCCN_8_ONE_OR_TWO_LETTER_PREFIX_PATTERN.matcher(lccnString);
       if (matcher.matches()) {

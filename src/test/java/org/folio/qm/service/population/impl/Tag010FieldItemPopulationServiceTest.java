@@ -46,10 +46,8 @@ class Tag010FieldItemPopulationServiceTest {
       arguments("$a  h 34005678", "$ah  34005678 "),
       arguments("$a   ha34005678", "$aha 34005678 "),
       arguments("$a  sn 85000678", "$asn 85000678 "),
-      arguments("$a   34005678 /M", "$a   34005678 /M"),
       arguments("$a  e  45000067", "$ae  45000067 "),
-      arguments("$a agr25000003  ", "$aagr25000003 "),
-      arguments("$aagr25000003 /M", "$aagr25000003 /M")
+      arguments("$a agr25000003  ", "$aagr25000003 ")
     );
   }
 

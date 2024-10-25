@@ -4,7 +4,6 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.TAG_999_FIELD;
 import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
-import static org.folio.qm.domain.entity.JobProfileAction.DELETE;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import java.util.Collections;
@@ -91,15 +90,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     setUserInfo(quickMarc, parsedRecordDto);
     log.info("findByExternalId:: quickMarc loaded by externalId: {}", externalId);
     return quickMarc;
-  }
-
-  @Override
-  public CreationStatus deleteByExternalId(UUID externalId) {
-    log.debug("deleteByExternalId:: trying to delete quickMarc by externalId: {}", externalId);
-    var recordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    var status = runImportAndGetStatus(recordDto, DELETE);
-    log.info("deleteByExternalId:: quickMarc deleted with status: {}", status.getStatus());
-    return status;
   }
 
   @Override

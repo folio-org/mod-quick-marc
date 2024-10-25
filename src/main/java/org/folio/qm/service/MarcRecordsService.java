@@ -20,14 +20,6 @@ public interface MarcRecordsService {
   QuickMarcView findByExternalId(UUID externalId);
 
   /**
-   * This method deletes QuickMarc record by its id.
-   *
-   * @param externalId external id
-   * @return {@link DeferredResult} response
-   */
-  CreationStatus deleteByExternalId(UUID externalId);
-
-  /**
    * This method updates QuickMarc record.
    *
    * @param parsedRecordId DTO id

@@ -36,7 +36,7 @@ public class DeferredResultCacheService {
 
   @Cacheable(cacheNames = DATA_IMPORT_RESULT_CACHE, key = "@folioExecutionContext.tenantId + ':' + #jobId")
   public DeferredResult<ResponseEntity<Void>> getDataImportActionResult(UUID jobId) {
-    log.info("New DeferredResult was created for [DELETE] action and [{}] jobId", jobId);
+    log.info("New DeferredResult was created for [CREATE] action and [{}] jobId", jobId);
     return new DeferredResult<>(60000L);
   }
 

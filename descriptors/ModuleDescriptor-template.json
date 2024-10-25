@@ -78,17 +78,6 @@
           ]
         },
         {
-          "methods": ["DELETE"],
-          "pathPattern": "/records-editor/records/{id}",
-          "permissionsRequired": ["marc-records-editor.item.delete"],
-          "modulePermissions": [
-            "change-manager.jobexecutions.post",
-            "change-manager.jobExecutions.jobProfile.item.put",
-            "change-manager.parsedrecords.get",
-            "change-manager.records.post"
-          ]
-        },
-        {
           "methods": ["GET"],
           "pathPattern": "/records-editor/records/status",
           "permissionsRequired": ["marc-records-editor.status.item.get"]
@@ -163,11 +152,6 @@
       "description": "Update a record"
     },
     {
-      "permissionName": "marc-records-editor.item.delete",
-      "displayName": "marc-records-editor - delete a record",
-      "description": "Delete a record"
-    },
-    {
       "permissionName": "marc-records-editor.status.item.get",
       "displayName": "marc-records-editor - get record creation status",
       "description": "Get record creation status"
@@ -190,7 +174,6 @@
         "marc-records-editor.item.get",
         "marc-records-editor.item.post",
         "marc-records-editor.item.put",
-        "marc-records-editor.item.delete",
         "marc-records-editor.status.item.get",
         "marc-records-editor.links.suggestion.post",
         "marc-records-editor.validate.post"

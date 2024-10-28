@@ -6,7 +6,6 @@ import static org.awaitility.Durations.ONE_MINUTE;
 import static org.folio.qm.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.support.utils.DataBaseTestUtils.getCreationStatusById;
 import static org.folio.qm.support.utils.DataBaseTestUtils.saveCreationStatus;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.DI_COMPLETE_AUTHORITY_DELETE;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.VALID_JOB_EXECUTION_ID;
 
 import java.util.UUID;
@@ -34,11 +33,6 @@ class KafkaListenerIT extends BaseIT {
       "mockdata/request/di-event/complete-event-with-holdings.json");
   }
 
-  @Test
-  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithAuthority() {
-    shouldUpdateExistingStatusWhenReceivedDataImportCompletedEvent(DI_COMPLETE_AUTHORITY_DELETE);
-  }
 
   @Test
   @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
@@ -88,22 +82,6 @@ class KafkaListenerIT extends BaseIT {
       .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.ERROR)
       .hasFieldOrPropertyWithValue("errorMessage", "Instance was not created")
       .hasFieldOrPropertyWithValue("jobExecutionId", VALID_JOB_EXECUTION_ID);
-  }
-
-  @Test
-  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
-  void shouldDeleteRecordWhenReceivedDataImportCompletedEvent() {
-    UUID statusId = UUID.randomUUID();
-    saveCreationStatus(statusId, VALID_JOB_EXECUTION_ID, metadata, jdbcTemplate);
-
-    sendDataImportKafkaRecord(DI_COMPLETE_AUTHORITY_DELETE, DI_COMPLETE_TOPIC_NAME);
-    awaitStatusChanged(statusId, RecordCreationStatusEnum.CREATED);
-
-    var creationStatus = getCreationStatusById(statusId, metadata, jdbcTemplate);
-    assertThat(creationStatus)
-      .hasNoNullFieldsOrPropertiesExcept("errorMessage")
-      .hasFieldOrPropertyWithValue("id", statusId)
-      .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED);
   }
 
   @Test

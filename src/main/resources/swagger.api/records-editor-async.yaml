@@ -54,42 +54,6 @@ paths:
           schema:
             '$ref': '#/components/schemas/UUID'
           description: The UUID of a record
-    delete:
-      tags:
-        - records-editor-async
-      responses:
-        '204':
-          description: MARC record successfully deleted
-        '400':
-          description:
-            Bad request, e.g. malformed request body or query parameter.
-            Details of the error (e.g. name of the parameter or line/character number
-            with malformed data) provided in the response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        '404':
-          description: MARC record with a given ID not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        '500':
-          description: Internal server error, e.g. due to misconfiguration
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-      description: Delete MARC record by externalId
-      operationId: deleteRecordByExternalId
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: UUID of the external that is related to the MARC record
-          schema:
-            $ref: '#/components/schemas/UUID'
 components:
   schemas:
     quickMarcEdit:

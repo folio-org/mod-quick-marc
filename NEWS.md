@@ -1,5 +1,7 @@
-## v5.2.0 In Progress
+## v6.0.0 In Progress
 ### Breaking changes
+* Deprecated endpoint `DELETE /records-editor/records/{id}` removed ([MODQM-437](https://issues.folio.org/browse/MODQM-437))
+* Create and update endpoints modified to validate MARC record based on MARC specification ([MODQM-434](https://folio-org.atlassian.net/browse/MODQM-434))
 
 ### New APIs versions
 * Provides `marc-specifications` `v1.2`
@@ -11,7 +13,6 @@
 * Update cached specification on kafka event ([MODQM-436](https://issues.folio.org/browse/MODQM-436))
 * Return '\' instead '#' in validation message for invalid indicator rule ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
 * Return '\' instead '#' in validation message for undefined indicator rule ([MODQM-448](https://issues.folio.org/browse/MODQM-448))
-* Create and update endpoints modified to validate MARC record based on MARC specification ([MODQM-434](https://folio-org.atlassian.net/browse/MODQM-434))
 * Auto populate spaces into LCCN 010 a$ value on Marc create, edit and validate ([MODQM-447](https://folio-org.atlassian.net/browse/MODQM-447))
 * Update `source-manager-job-executions` to `v3.4` and` field-protection-settings` to `v1.2` with module permissions renaming ([MODQM-449](https://folio-org.atlassian.net/browse/MODQM-449))
 

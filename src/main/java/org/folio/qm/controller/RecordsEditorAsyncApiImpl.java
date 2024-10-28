@@ -28,9 +28,4 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
     return updateActionResult;
   }
 
-  @Override
-  public DeferredResult<ResponseEntity<Void>> deleteRecordByExternalId(UUID id) {
-    var status = marcRecordsService.deleteByExternalId(id);
-    return deferredResultCacheService.getDataImportActionResult(status.getJobExecutionId());
-  }
 }

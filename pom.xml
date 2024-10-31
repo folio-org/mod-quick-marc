@@ -11,7 +11,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>mod-quick-marc</artifactId>
-  <version>6.0.0</version>
+  <version>6.0.1-SNAPSHOT</version>
   <description>API for quickMARC - in-app editor for MARC records in SRS</description>
   <packaging>jar</packaging>
 
@@ -481,7 +481,7 @@
     <url>https://github.com/folio-org/${project.artifactId}</url>
     <connection>scm:git:git://github.com/folio-org/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:folio-org/${project.artifactId}.git</developerConnection>
-    <tag>v6.0.0</tag>
+    <tag>release/v6.0</tag>
   </scm>
 
   <repositories>

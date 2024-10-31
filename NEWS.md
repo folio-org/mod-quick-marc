@@ -1,12 +1,38 @@
-## v6.0.0 In Progress
+## v6.1.0 YYYY-mm-DD
+### Breaking changes
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### New APIs versions
+* Provides `API_NAME vX.Y`
+* Requires `API_NAME vX.Y`
+
+### Features
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Bug fixes
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Tech Dept
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Dependencies
+* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
+* Add `LIB_NAME VERSION`
+* Remove `LIB_NAME`
+
+---
+
+## v6.0.0 2024-10-31
 ### Breaking changes
 * Deprecated endpoint `DELETE /records-editor/records/{id}` removed ([MODQM-437](https://issues.folio.org/browse/MODQM-437))
 * Create and update endpoints modified to validate MARC record based on MARC specification ([MODQM-434](https://folio-org.atlassian.net/browse/MODQM-434))
 
 ### New APIs versions
-* Provides `marc-specifications` `v1.2`
-* Provides `marc-records-editor` `v6.0`
-* Requires `specification-storage` `v1.0`
+* Provides `marc-specifications v1.2`
+* Provides `marc-records-editor v6.0`
+* Requires `specification-storage v1.0`
+* Requires `source-manager-job-executions v3.4`
+* Requires `field-protection-settings v1.2`
 
 ### Features
 * Implement endpoint to validate record based on MARC specification ([MODQM-433](https://issues.folio.org/browse/MODQM-433))
@@ -14,7 +40,7 @@
 * Return '\' instead '#' in validation message for invalid indicator rule ([MODQM-443](https://issues.folio.org/browse/MODQM-443))
 * Return '\' instead '#' in validation message for undefined indicator rule ([MODQM-448](https://issues.folio.org/browse/MODQM-448))
 * Auto populate spaces into LCCN 010 a$ value on Marc create, edit and validate ([MODQM-447](https://folio-org.atlassian.net/browse/MODQM-447))
-* Update `source-manager-job-executions` to `v3.4` and` field-protection-settings` to `v1.2` with module permissions renaming ([MODQM-449](https://folio-org.atlassian.net/browse/MODQM-449))
+* Update `source-manager-job-executions` to `v3.4` and `field-protection-settings` to `v1.2` with module permissions renaming ([MODQM-449](https://folio-org.atlassian.net/browse/MODQM-449))
 
 ### Bug fixes
 * Add Microfiche support to Form position for music and score document type ([MODQM-419](https://folio-org.atlassian.net/browse/MODQM-419))
@@ -25,9 +51,14 @@
 * Add module descriptor validator plugin ([MODQM-444](https://issues.folio.org/browse/MODQM-444))
 
 ### Dependencies
-* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
-* Add `LIB_NAME` `2.7.4`
-* Remove `LIB_NAME`
+* Bump `spring-boot` from `3.2.3` to `3.3.5`
+* Bump `folio-spring-base` from `8.1.0` to `8.2.0`
+* Bump `folio-service-tools` from `4.0.1` to `4.1.0`
+* Bump `marc4j` from `2.9.5` to `2.9.6`
+* Bump `mapstruct` from `1.5.5.Final` to `1.6.2`
+* Add `mod-record-specifications-validator v1.0.0`
+
+---
 
 ## v5.1.0 2024-03-20
 ### New APIs versions

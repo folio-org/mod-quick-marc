@@ -18,6 +18,8 @@ import java.util.UUID;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
+import org.folio.rspec.domain.dto.Family;
+import org.folio.rspec.domain.dto.FamilyProfile;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.testing.type.IntegrationTest;
 import org.junit.jupiter.api.Test;
@@ -64,7 +66,7 @@ class SpecificationKafkaListenerIT extends BaseIT {
 
     //update specification in cache with additional rules
     var specificationEvent = new SpecificationUpdatedEvent(
-      UUID.fromString("6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3"), TENANT_ID,
+      UUID.fromString("6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3"), TENANT_ID, Family.MARC, FamilyProfile.BIBLIOGRAPHIC,
       SpecificationUpdatedEvent.UpdateExtent.PARTIAL);
     sendSpecificationKafkaRecord(specificationEvent);
 

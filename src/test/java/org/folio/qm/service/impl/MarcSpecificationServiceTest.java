@@ -12,6 +12,8 @@ import static org.mockito.Mockito.when;
 import java.util.UUID;
 import org.folio.qm.client.SpecificationStorageClient;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.rspec.domain.dto.Family;
+import org.folio.rspec.domain.dto.FamilyProfile;
 import org.folio.rspec.domain.dto.SpecificationDto;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.testing.extension.Random;
@@ -69,6 +71,7 @@ class MarcSpecificationServiceTest {
   }
 
   private SpecificationUpdatedEvent event() {
-    return new SpecificationUpdatedEvent(UUID.randomUUID(), TENANT_ID, SpecificationUpdatedEvent.UpdateExtent.PARTIAL);
+    return new SpecificationUpdatedEvent(UUID.randomUUID(), TENANT_ID, Family.MARC, FamilyProfile.AUTHORITY,
+      SpecificationUpdatedEvent.UpdateExtent.PARTIAL);
   }
 }

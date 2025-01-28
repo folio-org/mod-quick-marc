@@ -26,9 +26,9 @@ import org.springframework.stereotype.Component;
 public class DataImportJobServiceImpl implements DataImportJobService {
 
   private static final Map<ParsedRecordDto.RecordTypeEnum, RecordType> TYPE_MAP = Map.of(
-    ParsedRecordDto.RecordTypeEnum.AUTHORITY, RecordType.MARC_AUTHORITY,
-    ParsedRecordDto.RecordTypeEnum.BIB, RecordType.MARC_BIBLIOGRAPHIC,
-    ParsedRecordDto.RecordTypeEnum.HOLDING, RecordType.MARC_HOLDINGS
+    ParsedRecordDto.RecordTypeEnum.MARC_AUTHORITY, RecordType.MARC_AUTHORITY,
+    ParsedRecordDto.RecordTypeEnum.MARC_BIB, RecordType.MARC_BIBLIOGRAPHIC,
+    ParsedRecordDto.RecordTypeEnum.MARC_HOLDING, RecordType.MARC_HOLDINGS
   );
 
   private final ChangeManagerService changeManagerService;

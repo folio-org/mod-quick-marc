@@ -53,6 +53,6 @@ public interface DataImportJobService {
           .last(isLast)
           .counter(1)
           .total(1)
-          .contentType(RawRecordsMetadata.ContentTypeEnum.JSON));
+          .contentType(RawRecordsMetadata.ContentTypeEnum.MARC_JSON));
   }
 }

@@ -322,6 +322,7 @@
                 <useSpringBoot3>true</useSpringBoot3>
                 <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
               </configOptions>
+              <additionalProperties>removeEnumValuePrefix=true</additionalProperties>
             </configuration>
           </execution>
           <execution>

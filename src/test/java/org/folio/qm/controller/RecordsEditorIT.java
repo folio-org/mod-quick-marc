@@ -232,7 +232,7 @@ class RecordsEditorIT extends BaseIT {
 
   @Test
   void testGetQuickMarcBibRecord_linksNotFound() throws Exception {
-    log.info("===== Verify GET Bibliographic record: Successful =====");
+    log.info("===== Verify GET Bibliographic record when links not found: Successful =====");
 
     mockGet(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), null, SC_NOT_FOUND, wireMockServer);
     mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
@@ -243,7 +243,6 @@ class RecordsEditorIT extends BaseIT {
     mockGet(LINKING_RULES_FETCHING_PATH, readFile(TestEntitiesUtils.LINKING_RULES_PATH), SC_OK, wireMockServer);
 
     getResultActions(recordsEditorPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID))
-      .andDo(result -> log.info("KEK" + result.getResponse().getContentAsString()))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.marcFormat").value(MarcFormat.BIBLIOGRAPHIC.getValue()))
       .andExpect(jsonPath("$.parsedRecordDtoId").value(VALID_PARSED_RECORD_DTO_ID.toString()))
@@ -345,7 +344,7 @@ class RecordsEditorIT extends BaseIT {
   @Test
   @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testGetCreationStatusHasProperlyFormattedDate() throws Exception {
-    log.info("===== Verify GET record status: Successful =====");
+    log.info("===== Verify GET record status: Date formatted =====");
 
     var id = UUID.randomUUID();
     saveCreationStatus(id, id, metadata, jdbcTemplate);
@@ -452,7 +451,7 @@ class RecordsEditorIT extends BaseIT {
   @ParameterizedTest
   @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void testPostQuickMarcValidRecordCreatedWithout001Field(String requestBody, String eventBody) throws Exception {
-    log.info("===== Verify POST record: Successful =====");
+    log.info("===== Verify POST record without 001: Successful =====");
 
     mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
       readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
@@ -545,7 +544,7 @@ class RecordsEditorIT extends BaseIT {
 
   @Test
   void testReturn422WhenHoldingsRecordWithMultiple001() throws Exception {
-    log.info("===== Verify POST record: Multiple 001 =====");
+    log.info("===== Verify POST holdings record: Multiple 001 =====");
 
     QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
 
@@ -616,7 +615,7 @@ class RecordsEditorIT extends BaseIT {
 
   private void checkParseRecordDtoId() {
     var serveEvents = wireMockServer.getAllServeEvents();
-    var changeManagerResponse = serveEvents.get(serveEvents.size() - 1).getResponse().getBodyAsString();
+    var changeManagerResponse = serveEvents.getLast().getResponse().getBodyAsString();
     ParsedRecordDto parsedRecordDto = getObjectFromJson(changeManagerResponse, ParsedRecordDto.class);
     assertThat(parsedRecordDto.getId(), equalTo(VALID_PARSED_RECORD_DTO_ID));
   }

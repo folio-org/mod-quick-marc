@@ -53,7 +53,7 @@ public class DataImportJobServiceImpl implements DataImportJobService {
   private UUID initJob(JobProfile jobProfile, UUID userId) {
     var jobExecutionDto = getDefaultJodExecutionDto(userId, jobProfile);
     var jobExecutionResponse = changeManagerService.postJobExecution(jobExecutionDto);
-    var jobExecutionId = jobExecutionResponse.getJobExecutions().get(0).getId();
+    var jobExecutionId = jobExecutionResponse.getJobExecutions().getFirst().getId();
     saveNewStatus(jobExecutionId);
     return jobExecutionId;
   }

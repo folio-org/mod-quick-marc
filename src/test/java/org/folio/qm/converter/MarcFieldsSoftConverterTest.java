@@ -33,7 +33,7 @@ class MarcFieldsSoftConverterTest {
   private MarcFieldsSoftConverter converter;
 
   @BeforeEach
-  public void init() {
+  void init() {
     fieldItemConverters.add(fieldItemConverter);
   }
 

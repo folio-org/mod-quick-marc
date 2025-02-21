@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.folio.qm.converter.elements.Constants.CONTROL_FIELD_PATTERN;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.FieldProtectionSettingsClient;
@@ -76,28 +77,28 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
   }
 
   private boolean isAnyIndicator1InSettingOrIndicator1Match(MarcFieldProtectionSetting setting, FieldItem field) {
-    return setting.getIndicator1().equals(ANY_STRING)
-      || (isNotEmpty(setting.getIndicator1()) ? setting.getIndicator1() : BLANK_SUBFIELD_CODE)
-      .equals(field.getIndicators().get(0));
+    return Objects.equals(setting.getIndicator1(), ANY_STRING)
+           || (isNotEmpty(setting.getIndicator1()) ? setting.getIndicator1() : BLANK_SUBFIELD_CODE)
+      .equals(field.getIndicators().getFirst());
   }
 
   private boolean isAnyIndicator2InSettingOrIndicator2Match(MarcFieldProtectionSetting setting, FieldItem field) {
-    return setting.getIndicator2().equals(ANY_STRING)
-      || (isNotEmpty(setting.getIndicator2()) ? setting.getIndicator2() : BLANK_SUBFIELD_CODE)
+    return Objects.equals(setting.getIndicator2(), ANY_STRING)
+           || (isNotEmpty(setting.getIndicator2()) ? setting.getIndicator2() : BLANK_SUBFIELD_CODE)
       .equals(field.getIndicators().get(1));
   }
 
   private boolean isAnySubFieldInSettingOrSubFieldMatch(MarcFieldProtectionSetting setting, FieldItem field) {
-    return setting.getSubfield().equals(ANY_STRING)
-      || Pattern.compile("[$]" + setting.getSubfield()).matcher(field.getContent().toString()).find();
+    return Objects.equals(setting.getSubfield(), ANY_STRING)
+           || Pattern.compile("[$]" + setting.getSubfield()).matcher(field.getContent().toString()).find();
   }
 
   private boolean isAnyDataInSettingOrDataMatchWithSubfield(MarcFieldProtectionSetting setting, FieldItem field) {
-    if (setting.getData().equals(ANY_STRING)) {
+    if (Objects.equals(setting.getData(), ANY_STRING)) {
       return true;
     }
 
-    var subfieldRegex = setting.getSubfield().equals(ANY_STRING) ? "." : setting.getSubfield();
+    var subfieldRegex = Objects.equals(setting.getSubfield(), ANY_STRING) ? "." : setting.getSubfield();
     var dataPattern = Pattern.compile(".*\\$" + subfieldRegex + " " + Pattern.quote(setting.getData()) + ".*");
     return dataPattern.matcher(field.getContent().toString()).matches();
   }

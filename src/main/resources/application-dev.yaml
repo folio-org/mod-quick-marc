@@ -77,16 +77,11 @@ management:
   endpoints:
     web:
       exposure:
-        include: info,health,env,httptrace,loggers
+        include: info,health,liquibase,threaddump,heapdump,loggers
       base-path: /admin
-  health:
-    defaults:
-      enabled: false
-    readinessstate:
-      enabled: true
   endpoint:
     loggers:
-      enabled: true
+      access: unrestricted
 server:
   port: 8081
 

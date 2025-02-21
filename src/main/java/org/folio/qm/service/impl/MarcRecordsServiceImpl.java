@@ -137,7 +137,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var quickMarcRecordsWithSuggestions = linksSuggestionsMapper.map(srsRecordsWithSuggestions);
     if (isNotEmpty(quickMarcRecordsWithSuggestions)) {
       log.info("suggestLinks:: links was suggested");
-      return quickMarcRecordsWithSuggestions.get(0);
+      return quickMarcRecordsWithSuggestions.getFirst();
     }
     return quickMarcView;
   }

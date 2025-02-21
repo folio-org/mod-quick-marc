@@ -1,7 +1,6 @@
 package org.folio.qm.messaging.topic;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -69,13 +68,13 @@ public class KafkaTopicsInitializer {
       .map(Enum::name)
       .map(topic -> getTenantTopicName(topic, tenant))
       .map(this::toKafkaTopic)
-      .collect(Collectors.toList());
+      .toList();
   }
 
   private NewTopic toKafkaTopic(String topic) {
     List<FolioKafkaProperties.KafkaTopic> topics = folioKafkaProperties.getTopics();
-    int replicas = topics.get(0).getReplicationFactor();
-    int partitions = topics.get(0).getNumPartitions();
+    int replicas = topics.getFirst().getReplicationFactor();
+    int partitions = topics.getFirst().getNumPartitions();
 
     return TopicBuilder.name(topic)
       .replicas(replicas)

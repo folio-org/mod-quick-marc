@@ -69,7 +69,7 @@ public class LinksServiceImpl implements LinksService {
             .filter(fieldItem -> rule.getBibField().equals(fieldItem.getTag()))
             .toList();
           if (fields.size() == 1) {
-            populateLink(fields.get(0), instanceLink);
+            populateLink(fields.getFirst(), instanceLink);
           } else {
             fields.stream()
               .filter(fieldItem -> instanceLink.getAuthorityId().equals(

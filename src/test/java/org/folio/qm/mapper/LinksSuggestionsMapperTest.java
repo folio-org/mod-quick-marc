@@ -43,8 +43,8 @@ class LinksSuggestionsMapperTest {
     var srsRecordCollection = new EntitiesLinksSuggestions()
       .addRecordsItem(srsRecord);
 
-    var quickMarcRecord = MAPPER.map(srsRecordCollection).get(0);
-    var quickMarcField = quickMarcRecord.getFields().get(0);
+    var quickMarcRecord = MAPPER.map(srsRecordCollection).getFirst();
+    var quickMarcField = quickMarcRecord.getFields().getFirst();
     assertThat(quickMarcRecord).hasFieldOrPropertyWithValue("leader", LEADER);
     assertThat(quickMarcField)
       .hasFieldOrPropertyWithValue("tag", expectedTag)
@@ -80,7 +80,7 @@ class LinksSuggestionsMapperTest {
       .subfields(expectedSubfields)
     );
 
-    var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().get(0);
+    var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().getFirst();
     assertThat(srsRecord)
       .hasFieldOrPropertyWithValue("leader", LEADER)
       .hasFieldOrPropertyWithValue("fields", List.of(expectedField));
@@ -93,8 +93,8 @@ class LinksSuggestionsMapperTest {
     var srsRecord = new BaseSrsMarcRecord().leader(LEADER).addFieldsItem(srsField);
     var srsRecordCollection = new EntitiesLinksSuggestions().addRecordsItem(srsRecord);
 
-    var quickMarcRecord = MAPPER.map(srsRecordCollection).get(0);
-    var quickMarcField = quickMarcRecord.getFields().get(0);
+    var quickMarcRecord = MAPPER.map(srsRecordCollection).getFirst();
+    var quickMarcField = quickMarcRecord.getFields().getFirst();
     assertThat(quickMarcRecord).hasFieldOrPropertyWithValue("leader", LEADER);
     assertThat(quickMarcField)
       .hasFieldOrPropertyWithValue("tag", expectedTag);
@@ -108,7 +108,7 @@ class LinksSuggestionsMapperTest {
     var quickMarcRecord = new QuickMarcView().leader(LEADER).addFieldsItem(quickMarcField);
     var expectedField = Map.of(quickMarcTag, new SrsFieldItem());
 
-    var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().get(0);
+    var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().getFirst();
     assertThat(srsRecord)
       .hasFieldOrPropertyWithValue("leader", LEADER)
       .hasFieldOrPropertyWithValue("fields", List.of(expectedField));

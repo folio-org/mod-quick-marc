@@ -13,15 +13,15 @@ public enum LeaderItem {
   INDICATOR_COUNT("Indicator count", 10, 1, '2'),
   SUBFIELD_CODE_LENGTH("Subfield code length", 11, '1', '2'),
   BASE_ADDRESS("Base address of data", 12, 5),
-  ENTRY_MAP_20("Entry map", 20, 1, '4'),
-  ENTRY_MAP_21("Entry map", 21, 1, '5'),
-  ENTRY_MAP_22("Entry map", 22, 1, '0'),
-  ENTRY_MAP_23("Entry map", 23, 1, '0'),
+  ENTRY_MAP_20(Constants.ENTRY_MAP_NAME, 20, 1, '4'),
+  ENTRY_MAP_21(Constants.ENTRY_MAP_NAME, 21, 1, '5'),
+  ENTRY_MAP_22(Constants.ENTRY_MAP_NAME, 22, 1, '0'),
+  ENTRY_MAP_23(Constants.ENTRY_MAP_NAME, 23, 1, '0'),
 
   //COMMON FIELDS FOR HOLDINGS AND AUTHORITY
-  UNDEFINED_CHARACTER_POSITION_7("Undefined character position", 7, 1, '\\'),
-  UNDEFINED_CHARACTER_POSITION_8("Undefined character position", 8, 1, '\\'),
-  UNDEFINED_CHARACTER_POSITION_19("Undefined character position", 19, 1, '\\'),
+  UNDEFINED_CHARACTER_POSITION_7(Constants.UNDEFINED_CHARACTER_POSITION_NAME, 7, 1, '\\'),
+  UNDEFINED_CHARACTER_POSITION_8(Constants.UNDEFINED_CHARACTER_POSITION_NAME, 8, 1, '\\'),
+  UNDEFINED_CHARACTER_POSITION_19(Constants.UNDEFINED_CHARACTER_POSITION_NAME, 19, 1, '\\'),
 
   //BIB FIELDS
   BIB_RECORD_STATUS("Bib record status", 5, 1, 'a', 'c', 'd', 'n', 'p'),
@@ -59,4 +59,8 @@ public enum LeaderItem {
     this.possibleValues = Arrays.stream(possibleValues).toList();
   }
 
+  private static final class Constants {
+    public static final String ENTRY_MAP_NAME = "Entry map";
+    public static final String UNDEFINED_CHARACTER_POSITION_NAME = "Undefined character position";
+  }
 }

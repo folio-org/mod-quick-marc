@@ -86,10 +86,10 @@ class FieldProtectionSetterServiceImplTest {
     settingsCollection.addMarcFieldProtectionSettingsItem(setting);
     when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
 
-    var record = new QuickMarcView().fields(List.of(fieldItem));
-    service.applyFieldProtection(record);
+    var marcView = new QuickMarcView().fields(List.of(fieldItem));
+    service.applyFieldProtection(marcView);
 
-    assertThat(record.getFields())
+    assertThat(marcView.getFields())
       .extracting("tag", "isProtected")
       .contains(tuple(setting.getField(), true));
   }
@@ -101,10 +101,10 @@ class FieldProtectionSetterServiceImplTest {
     settingsCollection.addMarcFieldProtectionSettingsItem(setting);
     when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
 
-    var record = new QuickMarcView().fields(List.of(fieldItem));
-    service.applyFieldProtection(record);
+    var marcView = new QuickMarcView().fields(List.of(fieldItem));
+    service.applyFieldProtection(marcView);
 
-    assertThat(record.getFields())
+    assertThat(marcView.getFields())
       .extracting("tag", "isProtected")
       .contains(tuple(setting.getField(), false));
   }

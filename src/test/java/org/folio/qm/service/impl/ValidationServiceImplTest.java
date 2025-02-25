@@ -77,7 +77,7 @@ class ValidationServiceImplTest {
 
     verify(defaultValuesPopulationService).populate(any(ValidatableRecord.class));
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).getMessage())
+    assertThat(result.getFirst().getMessage())
       .isEqualTo("Message that contains '\\'.");
   }
 
@@ -113,7 +113,7 @@ class ValidationServiceImplTest {
 
     assertNotNull(result);
     assertEquals(1, result.size());
-    assertThat(result.get(0).getMessage()).isEqualTo(SUBFIELD_ERROR_MESSAGE);
+    assertThat(result.getFirst().getMessage()).isEqualTo(SUBFIELD_ERROR_MESSAGE);
   }
 
   @ParameterizedTest
@@ -171,7 +171,7 @@ class ValidationServiceImplTest {
 
     assertNotNull(result);
     assertEquals(1, result.size());
-    assertThat(result.get(0).getMessage()).isEqualTo(NON_REPEATABLE_FIELD_ERROR_MESSAGE);
+    assertThat(result.getFirst().getMessage()).isEqualTo(NON_REPEATABLE_FIELD_ERROR_MESSAGE);
   }
 
   @Test

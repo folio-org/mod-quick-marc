@@ -27,7 +27,7 @@ class MarcQmToValidatableRecordConverterTest {
     var actual = converter.convert(marcRecord);
 
     assertThat(actual).isNotNull();
-    var validatableRecordFieldsInner = actual.getFields().get(0);
+    var validatableRecordFieldsInner = actual.getFields().getFirst();
     assertThat(actual.getLeader()).isEqualTo(marcRecord.getLeader());
     assertThat(actual.getMarcFormat()).isEqualTo(marcRecord.getMarcFormat());
     assertThat(validatableRecordFieldsInner.getTag()).isEqualTo(fields.getTag());

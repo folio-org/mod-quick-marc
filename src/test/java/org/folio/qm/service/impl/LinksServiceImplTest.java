@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomUtils;
 import org.folio.qm.client.LinkingRulesClient;
@@ -133,7 +132,7 @@ class LinksServiceImplTest {
   }
 
   private static InstanceLink getInstanceLink(UUID authorityId, String status, String errorCause) {
-    return new InstanceLink(RandomUtils.nextInt(),
+    return new InstanceLink(RandomUtils.insecure().randomInt(),
       authorityId,
       "12345",
       UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
@@ -157,12 +156,12 @@ class LinksServiceImplTest {
     when(linksClient.fetchLinksByInstanceId(any())).thenReturn(Optional.of(instanceLinks));
     when(rulesService.getLinkingRules()).thenReturn(linkingRules);
 
-    var record = getQuickMarcView(fieldItemsMock);
-    service.setRecordLinks(record);
+    var marcView = getQuickMarcView(fieldItemsMock);
+    service.setRecordLinks(marcView);
 
-    var linkedFields = record.getFields().stream()
+    var linkedFields = marcView.getFields().stream()
       .filter(fieldItem -> fieldItem.getLinkDetails() != null)
-      .collect(Collectors.toList());
+      .toList();
     assertThat(linkedFields)
       .hasSize(expectedLinkedFieldsCount);
 
@@ -195,7 +194,7 @@ class LinksServiceImplTest {
         .setAuthorityId(fieldItem.getLinkDetails().getAuthorityId())
         .setAuthorityNaturalId(fieldItem.getLinkDetails().getAuthorityNaturalId())
         .setLinkingRuleId(fieldItem.getLinkDetails().getLinkingRuleId()))
-      .collect(Collectors.toList());
+      .toList();
     var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
 
     assertThat(expectedLinks).hasSize(expectedLinkUpdates);

@@ -29,7 +29,7 @@ public class MarcSpecificationServiceImpl implements MarcSpecificationService {
   public SpecificationDto getSpecification(MarcFormat marcFormat) {
     for (FamilyProfile profile : FamilyProfile.values()) {
       if (profile.name().equals(marcFormat.name())) {
-        return specificationStorageClient.getSpecifications(profile.getValue()).getSpecifications().get(0);
+        return specificationStorageClient.getSpecifications(profile.getValue()).getSpecifications().getFirst();
       }
     }
     throw new IllegalArgumentException("Unknown format: " + marcFormat.name());

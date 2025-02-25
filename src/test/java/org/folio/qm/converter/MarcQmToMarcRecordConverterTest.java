@@ -36,7 +36,7 @@ class MarcQmToMarcRecordConverterTest {
 
     assertThat(actual).isNotNull();
     assertThat(actual.dataFields()).hasSize(1);
-    assertThat(actual.dataFields().get(0))
+    assertThat(actual.dataFields().getFirst())
       .matches(field -> tag.equals(field.tag()) && field.subfields().isEmpty());
   }
 
@@ -51,9 +51,10 @@ class MarcQmToMarcRecordConverterTest {
 
     assertThat(actual).isNotNull();
     assertThat(actual.dataFields()).hasSize(1);
-    assertThat(actual.dataFields().get(0).indicators()).isNotNull();
-    assertThat(actual.dataFields().get(0).indicators()).hasSize(2);
-    actual.dataFields().get(0).indicators().forEach(ind -> assertEquals('#', ind.value()));
+    var dataField = actual.dataFields().getFirst();
+    assertThat(dataField.indicators()).isNotNull();
+    assertThat(dataField.indicators()).hasSize(2);
+    dataField.indicators().forEach(ind -> assertEquals('#', ind.value()));
   }
 
   @Test
@@ -67,8 +68,9 @@ class MarcQmToMarcRecordConverterTest {
 
     assertThat(actual).isNotNull();
     assertThat(actual.dataFields()).hasSize(1);
-    assertThat(actual.dataFields().get(0).indicators()).isNotNull();
-    assertThat(actual.dataFields().get(0).indicators()).hasSize(2);
-    actual.dataFields().get(0).indicators().forEach(ind -> assertEquals('\\', ind.value()));
+    var dataField = actual.dataFields().getFirst();
+    assertThat(dataField.indicators()).isNotNull();
+    assertThat(dataField.indicators()).hasSize(2);
+    dataField.indicators().forEach(ind -> assertEquals('\\', ind.value()));
   }
 }

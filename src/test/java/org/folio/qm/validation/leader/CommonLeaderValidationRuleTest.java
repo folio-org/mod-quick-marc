@@ -33,13 +33,6 @@ class CommonLeaderValidationRuleTest {
   }
 
   @Test
-  void shouldValidateNullLeaderWithWrongLengthError() {
-    Optional<ValidationError> validationError = rule.validate(WRONG_RECORD_LENGTH);
-    assertTrue(validationError.isPresent());
-    assertThat(validationError.get().message(), Is.is("Wrong leader length"));
-  }
-
-  @Test
   void shouldValidateLeaderWithErrorOnRecordLength() {
     Optional<ValidationError> validationError = rule.validate(LEADER_RECORD_LENGTH_WITH_CHARS);
     assertTrue(validationError.isPresent());

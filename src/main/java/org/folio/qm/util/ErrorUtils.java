@@ -1,7 +1,6 @@
 package org.folio.qm.util;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.folio.qm.validation.ValidationError;
 import org.folio.tenant.domain.dto.Error;
 import org.folio.tenant.domain.dto.Errors;
@@ -44,7 +43,7 @@ public final class ErrorUtils {
   public static Errors buildErrors(List<ValidationError> validationErrors) {
     var errors = validationErrors.stream()
       .map(ErrorUtils::buildError)
-      .collect(Collectors.toList());
+      .toList();
     return new Errors().errors(errors).totalRecords(errors.size());
   }
 

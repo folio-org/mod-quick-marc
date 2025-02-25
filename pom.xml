@@ -11,21 +11,21 @@
 
   <groupId>org.folio</groupId>
   <artifactId>mod-quick-marc</artifactId>
-  <version>6.1.0-SNAPSHOT</version>
+  <version>7.0.0-SNAPSHOT</version>
   <description>API for quickMARC - in-app editor for MARC records in SRS</description>
   <packaging>jar</packaging>
 
   <properties>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <records-editor.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor.yaml</records-editor.yaml.file>
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
     <marc-specifications.yaml.file>${project.basedir}/src/main/resources/swagger.api/marc-specifications.yaml</marc-specifications.yaml.file>
 
-    <folio-spring-support.version>8.3.0-SNAPSHOT</folio-spring-support.version>
-    <folio-service-tools.version>4.2.0-SNAPSHOT</folio-service-tools.version>
-    <mod-record-specifications-validator.version>1.1.0-SNAPSHOT</mod-record-specifications-validator.version>
+    <folio-spring-support.version>9.0.0-SNAPSHOT</folio-spring-support.version>
+    <folio-service-tools.version>5.0.0-SNAPSHOT</folio-service-tools.version>
+    <mod-record-specifications-validator.version>2.0.0-SNAPSHOT</mod-record-specifications-validator.version>
     <marc4j.version>2.9.6</marc4j.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.mapstruct-binding.version>0.2.0</lombok.mapstruct-binding.version>
@@ -239,6 +239,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <release>${java.version}</release>
+          <compilerArgument>-proc:full</compilerArgument>
           <annotationProcessorPaths>
             <path>
               <groupId>org.projectlombok</groupId>

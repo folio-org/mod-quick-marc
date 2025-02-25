@@ -30,7 +30,7 @@ class ValidatableRecordDelegateTest {
     assertEquals(validatableRecord.getLeader(), delegate.getLeader());
     assertEquals(validatableRecord.getMarcFormat(), delegate.getMarcFormat());
 
-    var fieldItem = delegate.getFields().get(0);
+    var fieldItem = delegate.getFields().getFirst();
     assertEquals(field.getTag(), fieldItem.getTag());
     assertEquals(field.getContent(), fieldItem.getContent());
     assertEquals(field.getIndicators(), fieldItem.getIndicators());

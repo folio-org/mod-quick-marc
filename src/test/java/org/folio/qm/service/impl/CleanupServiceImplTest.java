@@ -44,7 +44,7 @@ class CleanupServiceImplTest {
   private ArgumentCaptor<Timestamp> timestampCaptor;
 
   @BeforeEach
-  public void setUpTenants() {
+  void setUpTenants() {
     tenantsHolder.add("tenant1");
     tenantsHolder.add("tenant2");
   }

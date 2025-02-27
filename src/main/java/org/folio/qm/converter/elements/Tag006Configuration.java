@@ -55,7 +55,7 @@ public enum Tag006Configuration {
 
   public List<ControlFieldItem> getControlFieldItems() {
     var controlFieldItems = new ArrayList<>(tag008Configuration.getSpecificItems());
-    controlFieldItems.add(0, ControlFieldItem.TYPE);
+    controlFieldItems.addFirst(ControlFieldItem.TYPE);
     return controlFieldItems;
   }
 

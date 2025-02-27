@@ -91,13 +91,11 @@ public class ErrorHandling {
   @ExceptionHandler(ConversionFailedException.class)
   public Error handleConverterException(ConversionFailedException e, HttpServletResponse response) {
     var cause = e.getCause();
-    if (cause instanceof QuickMarcException quickMarcException) {
-      return handleQuickMarcException(quickMarcException, response);
-    } else if (cause instanceof IllegalArgumentException illegalArgumentException) {
-      return handleIllegalArgumentException(illegalArgumentException, response);
-    } else {
-      return handleGlobalException(cause);
-    }
+    return switch (cause) {
+      case QuickMarcException quickMarcException -> handleQuickMarcException(quickMarcException, response);
+      case IllegalArgumentException argumentException -> handleIllegalArgumentException(argumentException, response);
+      default -> handleGlobalException(cause);
+    };
   }
 
   @ExceptionHandler(NotFoundException.class)
@@ -110,7 +108,7 @@ public class ErrorHandling {
   @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
   public Object handleFieldsValidationException(FieldsValidationException e) {
     var errors = e.getValidationResult().errors();
-    return errors.size() == 1 ? buildError(errors.get(0)) : buildErrors(errors);
+    return errors.size() == 1 ? buildError(errors.getFirst()) : buildErrors(errors);
   }
 
   @ExceptionHandler(MarcRecordValidationException.class)

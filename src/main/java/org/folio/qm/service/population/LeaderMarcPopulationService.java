@@ -35,8 +35,12 @@ public abstract class LeaderMarcPopulationService implements MarcPopulationServi
 
     leaderItems.stream()
       .filter(leaderItem -> !leaderItem.getPossibleValues().contains(leaderBuilder.charAt(leaderItem.getPosition())))
-      .forEach(leaderItem -> leaderBuilder.setCharAt(leaderItem.getPosition(), leaderItem.getPossibleValues().get(0)));
+      .forEach(leaderItem -> setLeaderChar(leaderItem, leaderBuilder));
 
     return leaderBuilder.toString();
+  }
+
+  private void setLeaderChar(LeaderItem leaderItem, StringBuilder leaderBuilder) {
+    leaderBuilder.setCharAt(leaderItem.getPosition(), leaderItem.getPossibleValues().getFirst());
   }
 }

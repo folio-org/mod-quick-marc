@@ -1,6 +1,6 @@
-## v6.1.0 YYYY-mm-DD
+## v7.0.0 YYYY-mm-DD
 ### Breaking changes
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+* Upgrade to Java 21 ([MODQM-458](https://issues.folio.org/browse/MODQM-458))
 
 ### New APIs versions
 * Provides `API_NAME vX.Y`

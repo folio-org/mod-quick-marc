@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.mapper.MarcTypeMapperImpl;
@@ -29,7 +30,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MarcDtoConverterTest {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
   private MarcDtoConverter converter;
   private MarcFieldsConverter fieldsConverter;
 
@@ -64,7 +64,7 @@ class MarcDtoConverterTest {
       .hasFieldOrPropertyWithValue("suppressDiscovery", expected.getSuppressDiscovery())
       .hasFieldOrPropertyWithValue("updateInfo.recordState", expected.getUpdateInfo().getRecordState())
       .hasFieldOrPropertyWithValue("updateInfo.updateDate", expected.getUpdateInfo().getUpdateDate())
-      .extracting(QuickMarcView::getFields).asList()
+      .extracting(QuickMarcView::getFields).asInstanceOf(InstanceOfAssertFactories.LIST)
       .hasSize(expected.getFields().size());
 
   }

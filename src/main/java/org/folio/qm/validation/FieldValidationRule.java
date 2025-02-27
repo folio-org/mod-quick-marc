@@ -1,6 +1,8 @@
 package org.folio.qm.validation;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.join;
 
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
@@ -41,7 +42,7 @@ public abstract class FieldValidationRule implements ValidationRule {
         return Optional.of(createValidationError(tagCode, IS_REQUIRED_TAG_ERROR_MSG));
       } else if (fields.size() != 1) {
         return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG_ERROR_MSG));
-      } else if (fields.get(0).getContent() instanceof CharSequence charSequence && StringUtils.isEmpty(charSequence)) {
+      } else if (fields.getFirst().getContent() instanceof CharSequence charSequence && isEmpty(charSequence)) {
         return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
       } else {
         return Optional.empty();
@@ -55,7 +56,7 @@ public abstract class FieldValidationRule implements ValidationRule {
         return Optional.empty();
       } else if (fields.size() != 1) {
         return Optional.of(createValidationError(tagCode, IS_UNIQUE_TAG_ERROR_MSG));
-      } else if (fields.get(0).getContent() instanceof CharSequence charSequence && StringUtils.isEmpty(charSequence)) {
+      } else if (fields.getFirst().getContent() instanceof CharSequence charSequence && isEmpty(charSequence)) {
         return Optional.of(createValidationError(tagCode, EMPTY_CONTENT_ERROR_MSG));
       }
 
@@ -72,7 +73,7 @@ public abstract class FieldValidationRule implements ValidationRule {
           var simplifiedContent = ((Map<?, ?>) field.getContent()).values().stream()
             .map(o -> {
               if (o instanceof List) {
-                return StringUtils.join((List<?>) o, "");
+                return join((List<?>) o, "");
               } else {
                 return o.toString();
               }

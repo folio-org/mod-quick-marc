@@ -211,7 +211,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
       .externalId(EXISTED_EXTERNAL_ID);
 
-    quickMarcJson.getFields().get(0).setTag("001-invalid");
+    quickMarcJson.getFields().getFirst().setTag("001-invalid");
 
     putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
       .andExpect(status().isBadRequest())
@@ -353,7 +353,7 @@ class RecordsEditorAsyncIT extends BaseIT {
   @ParameterizedTest
   @ValueSource(strings = {QM_RECORD_EDIT_BIB_PATH, QM_RECORD_EDIT_AUTHORITY_PATH})
   void testUpdateReturn422WhenRecordWithout001Field(String filePath) throws Exception {
-    log.info("===== Verify PUT record: 001 tag check =====");
+    log.info("===== Verify PUT record: 001 tag missed check =====");
 
     mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=bibliographic",
       readFile("mockdata/response/specifications/specification.json"), SC_OK, wireMockServer);
@@ -381,7 +381,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   @Test
   void testUpdateReturn422WhenHoldingsRecordWithMultiple001() throws Exception {
-    log.info("===== Verify PUT record: 001 tag check =====");
+    log.info("===== Verify PUT record: multiply 001 tag check =====");
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
 

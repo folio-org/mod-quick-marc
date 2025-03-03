@@ -1,24 +1,12 @@
-## v7.0.0 YYYY-mm-DD
+## v7.0.0 2025-03-03
 ### Breaking changes
 * Upgrade to Java 21 ([MODQM-458](https://issues.folio.org/browse/MODQM-458))
 
-### New APIs versions
-* Provides `API_NAME vX.Y`
-* Requires `API_NAME vX.Y`
-
-### Features
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
-
-### Bug fixes
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
-
-### Tech Dept
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
-
 ### Dependencies
-* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
-* Add `LIB_NAME VERSION`
-* Remove `LIB_NAME`
+* Bump `spring-boot` from `3.3.5` to `3.4.3`
+* Bump `folio-spring-support` from `8.2.0` to `9.0.0`
+* Bump `folio-service-tools` from `4.1.0` to `5.0.0`
+* Bump `mod-record-specifications-validator` from `1.0.0` to `2.0.0`
 
 ---
 

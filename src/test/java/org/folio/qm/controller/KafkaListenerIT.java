@@ -33,7 +33,6 @@ class KafkaListenerIT extends BaseIT {
       "mockdata/request/di-event/complete-event-with-holdings.json");
   }
 
-
   @Test
   @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithoutExternalId() {
@@ -121,5 +120,4 @@ class KafkaListenerIT extends BaseIT {
       .untilAsserted(() -> assertThat(getCreationStatusById(statusId, metadata, jdbcTemplate).getStatus())
         .isEqualTo(status));
   }
-
 }

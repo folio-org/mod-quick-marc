@@ -73,5 +73,4 @@ class CleanupServiceImplTest {
       .allMatch(actualTimestamp -> actualTimestamp <= yesterdayTime);
     assertTrue(allCallsWereForYesterday);
   }
-
 }

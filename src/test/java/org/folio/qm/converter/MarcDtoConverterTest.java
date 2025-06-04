@@ -66,7 +66,5 @@ class MarcDtoConverterTest {
       .hasFieldOrPropertyWithValue("updateInfo.updateDate", expected.getUpdateInfo().getUpdateDate())
       .extracting(QuickMarcView::getFields).asInstanceOf(InstanceOfAssertFactories.LIST)
       .hasSize(expected.getFields().size());
-
   }
-
 }

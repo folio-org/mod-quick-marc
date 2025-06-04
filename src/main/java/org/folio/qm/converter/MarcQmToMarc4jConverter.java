@@ -32,5 +32,4 @@ public class MarcQmToMarc4jConverter implements Converter<BaseMarcRecord, Record
     }
     return marcRecord;
   }
-
 }

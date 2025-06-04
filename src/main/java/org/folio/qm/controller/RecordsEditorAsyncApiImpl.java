@@ -27,5 +27,4 @@ public class RecordsEditorAsyncApiImpl implements RecordsEditorAsyncApi {
     marcRecordsService.updateById(id, quickMarc, updateActionResult);
     return updateActionResult;
   }
-
 }

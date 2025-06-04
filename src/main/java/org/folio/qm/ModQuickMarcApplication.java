@@ -13,5 +13,4 @@ public class ModQuickMarcApplication {
   public static void main(String[] args) {
     SpringApplication.run(ModQuickMarcApplication.class, args);
   }
-
 }

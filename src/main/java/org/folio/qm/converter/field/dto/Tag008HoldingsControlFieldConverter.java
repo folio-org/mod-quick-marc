@@ -30,5 +30,4 @@ public class Tag008HoldingsControlFieldConverter implements VariableFieldConvert
       && field.getTag().equals(TAG_008_CONTROL_FIELD)
       && marcFormat == MarcFormat.HOLDINGS;
   }
-
 }

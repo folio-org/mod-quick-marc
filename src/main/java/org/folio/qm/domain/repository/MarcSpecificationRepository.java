@@ -9,5 +9,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MarcSpecificationRepository extends JpaRepository<MarcSpecification, UUID> {
 
   Optional<MarcSpecification> findByRecordTypeAndFieldTag(RecordType recordType, String fieldTag);
-
 }

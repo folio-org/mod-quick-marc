@@ -86,5 +86,4 @@ class MarcQmConverterTest {
       throw new ConverterException(e);
     }
   }
-
 }

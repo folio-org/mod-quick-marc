@@ -46,5 +46,4 @@ public class CacheConfig {
       .maximumSize(maximumSize)
       .build());
   }
-
 }

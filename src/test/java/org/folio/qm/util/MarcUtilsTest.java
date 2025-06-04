@@ -77,5 +77,4 @@ class MarcUtilsTest {
 
     assertThat(subfields).isEmpty();
   }
-
 }

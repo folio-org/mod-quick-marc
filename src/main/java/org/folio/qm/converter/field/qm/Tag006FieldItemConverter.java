@@ -35,5 +35,4 @@ public class Tag006FieldItemConverter implements FieldItemConverter {
     var configuration = resolveByCode(type.charAt(0));
     return restoreFixedLengthField(contentMap, TAG_006_CONTROL_FIELD_LENGTH, 0, configuration.getControlFieldItems());
   }
-
 }

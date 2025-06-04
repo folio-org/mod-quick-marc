@@ -18,5 +18,4 @@ public interface ChangeManagerService {
   void putJobProfileByJobExecutionId(UUID jobExecutionId, ProfileInfo jobProfile);
 
   void postRawRecordsByJobExecutionId(UUID jobExecutionId, RawRecordsDto rawRecords);
-
 }

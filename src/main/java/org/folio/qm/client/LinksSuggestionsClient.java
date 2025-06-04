@@ -14,5 +14,4 @@ public interface LinksSuggestionsClient {
     EntitiesLinksSuggestions srsMarcRecord,
     @RequestParam AuthoritySearchParameter authoritySearchParameter,
     @RequestParam Boolean ignoreAutoLinkingEnabled);
-
 }

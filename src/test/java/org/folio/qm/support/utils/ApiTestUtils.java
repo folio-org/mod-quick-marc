@@ -126,5 +126,4 @@ public class ApiTestUtils {
     }
     mockServer.stubFor(put(urlEqualTo(url)).willReturn(responseDefinitionBuilder));
   }
-
 }

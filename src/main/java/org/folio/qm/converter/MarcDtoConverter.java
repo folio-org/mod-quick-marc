@@ -79,5 +79,4 @@ public class MarcDtoConverter implements Converter<ParsedRecordDto, QuickMarcVie
   private String convertLeader(Record marcRecord) {
     return masqueradeBlanks(marcRecord.getLeader().marshal());
   }
-
 }

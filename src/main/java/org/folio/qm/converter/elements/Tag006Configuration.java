@@ -58,5 +58,4 @@ public enum Tag006Configuration {
     controlFieldItems.addFirst(ControlFieldItem.TYPE);
     return controlFieldItems;
   }
-
 }

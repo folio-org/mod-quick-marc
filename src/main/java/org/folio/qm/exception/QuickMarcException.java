@@ -24,5 +24,4 @@ public abstract class QuickMarcException extends RuntimeException {
   }
 
   public abstract int getStatus();
-
 }

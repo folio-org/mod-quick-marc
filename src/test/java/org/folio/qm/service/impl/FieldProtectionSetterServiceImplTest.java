@@ -108,5 +108,4 @@ class FieldProtectionSetterServiceImplTest {
       .extracting("tag", "isProtected")
       .contains(tuple(setting.getField(), false));
   }
-
 }

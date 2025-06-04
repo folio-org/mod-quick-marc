@@ -138,7 +138,6 @@ class LeaderMarcPopulationServiceTest {
         leaderItems.add(LeaderItem.CODING_SCHEME);
         return leaderItems;
       }
-
     };
   }
 

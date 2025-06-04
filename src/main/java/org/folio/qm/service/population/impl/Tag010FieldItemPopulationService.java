@@ -18,7 +18,6 @@ import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.SubfieldImpl;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class Tag010FieldItemPopulationService extends FieldItemMarcPopulationService {
 

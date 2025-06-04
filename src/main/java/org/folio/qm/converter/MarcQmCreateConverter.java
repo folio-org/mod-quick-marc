@@ -22,5 +22,4 @@ public class MarcQmCreateConverter extends MarcQmConverter<QuickMarcCreate> {
   public ParsedRecordDto convert(@NonNull QuickMarcCreate source) {
     return super.convert(updateRecordTimestamp(source));
   }
-
 }

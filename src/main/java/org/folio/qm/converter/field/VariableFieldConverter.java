@@ -37,5 +37,4 @@ public interface VariableFieldConverter<T extends VariableField> {
   default String extractElementFromContent(String content, ControlFieldItem element, int delta) {
     return substring(content, element.getPosition() + delta, element.getPosition() + delta + element.getLength());
   }
-
 }

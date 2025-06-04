@@ -253,5 +253,4 @@ public enum Tag007FieldTestData {
     content.put("Configuration of playback channels", "g");
     return content;
   }
-
 }

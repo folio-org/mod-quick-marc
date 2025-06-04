@@ -128,5 +128,4 @@ public enum Tag007Configuration {
     }
     return UNKNOWN;
   }
-
 }

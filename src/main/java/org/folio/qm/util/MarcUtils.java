@@ -118,5 +118,4 @@ public final class MarcUtils {
   public static String convertDollar(String input) {
     return input.replace("$", DOLLAR_EXPRESSION);
   }
-
 }

@@ -20,5 +20,4 @@ public class CommonFieldItemConverter extends AbstractFieldItemConverter {
   protected Subfield subfieldFromString(String string) {
     return new SubfieldImpl(string.charAt(1), string.substring(2).trim());
   }
-
 }

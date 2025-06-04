@@ -63,5 +63,4 @@ public class TestEntitiesUtils {
       .externalId(UUID.randomUUID())
       .externalHrid("hr0001");
   }
-
 }

@@ -13,5 +13,4 @@ public class CustomCacheProperties {
   private final Map<String, CustomCache> spec = new HashMap<>();
 
   public record CustomCache(long maximumSize, Duration ttl) { }
-
 }

@@ -49,5 +49,4 @@ public class Tag008BibliographicControlFieldConverter implements VariableFieldCo
   private String change(char c) {
     return c == SPACE_CHARACTER ? BLANK_REPLACEMENT : Character.toString(c);
   }
-
 }

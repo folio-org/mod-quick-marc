@@ -10,5 +10,4 @@ public interface FieldProtectionSettingsClient {
 
   @GetMapping(value = "/marc?limit=1000", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
   MarcFieldProtectionSettingsCollection getFieldProtectionSettings();
-
 }

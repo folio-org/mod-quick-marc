@@ -66,5 +66,4 @@ public abstract class LeaderValidationRule implements ValidationRule {
     return item.getPossibleValues().contains(leader.charAt(item.getPosition()))
       || item.getPossibleValues().contains(Character.toLowerCase(leader.charAt(item.getPosition())));
   }
-
 }

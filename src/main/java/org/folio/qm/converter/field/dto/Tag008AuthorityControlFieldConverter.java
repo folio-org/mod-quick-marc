@@ -30,5 +30,4 @@ public class Tag008AuthorityControlFieldConverter implements VariableFieldConver
       && field.getTag().equals(TAG_008_CONTROL_FIELD)
       && marcFormat == MarcFormat.AUTHORITY;
   }
-
 }

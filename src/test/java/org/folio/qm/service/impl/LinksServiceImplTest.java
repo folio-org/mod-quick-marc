@@ -228,5 +228,4 @@ class LinksServiceImplTest {
       .externalId(UUID.randomUUID())
       .fields(fieldItems);
   }
-
 }

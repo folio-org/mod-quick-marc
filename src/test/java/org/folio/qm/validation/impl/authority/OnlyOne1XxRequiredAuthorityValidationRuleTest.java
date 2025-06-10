@@ -64,5 +64,4 @@ class OnlyOne1XxRequiredAuthorityValidationRuleTest {
       .isPresent()
       .hasValueSatisfying(validationError -> assertEquals(IS_REQUIRED_TAG_ERROR_MSG, validationError.message()));
   }
-
 }

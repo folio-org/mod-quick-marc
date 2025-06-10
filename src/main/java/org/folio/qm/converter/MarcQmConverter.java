@@ -90,5 +90,4 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
     fieldsArrayNode.removeAll();
     fieldsArrayNode.addAll(rearrangedArray);
   }
-
 }

@@ -102,5 +102,4 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
     var dataPattern = Pattern.compile(".*\\$" + subfieldRegex + " " + Pattern.quote(setting.getData()) + ".*");
     return dataPattern.matcher(field.getContent().toString()).matches();
   }
-
 }

@@ -39,6 +39,4 @@ public class DefaultValuesPopulationService {
         validatableRecord.setMarcFormat(populatedRecord.getMarcFormat());
       });
   }
-
-
 }

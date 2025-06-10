@@ -16,5 +16,4 @@ public interface RecordCreationStatusRepository extends JpaRepository<RecordCrea
   @Modifying
   @Query("delete RecordCreationStatus where updatedAt<:timestamp")
   void deleteByUpdatedAtBefore(@Param("timestamp") Timestamp timestamp);
-
 }

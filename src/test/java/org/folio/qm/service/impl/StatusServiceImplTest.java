@@ -58,5 +58,4 @@ class StatusServiceImplTest {
 
     verify(statusRepository).deleteByUpdatedAtBefore(currentTime);
   }
-
 }

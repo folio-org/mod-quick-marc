@@ -10,5 +10,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface JobProfileRepository extends JpaRepository<JobProfile, UUID> {
 
   Optional<JobProfile> findByProfileActionAndRecordType(JobProfileAction profileAction, RecordType recordType);
-
 }

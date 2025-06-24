@@ -7,7 +7,7 @@
 * Requires `API_NAME vX.Y`
 
 ### Features
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+* Add “allowedValues” to the MARC authority 008 spec response ([MODQM-455](https://folio-org.atlassian.net/browse/MODQM-455))
 
 ### Bug fixes
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))

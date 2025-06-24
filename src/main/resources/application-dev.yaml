@@ -2,9 +2,9 @@ spring:
   application:
     name: mod-quick-marc
   datasource:
-    password: ${DB_PASSWORD:pass}
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:db}
-    username: ${DB_USERNAME:user}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:modules}
+    password: ${DB_PASSWORD:folio_admin}
+    username: ${DB_USERNAME:folio_admin}
     hikari:
       register-mbeans: true
   kafka:

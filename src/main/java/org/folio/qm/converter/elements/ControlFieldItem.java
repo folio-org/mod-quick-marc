@@ -148,7 +148,7 @@ public enum ControlFieldItem {
   PERS_NAME("Pers Name", 32, 1, false),
   LEVEL_EST("Level Est", 33, 1, false),
   UNDEF_34("Undef_34", 34, 4, false),
-  MOD_REC_EST("Mod Rec Est", 38, 1, false),
+  MOD_REC("Mod Rec", 38, 1, false),
   SOURCE("Source", 39, 1, false);
 
   private final String name;

@@ -16,7 +16,7 @@ import static org.folio.qm.converter.elements.ControlFieldItem.LANG_HOLDINGS;
 import static org.folio.qm.converter.elements.ControlFieldItem.LEND;
 import static org.folio.qm.converter.elements.ControlFieldItem.LEVEL_EST;
 import static org.folio.qm.converter.elements.ControlFieldItem.MAIN_USE;
-import static org.folio.qm.converter.elements.ControlFieldItem.MOD_REC_EST;
+import static org.folio.qm.converter.elements.ControlFieldItem.MOD_REC;
 import static org.folio.qm.converter.elements.ControlFieldItem.NUMB_SERIES;
 import static org.folio.qm.converter.elements.ControlFieldItem.PERS_NAME;
 import static org.folio.qm.converter.elements.ControlFieldItem.REC_UPD;
@@ -96,7 +96,7 @@ public final class Constants {
     SERIES, NUMB_SERIES, MAIN_USE, SUBJ_USE,
     SERIES_USE, TYPE_SUBD, UNDEF_18, GOVT_AG,
     REF_EVAL, UNDEF_30, REC_UPD, PERS_NAME,
-    LEVEL_EST, UNDEF_34, MOD_REC_EST, SOURCE);
+    LEVEL_EST, UNDEF_34, MOD_REC, SOURCE);
 
   public static final List<ControlFieldItem> HOLDINGS_CONTROL_FIELD_ITEMS = List.of(ACQ_STATUS, ACQ_METHOD,
     ACQ_ENDDATE, COMPL, COPIES,

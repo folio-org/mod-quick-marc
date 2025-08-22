@@ -78,7 +78,7 @@ public enum Tag008FieldTestData {
     content.put("Pers Name", "a");
     content.put("Level Est", "a");
     content.put("Undef_34", "\\\\\\\\");
-    content.put("Mod Rec Est", "\\");
+    content.put("Mod Rec", "\\");
     content.put("Source", "\\");
     return content;
   }
@@ -112,7 +112,7 @@ public enum Tag008FieldTestData {
     content.put("Pers Name", "\\");
     content.put("Level Est", "\\");
     content.put("Undef_34", "\\\\\\\\");
-    content.put("Mod Rec Est", "\\");
+    content.put("Mod Rec", "\\");
     content.put("Source", "\\");
     return content;
   }

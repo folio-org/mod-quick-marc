@@ -25,8 +25,10 @@ import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.domain.dto.SourceRecord;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
+import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.LinksSuggestionsMapper;
@@ -83,11 +85,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public QuickMarcView findByExternalId(UUID externalId) {
     log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
-    var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    var quickMarc = conversionService.convert(parsedRecordDto, QuickMarcView.class);
+    var sourceRecord = changeManagerService.getSourceRecordByExternalId(externalId.toString());
+    var quickMarc = conversionService.convert(sourceRecord, QuickMarcView.class);
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
-    setUserInfo(quickMarc, parsedRecordDto);
+    setUserInfo(quickMarc, sourceRecord);
     log.info("findByExternalId:: quickMarc loaded by externalId: {}", externalId);
     return quickMarc;
   }
@@ -165,6 +167,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private void validateOnUpdate(UUID parsedRecordId, QuickMarcEdit quickMarc) {
+    var sourceVersion = quickMarc.getSourceVersion();
+    var currentVersion =
+      changeManagerService.getSourceRecordByExternalId(quickMarc.getExternalId().toString()).getGeneration();
+    if (sourceVersion != null && !sourceVersion.equals(currentVersion)) {
+      throw new OptimisticLockingException();
+    }
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcRecord(quickMarc);
@@ -177,9 +185,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  private void setUserInfo(QuickMarcView quickMarc, ParsedRecordDto parsedRecordDto) {
-    if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
-      usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
+  private void setUserInfo(QuickMarcView quickMarc, SourceRecord sourceRecord) {
+    if (sourceRecord.getMetadata() != null && sourceRecord.getMetadata().getUpdatedByUserId() != null) {
+      usersClient.fetchUserById(sourceRecord.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {
           var userInfo = userMapper.fromDto(userDto);
           Objects.requireNonNull(quickMarc).getUpdateInfo().setUpdatedBy(userInfo);

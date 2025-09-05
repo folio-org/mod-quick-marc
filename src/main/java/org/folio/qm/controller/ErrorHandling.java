@@ -73,6 +73,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(QuickMarcException.class)
   public Error handleQuickMarcException(QuickMarcException e, HttpServletResponse response) {
+    log.warn(e);
     var code = e.getStatus();
     response.setStatus(code);
     return e.getError();
@@ -80,6 +81,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(IllegalArgumentException.class)
   public Error handleIllegalArgumentException(IllegalArgumentException e, HttpServletResponse response) {
+    log.warn(e);
     var cause = e.getCause();
     if (cause instanceof ConverterException converterException) {
       return handleQuickMarcException(converterException, response);
@@ -90,6 +92,7 @@ public class ErrorHandling {
 
   @ExceptionHandler(ConversionFailedException.class)
   public Error handleConverterException(ConversionFailedException e, HttpServletResponse response) {
+    log.warn(e);
     var cause = e.getCause();
     return switch (cause) {
       case QuickMarcException quickMarcException -> handleQuickMarcException(quickMarcException, response);

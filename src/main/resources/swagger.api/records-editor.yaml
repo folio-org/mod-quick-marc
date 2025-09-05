@@ -222,6 +222,8 @@ components:
       $ref: 'schemas/common.yaml#/uuid'
     parsedRecordDto:
       $ref: 'schemas/external/parsedRecordDto.json'
+    sourceRecord:
+      $ref: 'schemas/external/sourceRecord.json'
     initJobExecutionsRqDto:
       $ref: 'schemas/external/initJobExecutionsRqDto.json'
     initJobExecutionsRsDto:

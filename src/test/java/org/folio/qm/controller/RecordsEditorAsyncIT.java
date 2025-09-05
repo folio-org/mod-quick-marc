@@ -11,9 +11,11 @@ import static org.folio.qm.support.utils.ApiTestUtils.linksByInstanceIdPath;
 import static org.folio.qm.support.utils.ApiTestUtils.mockGet;
 import static org.folio.qm.support.utils.ApiTestUtils.mockPut;
 import static org.folio.qm.support.utils.ApiTestUtils.recordsEditorResourceByIdPath;
+import static org.folio.qm.support.utils.ApiTestUtils.sourceStoragePath;
 import static org.folio.qm.support.utils.InputOutputTestUtils.readFile;
 import static org.folio.qm.support.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.EXISTED_EXTERNAL_ID;
+import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
 import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
@@ -67,6 +69,8 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     mockGet("/specification-storage/specifications?family=MARC&include=all&limit=1&profile=authority",
       readFile("mockdata/response/specifications/specificationAuthority.json"), SC_OK, wireMockServer);
+    mockGet(sourceStoragePath(EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
+      wireMockServer);
 
     mockPut(changeManagerResourceByIdPath(VALID_PARSED_RECORD_DTO_ID), SC_ACCEPTED, wireMockServer);
     if (filePath.equals(QM_RECORD_EDIT_BIB_PATH)) {
@@ -75,6 +79,7 @@ class RecordsEditorAsyncIT extends BaseIT {
 
     QuickMarcEdit quickMarcJson = readQuickMarc(filePath, QuickMarcEdit.class)
       .parsedRecordDtoId(VALID_PARSED_RECORD_DTO_ID)
+      .sourceVersion(0)
       .externalId(EXISTED_EXTERNAL_ID);
 
     MvcResult result = putResultActions(recordsEditorResourceByIdPath(VALID_PARSED_RECORD_ID), quickMarcJson)
@@ -249,7 +254,6 @@ class RecordsEditorAsyncIT extends BaseIT {
     var quickMarcJson =
       getQuickMarcJsonWithMinContent(field, field, field245, field246, field001).parsedRecordDtoId(UUID.randomUUID())
         .marcFormat(MarcFormat.BIBLIOGRAPHIC)
-        .relatedRecordVersion("1")
         .parsedRecordId(VALID_PARSED_RECORD_ID)
         .externalId(UUID.randomUUID());
 

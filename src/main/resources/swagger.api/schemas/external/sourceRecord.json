@@ -1,18 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Record DTO Schema",
+  "description": "Source record DTO Schema",
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "id": {
+    "recordId": {
       "description": "UUID",
       "type": "string",
       "format": "uuid"
-    },
-    "externalIdsHolder": {
-      "description": "Container for identifiers of external entities",
-      "type": "object",
-      "$ref": "externalIdsHolder.json"
     },
     "recordType": {
       "description": "Type of record, e.g. MARC",
@@ -28,10 +23,19 @@
       "type": "object",
       "$ref": "parsedRecord.json"
     },
-    "recordState": {
-      "description": "State of source record in QM workflow",
-      "$ref": "state.json",
-      "default": "ACTUAL"
+    "deleted": {
+      "description": "Flag indicates that the record marked as deleted",
+      "type": "boolean",
+      "default": false
+    },
+    "generation": {
+      "description": "Generation from the last record with the same matchedId incremented by 1. Starts from 0.",
+      "type": "integer"
+    },
+    "externalIdsHolder": {
+      "description": "Container for identifiers of external entities",
+      "type": "object",
+      "$ref": "externalIdsHolder.json"
     },
     "additionalInfo": {
       "description": "Auxiliary data which is not related to MARC type record",
@@ -44,10 +48,5 @@
       "$ref": "metadata.json",
       "readonly": true
     }
-  },
-  "required": [
-    "id",
-    "recordType",
-    "parsedRecord"
-  ]
+  }
 }

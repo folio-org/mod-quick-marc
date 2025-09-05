@@ -30,8 +30,7 @@ public class MarcQmEditConverter extends MarcQmConverter<QuickMarcEdit> {
     parsedRecordDto.getParsedRecord().setId(source.getParsedRecordId());
     return parsedRecordDto
       .id(source.getParsedRecordDtoId())
-      .externalIdsHolder(convertExternalIdsHolder(source))
-      .relatedRecordVersion(source.getRelatedRecordVersion());
+      .externalIdsHolder(convertExternalIdsHolder(source));
   }
 
   private ExternalIdsHolder convertExternalIdsHolder(QuickMarcEdit quickMarc) {

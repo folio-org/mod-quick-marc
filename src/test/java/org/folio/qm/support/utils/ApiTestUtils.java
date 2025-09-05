@@ -24,6 +24,7 @@ public class ApiTestUtils {
   public static final String TENANT_ID = "test";
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
   public static final String RECORDS_EDITOR_RECORDS_STATUS_PATH = "/records-editor/records/status";
+  public static final String SOURCE_STORAGE_RECORDS_PATH = "/source-storage/source-records";
   public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";
   public static final String CHANGE_MANAGER_JOB_EXECUTION_PATH = "/change-manager/jobExecutions";
   public static final String CHANGE_MANAGER_JOB_PROFILE_PATH = CHANGE_MANAGER_JOB_EXECUTION_PATH + "/%s/jobProfile";
@@ -35,6 +36,7 @@ public class ApiTestUtils {
   public static final String LINKS_INSTANCES_PATH = LINKS_PATH + "/instances";
   public static final String MARC_SPECIFICATIONS_PATH = "/marc-specifications";
 
+  public static final String ID = "id";
   public static final String EXTERNAL_ID = "externalId";
   public static final String QM_RECORD_ID = "qmRecordId";
 
@@ -42,10 +44,6 @@ public class ApiTestUtils {
 
   public static String buildQuery(String parameter, String query) {
     return String.format("?%s=%s", parameter, encodeQuery(query));
-  }
-
-  private static String encodeQuery(String query) {
-    return URLEncoder.encode(query, StandardCharsets.UTF_8);
   }
 
   public static String usersByIdPath(String id) {
@@ -78,6 +76,10 @@ public class ApiTestUtils {
 
   public static String recordsEditorResourceByIdPath(UUID id) {
     return recordsEditorPath() + "/" + id;
+  }
+
+  public static String sourceStoragePath(UUID id) {
+    return SOURCE_STORAGE_RECORDS_PATH + buildQuery(ID, String.valueOf(id)) + "&idType=EXTERNAL";
   }
 
   public static String changeManagerPath() {
@@ -125,5 +127,9 @@ public class ApiTestUtils {
       responseDefinitionBuilder.withBody(body).withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
     }
     mockServer.stubFor(put(urlEqualTo(url)).willReturn(responseDefinitionBuilder));
+  }
+
+  private static String encodeQuery(String query) {
+    return URLEncoder.encode(query, StandardCharsets.UTF_8);
   }
 }

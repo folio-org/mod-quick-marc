@@ -6,10 +6,13 @@ import org.folio.qm.domain.dto.InitJobExecutionsRsDto;
 import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.ProfileInfo;
 import org.folio.qm.domain.dto.RawRecordsDto;
+import org.folio.qm.domain.dto.SourceRecord;
 
 public interface ChangeManagerService {
 
   ParsedRecordDto getParsedRecordByExternalId(String externalId);
+
+  SourceRecord getSourceRecordByExternalId(String externalId);
 
   void putParsedRecordByInstanceId(UUID id, ParsedRecordDto recordDto);
 

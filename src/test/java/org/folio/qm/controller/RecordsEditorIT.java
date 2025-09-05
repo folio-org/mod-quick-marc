@@ -24,6 +24,7 @@ import static org.folio.qm.support.utils.ApiTestUtils.mockPost;
 import static org.folio.qm.support.utils.ApiTestUtils.mockPut;
 import static org.folio.qm.support.utils.ApiTestUtils.recordsEditorPath;
 import static org.folio.qm.support.utils.ApiTestUtils.recordsEditorStatusPath;
+import static org.folio.qm.support.utils.ApiTestUtils.sourceStoragePath;
 import static org.folio.qm.support.utils.ApiTestUtils.usersByIdPath;
 import static org.folio.qm.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.qm.support.utils.DataBaseTestUtils.getCreationStatusById;
@@ -102,7 +103,7 @@ class RecordsEditorIT extends BaseIT {
     log.info("===== Verify GET Bibliographic record: Successful =====");
 
     mockGet(linksByInstanceIdPath(EXISTED_EXTERNAL_ID), readFile(TestEntitiesUtils.LINKS_PATH), SC_OK, wireMockServer);
-    mockGet(changeManagerPath(EXTERNAL_ID, EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
+    mockGet(sourceStoragePath(EXISTED_EXTERNAL_ID), readFile(PARSED_RECORD_BIB_DTO_PATH), SC_OK,
       wireMockServer);
     mockGet(usersByIdPath(JOHN_USER_ID), readFile(USER_JOHN_PATH), SC_OK, wireMockServer);
     mockGet(FIELD_PROTECTION_SETTINGS_PATH, readFile(TestEntitiesUtils.FIELD_PROTECTION_SETTINGS_PATH), SC_OK,
@@ -122,8 +123,6 @@ class RecordsEditorIT extends BaseIT {
       .andExpect(jsonPath("$.fields[14].linkDetails.linkingRuleId").value(LINKING_RULE_ID))
       .andExpect(jsonPath("$.fields[14].linkDetails.status").value(LINK_STATUS_ERROR))
       .andExpect(jsonPath("$.fields[14].linkDetails.errorCause").value(LINK_ERROR_CAUSE));
-
-    checkParseRecordDtoId();
   }
 
   @Test

@@ -13,17 +13,17 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.client.model.RecordTypeEnum;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.marc4j.marc.Subfield;
 
 public final class MarcUtils {
-  public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
-    ParsedRecordDto.RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
-    ParsedRecordDto.RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
-    ParsedRecordDto.RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
+  public static final BiMap<RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
+    RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
+    RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
+    RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
   );
   private static final DateTimeFormatter DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER =
     DateTimeFormatter.ofPattern("yyyyMMddHHmmss.S");
@@ -97,10 +97,11 @@ public final class MarcUtils {
   /**
    * Extract subfields from FieldItem.
    *
-   * @param field Quick Marc field.
+   * @param field            Quick Marc field.
    * @param subfieldFunction Function to map string to subfield object.
-   * @param soft Indicates whether to throw exception on invalid data. soft=true doesn't throw.
-   * */
+   * @param soft             Indicates whether to throw exception on invalid data. soft=true doesn't throw.
+   *
+   */
   public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction,
                                                 boolean soft) {
     return Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))

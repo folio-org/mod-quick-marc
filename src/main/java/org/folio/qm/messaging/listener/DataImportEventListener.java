@@ -5,7 +5,7 @@ import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.client.model.DataImportEventPayload;
 import org.folio.qm.service.EventProcessingService;
 import org.folio.spring.FolioModuleMetadata;
 import org.springframework.kafka.annotation.KafkaListener;

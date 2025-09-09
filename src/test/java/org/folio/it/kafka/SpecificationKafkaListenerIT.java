@@ -13,13 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import jakarta.annotation.PostConstruct;
 import java.util.UUID;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.folio.it.BaseIT;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
 import org.folio.rspec.domain.dto.Family;
 import org.folio.rspec.domain.dto.FamilyProfile;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.testing.type.IntegrationTest;
-import org.folio.support.BaseIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;

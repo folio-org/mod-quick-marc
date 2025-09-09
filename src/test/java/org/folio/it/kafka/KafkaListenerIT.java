@@ -11,10 +11,10 @@ import static org.folio.support.utils.TestEntitiesUtils.DI_EVENT_WITH_INSTANCE;
 import static org.folio.support.utils.TestEntitiesUtils.JOB_EXECUTION_ID;
 
 import java.util.UUID;
+import org.folio.it.BaseIT;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.spring.testing.extension.DatabaseCleanup;
 import org.folio.spring.testing.type.IntegrationTest;
-import org.folio.support.BaseIT;
 import org.folio.support.utils.TestEntitiesUtils;
 import org.junit.jupiter.api.Test;
 

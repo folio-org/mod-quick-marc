@@ -5,9 +5,9 @@ import static org.folio.qm.util.ErrorUtils.buildInternalError;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
+import org.folio.qm.client.model.ExternalIdsHolder;
+import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.domain.dto.BaseMarcRecord;
-import org.folio.qm.domain.dto.ExternalIdsHolder;
-import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
@@ -29,12 +29,12 @@ public class MarcQmEditConverter extends MarcQmConverter<QuickMarcEdit> {
     var parsedRecordDto = Objects.requireNonNull(super.convert(updateRecordTimestamp(source)));
     parsedRecordDto.getParsedRecord().setId(source.getParsedRecordId());
     return parsedRecordDto
-      .id(source.getParsedRecordDtoId())
-      .externalIdsHolder(convertExternalIdsHolder(source));
+      .setId(source.getParsedRecordDtoId())
+      .setExternalIdsHolder(convertExternalIdsHolder(source));
   }
 
   private ExternalIdsHolder convertExternalIdsHolder(QuickMarcEdit quickMarc) {
-    var externalIdsHolder = new org.folio.qm.domain.dto.ExternalIdsHolder();
+    var externalIdsHolder = new ExternalIdsHolder();
     switch (quickMarc.getMarcFormat()) {
       case BIBLIOGRAPHIC -> {
         externalIdsHolder.setInstanceId(quickMarc.getExternalId());

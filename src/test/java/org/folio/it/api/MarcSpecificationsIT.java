@@ -5,11 +5,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.extern.log4j.Log4j2;
+import org.folio.it.BaseIT;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.testing.type.IntegrationTest;
-import org.folio.support.BaseIT;
 import org.junit.jupiter.api.Test;
 
 @Log4j2

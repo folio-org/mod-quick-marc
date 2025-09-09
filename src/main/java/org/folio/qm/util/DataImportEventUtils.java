@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.client.model.DataImportEventPayload;
 
 @Log4j2
 @UtilityClass

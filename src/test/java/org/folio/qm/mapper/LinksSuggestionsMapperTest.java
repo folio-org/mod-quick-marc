@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-import org.folio.qm.domain.dto.BaseSrsMarcRecord;
-import org.folio.qm.domain.dto.EntitiesLinksSuggestions;
+import org.folio.qm.client.model.BaseSrsMarcRecord;
+import org.folio.qm.client.model.EntitiesLinksSuggestions;
+import org.folio.qm.client.model.SrsFieldItem;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.domain.dto.SrsFieldItem;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -29,19 +29,15 @@ class LinksSuggestionsMapperTest {
     var srsSubfields = List.of(
       Map.of("a", "test $ subfield"),
       Map.of("0", "test0"),
-      Map.of("9", "test9")
-    );
+      Map.of("9", "test9"));
     var srsField = Map.of(expectedTag, new SrsFieldItem()
-      .ind1(expectedIndicators.get(0))
-      .ind2(expectedIndicators.get(1))
-      .linkDetails(linkDetails)
-      .subfields(srsSubfields)
-    );
+      .setInd1(expectedIndicators.get(0))
+      .setInd2(expectedIndicators.get(1))
+      .setLinkDetails(linkDetails)
+      .setSubfields(srsSubfields));
 
-    var srsRecord = new BaseSrsMarcRecord().leader(LEADER)
-      .addFieldsItem(srsField);
-    var srsRecordCollection = new EntitiesLinksSuggestions()
-      .addRecordsItem(srsRecord);
+    var srsRecord = new BaseSrsMarcRecord().setLeader(LEADER).setFields(List.of(srsField));
+    var srsRecordCollection = new EntitiesLinksSuggestions().setRecords(List.of(srsRecord));
 
     var quickMarcRecord = MAPPER.map(srsRecordCollection).getFirst();
     var quickMarcField = quickMarcRecord.getFields().getFirst();
@@ -65,20 +61,16 @@ class LinksSuggestionsMapperTest {
       .indicators(quickMarcIndicators)
       .content(quickMarcContent);
 
-    var quickMarcRecord = new QuickMarcView().leader(LEADER)
-      .addFieldsItem(quickMarcField);
-
+    var quickMarcRecord = new QuickMarcView().leader(LEADER).addFieldsItem(quickMarcField);
     var expectedSubfields = List.of(
       Map.of("a", "test $ subfield"),
       Map.of("0", "test0"),
-      Map.of("9", "test9")
-    );
+      Map.of("9", "test9"));
     var expectedField = Map.of(quickMarcTag, new SrsFieldItem()
-      .ind1(quickMarcIndicators.get(0))
-      .ind2(quickMarcIndicators.get(1))
-      .linkDetails(linkDetails)
-      .subfields(expectedSubfields)
-    );
+      .setInd1(quickMarcIndicators.get(0))
+      .setInd2(quickMarcIndicators.get(1))
+      .setLinkDetails(linkDetails)
+      .setSubfields(expectedSubfields));
 
     var srsRecord = MAPPER.map(List.of(quickMarcRecord)).getRecords().getFirst();
     assertThat(srsRecord)
@@ -89,9 +81,9 @@ class LinksSuggestionsMapperTest {
   @Test
   void shouldConvertSrsToQuickMarcSuccessfullyWhenContentIsEmpty() {
     var expectedTag = "100";
-    var srsField = Map.of(expectedTag, new SrsFieldItem().subfields(null));
-    var srsRecord = new BaseSrsMarcRecord().leader(LEADER).addFieldsItem(srsField);
-    var srsRecordCollection = new EntitiesLinksSuggestions().addRecordsItem(srsRecord);
+    var srsField = Map.of(expectedTag, new SrsFieldItem().setSubfields(null));
+    var srsRecord = new BaseSrsMarcRecord().setLeader(LEADER).setFields(List.of(srsField));
+    var srsRecordCollection = new EntitiesLinksSuggestions().setRecords(List.of(srsRecord));
 
     var quickMarcRecord = MAPPER.map(srsRecordCollection).getFirst();
     var quickMarcField = quickMarcRecord.getFields().getFirst();

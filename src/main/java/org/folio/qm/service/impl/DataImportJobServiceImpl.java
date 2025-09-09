@@ -10,7 +10,8 @@ import static org.folio.qm.util.StatusUtils.getStatusNew;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.client.model.ParsedRecordDto;
+import org.folio.qm.client.model.RecordTypeEnum;
 import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.domain.entity.RecordType;
@@ -25,10 +26,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataImportJobServiceImpl implements DataImportJobService {
 
-  private static final Map<ParsedRecordDto.RecordTypeEnum, RecordType> TYPE_MAP = Map.of(
-    ParsedRecordDto.RecordTypeEnum.AUTHORITY, RecordType.MARC_AUTHORITY,
-    ParsedRecordDto.RecordTypeEnum.BIB, RecordType.MARC_BIBLIOGRAPHIC,
-    ParsedRecordDto.RecordTypeEnum.HOLDING, RecordType.MARC_HOLDINGS
+  private static final Map<RecordTypeEnum, RecordType> TYPE_MAP = Map.of(
+    RecordTypeEnum.AUTHORITY, RecordType.MARC_AUTHORITY,
+    RecordTypeEnum.BIB, RecordType.MARC_BIBLIOGRAPHIC,
+    RecordTypeEnum.HOLDING, RecordType.MARC_HOLDINGS
   );
 
   private final ChangeManagerService changeManagerService;

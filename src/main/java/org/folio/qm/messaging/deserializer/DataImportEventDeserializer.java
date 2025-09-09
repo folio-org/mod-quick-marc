@@ -6,7 +6,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
-import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.client.model.DataImportEventPayload;
 import org.springframework.stereotype.Component;
 
 @Component

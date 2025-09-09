@@ -9,12 +9,12 @@ import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
-import org.folio.qm.domain.dto.ExternalIdsHolder;
+import org.folio.qm.client.model.ExternalIdsHolder;
+import org.folio.qm.client.model.ParsedRecord;
+import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.ParsedRecord;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.RecordState;
-import org.folio.qm.domain.dto.SourceRecord;
 import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
@@ -63,7 +63,7 @@ public class SourceRecordConverter implements Converter<SourceRecord, QuickMarcV
       .sourceVersion(source.getGeneration())
       .externalId(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
       .externalHrid(EXTERNAL_HRID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
-      .suppressDiscovery(source.getAdditionalInfo().getSuppressDiscovery())
+      .suppressDiscovery(source.getAdditionalInfo().isSuppressDiscovery())
       .updateInfo(new UpdateInfo()
         .recordState(RecordState.ACTUAL)
         .updateDate(source.getMetadata().getUpdatedDate()));

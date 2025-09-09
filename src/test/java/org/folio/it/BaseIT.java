@@ -1,4 +1,4 @@
-package org.folio.support;
+package org.folio.it;
 
 import static java.util.Objects.requireNonNull;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
@@ -24,6 +24,7 @@ import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.folio.qm.ModQuickMarcApplication;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
@@ -31,6 +32,7 @@ import org.folio.spring.testing.extension.EnableKafka;
 import org.folio.spring.testing.extension.EnableOkapi;
 import org.folio.spring.testing.extension.EnablePostgres;
 import org.folio.spring.testing.extension.impl.OkapiConfiguration;
+import org.folio.support.DisplayNameLogger;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -51,11 +53,12 @@ import org.springframework.test.web.servlet.ResultActions;
 @EnableOkapi
 @EnableKafka
 @EnablePostgres
-@SpringBootTest
+@SpringBootTest(classes = ModQuickMarcApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @ExtendWith(DisplayNameLogger.class)
-public abstract class BaseIT {
+@SuppressWarnings("java:S5786")
+public class BaseIT {
 
   protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
   protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";

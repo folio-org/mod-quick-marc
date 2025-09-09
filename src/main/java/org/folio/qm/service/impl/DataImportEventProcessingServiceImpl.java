@@ -7,7 +7,7 @@ import static org.folio.qm.util.DataImportEventUtils.extractMarcId;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.client.model.DataImportEventPayload;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 import org.folio.qm.service.EventProcessingService;

@@ -16,11 +16,11 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.folio.qm.domain.dto.ParsedRecord;
-import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.client.model.ParsedRecord;
+import org.folio.qm.client.model.ParsedRecordDto;
+import org.folio.qm.client.model.SourceRecord;
+import org.folio.qm.client.model.State;
 import org.folio.qm.domain.dto.QuickMarcEdit;
-import org.folio.qm.domain.dto.SourceRecord;
-import org.folio.qm.domain.dto.State;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapperImpl;
 import org.folio.spring.testing.type.UnitTest;
@@ -89,12 +89,12 @@ class MarcQmConverterTest {
 
   private ParsedRecordDto toDto(SourceRecord sourceRecord) {
     return new ParsedRecordDto()
-      .recordType(ParsedRecordDto.RecordTypeEnum.fromValue(sourceRecord.getRecordType().getValue()))
-      .parsedRecord(sourceRecord.getParsedRecord())
-      .additionalInfo(sourceRecord.getAdditionalInfo())
-      .id(sourceRecord.getRecordId())
-      .externalIdsHolder(sourceRecord.getExternalIdsHolder())
-      .metadata(sourceRecord.getMetadata())
-      .recordState(State.ACTUAL);
+      .setRecordType(sourceRecord.getRecordType())
+      .setParsedRecord(sourceRecord.getParsedRecord())
+      .setAdditionalInfo(sourceRecord.getAdditionalInfo())
+      .setId(sourceRecord.getRecordId())
+      .setExternalIdsHolder(sourceRecord.getExternalIdsHolder())
+      .setMetadata(sourceRecord.getMetadata())
+      .setRecordState(State.ACTUAL);
   }
 }

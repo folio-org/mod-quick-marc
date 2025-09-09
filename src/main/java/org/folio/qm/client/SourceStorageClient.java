@@ -1,6 +1,6 @@
 package org.folio.qm.client;
 
-import org.folio.qm.domain.dto.SourceRecord;
+import org.folio.qm.client.model.SourceRecord;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

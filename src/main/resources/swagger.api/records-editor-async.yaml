@@ -52,8 +52,10 @@ paths:
           in: path
           required: true
           schema:
-            '$ref': '#/components/schemas/UUID'
+            type: string
+            format: uuid
           description: The UUID of a record
+
 components:
   schemas:
     quickMarcEdit:
@@ -62,5 +64,3 @@ components:
       $ref: 'schemas/common.yaml#/validationResult'
     error:
       type: object
-    UUID:
-      $ref: 'schemas/common.yaml#/uuid'

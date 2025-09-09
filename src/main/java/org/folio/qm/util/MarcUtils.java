@@ -36,18 +36,6 @@ public final class MarcUtils {
   }
 
   /**
-   * This method decode MARC date-time representation for.
-   * Date and Time of Latest Transaction Field (005)
-   * in the Java {@link LocalDateTime} value
-   *
-   * @param representation MARC date-time representation
-   * @return Java {@link LocalDateTime} for MARC date-time value
-   */
-  public static LocalDateTime decodeFromMarcDateTime(String representation) {
-    return LocalDateTime.parse(representation, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
-  }
-
-  /**
    * This method encode Java {@link java.time.LocalDateTime} value in the MARC date-time format for
    * <a href="https://www.loc.gov/marc/bibliographic/bd005.html">Date and Time of Latest Transaction Field (005)</a>.
    *

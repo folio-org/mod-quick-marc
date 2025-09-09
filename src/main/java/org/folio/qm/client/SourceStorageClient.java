@@ -14,8 +14,6 @@ public interface SourceStorageClient {
   SourceRecord getSourceRecord(@PathVariable("id") String id, @RequestParam("idType") IdType idType);
 
   enum IdType {
-    EXTERNAL,
-    RECORD,
-    SRS_RECORD
+    EXTERNAL
   }
 }

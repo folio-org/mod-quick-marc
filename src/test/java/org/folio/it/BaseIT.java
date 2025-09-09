@@ -10,7 +10,6 @@ import static org.folio.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.support.utils.TestEntitiesUtils.JOHN_USER_ID;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -132,14 +131,6 @@ public class BaseIT {
 
   protected ResultActions doPut(String uri) throws Exception {
     return mockMvc.perform(put(uri)
-        .headers(defaultHeaders())
-        .contentType(APPLICATION_JSON)
-        .content(""))
-      .andDo(log());
-  }
-
-  protected ResultActions deleteResultActions(String uri) throws Exception {
-    return mockMvc.perform(delete(uri)
         .headers(defaultHeaders())
         .contentType(APPLICATION_JSON)
         .content(""))

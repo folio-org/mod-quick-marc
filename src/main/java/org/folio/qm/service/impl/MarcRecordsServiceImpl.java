@@ -167,11 +167,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private void validateOnUpdate(UUID parsedRecordId, QuickMarcEdit quickMarc) {
-    var sourceVersion = quickMarc.getSourceVersion();
-    var currentVersion =
+    var requestVersion = quickMarc.getSourceVersion();
+    var storedVersion =
       changeManagerService.getSourceRecordByExternalId(quickMarc.getExternalId().toString()).getGeneration();
-    if (sourceVersion != null && !sourceVersion.equals(currentVersion)) {
-      throw new OptimisticLockingException();
+    if (requestVersion != null && !requestVersion.equals(storedVersion)) {
+      throw new OptimisticLockingException(parsedRecordId, storedVersion, requestVersion);
     }
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validationService.validateIdsMatch(quickMarc, parsedRecordId);

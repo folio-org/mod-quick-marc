@@ -1,0 +1,18 @@
+{
+  "mappings": [
+    {
+      "priority": 5,
+      "request": {
+        "method": "GET",
+        "url": "/users/38d3a441-c100-5e8d-bd12-71bde492b723"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "users/userJohn.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

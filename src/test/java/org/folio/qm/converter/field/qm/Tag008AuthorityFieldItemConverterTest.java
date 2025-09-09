@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.support.utils.testdata.Tag008FieldTestData;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.testdata.Tag008FieldTestData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

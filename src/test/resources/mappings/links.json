@@ -1,0 +1,39 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/links/instances/00000000-0000-0000-0000-000000000001"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "links/instanceLinks.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "urlPath": "/links/instances/00000000-0000-0000-0000-000000000001"
+      },
+      "response": {
+        "status": 202
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/linking-rules/instance-authority"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "links/linkingRules.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

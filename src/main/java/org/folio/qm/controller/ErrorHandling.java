@@ -16,7 +16,9 @@ import org.folio.qm.exception.ConverterException;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.JobProfileNotFoundException;
 import org.folio.qm.exception.MarcRecordValidationException;
+import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.QuickMarcException;
+import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.exception.NotFoundException;
 import org.folio.tenant.domain.dto.Error;
 import org.springframework.core.convert.ConversionFailedException;
@@ -117,7 +119,7 @@ public class ErrorHandling {
   @ExceptionHandler(MarcRecordValidationException.class)
   @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
   public ValidationResult handleMarcRecordValidationException(MarcRecordValidationException e) {
-    log.error("Marc record validation error occurred: ", e);
+    log.warn("Marc record validation error occurred: {}", e.getMessage());
     return e.getValidationResult();
   }
 
@@ -162,6 +164,12 @@ public class ErrorHandling {
   @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
   public Error handleAsyncRequestTimeoutException(AsyncRequestTimeoutException e) {
     return buildError(HttpStatus.REQUEST_TIMEOUT, INTERNAL, "Request timeout occurred");
+  }
+
+  @ExceptionHandler(OptimisticLockingException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public Error handleOptimisticLockingException(OptimisticLockingException e) {
+    return ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, e.getMessage());
   }
 
   @ExceptionHandler(Exception.class)

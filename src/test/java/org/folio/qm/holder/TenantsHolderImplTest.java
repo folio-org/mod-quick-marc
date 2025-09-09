@@ -1,6 +1,6 @@
 package org.folio.qm.holder;
 
-import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
+import static org.folio.support.utils.ApiTestUtils.TENANT_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,8 +1,5 @@
 package org.folio.qm.util;
 
-import static org.folio.qm.converter.elements.Constants.SPLIT_PATTERN;
-import static org.folio.qm.converter.elements.Constants.TOKEN_MIN_LENGTH;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
@@ -20,11 +17,16 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.marc4j.marc.Subfield;
 
 public final class MarcUtils {
+
   public static final BiMap<RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
     RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
     RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
     RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
   );
+
+  private static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-zA-Z0-9])");
+  private static final int TOKEN_MIN_LENGTH = 3;
+
   private static final DateTimeFormatter DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER =
     DateTimeFormatter.ofPattern("yyyyMMddHHmmss.S");
   private static final Pattern UUID_REGEX =
@@ -101,10 +103,16 @@ public final class MarcUtils {
       })
       .filter(StringUtils::isNotBlank)
       .map(subfieldFunction)
+      .map(MarcUtils::lowercaseSubfieldCode)
       .toList();
   }
 
   public static String convertDollar(String input) {
     return input.replace("$", DOLLAR_EXPRESSION);
+  }
+
+  private static Subfield lowercaseSubfieldCode(Subfield subfield) {
+    subfield.setCode(Character.toLowerCase(subfield.getCode()));
+    return subfield;
   }
 }

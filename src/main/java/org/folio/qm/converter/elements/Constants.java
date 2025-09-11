@@ -60,7 +60,6 @@ public final class Constants {
   public static final int TAG_008_HOLDINGS_CONTROL_FIELD_LENGTH = 32;
   public static final int TAG_008_AUTHORITY_CONTROL_FIELD_LENGTH = 40;
   public static final int TAG_008_BIBLIOGRAPHIC_CONTROL_FIELD_LENGTH = 40;
-  public static final int TOKEN_MIN_LENGTH = 3;
   public static final int LEADER_LENGTH = 24;
   public static final int LCCN_NEW_PREFIX_LENGTH = 2;
   public static final int LCCN_OLD_PREFIX_LENGTH = 3;
@@ -68,7 +67,6 @@ public final class Constants {
   public static final int SPECIFIC_ELEMENTS_END_INDEX = 35;
 
   public static final Pattern CONTROL_FIELD_PATTERN = Pattern.compile("^(00)[1-9]$");
-  public static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-z0-9])");
 
   public static final String DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD = "005";
   public static final String TAG_001_CONTROL_FIELD = "001";

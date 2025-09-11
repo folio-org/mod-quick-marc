@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -65,7 +64,7 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
       var convertedContent = objectMapper.readTree(os.toByteArray());
       reorderContentTagsBasedOnSource(convertedContent, source.getFields());
       return convertedContent;
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new ConverterException(e);
     }
   }

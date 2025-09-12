@@ -3,24 +3,8 @@
   "name": "quickMARC",
   "requires": [
     {
-      "id": "source-manager-parsed-records",
-      "version": "3.0"
-    },
-    {
-      "id": "source-manager-job-executions",
-      "version": "3.4"
-    },
-    {
-      "id": "source-manager-records",
-      "version": "2.0"
-    },
-    {
       "id": "users",
       "version": "15.0 16.0"
-    },
-    {
-      "id": "field-protection-settings",
-      "version": "1.2"
     },
     {
       "id": "instance-authority-links",
@@ -37,6 +21,24 @@
     {
       "id": "specification-storage",
       "version": "1.0"
+    }
+  ],
+  "optional": [
+    {
+      "id": "source-manager-parsed-records",
+      "version": "3.0"
+    },
+    {
+      "id": "source-manager-job-executions",
+      "version": "3.4"
+    },
+    {
+      "id": "source-manager-records",
+      "version": "2.0"
+    },
+    {
+      "id": "field-protection-settings",
+      "version": "1.2"
     }
   ],
   "provides": [

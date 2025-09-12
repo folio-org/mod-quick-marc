@@ -10,18 +10,18 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.client.model.RecordTypeEnum;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.marc4j.marc.Subfield;
 
 public final class MarcUtils {
 
-  public static final BiMap<ParsedRecordDto.RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
-    ParsedRecordDto.RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
-    ParsedRecordDto.RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
-    ParsedRecordDto.RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
+  public static final BiMap<RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
+    RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
+    RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
+    RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
   );
 
   private static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-zA-Z0-9])");
@@ -35,18 +35,6 @@ public final class MarcUtils {
   private static final String DOLLAR_EXPRESSION = "{dollar}";
 
   private MarcUtils() {
-  }
-
-  /**
-   * This method decode MARC date-time representation for.
-   * Date and Time of Latest Transaction Field (005)
-   * in the Java {@link LocalDateTime} value
-   *
-   * @param representation MARC date-time representation
-   * @return Java {@link LocalDateTime} for MARC date-time value
-   */
-  public static LocalDateTime decodeFromMarcDateTime(String representation) {
-    return LocalDateTime.parse(representation, DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
   /**

@@ -9,9 +9,9 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.FieldProtectionSettingsClient;
+import org.folio.qm.client.model.MarcFieldProtectionSetting;
+import org.folio.qm.client.model.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.MarcFieldProtectionSetting;
-import org.folio.qm.domain.dto.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.service.FieldProtectionSetterService;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,7 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
 
   private boolean isAnyValueInSettingOrTagMatch(MarcFieldProtectionSetting setting, FieldItem field) {
     return isBlank(setting.getIndicator1()) && isBlank(setting.getIndicator2()) && isBlank(setting.getSubfield())
-      && setting.getField().equals(ANY_STRING) || setting.getField().equals(field.getTag());
+           && setting.getField().equals(ANY_STRING) || setting.getField().equals(field.getTag());
   }
 
   private boolean isAnyDataInSettingOrDataMatch(MarcFieldProtectionSetting setting, FieldItem field) {
@@ -79,13 +79,13 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
   private boolean isAnyIndicator1InSettingOrIndicator1Match(MarcFieldProtectionSetting setting, FieldItem field) {
     return Objects.equals(setting.getIndicator1(), ANY_STRING)
            || (isNotEmpty(setting.getIndicator1()) ? setting.getIndicator1() : BLANK_SUBFIELD_CODE)
-      .equals(field.getIndicators().getFirst());
+             .equals(field.getIndicators().getFirst());
   }
 
   private boolean isAnyIndicator2InSettingOrIndicator2Match(MarcFieldProtectionSetting setting, FieldItem field) {
     return Objects.equals(setting.getIndicator2(), ANY_STRING)
            || (isNotEmpty(setting.getIndicator2()) ? setting.getIndicator2() : BLANK_SUBFIELD_CODE)
-      .equals(field.getIndicators().get(1));
+             .equals(field.getIndicators().get(1));
   }
 
   private boolean isAnySubFieldInSettingOrSubFieldMatch(MarcFieldProtectionSetting setting, FieldItem field) {

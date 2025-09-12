@@ -7,11 +7,11 @@ import static org.folio.qm.util.MarcUtils.extractSubfields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.folio.qm.domain.dto.BaseSrsMarcRecord;
-import org.folio.qm.domain.dto.EntitiesLinksSuggestions;
+import org.folio.qm.client.model.BaseSrsMarcRecord;
+import org.folio.qm.client.model.EntitiesLinksSuggestions;
+import org.folio.qm.client.model.SrsFieldItem;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.domain.dto.SrsFieldItem;
 import org.folio.qm.util.MarcUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
@@ -26,7 +26,7 @@ public interface LinksSuggestionsMapper {
 
   default EntitiesLinksSuggestions map(List<QuickMarcView> quickMarcRecords) {
     return new EntitiesLinksSuggestions()
-      .records(quickMarcRecords.stream().map(this::mapRecord).toList());
+      .setRecords(quickMarcRecords.stream().map(this::mapRecord).toList());
   }
 
   default QuickMarcView mapRecord(BaseSrsMarcRecord quickMarcRecord) {
@@ -37,8 +37,8 @@ public interface LinksSuggestionsMapper {
 
   default BaseSrsMarcRecord mapRecord(QuickMarcView quickMarcRecord) {
     return new BaseSrsMarcRecord()
-      .leader(quickMarcRecord.getLeader())
-      .fields(quickMarcRecord.getFields().stream().map(this::mapField).toList());
+      .setLeader(quickMarcRecord.getLeader())
+      .setFields(quickMarcRecord.getFields().stream().map(this::mapField).toList());
   }
 
   default FieldItem mapField(Map<String, SrsFieldItem> fields) {

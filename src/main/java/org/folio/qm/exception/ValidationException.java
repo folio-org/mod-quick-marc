@@ -12,10 +12,6 @@ public class ValidationException extends QuickMarcException {
     super(error);
   }
 
-  public ValidationException(Exception ex) {
-    super(ex);
-  }
-
   public int getStatus() {
     return HttpStatus.BAD_REQUEST.value();
   }

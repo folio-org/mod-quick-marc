@@ -16,17 +16,19 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
+import org.folio.qm.client.model.ParsedRecordDto;
+import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
+import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.UnexpectedException;
 import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.mapper.LinksSuggestionsMapper;
@@ -83,11 +85,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public QuickMarcView findByExternalId(UUID externalId) {
     log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
-    var parsedRecordDto = changeManagerService.getParsedRecordByExternalId(externalId.toString());
-    var quickMarc = conversionService.convert(parsedRecordDto, QuickMarcView.class);
+    var sourceRecord = changeManagerService.getSourceRecordByExternalId(externalId.toString());
+    var quickMarc = conversionService.convert(sourceRecord, QuickMarcView.class);
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
-    setUserInfo(quickMarc, parsedRecordDto);
+    setUserInfo(quickMarc, sourceRecord);
     log.info("findByExternalId:: quickMarc loaded by externalId: {}", externalId);
     return quickMarc;
   }
@@ -165,6 +167,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   }
 
   private void validateOnUpdate(UUID parsedRecordId, QuickMarcEdit quickMarc) {
+    var requestVersion = quickMarc.getSourceVersion();
+    var storedVersion =
+      changeManagerService.getSourceRecordByExternalId(quickMarc.getExternalId().toString()).getGeneration();
+    if (requestVersion != null && !requestVersion.equals(storedVersion)) {
+      throw new OptimisticLockingException(parsedRecordId, storedVersion, requestVersion);
+    }
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcRecord(quickMarc);
@@ -177,9 +185,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  private void setUserInfo(QuickMarcView quickMarc, ParsedRecordDto parsedRecordDto) {
-    if (parsedRecordDto.getMetadata() != null && parsedRecordDto.getMetadata().getUpdatedByUserId() != null) {
-      usersClient.fetchUserById(parsedRecordDto.getMetadata().getUpdatedByUserId())
+  private void setUserInfo(QuickMarcView quickMarc, SourceRecord sourceRecord) {
+    if (sourceRecord.getMetadata() != null && sourceRecord.getMetadata().getUpdatedByUserId() != null) {
+      usersClient.fetchUserById(sourceRecord.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {
           var userInfo = userMapper.fromDto(userDto);
           Objects.requireNonNull(quickMarc).getUpdateInfo().setUpdatedBy(userInfo);

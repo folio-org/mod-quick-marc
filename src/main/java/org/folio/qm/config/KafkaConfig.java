@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.client.model.DataImportEventPayload;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.springframework.beans.factory.annotation.Value;

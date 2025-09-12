@@ -1,8 +1,8 @@
 package org.folio.qm.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.domain.dto.BaseMarcRecord;
-import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.mapper.MarcTypeMapper;
 import org.marc4j.marc.Record;

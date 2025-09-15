@@ -19,7 +19,6 @@ import org.apache.commons.io.IOUtils;
 import org.folio.qm.client.model.ParsedRecord;
 import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.SourceRecord;
-import org.folio.qm.client.model.State;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapperImpl;
@@ -94,7 +93,6 @@ class MarcQmConverterTest {
       .setAdditionalInfo(sourceRecord.getAdditionalInfo())
       .setId(sourceRecord.getRecordId())
       .setExternalIdsHolder(sourceRecord.getExternalIdsHolder())
-      .setMetadata(sourceRecord.getMetadata())
-      .setRecordState(State.ACTUAL);
+      .setMetadata(sourceRecord.getMetadata());
   }
 }

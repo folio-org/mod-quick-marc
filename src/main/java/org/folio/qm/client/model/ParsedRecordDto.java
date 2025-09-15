@@ -14,7 +14,6 @@ public class ParsedRecordDto {
   private ExternalIdsHolder externalIdsHolder;
   private RecordTypeEnum recordType;
   private ParsedRecord parsedRecord;
-  private org.folio.qm.client.model.State recordState = State.ACTUAL;
   private AdditionalInfo additionalInfo;
   private Metadata metadata;
 }

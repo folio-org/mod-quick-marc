@@ -3,8 +3,8 @@ package org.folio.qm.service.impl;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_ERROR_CAUSE;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.LINK_STATUS_ERROR;
+import static org.folio.support.utils.TestEntitiesUtils.LINK_ERROR_CAUSE;
+import static org.folio.support.utils.TestEntitiesUtils.LINK_STATUS_ERROR;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -56,93 +56,26 @@ class LinksServiceImplTest {
 
   public static Stream<Arguments> setLinksTestData() {
     return Stream.of(
-      arguments(
-        Collections.emptyList(),
-        List.of(
-          getFieldItem()),
-        0
-      ),
-      arguments(
-        List.of(
-          getInstanceLink(UUID.fromString(AUTHORITY_ID))),
-        List.of(
-          getFieldItem(AUTHORITY_ID)),
-        1
-      ),
-      arguments(
-        List.of(
-          getInstanceLink(UUID.fromString(AUTHORITY_ID)),
+      arguments(Collections.emptyList(), List.of(getFieldItem()), 0),
+      arguments(List.of(getInstanceLink(UUID.fromString(AUTHORITY_ID))), List.of(getFieldItem(AUTHORITY_ID)), 1),
+      arguments(List.of(getInstanceLink(UUID.fromString(AUTHORITY_ID)),
           getInstanceLink(UUID.fromString("81404611-aab2-4e24-806a-c1e9b8eb3ad1"))),
-        List.of(
-          getFieldItem(),
+        List.of(getFieldItem(),
           getFieldItem(AUTHORITY_ID),
-          getFieldItem("81404611-aab2-4e24-806a-c1e9b8eb3ad1")),
-        2
-      ),
-      arguments(
-        List.of(
-          getInstanceLink(UUID.fromString(AUTHORITY_ID))),
-        List.of(
-          getFieldItem(),
-          getFieldItem()),
-        0
-      ),
-      arguments(
-        List.of(
-          getInstanceLink(UUID.fromString(AUTHORITY_ID), LINK_STATUS_ERROR, LINK_ERROR_CAUSE)),
-        List.of(
-          getFieldItem(AUTHORITY_ID)),
-        1
-      )
+          getFieldItem("81404611-aab2-4e24-806a-c1e9b8eb3ad1")), 2),
+      arguments(List.of(getInstanceLink(UUID.fromString(AUTHORITY_ID))),
+        List.of(getFieldItem(), getFieldItem()), 0),
+      arguments(List.of(getInstanceLink(UUID.fromString(AUTHORITY_ID), LINK_STATUS_ERROR, LINK_ERROR_CAUSE)),
+        List.of(getFieldItem(AUTHORITY_ID)), 1)
     );
   }
 
   public static Stream<Arguments> updateLinksTestData() {
     return Stream.of(
-      arguments(List.of(
-        getFieldItem(),
-        getFieldItemLinked()
-      ), 1),
-      arguments(singletonList(
-        getFieldItemLinkedWithError()
-      ), 1),
+      arguments(List.of(getFieldItem(), getFieldItemLinked()), 1),
+      arguments(singletonList(getFieldItemLinkedWithError()), 1),
       arguments(Collections.emptyList(), 0)
     );
-  }
-
-  private static FieldItem getFieldItem() {
-    return new FieldItem().tag(BIB_TAG).indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
-  }
-
-  private static FieldItem getFieldItem(String authorityId) {
-    return getFieldItem()
-      .linkDetails(new LinkDetails().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345"));
-  }
-
-  private static FieldItem getFieldItemLinked() {
-    var fieldItem = getFieldItem(AUTHORITY_ID);
-    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID);
-    return fieldItem;
-  }
-
-  private static FieldItem getFieldItemLinkedWithError() {
-    var fieldItem = getFieldItem(AUTHORITY_ID);
-    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID).status(LINK_STATUS_ERROR).errorCause(LINK_ERROR_CAUSE);
-    return fieldItem;
-  }
-
-  private static InstanceLink getInstanceLink(UUID authorityId, String status, String errorCause) {
-    return new InstanceLink(RandomUtils.insecure().randomInt(),
-      authorityId,
-      "12345",
-      UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
-      LINKING_RULE_ID,
-      status,
-      errorCause);
-  }
-
-  private static InstanceLink getInstanceLink(UUID authorityId) {
-    return getInstanceLink(authorityId, LINK_STATUS_ACTUAL, EMPTY);
   }
 
   @ParameterizedTest
@@ -167,16 +100,11 @@ class LinksServiceImplTest {
 
     for (int i = 0; i < linkedFields.size(); i++) {
       var linkDetails = linkedFields.get(i).getLinkDetails();
-      assertThat(linkDetails.getAuthorityId())
-        .isEqualTo(links.get(i).getAuthorityId());
-      assertThat(linkDetails.getAuthorityNaturalId())
-        .isEqualTo(links.get(i).getAuthorityNaturalId());
-      assertThat(linkDetails.getLinkingRuleId())
-        .isEqualTo(links.get(i).getLinkingRuleId());
-      assertThat(linkDetails.getStatus())
-        .isEqualTo(links.get(i).getStatus());
-      assertThat(linkDetails.getErrorCause())
-        .isEqualTo(links.get(i).getErrorCause());
+      assertThat(linkDetails.getAuthorityId()).isEqualTo(links.get(i).getAuthorityId());
+      assertThat(linkDetails.getAuthorityNaturalId()).isEqualTo(links.get(i).getAuthorityNaturalId());
+      assertThat(linkDetails.getLinkingRuleId()).isEqualTo(links.get(i).getLinkingRuleId());
+      assertThat(linkDetails.getStatus()).isEqualTo(links.get(i).getStatus());
+      assertThat(linkDetails.getErrorCause()).isEqualTo(links.get(i).getErrorCause());
     }
   }
 
@@ -215,6 +143,41 @@ class LinksServiceImplTest {
     var quickMarc = new QuickMarcEdit().marcFormat(marcFormat);
     service.updateRecordLinks(quickMarc);
     verifyNoInteractions(linksClient);
+  }
+
+  private static FieldItem getFieldItem() {
+    return new FieldItem().tag(BIB_TAG).indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");
+  }
+
+  private static FieldItem getFieldItem(String authorityId) {
+    return getFieldItem()
+      .linkDetails(new LinkDetails().authorityId(UUID.fromString(authorityId)).authorityNaturalId("12345"));
+  }
+
+  private static FieldItem getFieldItemLinked() {
+    var fieldItem = getFieldItem(AUTHORITY_ID);
+    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID);
+    return fieldItem;
+  }
+
+  private static FieldItem getFieldItemLinkedWithError() {
+    var fieldItem = getFieldItem(AUTHORITY_ID);
+    fieldItem.getLinkDetails().linkingRuleId(LINKING_RULE_ID).status(LINK_STATUS_ERROR).errorCause(LINK_ERROR_CAUSE);
+    return fieldItem;
+  }
+
+  private static InstanceLink getInstanceLink(UUID authorityId, String status, String errorCause) {
+    return new InstanceLink(RandomUtils.insecure().randomInt(),
+      authorityId,
+      "12345",
+      UUID.fromString("b9a5f035-de63-4e2c-92c2-07240c89b817"),
+      LINKING_RULE_ID,
+      status,
+      errorCause);
+  }
+
+  private static InstanceLink getInstanceLink(UUID authorityId) {
+    return getInstanceLink(authorityId, LINK_STATUS_ACTUAL, EMPTY);
   }
 
   private QuickMarcView getQuickMarcView(List<FieldItem> fieldItems) {

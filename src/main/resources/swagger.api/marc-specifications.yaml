@@ -61,5 +61,5 @@ components:
     error:
       type: object
     marcSpec:
-      $ref: schemas/common.yaml#/marcSpecification
+      $ref: 'schemas/common.yaml#/marcSpecification'
 

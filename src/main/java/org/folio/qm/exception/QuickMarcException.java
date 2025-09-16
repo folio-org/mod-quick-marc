@@ -19,7 +19,7 @@ public abstract class QuickMarcException extends RuntimeException {
     if (ex instanceof QuickMarcException cex) {
       this.error = cex.getError();
     } else {
-      this.error = buildError(ErrorUtils.ErrorType.INTERNAL, ex.getClass().getSimpleName() + ": Generic Error");
+      this.error = buildError(ErrorUtils.ErrorType.INTERNAL, ex.getClass().getName() + ": " + ex.getMessage());
     }
   }
 

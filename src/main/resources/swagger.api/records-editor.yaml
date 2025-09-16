@@ -45,7 +45,8 @@ paths:
           required: true
           description: UUID of the external that is related to the MARC record
           schema:
-            $ref: '#/components/schemas/UUID'
+            type: string
+            format: uuid
         - name: lang
           in: query
           required: false
@@ -129,7 +130,8 @@ paths:
           required: true
           description: UUID of ParsedRecord to be created
           schema:
-            $ref: '#/components/schemas/UUID'
+            type: string
+            format: uuid
   /links/suggestion:
     post:
       tags:
@@ -140,7 +142,7 @@ paths:
           required: false
           description: Authority field to search by
           schema:
-            $ref: "#/components/schemas/AuthoritySearchParameter"
+            $ref: "#/components/schemas/authoritySearchParameter"
         - name: ignoreAutoLinkingEnabled
           in: query
           required: false
@@ -210,31 +212,15 @@ components:
       $ref: 'schemas/common.yaml#/quickMarcCreate'
     creationStatus:
       $ref: 'schemas/common.yaml#/creationStatus'
-    entitiesLinksSuggestions:
-      $ref: 'schemas/common.yaml#/entitiesLinksSuggestions'
     validationResult:
       $ref: 'schemas/common.yaml#/validationResult'
     validatableRecord:
       $ref: 'schemas/common.yaml#/validatableRecord'
     error:
       type: object
-    UUID:
-      $ref: 'schemas/common.yaml#/uuid'
-    parsedRecordDto:
-      $ref: 'schemas/external/parsedRecordDto.json'
-    initJobExecutionsRqDto:
-      $ref: 'schemas/external/initJobExecutionsRqDto.json'
-    initJobExecutionsRsDto:
-      $ref: 'schemas/external/initJobExecutionsRsDto.json'
-    rawRecordsDto:
-      $ref: 'schemas/external/rawRecordsDto.json'
-    marcFieldProtectionSettingsCollection:
-      $ref: 'schemas/external/marcFieldProtectionSettingsCollection.json'
-    dataImportEventPayload:
-      $ref: 'schemas/external/dataImportEventPayload.json'
-    AuthoritySearchParameter:
+    authoritySearchParameter:
       description: Authority search parameter for link suggestions
       type: string
-      enum: [ID, NATURAL_ID]
+      enum: [ ID, NATURAL_ID ]
       default: NATURAL_ID
 

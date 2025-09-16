@@ -60,13 +60,19 @@ class CommonFieldItemConverterTest {
       ),
       arguments(new DataFieldImpl("100", ' ', ' '),
         new String[] {"a", "A$Ap Rocky"},
-        new FieldItem().tag("100").indicators(List.of("\\", "\\"))
-          .content("$a A{dollar}Ap Rocky")
+        new FieldItem().tag("100").indicators(List.of("\\", "\\")).content("$a A{dollar}Ap Rocky")
       ),
       arguments(new DataFieldImpl("100", ' ', ' '),
         new String[] {"a", "$1"},
-        new FieldItem().tag("100").indicators(List.of("\\", "\\"))
-          .content("$a{dollar}1")
+        new FieldItem().tag("100").indicators(List.of("\\", "\\")).content("$a{dollar}1")
+      ),
+      arguments(new DataFieldImpl("100", ' ', ' '),
+        new String[] {"a", "$1"},
+        new FieldItem().tag("100").indicators(List.of("\\", "\\")).content("$A{dollar}1")
+      ),
+      arguments(new DataFieldImpl("100", ' ', '1'),
+        new String[] {"a", "aest", "b", "best"},
+        new FieldItem().tag("100").indicators(List.of("\\", "1")).content("$Aaest$Bbest")
       )
     );
   }

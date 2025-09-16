@@ -1,6 +1,6 @@
 package org.folio.qm.service.impl;
 
-import static org.folio.qm.support.utils.ApiTestUtils.TENANT_ID;
+import static org.folio.support.utils.ApiTestUtils.TENANT_ID;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

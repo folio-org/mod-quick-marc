@@ -1,11 +1,11 @@
 package org.folio.qm.validation.impl.common;
 
-import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
 import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
+import static org.folio.support.utils.JsonTestUtils.getMockAsObject;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;

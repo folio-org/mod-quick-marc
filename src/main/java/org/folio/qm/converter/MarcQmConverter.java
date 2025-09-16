@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import lombok.RequiredArgsConstructor;
-import org.folio.qm.domain.dto.AdditionalInfo;
+import org.folio.qm.client.model.AdditionalInfo;
+import org.folio.qm.client.model.ParsedRecord;
+import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.ParsedRecord;
-import org.folio.qm.domain.dto.ParsedRecordDto;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.util.QmMarcJsonWriter;
@@ -41,9 +40,9 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
   public ParsedRecordDto convert(@NonNull T source) {
     var format = source.getMarcFormat();
     return new ParsedRecordDto()
-      .recordType(typeMapper.toDto(format))
-      .parsedRecord(new ParsedRecord().content(convertToParsedContent(source)))
-      .additionalInfo(new AdditionalInfo().suppressDiscovery(source.getSuppressDiscovery()));
+      .setRecordType(typeMapper.toDto(format))
+      .setParsedRecord(new ParsedRecord(convertToParsedContent(source)))
+      .setAdditionalInfo(new AdditionalInfo(source.getSuppressDiscovery()));
   }
 
   protected static <T extends BaseMarcRecord> T updateRecordTimestamp(T quickMarc) {
@@ -65,7 +64,7 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
       var convertedContent = objectMapper.readTree(os.toByteArray());
       reorderContentTagsBasedOnSource(convertedContent, source.getFields());
       return convertedContent;
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new ConverterException(e);
     }
   }

@@ -111,6 +111,11 @@ baseMarcRecord:
     marcFormat:
       $ref: '#/marcFormat'
       description: MARC Format
+    sourceVersion:
+      type: integer
+      description: Version of the source record
+      default: -1
+      example: 1
   discriminator:
     propertyName: _actionType
     mapping:
@@ -159,15 +164,11 @@ quickMarcEdit:
         externalHrid:
           description: HRID of external entity
           type: string
-        relatedRecordVersion:
-          description: Information related to version of the record
-          type: string
       required:
         - parsedRecordId
         - parsedRecordDtoId
         - externalId
         - externalHrid
-        - relatedRecordVersion
 
 quickMarcCreate:
   allOf:

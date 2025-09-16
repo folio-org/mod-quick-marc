@@ -1,6 +1,6 @@
 package org.folio.qm.service;
 
-import org.folio.qm.domain.dto.DataImportEventPayload;
+import org.folio.qm.client.model.DataImportEventPayload;
 
 public interface EventProcessingService {
 

@@ -1,0 +1,14 @@
+{
+  "links": [
+    {
+      "id": 1,
+      "authorityId": "b9a5f035-de63-4e2c-92c2-07240c88b817",
+      "authorityNaturalId": "12345",
+      "instanceId": "00000000-0000-0000-0000-000000000001",
+      "linkingRuleId": 1,
+      "status": "ERROR",
+      "errorCause": "test"
+    }
+  ],
+  "totalRecords": 1
+}

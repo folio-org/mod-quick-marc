@@ -2,13 +2,13 @@ package org.folio.qm.converter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.folio.qm.support.utils.JsonTestUtils.getMockAsObject;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_AUTHORITY_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_BIB_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.PARSED_RECORD_HOLDINGS_DTO_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
-import static org.folio.qm.support.utils.testentities.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
+import static org.folio.support.utils.JsonTestUtils.getMockAsObject;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.SOURCE_RECORD_AUTHORITY_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.SOURCE_RECORD_BIB_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.SOURCE_RECORD_HOLDINGS_PATH;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,8 +16,9 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.folio.qm.domain.dto.ParsedRecord;
-import org.folio.qm.domain.dto.ParsedRecordDto;
+import org.folio.qm.client.model.ParsedRecord;
+import org.folio.qm.client.model.ParsedRecordDto;
+import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapperImpl;
@@ -50,31 +51,29 @@ class MarcQmConverterTest {
   @SneakyThrows
   @ParameterizedTest
   @CsvSource(value = {
-    PARSED_RECORD_AUTHORITY_DTO_PATH + "," + QM_RECORD_EDIT_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
-    PARSED_RECORD_HOLDINGS_DTO_PATH + "," + QM_RECORD_EDIT_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
-    PARSED_RECORD_BIB_DTO_PATH + "," + QM_RECORD_EDIT_BIB_PATH + "," + "01750ccm a2200421   4500"
+    SOURCE_RECORD_AUTHORITY_PATH + "," + QM_RECORD_EDIT_AUTHORITY_PATH + "," + "01725cz  a2200433n  4500",
+    SOURCE_RECORD_HOLDINGS_PATH + "," + QM_RECORD_EDIT_HOLDINGS_PATH + "," + "01717cx  a2200433zn 4500",
+    SOURCE_RECORD_BIB_PATH + "," + QM_RECORD_EDIT_BIB_PATH + "," + "01750ccm a2200421   4500"
   })
   void testConvertDtoRecord(String parsedRecordDtoPath, String quickMarcJsonPath, String expectedLeader) {
-    var expected = getMockAsObject(parsedRecordDtoPath, ParsedRecordDto.class);
+    var expected = toDto(getMockAsObject(parsedRecordDtoPath, SourceRecord.class));
     var qmRecord = getMockAsObject(quickMarcJsonPath, QuickMarcEdit.class);
     when(fieldsConverter.convertQmFields(any(), any())).thenReturn(extractMarcRecord(expected.getParsedRecord())
       .getVariableFields());
 
-    ParsedRecordDto actual = converter.convert(qmRecord);
+    var actual = converter.convert(qmRecord);
 
     assertThat(actual)
       .isNotNull()
       .hasFieldOrPropertyWithValue("id", expected.getId())
       .hasFieldOrPropertyWithValue("recordType", expected.getRecordType())
-      .hasFieldOrPropertyWithValue("relatedRecordVersion", "1")
       .hasFieldOrPropertyWithValue("parsedRecord.id", expected.getParsedRecord().getId())
-      .hasFieldOrPropertyWithValue("additionalInfo.suppressDiscovery",
-        expected.getAdditionalInfo().getSuppressDiscovery())
+      .hasFieldOrPropertyWithValue("additionalInfo", expected.getAdditionalInfo())
       .extracting(parsedRecordDto -> parsedRecordDto.getParsedRecord().getContent().toString())
       .matches(content -> content.contains(expectedLeader), "contains valid leader");
 
-    String expectedJson = objectMapper.writeValueAsString(expected.getParsedRecord().getContent());
-    String actualJson = objectMapper.writeValueAsString(actual.getParsedRecord().getContent());
+    var expectedJson = objectMapper.writeValueAsString(expected.getParsedRecord().getContent());
+    var actualJson = objectMapper.writeValueAsString(actual.getParsedRecord().getContent());
 
     JSONAssert.assertEquals(expectedJson, actualJson, true);
   }
@@ -85,5 +84,15 @@ class MarcQmConverterTest {
     } catch (Exception e) {
       throw new ConverterException(e);
     }
+  }
+
+  private ParsedRecordDto toDto(SourceRecord sourceRecord) {
+    return new ParsedRecordDto()
+      .setRecordType(sourceRecord.getRecordType())
+      .setParsedRecord(sourceRecord.getParsedRecord())
+      .setAdditionalInfo(sourceRecord.getAdditionalInfo())
+      .setId(sourceRecord.getRecordId())
+      .setExternalIdsHolder(sourceRecord.getExternalIdsHolder())
+      .setMetadata(sourceRecord.getMetadata());
   }
 }

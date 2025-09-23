@@ -1,0 +1,58 @@
+include:
+  - infra-docker-compose.yml
+
+services:
+  kafka-topic-init:
+    image: apache/kafka:latest
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 9093
+      ENV: ${ENV}
+      KAFKA_TOPIC_PARTITIONS: ${KAFKA_TOPIC_PARTITIONS}
+    volumes:
+      - ./kafka-init.sh:/usr/bin/kafka-init.sh
+    entrypoint: ["bash", "/usr/bin/kafka-init.sh"]
+    networks:
+      - mod-quick-marc-local
+
+  mod-quick-marc:
+    image: dev.folio/mod-quick-marc
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "8081" # Allow Docker to dynamically assign a host port
+    environment:
+      ENV: ${ENV}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+    depends_on:
+      - postgres
+      - kafka-topic-init
+    networks:
+      - mod-quick-marc-local
+    deploy:
+      replicas: ${MODULE_REPLICAS:-1}
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
+
+networks:
+  mod-quick-marc-local:
+    driver: bridge

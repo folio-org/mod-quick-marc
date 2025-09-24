@@ -15,7 +15,7 @@
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
 
 ### Tech Dept
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+* Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))
 
 ### Dependencies
 * Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`

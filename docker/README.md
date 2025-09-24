@@ -108,6 +108,10 @@ This Docker Compose setup includes:
 docker compose -f app-docker-compose.yml up -d
 ```
 ```bash
+# Start only infrastructure services
+docker compose -f infra-docker-compose.yml up -d
+```
+```bash
 # Start with build (if module code changed)
 docker compose -f app-docker-compose.yml up -d --build
 ```
@@ -121,6 +125,10 @@ docker compose -f app-docker-compose.yml up -d mod-quick-marc
 ```bash
 # Stop all services
 docker compose -f app-docker-compose.yml down
+```
+```bash
+# Stop infra services
+docker compose -f infra-docker-compose.yml down
 ```
 ```bash
 # Stop and remove volumes (clean slate)
@@ -164,7 +172,12 @@ docker compose -f app-docker-compose.yml up -d --build
 
 ## 🛠️ Development
 
+### IntelliJ IDEA usage
+Run ModQuickMarcApplication.java as a Spring Boot application with `dev` profile. 
+It will automatically use `infra-docker-compose.yml` for starting infrastructure services.
+
 ### Building the Module
+It's expected that the module is packaged to jar before building the Docker image. Use `mvn clean package` to build the jar.
 
 ```bash
 # Build only the module image

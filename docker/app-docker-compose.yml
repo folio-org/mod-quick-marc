@@ -2,21 +2,6 @@ include:
   - infra-docker-compose.yml
 
 services:
-  kafka-topic-init:
-    image: apache/kafka:latest
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9093
-      ENV: ${ENV}
-      KAFKA_TOPIC_PARTITIONS: ${KAFKA_TOPIC_PARTITIONS}
-    volumes:
-      - ./kafka-init.sh:/usr/bin/kafka-init.sh
-    entrypoint: ["bash", "/usr/bin/kafka-init.sh"]
-    networks:
-      - mod-quick-marc-local
-
   mod-quick-marc:
     image: dev.folio/mod-quick-marc
     build:

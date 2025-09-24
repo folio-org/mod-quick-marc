@@ -29,10 +29,11 @@ services:
       - mod-quick-marc-local
     ports:
       - ${KAFKA_PORT}:9093
+      - 29092:29092
     environment:
       # Configure listeners for both docker and host communication
-      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:29092,DOCKER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:29092,DOCKER://kafka:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
       # Settings required for KRaft mode
       KAFKA_NODE_ID: 1
@@ -56,6 +57,21 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:${KAFKA_PORT}
     depends_on:
       - kafka
+
+  kafka-topic-init:
+    image: apache/kafka:latest
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 9093
+      ENV: ${ENV}
+      KAFKA_TOPIC_PARTITIONS: ${KAFKA_TOPIC_PARTITIONS}
+    volumes:
+      - ./kafka-init.sh:/usr/bin/kafka-init.sh
+    entrypoint: ["bash", "/usr/bin/kafka-init.sh"]
+    networks:
+      - mod-quick-marc-local
 
 networks:
   mod-quick-marc-local:

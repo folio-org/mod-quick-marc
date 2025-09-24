@@ -73,6 +73,18 @@ services:
     networks:
       - mod-quick-marc-local
 
+  api-mock:
+    image: wiremock/wiremock:3.8.0
+    networks:
+      - mod-quick-marc-local
+    command:
+      - "--verbose"
+    ports:
+      - "9130:8080"
+    volumes:
+      - ../src/test/resources/mappings:/home/wiremock/mappings
+      - ../src/test/resources/__files:/home/wiremock/__files
+
 networks:
   mod-quick-marc-local:
     driver: "bridge"

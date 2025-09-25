@@ -8,7 +8,14 @@ spring:
     hikari:
       register-mbeans: true
   kafka:
-    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
+    security:
+      protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+    ssl:
+      key-store-password: ${KAFKA_SSL_KEYSTORE_PASSWORD:}
+      key-store-location: ${KAFKA_SSL_KEYSTORE_LOCATION:}
+      trust-store-password: ${KAFKA_SSL_TRUSTSTORE_PASSWORD:}
+      trust-store-location: ${KAFKA_SSL_TRUSTSTORE_LOCATION:}
     consumer:
       enable-auto-commit: true
       auto-commit-interval: 1000
@@ -42,6 +49,11 @@ spring:
     init:
       # to boot up application despite of any DB connection issues
       continue-on-error: true
+  docker:
+    compose:
+      enabled: true
+      file: ./docker/infra-docker-compose.yml
+
 folio:
   environment: ${ENV:folio}
   tenant:

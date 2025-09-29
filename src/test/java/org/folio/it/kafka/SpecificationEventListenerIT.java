@@ -1,8 +1,10 @@
 package org.folio.it.kafka;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Durations.FIVE_SECONDS;
 import static org.awaitility.Durations.TWO_HUNDRED_MILLISECONDS;
+import static org.folio.qm.messaging.listener.SpecificationEventListener.SPECIFICATION_UPDATED_LISTENER_ID;
 import static org.folio.support.utils.ApiTestUtils.TENANT_ID;
 import static org.folio.support.utils.ApiTestUtils.recordsEditorValidatePath;
 import static org.folio.support.utils.JsonTestUtils.readQuickMarc;
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import jakarta.annotation.PostConstruct;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.folio.it.BaseIT;
 import org.folio.qm.domain.dto.ValidatableRecord;
@@ -24,16 +27,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaAdmin;
 
 @IntegrationTest
-class SpecificationKafkaListenerIT extends BaseIT {
+class SpecificationEventListenerIT extends BaseIT {
   @Autowired
   private KafkaAdmin kafkaAdmin;
   @Autowired
   private BeanFactory beanFactory;
   @Autowired
   private KafkaTopicsInitializer topicsInitializer;
+  @Autowired
+  private KafkaListenerEndpointRegistry listenerEndpointRegistry;
 
   @PostConstruct
   public void setUpKafka() {
@@ -45,6 +51,17 @@ class SpecificationKafkaListenerIT extends BaseIT {
       kafkaAdmin.initialize();
       topicsInitializer.restartEventListeners();
     }
+  }
+
+  @Test
+  void testListenerInitialization() {
+    var listenerContainer = listenerEndpointRegistry.getListenerContainer(SPECIFICATION_UPDATED_LISTENER_ID);
+    assertThat(listenerContainer).isNotNull();
+    assertThat(listenerContainer.getGroupId()).startsWith("folio-mod-quick-marc-specification-group-");
+    assertThat(listenerContainer.getContainerProperties().getTopicPattern())
+      .isNotNull()
+      .extracting(Pattern::pattern)
+      .isEqualTo("(folio\\.)(.*\\.)specification-storage\\.specification\\.updated");
   }
 
   @Test

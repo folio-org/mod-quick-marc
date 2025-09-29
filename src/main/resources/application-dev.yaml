@@ -85,6 +85,7 @@ folio:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:1}
         topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)(.*\.)specification-storage\.specification\.updated}
         group-id: ${folio.environment}-mod-quick-marc-specification-group
+        shared-group: false
 management:
   endpoints:
     web:

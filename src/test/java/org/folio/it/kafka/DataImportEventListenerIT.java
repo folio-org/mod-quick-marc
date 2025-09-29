@@ -3,6 +3,8 @@ package org.folio.it.kafka;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Durations.ONE_MINUTE;
+import static org.folio.qm.messaging.listener.DataImportEventListener.DI_COMPLETED_LISTENER_ID;
+import static org.folio.qm.messaging.listener.DataImportEventListener.DI_ERROR_LISTENER_ID;
 import static org.folio.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
 import static org.folio.support.utils.DataBaseTestUtils.getCreationStatusById;
 import static org.folio.support.utils.DataBaseTestUtils.saveCreationStatus;
@@ -11,16 +13,41 @@ import static org.folio.support.utils.TestEntitiesUtils.DI_EVENT_WITH_INSTANCE;
 import static org.folio.support.utils.TestEntitiesUtils.JOB_EXECUTION_ID;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 import org.folio.it.BaseIT;
 import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.spring.testing.extension.DatabaseCleanup;
 import org.folio.spring.testing.type.IntegrationTest;
 import org.folio.support.utils.TestEntitiesUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 
 @IntegrationTest
 @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
-class KafkaListenerIT extends BaseIT {
+class DataImportEventListenerIT extends BaseIT {
+
+  @Autowired
+  private KafkaListenerEndpointRegistry listenerEndpointRegistry;
+
+  @Test
+  void testListenerInitialization() {
+    var diCompletedListener = listenerEndpointRegistry.getListenerContainer(DI_COMPLETED_LISTENER_ID);
+    assertThat(diCompletedListener).isNotNull();
+    assertThat(diCompletedListener.getGroupId()).isEqualTo("folio-mod-quick-marc-di-completed-group");
+    assertThat(diCompletedListener.getContainerProperties().getTopicPattern())
+      .isNotNull()
+      .extracting(Pattern::pattern)
+      .isEqualTo("(folio\\.)[a-zA-z0-9-]+\\.\\w+\\.DI_COMPLETED");
+
+    var diErrorListener = listenerEndpointRegistry.getListenerContainer(DI_ERROR_LISTENER_ID);
+    assertThat(diErrorListener).isNotNull();
+    assertThat(diErrorListener.getGroupId()).isEqualTo("folio-mod-quick-marc-di-error-group");
+    assertThat(diErrorListener.getContainerProperties().getTopicPattern())
+      .isNotNull()
+      .extracting(Pattern::pattern)
+      .isEqualTo("(folio\\.)[a-zA-z0-9-]+\\.\\w+\\.DI_ERROR");
+  }
 
   @Test
   void shouldUpdateExistingStatusWhenReceivedDataImportCompletedEventWithInstance() {

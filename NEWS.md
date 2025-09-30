@@ -11,6 +11,7 @@
 * Update the label for position 38 of MARC authority "008" field to "Mod Rec" ([MODQM-474](https://folio-org.atlassian.net/browse/MODQM-474))
 * Convert subfield to lowercase during quick-marc to source record convertion ([MODQM-477](https://folio-org.atlassian.net/browse/MODQM-477))
 * Use unique consumer group per instance for specification-storage.specification.updated topic ([MODQM-483](https://folio-org.atlassian.net/browse/MODQM-483))
+* Ignore empty subfields during conversion from DTO ([MODQM-445](https://folio-org.atlassian.net/browse/MODQM-445))
 
 ### Bug fixes
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))

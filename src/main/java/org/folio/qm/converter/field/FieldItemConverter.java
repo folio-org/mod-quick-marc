@@ -20,10 +20,6 @@ public interface FieldItemConverter {
 
   VariableField convert(FieldItem field);
 
-  default VariableField convert(FieldItem field, boolean soft) {
-    return convert(field);
-  }
-
   boolean canProcess(FieldItem field, MarcFormat marcFormat);
 
   default char getIndicator(FieldItem field, int index) {

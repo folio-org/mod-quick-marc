@@ -89,19 +89,12 @@ public final class MarcUtils {
    *
    * @param field            Quick Marc field.
    * @param subfieldFunction Function to map string to subfield object.
-   * @param soft             Indicates whether to throw exception on invalid data. soft=true doesn't throw.
    *
    */
-  public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction,
-                                                boolean soft) {
+  public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction) {
     return Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
-      .map(token -> {
-        if (!soft && token.length() < TOKEN_MIN_LENGTH) {
-          throw new IllegalArgumentException("Subfield length");
-        }
-        return token.replace(DOLLAR_EXPRESSION, "$");
-      })
-      .filter(StringUtils::isNotBlank)
+      .filter(token -> token.length() >= TOKEN_MIN_LENGTH)
+      .map(token -> token.replace(DOLLAR_EXPRESSION, "$"))
       .map(subfieldFunction)
       .map(MarcUtils::lowercaseSubfieldCode)
       .toList();

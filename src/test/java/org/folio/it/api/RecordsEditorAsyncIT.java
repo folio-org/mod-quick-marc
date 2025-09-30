@@ -331,21 +331,6 @@ class RecordsEditorAsyncIT extends BaseIT {
     expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
   }
 
-  @ParameterizedTest
-  @MethodSource("testUpdateQuickMarcRecordCases")
-  @DisplayName("Should fail with 400 when record have incorrect field content")
-  void testUpdateReturn400WhenRecordHaveIncorrectFieldContent(String filePath, String id) throws Exception {
-    var quickMarcRecord = readQuickMarc(filePath, QuickMarcEdit.class);
-    // Now change the content of the field to wrong one
-    quickMarcRecord.getFields().get(7).setContent("$a");
-
-    doPut(recordsEditorByIdPath(id), quickMarcRecord)
-      .andExpect(status().isBadRequest())
-      .andExpect(errorMessageMatch(equalTo("Subfield length")));
-
-    expectLinksUpdateRequests(0, changeManagerResourceByIdPath(id));
-  }
-
   private QuickMarcEdit prepareRecordWithInvalidIndicators() {
     var field333 = getFieldWithValue("333", "$333 content").content("$333 content")
       .indicators(Collections.singletonList(" "));

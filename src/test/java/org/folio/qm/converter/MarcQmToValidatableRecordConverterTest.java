@@ -21,7 +21,7 @@ class MarcQmToValidatableRecordConverterTest {
 
   @Test
   void convertToValidatableRecord() {
-    var fields = new FieldItem().tag("246").indicators(List.of("0", "1")).content("$a test");
+    var fields = new FieldItem().tag("246").indicators(List.of("0", "1")).content("$a test $b");
     var marcRecord = new BaseMarcRecord().leader("test").marcFormat(MarcFormat.BIBLIOGRAPHIC).fields(List.of(fields));
 
     var actual = converter.convert(marcRecord);

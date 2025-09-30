@@ -17,6 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.SubfieldImpl;
 
 @UnitTest
@@ -65,16 +66,41 @@ class MarcUtilsTest {
   void extractSubfields_emptyFieldContent() {
     var field = new FieldItem().content(EMPTY);
 
-    assertThrows(IllegalArgumentException.class,
-      () -> MarcUtils.extractSubfields(field, s -> new SubfieldImpl(), false));
+    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl());
+
+    assertThat(subfields).isEmpty();
   }
 
   @Test
-  void extractSubfields_emptyFieldContent_soft() {
-    var field = new FieldItem().content(EMPTY);
+  void extractSubfields_emptyLastSubfieldContent() {
+    var field = new FieldItem().content("$Aa$bb$c");
 
-    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl(), true);
+    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl('x', s));
 
-    assertThat(subfields).isEmpty();
+    assertThat(subfields).hasSize(2)
+      .extracting(Subfield::getData)
+      .containsExactly("$Aa", "$bb");
+  }
+
+  @Test
+  void extractSubfields_emptyMiddleSubfieldContent() {
+    var field = new FieldItem().content("$Aa$b$cc");
+
+    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl('x', s));
+
+    assertThat(subfields).hasSize(2)
+      .extracting(Subfield::getData)
+      .containsExactly("$Aa", "$cc");
+  }
+
+  @Test
+  void extractSubfields_emptyFirstSubfieldContent() {
+    var field = new FieldItem().content("$A$bb$cc");
+
+    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl('x', s));
+
+    assertThat(subfields).hasSize(2)
+      .extracting(Subfield::getData)
+      .containsExactly("$bb", "$cc");
   }
 }

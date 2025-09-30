@@ -106,18 +106,7 @@ class CommonFieldItemConverterTest {
     var field = new FieldItem().tag("245");
     try (var marcUtils = Mockito.mockStatic(MarcUtils.class)) {
       var actual = converter.convert(field);
-      marcUtils.verify(() -> MarcUtils.extractSubfields(eq(field), any(), eq(false)));
-
-      assertThat(actual.getTag()).isEqualTo(field.getTag());
-    }
-  }
-
-  @Test
-  void testConvertSoft() {
-    var field = new FieldItem().tag("245");
-    try (var marcUtils = Mockito.mockStatic(MarcUtils.class)) {
-      var actual = converter.convert(field, true);
-      marcUtils.verify(() -> MarcUtils.extractSubfields(eq(field), any(), eq(true)));
+      marcUtils.verify(() -> MarcUtils.extractSubfields(eq(field), any()));
 
       assertThat(actual.getTag()).isEqualTo(field.getTag());
     }

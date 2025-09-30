@@ -34,7 +34,7 @@ public class Tag010FieldItemPopulationService extends FieldItemMarcPopulationSer
 
   @Override
   protected void populateValues(FieldItem fieldItem, MarcFormat marcFormat) {
-    var content = extractSubfields(fieldItem, this::subfieldFromString, true).stream()
+    var content = extractSubfields(fieldItem, this::subfieldFromString).stream()
       .map(Subfield::toString)
       .collect(Collectors.joining());
     fieldItem.setContent(content);

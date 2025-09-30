@@ -18,7 +18,6 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,6 @@ public class MarcQmToMarcRecordConverter implements Converter<BaseMarcRecord, Ma
   private static final char QUICK_MARC_INDICATOR_EMPTY_VALUE = '\\';
   private static final char VALIDATION_INDICATOR_EMPTY_VALUE = '#';
 
-  @Qualifier("marcFieldsSoftConverter")
   private final MarcFieldsConverter fieldsConverter;
 
   @Override

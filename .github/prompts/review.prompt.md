@@ -45,7 +45,7 @@ Create a <BRANCH_NAME_CODEREVIEW>.md file with your findings.
 
 ## Constraints
 
-* **VERY IMPORTANT**: Use `git diff --name-only master` to get changed files to be reviewed.
+* **VERY IMPORTANT**: Use `git --no-pager diff --name-only master` to get changed files to be reviewed.
 * **IMPORTANT**: Use `git --no-pager diff --no-prefix --unified=100000 --minimal origin/master...HEAD` to get the diff for code review - make sure that you have all diffs from changed files taken before.
 * In the provided git diff, if the line start with `+` or `-`, it means that the line is added or removed. If the line starts with a space, it means that the line is unchanged. If the line starts with `@@`, it means that the line is a hunk header.
 

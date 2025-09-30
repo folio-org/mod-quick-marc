@@ -19,22 +19,20 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.VariableField;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
-public abstract class MarcFieldsConverter {
+public class MarcFieldsConverter {
 
   public static final String TAG_REGEX = "\\{(\\d{3})=([^}]+)";
-  /**
-   * Soft conversion means not throwing an exception in case of bad data, just ignore it.
-   * */
-  private final Boolean softConversion;
   private final List<FieldItemConverter> fieldItemConverters;
   private final List<VariableFieldConverter<DataField>> dataFieldConverters;
   private final List<VariableFieldConverter<ControlField>> controlFieldConverters;
 
   public List<VariableField> convertQmFields(List<FieldItem> fields, MarcFormat format) {
     return fields.stream()
-      .map(field -> toVariableField(field, format, softConversion))
+      .map(field -> toVariableField(field, format))
       .toList();
   }
 
@@ -48,11 +46,11 @@ public abstract class MarcFieldsConverter {
     return Stream.concat(controlFields, dataFields).toList();
   }
 
-  public VariableField toVariableField(FieldItem field, MarcFormat marcFormat, boolean soft) {
+  public VariableField toVariableField(FieldItem field, MarcFormat marcFormat) {
     return fieldItemConverters.stream()
       .filter(fieldItemConverter -> fieldItemConverter.canProcess(field, marcFormat))
       .findFirst()
-      .map(fieldItemConverter -> fieldItemConverter.convert(field, soft))
+      .map(fieldItemConverter -> fieldItemConverter.convert(field))
       .orElseThrow(() -> new IllegalArgumentException("Field converter not found"));
   }
 

@@ -18,6 +18,7 @@
 
 ### Tech Dept
 * Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))
+* Add "apt upgrade" to Dockerfile, add .dockerignore
 
 ### Dependencies
 * Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`

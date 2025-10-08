@@ -7,6 +7,7 @@ import static org.folio.qm.util.MarcUtils.extractSubfields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.client.model.BaseSrsMarcRecord;
 import org.folio.qm.client.model.EntitiesLinksSuggestions;
 import org.folio.qm.client.model.SrsFieldItem;
@@ -91,7 +92,11 @@ public interface LinksSuggestionsMapper {
     var subfields = extractSubfields(
       fieldItem, s -> new SubfieldImpl(s.charAt(1), s.substring(2).trim()));
     for (var subfield : subfields) {
-      listOfSubfields.add(Map.of(String.valueOf(subfield.getCode()), subfield.getData()));
+      var code = String.valueOf(subfield.getCode());
+      var data = subfield.getData();
+      if (StringUtils.isNoneBlank(code, data)) {
+        listOfSubfields.add(Map.of(code, data));
+      }
     }
     return listOfSubfields;
   }

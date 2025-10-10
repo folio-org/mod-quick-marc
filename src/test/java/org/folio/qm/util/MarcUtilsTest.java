@@ -94,6 +94,17 @@ class MarcUtilsTest {
   }
 
   @Test
+  void extractSubfields_blankMiddleSubfieldContent() {
+    var field = new FieldItem().content("$Aa$b $cc");
+
+    var subfields = MarcUtils.extractSubfields(field, s -> new SubfieldImpl('x', s));
+
+    assertThat(subfields).hasSize(2)
+      .extracting(Subfield::getData)
+      .containsExactly("$Aa", "$cc");
+  }
+
+  @Test
   void extractSubfields_emptyFirstSubfieldContent() {
     var field = new FieldItem().content("$A$bb$cc");
 

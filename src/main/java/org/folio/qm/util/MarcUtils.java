@@ -93,7 +93,7 @@ public final class MarcUtils {
    */
   public static List<Subfield> extractSubfields(FieldItem field, Function<String, Subfield> subfieldFunction) {
     return Arrays.stream(SPLIT_PATTERN.split(field.getContent().toString()))
-      .filter(token -> token.length() >= TOKEN_MIN_LENGTH)
+      .filter(token -> token.trim().length() >= TOKEN_MIN_LENGTH)
       .map(token -> token.replace(DOLLAR_EXPRESSION, "$"))
       .map(subfieldFunction)
       .map(MarcUtils::lowercaseSubfieldCode)

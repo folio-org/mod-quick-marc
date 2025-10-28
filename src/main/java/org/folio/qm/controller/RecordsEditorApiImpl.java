@@ -25,7 +25,7 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
   private final MarcRecordsService marcRecordsService;
 
   @Override
-  public ResponseEntity<QuickMarcView> getRecordByExternalId(UUID externalId, String lang) {
+  public ResponseEntity<QuickMarcView> getRecordByExternalId(UUID externalId) {
     var quickMarc = marcRecordsService.findByExternalId(externalId);
     return ResponseEntity.ok(quickMarc);
   }

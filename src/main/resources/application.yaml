@@ -23,6 +23,13 @@ spring:
     consumer:
       enable-auto-commit: true
       auto-commit-interval: 1000
+    security:
+      protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+    ssl:
+      key-store-password: ${KAFKA_SSL_KEYSTORE_PASSWORD:}
+      key-store-location: ${KAFKA_SSL_KEYSTORE_LOCATION:}
+      trust-store-password: ${KAFKA_SSL_TRUSTSTORE_PASSWORD:}
+      trust-store-location: ${KAFKA_SSL_TRUSTSTORE_LOCATION:}
   jpa:
     open-in-view: false
     hibernate:
@@ -91,19 +98,19 @@ folio:
     listener:
       di-completed:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.DI_COMPLETED}
+        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.DI_COMPLETED
         group-id: ${folio.environment}-mod-quick-marc-di-completed-group
       di-error:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.DI_ERROR}
+        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.DI_ERROR
         group-id: ${folio.environment}-mod-quick-marc-di-error-group
       qm-completed:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.QM_COMPLETED}
+        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.QM_COMPLETED
         group-id: ${folio.environment}-mod-quick-marc-qm-group
       specification-updated:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:1}
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)(.*\.)specification-storage\.specification\.updated}
+        topic-pattern: (${folio.environment}\.)(.*\.)specification-storage\.specification\.updated
         group-id: ${folio.environment}-mod-quick-marc-specification-group
         shared-group: false
 management:

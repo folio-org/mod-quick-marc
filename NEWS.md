@@ -1,6 +1,6 @@
-## v7.1.0 YYYY-mm-DD
+## v8.0.0 YYYY-mm-DD
 ### Breaking changes
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+* Update QuickMARC to use generation field from SRS for optimistic locking ([MODQM-478](https://folio-org.atlassian.net/browse/MODQM-478))
 
 ### New APIs versions
 * Provides `API_NAME vX.Y`
@@ -18,6 +18,7 @@
 
 ### Tech Dept
 * Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))
+* Restructure documentation in `README.md` ([MODQM-470](https://folio-org.atlassian.net/browse/MODQM-470))
 * Add "apt upgrade" to Dockerfile, add .dockerignore
 
 ### Dependencies

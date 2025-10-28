@@ -47,14 +47,6 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: lang
-          in: query
-          required: false
-          description: Requested language. Optional. [lang=en]
-          schema:
-            type: string
-            pattern: '[a-zA-Z]{2}'
-            default: 'en'
     post:
       tags:
         - records-editor

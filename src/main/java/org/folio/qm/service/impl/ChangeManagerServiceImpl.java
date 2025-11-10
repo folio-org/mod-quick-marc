@@ -6,7 +6,6 @@ import org.folio.qm.client.ChangeManagerClient;
 import org.folio.qm.client.SourceStorageClient;
 import org.folio.qm.client.model.InitJobExecutionsRqDto;
 import org.folio.qm.client.model.InitJobExecutionsRsDto;
-import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.ProfileInfo;
 import org.folio.qm.client.model.RawRecordsDto;
 import org.folio.qm.client.model.SourceRecord;
@@ -23,11 +22,6 @@ public class ChangeManagerServiceImpl implements ChangeManagerService {
   @Override
   public SourceRecord getSourceRecordByExternalId(String externalId) {
     return storageClient.getSourceRecord(externalId, SourceStorageClient.IdType.EXTERNAL);
-  }
-
-  @Override
-  public void putParsedRecordByInstanceId(UUID id, ParsedRecordDto recordDto) {
-    srmClient.putParsedRecordByInstanceId(id, recordDto);
   }
 
   @Override

@@ -72,6 +72,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final ValidationService validationService;
   private final StatusService statusService;
   private final LinksService linksService;
+  private final MarcRecordServiceRegistry marcRecordServiceRegistry;
 
   private final UsersClient usersClient;
   private final LinksSuggestionsClient linksSuggestionsClient;
@@ -102,8 +103,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     validateOnUpdate(parsedRecordId, quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
-    changeManagerService.putParsedRecordByInstanceId(quickMarc.getParsedRecordDtoId(), parsedRecordDto);
-    log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
+
+    var recordService = marcRecordServiceRegistry.get(Objects.requireNonNull(parsedRecordDto).getRecordType());
+    recordService.update(parsedRecordId, updateResult, parsedRecordDto);
   }
 
   @Override

@@ -10,10 +10,10 @@ import org.folio.qm.domain.entity.RecordCreationStatusUpdate;
 @UtilityClass
 public class StatusUtils {
 
-  public static RecordCreationStatus getStatusNew(UUID jobExecutionId) {
+  public static RecordCreationStatus getStatus(UUID jobExecutionId, RecordCreationStatusEnum statusName) {
     final RecordCreationStatus status = new RecordCreationStatus();
     status.setJobExecutionId(jobExecutionId);
-    status.setStatus(RecordCreationStatusEnum.NEW);
+    status.setStatus(statusName);
     status.setCreatedAt(new Timestamp(System.currentTimeMillis()));
     status.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     return status;

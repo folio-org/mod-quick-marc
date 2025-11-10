@@ -23,8 +23,48 @@
       "version": "1.2"
     },
     {
+      "id": "authority-storage",
+      "version": "2.0"
+    },
+    {
+      "id": "instance-storage",
+      "version": "11.2"
+    },
+    {
+      "id": "holdings-storage",
+      "version": "8.1"
+    },
+    {
+      "id": "locations",
+      "version": "3.2"
+    },
+    {
       "id": "specification-storage",
       "version": "1.0"
+    },
+    {
+      "id": "material-types",
+      "version": "2.0"
+    },
+    {
+      "id": "loan-types",
+      "version": "2.0"
+    },
+    {
+      "id": "instance-types",
+      "version": "1.0 2.0"
+    },
+    {
+      "id": "identifier-types",
+      "version": "1.0"
+    },
+    {
+      "id": "contributor-name-types",
+      "version": "1.0"
+    },
+    {
+      "id": "instance-preceding-succeeding-titles",
+      "version": "0.1"
     }
   ],
   "optional": [
@@ -43,6 +83,14 @@
     {
       "id": "field-protection-settings",
       "version": "1.2"
+    },
+    {
+      "id": "source-storage-snapshots",
+      "version": "2.1"
+    },
+    {
+      "id": "mapping-metadata-provider",
+      "version": "1.1"
     }
   ],
   "provides": [

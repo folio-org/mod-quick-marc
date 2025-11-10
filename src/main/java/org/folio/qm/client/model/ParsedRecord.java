@@ -12,6 +12,7 @@ public class ParsedRecord {
 
   private UUID id;
   private Object content;
+  private String formattedContent;
 
   public ParsedRecord(Object content) {
     this.content = content;

@@ -4,8 +4,8 @@ import static org.folio.qm.service.DataImportJobService.getDefaultJodExecutionDt
 import static org.folio.qm.service.DataImportJobService.toJobProfileInfo;
 import static org.folio.qm.service.DataImportJobService.toLastRawRecordsDto;
 import static org.folio.qm.service.DataImportJobService.toRawRecordsDto;
+import static org.folio.qm.util.StatusUtils.getStatus;
 import static org.folio.qm.util.StatusUtils.getStatusInProgress;
-import static org.folio.qm.util.StatusUtils.getStatusNew;
 
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +14,7 @@ import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.RecordTypeEnum;
 import org.folio.qm.domain.entity.JobProfile;
 import org.folio.qm.domain.entity.JobProfileAction;
+import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.service.ChangeManagerService;
 import org.folio.qm.service.DataImportJobService;
@@ -55,7 +56,7 @@ public class DataImportJobServiceImpl implements DataImportJobService {
     var jobExecutionDto = getDefaultJodExecutionDto(userId, jobProfile);
     var jobExecutionResponse = changeManagerService.postJobExecution(jobExecutionDto);
     var jobExecutionId = jobExecutionResponse.getJobExecutions().getFirst().getId();
-    saveNewStatus(jobExecutionId);
+    saveStatus(jobExecutionId, RecordCreationStatusEnum.NEW);
     return jobExecutionId;
   }
 
@@ -76,8 +77,8 @@ public class DataImportJobServiceImpl implements DataImportJobService {
     return jobProfileService.getJobProfile(TYPE_MAP.get(recordDto.getRecordType()), action);
   }
 
-  private void saveNewStatus(UUID jobExecutionId) {
-    var status = getStatusNew(jobExecutionId);
+  private void saveStatus(UUID jobExecutionId, RecordCreationStatusEnum statusName) {
+    var status = getStatus(jobExecutionId, statusName);
     statusService.save(status);
   }
 

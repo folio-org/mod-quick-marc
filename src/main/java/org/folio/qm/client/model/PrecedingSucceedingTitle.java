@@ -2,11 +2,14 @@ package org.folio.qm.client.model;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.NoArgsConstructor;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 public class PrecedingSucceedingTitle {
   public static final String PRECEDING_INSTANCE_ID_KEY = "precedingInstanceId";
@@ -15,11 +18,17 @@ public class PrecedingSucceedingTitle {
   public static final String HRID_KEY = "hrid";
   public static final String IDENTIFIERS_KEY = "identifiers";
 
+  @JsonProperty("id")
   private String id;
+  @JsonProperty("precedingInstanceId")
   private String precedingInstanceId;
+  @JsonProperty("succeedingInstanceId")
   private String succeedingInstanceId;
+  @JsonProperty("title")
   private String title;
+  @JsonProperty("hrid")
   private String hrid;
+  @JsonProperty("identifiers")
   private List<Map<String, Object>> identifiers;
 
   public PrecedingSucceedingTitle(String id, String precedingInstanceId,

@@ -102,7 +102,7 @@ public class Instance {
   private String indexTitle;
 
   @JsonProperty("alternativeTitles")
-  private Set<AlternativeTitle> alternativeTitles = new LinkedHashSet<AlternativeTitle>();
+  private Set<AlternativeTitle> alternativeTitles = new LinkedHashSet<>();
 
   @JsonProperty("editions")
   @JsonDeserialize(as = LinkedHashSet.class)

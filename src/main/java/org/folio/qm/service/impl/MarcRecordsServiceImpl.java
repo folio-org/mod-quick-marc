@@ -192,7 +192,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
           var updatedInstance = mergeRecords(existingInstance, mappedInstance);
           log.info("updateById:: updated instance id: {} updatedInstance: {}", instanceId, updatedInstance.result());
           var instanceJsonResponse = instanceStorageClient
-            .updateInstance(instanceId, updatedInstance.result().getJsonForStorage());
+            .updateInstance(instanceId, updatedInstance.result().getJsonForStorage().getMap());
           if (instanceJsonResponse.getStatusCode().is2xxSuccessful()) {
             var titles = precedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(
               updatedInstance.result());

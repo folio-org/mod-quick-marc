@@ -1,6 +1,6 @@
 package org.folio.qm.client;
 
-import io.vertx.core.json.JsonObject;
+import java.util.Map;
 import org.folio.qm.client.model.Instance;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -16,5 +16,5 @@ public interface InstanceStorageClient {
   Instance getInstanceById(@PathVariable("id") String id);
 
   @PutMapping(value = "/instances/{id}", consumes = "application/json")
-  ResponseEntity<Void> updateInstance(@PathVariable("id") String id, @RequestBody JsonObject instance);
+  ResponseEntity<Void> updateInstance(@PathVariable("id") String id, @RequestBody Map<String, Object> instance);
 }

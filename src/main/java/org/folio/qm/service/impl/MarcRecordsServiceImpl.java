@@ -136,86 +136,89 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc,
                          DeferredResult<ResponseEntity<Void>> updateResult) {
-    try {
-      log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
-      defaultValuesPopulationService.populate(quickMarc);
-      validateOnUpdate(parsedRecordId, quickMarc);
-      var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
-      updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
+    log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
+    defaultValuesPopulationService.populate(quickMarc);
+    validateOnUpdate(parsedRecordId, quickMarc);
+    var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
+    updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
 
-      if (parsedRecordDto != null && parsedRecordDto.getRecordType() != null) {
-        if (RecordTypeEnum.HOLDING.equals(parsedRecordDto.getRecordType())) {
-          var mappingMetadata = mappingMetadataProvider.getMappingData("marc-holdings");
-          var mappingRules = mappingMetadata.mappingRules();
-          var mappingParameters = mappingMetadata.mappingParameters();
-          var holdingId = parsedRecordDto.getExternalIdsHolder().getHoldingsId().toString();
-          var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
-          var parsedRecordJson = retrieveParsedContent(parsedRecord);
-          RecordMapper<Holdings> recordMapper = RecordMapperBuilder.buildMapper("MARC_HOLDINGS");
-          var mappedHoldings = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
-          var source = holdingsSourceClient.getHoldingSourceByName(MARC_NAME);
-          mappedHoldings.setSourceId(source.getSourceId());
-          var holding = holdingsStorageClient.getHoldingById(holdingId);
-          var updatedHolding = mergeRecords(holding, mappedHoldings);
-          var holdingRecord = populateUpdatedByUserIdIfNeeded(updatedHolding.result());
-          ResponseEntity<Void> response = holdingsStorageClient.updateHolding(holdingRecord.getId(), holdingRecord);
-          processResponse(parsedRecordId, updateResult, response, parsedRecordDto);
-        }
-        if (RecordTypeEnum.AUTHORITY.equals(parsedRecordDto.getRecordType())) {
-          var mappingMetadata = mappingMetadataProvider.getMappingData("marc-authority");
-          var mappingRules = mappingMetadata.mappingRules();
-          var mappingParameters = mappingMetadata.mappingParameters();
-          var authorityId = parsedRecordDto.getExternalIdsHolder().getAuthorityId().toString();
-          var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
-          RecordMapper<Authority> recordMapper = isAuthorityExtendedMode()
-            ? RecordMapperBuilder.buildMapper(ActionProfile.FolioRecord.MARC_AUTHORITY_EXTENDED.value())
-            : RecordMapperBuilder.buildMapper(RecordTypeEnum.AUTHORITY.getValue());
-          var parsedRecordJson = retrieveParsedContent(parsedRecord);
-          var mappedAuthority = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
-          var existingAuthority = authorityStorageClient.getAuthorityById(authorityId);
-          var updatedAuthority = mergeRecords(existingAuthority, mappedAuthority);
-          ResponseEntity<Void> response = authorityStorageClient.updateAuthority(authorityId,
-            updatedAuthority.result());
-          processResponse(parsedRecordId, updateResult, response, parsedRecordDto);
-        }
-        if (RecordTypeEnum.BIB.equals(parsedRecordDto.getRecordType())) {
-          var mappingMetadata = mappingMetadataProvider.getMappingData("marc-bib");
-          var mappingRules = mappingMetadata.mappingRules();
-          var mappingParameters = mappingMetadata.mappingParameters();
-          var instanceId = parsedRecordDto.getExternalIdsHolder().getInstanceId().toString();
-          var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
-          var parsedRecordJson = retrieveParsedContent(parsedRecord);
+    if (parsedRecordDto != null && parsedRecordDto.getRecordType() != null) {
+      if (RecordTypeEnum.HOLDING.equals(parsedRecordDto.getRecordType())) {
+        var mappingMetadata = mappingMetadataProvider.getMappingData("marc-holdings");
+        var mappingRules = mappingMetadata.mappingRules();
+        var mappingParameters = mappingMetadata.mappingParameters();
+        var holdingId = parsedRecordDto.getExternalIdsHolder().getHoldingsId().toString();
+        var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
+        var parsedRecordJson = retrieveParsedContent(parsedRecord);
 
-          RecordMapper<org.folio.Instance> recordMapper = RecordMapperBuilder
-            .buildMapper(RecordTypeEnum.BIB.getValue());
-          var mappedInstance = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
+        RecordMapper<Holdings> recordMapper = RecordMapperBuilder.buildMapper("MARC_HOLDINGS");
+        var mappedHoldings = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
 
-          org.folio.qm.client.model.Instance existingInstance = instanceStorageClient.getInstanceById(instanceId);
+        var source = holdingsSourceClient.getHoldingSourceByName(MARC_NAME);
+        mappedHoldings.setSourceId(source.getSourceId());
 
-          var updatedInstance = mergeRecords(existingInstance, mappedInstance);
-          log.info("updateById:: updated instance id: {} updatedInstance: {}", instanceId, updatedInstance.result());
+        var holding = holdingsStorageClient.getHoldingById(holdingId);
+        var updatedHolding = mergeRecords(holding, mappedHoldings);
+        var holdingRecord = populateUpdatedByUserIdIfNeeded(updatedHolding.result());
 
-          var updatedResponse = instanceStorageClient.updateInstance(instanceId,
-            updatedInstance.result().getJsonForStorage().mapTo(org.folio.qm.client.model.Instance.class));
-          if (updatedResponse.getStatusCode().is2xxSuccessful()) {
-            var titles = precedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(
-              updatedInstance.result());
-            var response = precedingSucceedingTitlesClient.updateTitles(instanceId, titles);
-            log.info("updateById:: instance update response for id: {} response: {}", instanceId,
-              response.getStatusCode());
-            processResponse(parsedRecordId, updateResult, response, parsedRecordDto);
-          } else {
-            log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}",
-              parsedRecordId, updatedResponse.getStatusCode().value());
-            var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
-              "Failed to update parsedRecordDto for quickMarc with parsedRecordId: " + parsedRecordId);
-            updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
-          }
+        ResponseEntity<Void> response = holdingsStorageClient.updateHolding(holdingRecord.getId(), holdingRecord);
+        handleSrsRecordUpdateResult(parsedRecordId, updateResult, response, parsedRecordDto);
+      }
+      if (RecordTypeEnum.AUTHORITY.equals(parsedRecordDto.getRecordType())) {
+        var mappingMetadata = mappingMetadataProvider.getMappingData("marc-authority");
+        var mappingRules = mappingMetadata.mappingRules();
+        var mappingParameters = mappingMetadata.mappingParameters();
+        var authorityId = parsedRecordDto.getExternalIdsHolder().getAuthorityId().toString();
+        var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
+
+        RecordMapper<Authority> recordMapper = isAuthorityExtendedMode()
+          ? RecordMapperBuilder.buildMapper(ActionProfile.FolioRecord.MARC_AUTHORITY_EXTENDED.value())
+          : RecordMapperBuilder.buildMapper(RecordTypeEnum.AUTHORITY.getValue());
+        var parsedRecordJson = retrieveParsedContent(parsedRecord);
+        var mappedAuthority = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
+
+        var existingAuthority = authorityStorageClient.getAuthorityById(authorityId);
+        var updatedAuthority = mergeRecords(existingAuthority, mappedAuthority);
+
+        ResponseEntity<Void> response = authorityStorageClient.updateAuthority(authorityId,
+          updatedAuthority.result());
+        handleSrsRecordUpdateResult(parsedRecordId, updateResult, response, parsedRecordDto);
+      }
+      if (RecordTypeEnum.BIB.equals(parsedRecordDto.getRecordType())) {
+        var mappingMetadata = mappingMetadataProvider.getMappingData("marc-bib");
+        var mappingRules = mappingMetadata.mappingRules();
+        var mappingParameters = mappingMetadata.mappingParameters();
+        var instanceId = parsedRecordDto.getExternalIdsHolder().getInstanceId().toString();
+        var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
+        var parsedRecordJson = retrieveParsedContent(parsedRecord);
+
+        RecordMapper<org.folio.Instance> recordMapper = RecordMapperBuilder
+          .buildMapper(RecordTypeEnum.BIB.getValue());
+        var mappedInstance = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
+
+        org.folio.qm.client.model.Instance existingInstance = instanceStorageClient.getInstanceById(instanceId);
+
+        var updatedInstance = mergeRecords(existingInstance, mappedInstance);
+        log.info("updateById:: updated instance id: {} updatedInstance: {}", instanceId, updatedInstance.result());
+
+        var updatedResponse = instanceStorageClient.updateInstance(instanceId,
+          updatedInstance.result().getJsonForStorage().mapTo(org.folio.qm.client.model.Instance.class));
+        if (updatedResponse.getStatusCode().is2xxSuccessful()) {
+          var titles = precedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(
+            updatedInstance.result());
+          var titlesJson = JsonObject.mapFrom(titles);
+          org.folio.qm.client.model.PrecedingSucceedingTitleCollection titleCollection = titlesJson.mapTo(
+            org.folio.qm.client.model.PrecedingSucceedingTitleCollection.class);
+          var response = precedingSucceedingTitlesClient.updateTitles(instanceId, titleCollection);
+          log.info("updateById:: instance update response for id: {} response: {}", instanceId,
+            response.getStatusCode());
+          handleSrsRecordUpdateResult(parsedRecordId, updateResult, response, parsedRecordDto);
+        } else {
+          log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}",
+            parsedRecordId, updatedResponse.getStatusCode().value());
+          setErrorResult(parsedRecordId, updateResult);
         }
       }
-      log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
-    } catch (Exception e) {
-      log.error("updateById:: failed to update Mrc record", e);
     }
   }
 
@@ -225,8 +228,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       : JsonObject.mapFrom(parsedRecord.getContent());
   }
 
-  private void processResponse(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                               ResponseEntity<Void> response, ParsedRecordDto parsedRecordDto) {
+  private void handleSrsRecordUpdateResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
+                                           ResponseEntity<Void> response, ParsedRecordDto parsedRecordDto) {
     if (response.getStatusCode().is2xxSuccessful()) {
       var result = sourceStorageClient.putParsedRecordDto(parsedRecordDto);
       if (result.getStatusCode().is2xxSuccessful()) {
@@ -235,15 +238,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       } else {
         log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}", parsedRecordId,
           result.getStatusCode().value());
-        var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
-          "Failed to update parsedRecordDto for quickMarc with parsedRecordId: " + parsedRecordId);
-        updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
+        setErrorResult(parsedRecordId, updateResult);
       }
     } else {
-      log.error("updateById:: failed to update holding for quickMarc by parsedRecordId: {}", parsedRecordId);
-      var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
-        "Failed to update parsedRecordDto for quickMarc with parsedRecordId: " + parsedRecordId);
-      updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
+      log.error("updateById:: failed to update MARC record by parsedRecordId: {}", parsedRecordId);
+      setErrorResult(parsedRecordId, updateResult);
     }
   }
 
@@ -452,5 +451,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private boolean isAuthorityExtendedMode() {
     return Boolean.parseBoolean(
       System.getenv().getOrDefault(AUTHORITY_EXTENDED, "false"));
+  }
+
+  private void setErrorResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult) {
+    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
+      "Failed to update parsedRecordDto for quickMarc with parsedRecordId: " + parsedRecordId);
+    updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
   }
 }

@@ -6,8 +6,12 @@ import lombok.Getter;
 @Getter
 public class PrecedingSucceedingTitleCollection {
 
-  private final List<PrecedingSucceedingTitle> precedingSucceedingTitles;
-  private final int totalRecords;
+  private List<PrecedingSucceedingTitle> precedingSucceedingTitles;
+  private int totalRecords;
+
+  public PrecedingSucceedingTitleCollection() {
+    // Default constructor for Jackson
+  }
 
   public PrecedingSucceedingTitleCollection(List<PrecedingSucceedingTitle> precedingSucceedingTitles,
                                             int totalRecords) {

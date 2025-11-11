@@ -5,7 +5,9 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class PrecedingSucceedingTitle {
   public static final String PRECEDING_INSTANCE_ID_KEY = "precedingInstanceId";
   public static final String SUCCEEDING_INSTANCE_ID_KEY = "succeedingInstanceId";
@@ -13,12 +15,12 @@ public class PrecedingSucceedingTitle {
   public static final String HRID_KEY = "hrid";
   public static final String IDENTIFIERS_KEY = "identifiers";
 
-  public final String id;
-  public final String precedingInstanceId;
-  public final String succeedingInstanceId;
-  public final String title;
-  public final String hrid;
-  public final List<Map<String, Object>> identifiers;
+  private String id;
+  private String precedingInstanceId;
+  private String succeedingInstanceId;
+  private String title;
+  private String hrid;
+  private List<Map<String, Object>> identifiers;
 
   public PrecedingSucceedingTitle(String id, String precedingInstanceId,
                                   String succeedingInstanceId, String title, String hrid,

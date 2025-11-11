@@ -185,15 +185,19 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
           var instanceId = parsedRecordDto.getExternalIdsHolder().getInstanceId().toString();
           var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
           var parsedRecordJson = retrieveParsedContent(parsedRecord);
+
           RecordMapper<org.folio.Instance> recordMapper = RecordMapperBuilder
             .buildMapper(RecordTypeEnum.BIB.getValue());
           var mappedInstance = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
+
           org.folio.qm.client.model.Instance existingInstance = instanceStorageClient.getInstanceById(instanceId);
+
           var updatedInstance = mergeRecords(existingInstance, mappedInstance);
           log.info("updateById:: updated instance id: {} updatedInstance: {}", instanceId, updatedInstance.result());
-          var instanceJsonResponse = instanceStorageClient
-            .updateInstance(instanceId, updatedInstance.result().getJsonForStorage().getMap());
-          if (instanceJsonResponse.getStatusCode().is2xxSuccessful()) {
+
+          var updatedResponse = instanceStorageClient.updateInstance(instanceId,
+            updatedInstance.result().getJsonForStorage().mapTo(org.folio.qm.client.model.Instance.class));
+          if (updatedResponse.getStatusCode().is2xxSuccessful()) {
             var titles = precedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(
               updatedInstance.result());
             var response = precedingSucceedingTitlesClient.updateTitles(instanceId, titles);
@@ -202,7 +206,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
             processResponse(parsedRecordId, updateResult, response, parsedRecordDto);
           } else {
             log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}",
-              parsedRecordId, instanceJsonResponse.getStatusCode().value());
+              parsedRecordId, updatedResponse.getStatusCode().value());
             var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
               "Failed to update parsedRecordDto for quickMarc with parsedRecordId: " + parsedRecordId);
             updateResult.setErrorResult(ResponseEntity.badRequest().body(error));

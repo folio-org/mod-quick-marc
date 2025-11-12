@@ -222,30 +222,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  private JsonObject retrieveParsedContent(ParsedRecord parsedRecord) {
-    return parsedRecord.getContent() instanceof String
-      ? new JsonObject(parsedRecord.getContent().toString())
-      : JsonObject.mapFrom(parsedRecord.getContent());
-  }
-
-  private void handleSrsRecordUpdateResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                                           ResponseEntity<Void> response, ParsedRecordDto parsedRecordDto) {
-    if (response.getStatusCode().is2xxSuccessful()) {
-      var result = sourceStorageClient.putParsedRecordDto(parsedRecordDto);
-      if (result.getStatusCode().is2xxSuccessful()) {
-        log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
-        updateResult.setResult(ResponseEntity.accepted().build());
-      } else {
-        log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}", parsedRecordId,
-          result.getStatusCode().value());
-        setErrorResult(parsedRecordId, updateResult);
-      }
-    } else {
-      log.error("updateById:: failed to update MARC record by parsedRecordId: {}", parsedRecordId);
-      setErrorResult(parsedRecordId, updateResult);
-    }
-  }
-
   @Override
   public CreationStatus getCreationStatusByQmRecordId(UUID qmRecordId) {
     log.debug("getCreationStatusByQmRecordId:: trying to get creationStatus by qmRecordId: {}", qmRecordId);
@@ -263,7 +239,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     log.debug("createNewRecord:: trying to create a new quickMarc");
     defaultValuesPopulationService.populate(quickMarc);
     validateOnCreate(quickMarc);
+    log.info("createNewRecord:: quickMarc passed validation, quickMarc: {}", quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
+    log.info("createNewRecord:: quickMarc converted to ParsedRecordDto, recordDto: {}", recordDto);
+    log.info("createNewRecord:: quickMarc parsedRecord content: {}", recordDto.getParsedRecord() != null
+      ? recordDto.getParsedRecord().getContent() : "null");
     var status = runImportAndGetStatus(recordDto, CREATE);
     log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
     return status;
@@ -290,6 +270,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       fieldItemPredicate = fieldItemPredicate.or(FIELD_001_PREDICATE);
     }
     quickMarc.getFields().removeIf(fieldItemPredicate);
+    log.info("prepareRecord:: prepared quickMarc for creation, quickMarc: {}", quickMarc);
     return quickMarc;
   }
 
@@ -406,7 +387,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  public JsonObject mergeInstances(JsonObject existing, JsonObject mapped) {
+  private JsonObject mergeInstances(JsonObject existing, JsonObject mapped) {
     JsonArray statisticalCodeIds = existing.getJsonArray(STATISTICAL_CODE_IDS_PROPERTY);
     JsonArray natureOfContentTermIds = existing.getJsonArray(NATURE_OF_CONTENT_TERM_IDS_PROPERTY);
     JsonArray administrativeNotes = existing.getJsonArray(ADMINISTRATIVE_NOTES_PROPERTY);
@@ -430,7 +411,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     existingRecord.setCallNumberSuffix(mappedHoldings.getCallNumberSuffix());
   }
 
-  public HoldingsRecord populateUpdatedByUserIdIfNeeded(HoldingsRecord holding) {
+  private HoldingsRecord populateUpdatedByUserIdIfNeeded(HoldingsRecord holding) {
     if (holding.getMetadata() == null) {
       holding.setMetadata(new Metadata());
     }
@@ -457,5 +438,29 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
       "Failed to update parsedRecordDto for quickMarc with parsedRecordId: " + parsedRecordId);
     updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
+  }
+
+  private JsonObject retrieveParsedContent(ParsedRecord parsedRecord) {
+    return parsedRecord.getContent() instanceof String
+      ? new JsonObject(parsedRecord.getContent().toString())
+      : JsonObject.mapFrom(parsedRecord.getContent());
+  }
+
+  private void handleSrsRecordUpdateResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
+                                           ResponseEntity<Void> response, ParsedRecordDto parsedRecordDto) {
+    if (response.getStatusCode().is2xxSuccessful()) {
+      var result = sourceStorageClient.putParsedRecordDto(parsedRecordDto);
+      if (result.getStatusCode().is2xxSuccessful()) {
+        log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
+        updateResult.setResult(ResponseEntity.accepted().build());
+      } else {
+        log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}", parsedRecordId,
+          result.getStatusCode().value());
+        setErrorResult(parsedRecordId, updateResult);
+      }
+    } else {
+      log.error("updateById:: failed to update MARC record by parsedRecordId: {}", parsedRecordId);
+      setErrorResult(parsedRecordId, updateResult);
+    }
   }
 }

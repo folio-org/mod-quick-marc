@@ -43,6 +43,10 @@
     {
       "id": "field-protection-settings",
       "version": "1.2"
+    },
+    {
+      "id": "source-storage-snapshots",
+      "version": "2.1"
     }
   ],
   "provides": [

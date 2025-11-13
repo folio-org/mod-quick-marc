@@ -1,19 +1,27 @@
 package org.folio.qm.service.impl;
 
+import static java.util.Objects.requireNonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.TAG_999_FIELD;
-import static org.folio.qm.domain.entity.JobProfileAction.CREATE;
+import static org.folio.qm.util.AdditionalFieldsUtil.SUBFIELD_I;
+import static org.folio.qm.util.AdditionalFieldsUtil.TAG_001;
+import static org.folio.qm.util.AdditionalFieldsUtil.TAG_999;
+import static org.folio.qm.util.AdditionalFieldsUtil.addFieldToMarcRecord;
+import static org.folio.qm.util.AdditionalFieldsUtil.getControlFieldValue;
+import static org.folio.qm.util.JsonUtils.objectToJsonString;
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +32,7 @@ import org.folio.Authority;
 import org.folio.Holdings;
 import org.folio.Metadata;
 import org.folio.ParsedRecord;
+import org.folio.RawRecord;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapperBuilder;
 import org.folio.qm.client.AuthorityStorageClient;
@@ -34,10 +43,12 @@ import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.client.SourceStorageClient;
 import org.folio.qm.client.UsersClient;
+import org.folio.qm.client.model.ExternalIdsHolder;
 import org.folio.qm.client.model.ParsedRecordDto;
+import org.folio.qm.client.model.Record;
 import org.folio.qm.client.model.RecordTypeEnum;
+import org.folio.qm.client.model.Snapshot;
 import org.folio.qm.client.model.SourceRecord;
-import org.folio.qm.client.model.instance.Instance;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.CreationStatus;
@@ -47,7 +58,6 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.entity.HoldingsRecord;
-import org.folio.qm.domain.entity.JobProfileAction;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.UnexpectedException;
@@ -239,12 +249,33 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     log.debug("createNewRecord:: trying to create a new quickMarc");
     defaultValuesPopulationService.populate(quickMarc);
     validateOnCreate(quickMarc);
-    log.info("createNewRecord:: quickMarc passed validation, quickMarc: {}", quickMarc);
     var recordDto = conversionService.convert(prepareRecord(quickMarc), ParsedRecordDto.class);
-    log.info("createNewRecord:: quickMarc converted to ParsedRecordDto, recordDto: {}", recordDto);
-    log.info("createNewRecord:: quickMarc parsedRecord content: {}", recordDto.getParsedRecord() != null
-      ? recordDto.getParsedRecord().getContent() : "null");
-    var status = runImportAndGetStatus(recordDto, CREATE);
+    if (RecordTypeEnum.AUTHORITY.equals(recordDto.getRecordType())) {
+      var authorityId = UUID.randomUUID().toString();
+      var authority = getAuthority(recordDto, authorityId);
+      // Create authority srsRecord
+      createAuthorityRecord(authority);
+      // Create snapshot
+      var snapshotId = UUID.randomUUID().toString();
+      createSnapshot(snapshotId);
+      // Create SRS record
+      Record srsRecord = new Record();
+      var recordId = UUID.randomUUID().toString();
+      srsRecord.setId(recordId);
+      srsRecord.setRecordType(Record.RecordType.MARC_AUTHORITY);
+      srsRecord.setState(Record.State.ACTUAL);
+      srsRecord.setSnapshotId(snapshotId);
+      srsRecord.setRawRecord(toRawRecord(recordDto, recordId));
+      srsRecord.setParsedRecord(new org.folio.qm.client.model.ParsedRecord()
+        .setId(UUID.fromString(recordId))
+        .setContent(recordDto.getParsedRecord().getContent()));
+
+      addFieldToMarcRecord(srsRecord, TAG_999, SUBFIELD_I, authorityId);
+      setExternalIdsHolder(authorityId, srsRecord);
+      sourceStorageClient.createSrsRecord(srsRecord);
+    }
+    var status = new CreationStatus();
+    status.setStatus(CreationStatus.StatusEnum.CREATED);
     log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
     return status;
   }
@@ -270,15 +301,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       fieldItemPredicate = fieldItemPredicate.or(FIELD_001_PREDICATE);
     }
     quickMarc.getFields().removeIf(fieldItemPredicate);
-    log.info("prepareRecord:: prepared quickMarc for creation, quickMarc: {}", quickMarc);
     return quickMarc;
-  }
-
-  private CreationStatus runImportAndGetStatus(ParsedRecordDto recordDto, JobProfileAction action) {
-    var jobId = dataImportJobService.executeDataImportJob(recordDto, action);
-    return statusService.findByJobExecutionId(jobId)
-      .map(statusMapper::fromEntity)
-      .orElseThrow(() -> new UnexpectedException(String.format(RECORD_NOT_FOUND_MESSAGE, jobId)));
   }
 
   private void validateOnCreate(QuickMarcCreate quickMarc) {
@@ -361,8 +384,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  private Future<Instance> mergeRecords(org.folio.qm.client.model.Instance existingInstance,
-                                        org.folio.Instance mappedInstance) {
+  private Future<org.folio.qm.client.model.instance.Instance> mergeRecords(
+    org.folio.qm.client.model.Instance existingInstance,
+    org.folio.Instance mappedInstance) {
+
     log.info("mergeRecords:: Merging existing instance with id: {} and mapped instance",
       existingInstance.getId());
     try {
@@ -379,7 +404,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       JsonObject existing = JsonObject.mapFrom(existingInstance);
       JsonObject mapped = JsonObject.mapFrom(mappedInstance);
       JsonObject mergedInstanceAsJson = mergeInstances(existing, mapped);
-      Instance mergedInstance = Instance.fromJson(mergedInstanceAsJson);
+      org.folio.qm.client.model.instance.Instance mergedInstance = org.folio.qm.client.model.instance.Instance
+        .fromJson(mergedInstanceAsJson);
       return Future.succeededFuture(mergedInstance);
     } catch (Exception e) {
       log.error("Error updating instance", e);
@@ -461,6 +487,66 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     } else {
       log.error("updateById:: failed to update MARC record by parsedRecordId: {}", parsedRecordId);
       setErrorResult(parsedRecordId, updateResult);
+    }
+  }
+
+  private RawRecord toRawRecord(ParsedRecordDto parsedRecordDto, String recordId) {
+    var jsonString = objectToJsonString(requireNonNull(parsedRecordDto).getParsedRecord().getContent());
+    return new RawRecord()
+      .withId(recordId)
+      .withContent(jsonString);
+  }
+
+  private void setExternalIdsHolder(String authorityId, Record srsRecord) {
+    var externalIdsHolder = new ExternalIdsHolder();
+    externalIdsHolder.setAuthorityId(UUID.fromString(authorityId));
+    Optional.ofNullable(getControlFieldValue(srsRecord, TAG_001))
+      .map(String::trim)
+      .ifPresent(externalIdsHolder::setAuthorityHrid);
+    srsRecord.setExternalIdsHolder(externalIdsHolder);
+  }
+
+  private Authority getAuthority(ParsedRecordDto recordDto, String authorityId) {
+    var mappingMetadata = mappingMetadataProvider.getMappingData("marc-authority");
+    var mappingRules = mappingMetadata.mappingRules();
+    var mappingParameters = mappingMetadata.mappingParameters();
+
+    var parsedRecord = new ParsedRecord().withContent(recordDto.getParsedRecord().getContent());
+
+    RecordMapper<Authority> recordMapper = isAuthorityExtendedMode()
+      ? RecordMapperBuilder.buildMapper(ActionProfile.FolioRecord.MARC_AUTHORITY_EXTENDED.value())
+      : RecordMapperBuilder.buildMapper(RecordTypeEnum.AUTHORITY.getValue());
+    var parsedRecordJson = retrieveParsedContent(parsedRecord);
+    var mappedAuthority = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
+
+    mappedAuthority.setId(authorityId);
+    mappedAuthority.setSource(Authority.Source.MARC);
+    return mappedAuthority;
+  }
+
+  private void createSnapshot(String snapshotId) {
+    var snapshot = new Snapshot();
+    snapshot.setJobExecutionId(snapshotId);
+    snapshot.setStatus(Snapshot.Status.COMMITTED);
+    snapshot.setProcessingStartedDate(new Date());
+    var snapshotResponse = sourceStorageClient.createSnapshot(snapshot);
+    if (snapshotResponse.getStatusCode().is2xxSuccessful()) {
+      log.info("createNewRecord:: snapshot created for new authority with id: {}", snapshotId);
+    } else {
+      log.error("createNewRecord:: failed to create snapshot for new authority, response status: {}",
+        snapshotResponse.getStatusCode().value());
+      throw new UnexpectedException("Failed to create snapshot for new authority record");
+    }
+  }
+
+  private void createAuthorityRecord(Authority mappedAuthority) {
+    ResponseEntity<Authority> response = authorityStorageClient.createAuthority(mappedAuthority);
+    if (response.getStatusCode().is2xxSuccessful()) {
+      log.info("createNewRecord:: new authority created with id: {}", response.getBody().getId());
+    } else {
+      log.error("createNewRecord:: failed to create new authority, response status: {}",
+        response.getStatusCode().value());
+      throw new UnexpectedException("Failed to create new authority record");
     }
   }
 }

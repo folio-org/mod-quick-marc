@@ -1,12 +1,15 @@
 package org.folio.qm.client;
 
 import org.folio.qm.client.model.ParsedRecordDto;
+import org.folio.qm.client.model.Record;
+import org.folio.qm.client.model.Snapshot;
 import org.folio.qm.client.model.SourceRecord;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,6 +21,12 @@ public interface SourceStorageClient {
 
   @PutMapping(value = "/source-records/parsed-record")
   ResponseEntity<Void> putParsedRecordDto(ParsedRecordDto parsedRecordDto);
+
+  @PostMapping(value = "/snapshots")
+  ResponseEntity<Snapshot> createSnapshot(Snapshot snapshot);
+
+  @PostMapping(value = "/records")
+  ResponseEntity<Record> createSrsRecord(Record record);
 
   enum IdType {
     EXTERNAL

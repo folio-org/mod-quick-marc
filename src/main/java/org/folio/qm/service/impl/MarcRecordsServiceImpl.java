@@ -259,25 +259,31 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       var snapshotId = UUID.randomUUID().toString();
       createSnapshot(snapshotId);
       // Create SRS record
-      Record srsRecord = new Record();
-      var recordId = UUID.randomUUID().toString();
-      srsRecord.setId(recordId);
-      srsRecord.setRecordType(Record.RecordType.MARC_AUTHORITY);
-      srsRecord.setState(Record.State.ACTUAL);
-      srsRecord.setSnapshotId(snapshotId);
-      srsRecord.setRawRecord(toRawRecord(recordDto, recordId));
-      srsRecord.setParsedRecord(new org.folio.qm.client.model.ParsedRecord()
-        .setId(UUID.fromString(recordId))
-        .setContent(recordDto.getParsedRecord().getContent()));
-
-      addFieldToMarcRecord(srsRecord, TAG_999, SUBFIELD_I, authorityId);
-      setExternalIdsHolder(authorityId, srsRecord);
+      var srsRecord = getRecord(snapshotId, recordDto, authorityId);
       sourceStorageClient.createSrsRecord(srsRecord);
     }
     var status = new CreationStatus();
     status.setStatus(CreationStatus.StatusEnum.CREATED);
     log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getQmRecordId());
     return status;
+  }
+
+  private Record getRecord(String snapshotId, ParsedRecordDto recordDto, String authorityId) {
+    var srsRecord = new Record();
+    var recordId = UUID.randomUUID().toString();
+    srsRecord.setId(recordId);
+    srsRecord.setMatchedId(recordId);
+    srsRecord.setRecordType(Record.RecordType.MARC_AUTHORITY);
+    srsRecord.setState(Record.State.ACTUAL);
+    srsRecord.setSnapshotId(snapshotId);
+    srsRecord.setRawRecord(toRawRecord(recordDto, recordId));
+    srsRecord.setParsedRecord(new org.folio.qm.client.model.ParsedRecord()
+      .setId(UUID.fromString(recordId))
+      .setContent(recordDto.getParsedRecord().getContent()));
+
+    addFieldToMarcRecord(srsRecord, TAG_999, SUBFIELD_I, authorityId);
+    setExternalIdsHolder(authorityId, srsRecord);
+    return srsRecord;
   }
 
   @Override

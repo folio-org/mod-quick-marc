@@ -39,7 +39,7 @@
     <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
     <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-    <checkstyle.version>12.1.1</checkstyle.version>
+    <checkstyle.version>12.1.2</checkstyle.version>
     <folio-java-checkstyle.version>1.2.0</folio-java-checkstyle.version>
 
     <sonar.exclusions>

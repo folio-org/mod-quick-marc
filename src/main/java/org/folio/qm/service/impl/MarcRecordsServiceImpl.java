@@ -34,26 +34,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.ActionProfile;
+import org.folio.AdditionalInfo;
 import org.folio.Authority;
+import org.folio.ExternalIdsHolder;
 import org.folio.Holdings;
 import org.folio.Metadata;
 import org.folio.ParsedRecord;
 import org.folio.RawRecord;
+import org.folio.Record;
 import org.folio.processing.exceptions.EventProcessingException;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapperBuilder;
 import org.folio.qm.client.AuthorityStorageClient;
-import org.folio.qm.client.HoldingsSourceClient;
 import org.folio.qm.client.HoldingsStorageClient;
 import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.client.SourceStorageClient;
 import org.folio.qm.client.UsersClient;
-import org.folio.qm.client.model.AdditionalInfo;
-import org.folio.qm.client.model.ExternalIdsHolder;
 import org.folio.qm.client.model.ParsedRecordDto;
-import org.folio.qm.client.model.Record;
 import org.folio.qm.client.model.RecordTypeEnum;
 import org.folio.qm.client.model.Snapshot;
 import org.folio.qm.client.model.SourceRecord;
@@ -132,7 +131,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private final PrecedingSucceedingTitlesHelper precedingSucceedingTitlesHelper;
 
   private final UsersClient usersClient;
-  private final HoldingsSourceClient holdingsSourceClient;
   private final LinksSuggestionsClient linksSuggestionsClient;
   private final HoldingsStorageClient holdingsStorageClient;
   private final AuthorityStorageClient authorityStorageClient;
@@ -165,6 +163,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     defaultValuesPopulationService.populate(quickMarc);
     validateOnUpdate(parsedRecordId, quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
+    log.info("updateById:: parsedRecordDto: {}", objectToJsonString(parsedRecordDto));
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
 
     switch (Objects.requireNonNull(parsedRecordDto).getRecordType()) {
@@ -284,6 +283,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var mappingMetadata = mappingMetadataProvider.getMappingData("marc-bib");
     var mappingRules = mappingMetadata.mappingRules();
     var mappingParameters = mappingMetadata.mappingParameters();
+    log.info("updateInstance:: mappingParameters: {}", objectToJsonString(mappingParameters));
     var instanceId = parsedRecordDto.getExternalIdsHolder().getInstanceId().toString();
     var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
     var parsedRecordJson = retrieveParsedContent(parsedRecord);
@@ -348,9 +348,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
     RecordMapper<Holdings> recordMapper = RecordMapperBuilder.buildMapper("MARC_HOLDINGS");
     var mappedHoldings = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
-
-    var source = holdingsSourceClient.getHoldingSourceByName(MARC_NAME);
-    mappedHoldings.setSourceId(source.getSourceId());
     var holdingId = parsedRecordDto.getExternalIdsHolder().getHoldingsId().toString();
     var holding = holdingsStorageClient.getHoldingById(holdingId);
     var updatedHolding = mergeRecords(holding, mappedHoldings);
@@ -481,8 +478,16 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private void handleSrsRecordUpdateResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
                                            ResponseEntity<Void> response, ParsedRecordDto parsedRecordDto) {
     if (response.getStatusCode().is2xxSuccessful()) {
+      var existingRecordResponse = sourceStorageClient.getSrsRecord(parsedRecordId.toString());
+      if (!existingRecordResponse.getStatusCode().is2xxSuccessful()) {
+        log.error("updateById:: failed to retrieve existing SRS record by parsedRecordId: {} response status: {}",
+          parsedRecordId, existingRecordResponse.getStatusCode().value());
+        setErrorResult(parsedRecordId, updateResult);
+      }
+      var record = getNewRecord(parsedRecordDto, Objects.requireNonNull(existingRecordResponse.getBody()));
+      var result = sourceStorageClient.updateSrsRecordGeneration(record.getId(), record);
       //store updated parsedRecordDto in the SRS module
-      var result = sourceStorageClient.putParsedRecordDto(parsedRecordDto);
+      //var result = sourceStorageClient.putParsedRecordDto(parsedRecordDto);
       if (result.getStatusCode().is2xxSuccessful()) {
         log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
         updateResult.setResult(ResponseEntity.accepted().build());
@@ -495,6 +500,55 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       log.error("updateById:: failed to update MARC record by parsedRecordId: {}", parsedRecordId);
       setErrorResult(parsedRecordId, updateResult);
     }
+  }
+
+  private Record getNewRecord(ParsedRecordDto parsedRecordDto, Record existingRecord) {
+    var newRecordId = parsedRecordDto.getId().toString();
+    var externalIdsHolder = parsedRecordDto.getExternalIdsHolder();
+    var metadata = existingRecord.getMetadata();
+    assert metadata != null;
+    assert externalIdsHolder != null;
+    return new Record()
+      .withId(newRecordId)
+      .withSnapshotId(existingRecord.getSnapshotId())
+      .withMatchedId(parsedRecordDto.getId().toString())
+      .withRecordType(Record.RecordType.fromValue(parsedRecordDto.getRecordType().getValue()))
+      .withOrder(existingRecord.getOrder())
+      .withDeleted(false)
+      .withState(Record.State.ACTUAL)
+      .withGeneration(existingRecord.getGeneration() + 1)
+      .withRawRecord(toRawRecord(parsedRecordDto.getParsedRecord(), newRecordId))
+      .withParsedRecord(new ParsedRecord()
+        .withId(newRecordId)
+        .withContent(parsedRecordDto.getParsedRecord().getContent()))
+      .withExternalIdsHolder(getExternalIdsHolder(externalIdsHolder))
+      .withAdditionalInfo(new AdditionalInfo()
+        .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().isSuppressDiscovery()))
+      .withMetadata(metadata.withUpdatedDate(new Date()));
+  }
+
+  private ExternalIdsHolder getExternalIdsHolder(org.folio.qm.client.model.ExternalIdsHolder externalIdsHolder) {
+    var ids = new ExternalIdsHolder();
+
+    if (externalIdsHolder.getAuthorityId() != null) {
+      ids.withAuthorityId(externalIdsHolder.getAuthorityId().toString());
+    }
+    if (externalIdsHolder.getAuthorityHrid() != null) {
+      ids.withAuthorityHrid(externalIdsHolder.getAuthorityHrid());
+    }
+    if (externalIdsHolder.getHoldingsId() != null) {
+      ids.withHoldingsId(externalIdsHolder.getHoldingsId().toString());
+    }
+    if (externalIdsHolder.getHoldingsHrid() != null) {
+      ids.withHoldingsHrid(externalIdsHolder.getHoldingsHrid());
+    }
+    if (externalIdsHolder.getInstanceId() != null) {
+      ids.withInstanceId(externalIdsHolder.getInstanceId().toString());
+    }
+    if (externalIdsHolder.getInstanceHrid() != null) {
+      ids.withInstanceHrid(externalIdsHolder.getInstanceHrid());
+    }
+    return ids;
   }
 
   private void createInstance(ParsedRecordDto recordDto, String snapshotId, RecordCreationStatus status) {
@@ -518,7 +572,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       org.folio.qm.client.model.PrecedingSucceedingTitleCollection.class);
     log.info("createNewRecord:: posting preceding/succeeding titles for instance id: {} ", externalInstance.getId());
     // Create preceding/succeeding titles in the mod-inventory-storage module
-    titleCollection.getPrecedingSucceedingTitles().forEach(precedingSucceedingTitlesClient::createTitles);
+    precedingSucceedingTitlesClient.updateTitles(externalInstance.getId(), titleCollection);
     // Create snapshot in the SRS module
     createSnapshot(snapshotId);
     var srsRecord = getInstanceSrsRecord(snapshotId, recordDto, externalInstance);
@@ -540,8 +594,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var instanceHrid = getInstanceHrid(mappedHoldings, recordDto);
     var instanceId = instanceStorageClient.getInstanceIdByHrid(instanceHrid).getInstanceId();
     mappedHoldings.setInstanceId(instanceId);
-    var source = holdingsSourceClient.getHoldingSourceByName(MARC_NAME);
-    mappedHoldings.setSourceId(source.getSourceId());
     mappedHoldings.setDiscoverySuppress(recordDto.getAdditionalInfo().isSuppressDiscovery());
     setMetadata(mappedHoldings);
     var holdingsRecord = JsonObject.mapFrom(mappedHoldings).mapTo(HoldingsRecord.class);
@@ -636,9 +688,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     srsRecord.setState(Record.State.ACTUAL);
     srsRecord.setSnapshotId(snapshotId);
     srsRecord.setRawRecord(toRawRecord(recordDto.getParsedRecord(), recordId));
-    srsRecord.setParsedRecord(new org.folio.qm.client.model.ParsedRecord()
-      .setId(UUID.fromString(recordId))
-      .setContent(recordDto.getParsedRecord().getContent()));
+    srsRecord.setParsedRecord(new ParsedRecord()
+      .withId(recordId)
+      .withContent(recordDto.getParsedRecord().getContent()));
     setExternalIdsHolderForAuthority(authorityId, srsRecord);
     setMetadata(srsRecord);
     addFieldToMarcRecord(srsRecord, TAG_999, SUBFIELD_I, authorityId);
@@ -656,11 +708,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     srsRecord.setState(Record.State.ACTUAL);
     srsRecord.setMetadata(externalHolding.getMetadata());
     srsRecord.setSnapshotId(snapshotId);
-    srsRecord.setAdditionalInfo(new AdditionalInfo().setSuppressDiscovery(externalHolding.getDiscoverySuppress()));
+    srsRecord.setAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(externalHolding.getDiscoverySuppress()));
     srsRecord.setRawRecord(toRawRecord(recordDto.getParsedRecord(), recordId));
-    srsRecord.setParsedRecord(new org.folio.qm.client.model.ParsedRecord()
-      .setId(UUID.fromString(recordId))
-      .setContent(recordDto.getParsedRecord().getContent()));
+    srsRecord.setParsedRecord(new ParsedRecord()
+      .withId(recordId)
+      .withContent(recordDto.getParsedRecord().getContent()));
     setExternalIdsHolderForHolding(externalHolding.getId(), srsRecord, instanceHrid);
     addFieldToMarcRecord(srsRecord, TAG_999, SUBFIELD_I, externalHolding.getId());
 
@@ -681,11 +733,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     srsRecord.setState(Record.State.ACTUAL);
     srsRecord.setMetadata(externalInstance.getMetadata());
     srsRecord.setSnapshotId(snapshotId);
-    srsRecord.setAdditionalInfo(new AdditionalInfo().setSuppressDiscovery(externalInstance.getDiscoverySuppress()));
+    srsRecord.setAdditionalInfo(new AdditionalInfo().withSuppressDiscovery(externalInstance.getDiscoverySuppress()));
     srsRecord.setRawRecord(toRawRecord(recordDto.getParsedRecord(), recordId));
-    srsRecord.setParsedRecord(new org.folio.qm.client.model.ParsedRecord()
-      .setId(UUID.fromString(recordId))
-      .setContent(recordDto.getParsedRecord().getContent()));
+    srsRecord.setParsedRecord(new ParsedRecord()
+      .withId(recordId)
+      .withContent(recordDto.getParsedRecord().getContent()));
     setExternalIdsHolderForInstance(externalInstance.getId(), srsRecord, externalInstance.getHrid());
     addFieldToMarcRecord(srsRecord, TAG_999, SUBFIELD_I, externalInstance.getId());
     addControlledFieldToMarcRecord(srsRecord, TAG_001, externalInstance.getHrid(),
@@ -733,7 +785,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private void setExternalIdsHolderForAuthority(String authorityId, Record srsRecord) {
     var externalIdsHolder = new ExternalIdsHolder();
-    externalIdsHolder.setAuthorityId(UUID.fromString(authorityId));
+    externalIdsHolder.setAuthorityId(authorityId);
     Optional.ofNullable(getControlFieldValue(srsRecord, TAG_001))
       .map(String::trim)
       .ifPresent(externalIdsHolder::setAuthorityHrid);
@@ -742,7 +794,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private void setExternalIdsHolderForHolding(String holdingId, Record srsRecord, String instanceHrid) {
     var externalIdsHolder = new ExternalIdsHolder();
-    externalIdsHolder.setHoldingsId(UUID.fromString(holdingId));
+    externalIdsHolder.setHoldingsId(holdingId);
     Optional.ofNullable(instanceHrid)
       .map(String::trim)
       .ifPresent(externalIdsHolder::setHoldingsHrid);
@@ -751,7 +803,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private void setExternalIdsHolderForInstance(String instanceId, Record srsRecord, String instanceHrid) {
     var externalIdsHolder = new ExternalIdsHolder();
-    externalIdsHolder.setInstanceId(UUID.fromString(instanceId));
+    externalIdsHolder.setInstanceId(instanceId);
     Optional.ofNullable(instanceHrid)
       .map(String::trim)
       .ifPresent(externalIdsHolder::setInstanceHrid);

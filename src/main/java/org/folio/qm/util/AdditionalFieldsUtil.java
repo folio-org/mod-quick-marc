@@ -23,7 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.folio.qm.client.model.Record;
+import org.folio.Record;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.MarcJsonWriter;
 import org.marc4j.MarcReader;
@@ -97,7 +97,7 @@ public final class AdditionalFieldsUtil {
             parsedContentString
           );
 
-          record.setParsedRecord(record.getParsedRecord().setContent(content));
+          record.setParsedRecord(record.getParsedRecord().withContent(content));
           result = true;
         }
       }
@@ -274,7 +274,7 @@ public final class AdditionalFieldsUtil {
           jsonWriter.write(marcRecord);
 
           String parsedContentString = new JsonObject(os.toString()).encode();
-          recordForUpdate.setParsedRecord(recordForUpdate.getParsedRecord().setContent(parsedContentString));
+          recordForUpdate.setParsedRecord(recordForUpdate.getParsedRecord().withContent(parsedContentString));
           result = true;
         }
       }
@@ -324,7 +324,7 @@ public final class AdditionalFieldsUtil {
             String parsedContentString = new JsonObject(baos.toString()).encode();
 
             LOGGER.debug("removeField:: Prepared parsedContentString for record {}", record.getId());
-            record.setParsedRecord(record.getParsedRecord().setContent(parsedContentString));
+            record.setParsedRecord(record.getParsedRecord().withContent(parsedContentString));
           }
         }
       } else {
@@ -432,7 +432,7 @@ public final class AdditionalFieldsUtil {
         jsonWriter.write(marcRecord);
 
         String parsedContentString = new JsonObject(os.toString()).encode();
-        recordForUpdate.setParsedRecord(recordForUpdate.getParsedRecord().setContent(parsedContentString));
+        recordForUpdate.setParsedRecord(recordForUpdate.getParsedRecord().withContent(parsedContentString));
       }
     } catch (Exception e) {
       LOGGER.warn("recalculateLeaderAndParsedRecord:: Failed to recalculate leader and parsed record for record: {}",
@@ -544,7 +544,7 @@ public final class AdditionalFieldsUtil {
           jsonWriter.write(marcRecord);
 
           String parsedContentString = new JsonObject(os.toString()).encode();
-          recordForUpdate.setParsedRecord(recordForUpdate.getParsedRecord().setContent(parsedContentString));
+          recordForUpdate.setParsedRecord(recordForUpdate.getParsedRecord().withContent(parsedContentString));
           result = true;
         }
       }

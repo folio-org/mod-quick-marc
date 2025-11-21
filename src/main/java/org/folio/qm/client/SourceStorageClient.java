@@ -2,7 +2,6 @@ package org.folio.qm.client;
 
 import java.util.List;
 import org.folio.Record;
-import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.Snapshot;
 import org.folio.qm.client.model.SourceRecord;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,17 +19,11 @@ public interface SourceStorageClient {
   @GetMapping(value = "/source-records/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   SourceRecord getSourceRecord(@PathVariable("id") String id, @RequestParam("idType") IdType idType);
 
-  @PutMapping(value = "/source-records/parsed-record")
-  ResponseEntity<Void> putParsedRecordDto(ParsedRecordDto parsedRecordDto);
-
   @PostMapping(value = "/snapshots")
   ResponseEntity<Snapshot> createSnapshot(Snapshot snapshot);
 
   @GetMapping(value = "/records/{id}")
   ResponseEntity<Record> getSrsRecord(@PathVariable("id") String id);
-
-  @PutMapping(value = "/records/{id}")
-  ResponseEntity<Record> updateSrsRecord(@PathVariable("id") String id, Record record);
 
   @PutMapping(value = "/records/{id}/generation")
   ResponseEntity<Record> updateSrsRecordGeneration(@PathVariable("id") String matchId, Record record);

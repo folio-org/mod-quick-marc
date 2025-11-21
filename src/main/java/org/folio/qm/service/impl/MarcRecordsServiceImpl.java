@@ -163,7 +163,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     defaultValuesPopulationService.populate(quickMarc);
     validateOnUpdate(parsedRecordId, quickMarc);
     var parsedRecordDto = conversionService.convert(quickMarc, ParsedRecordDto.class);
-    log.info("updateById:: parsedRecordDto: {}", objectToJsonString(parsedRecordDto));
     updateResult.onCompletion(updateLinksTask(folioExecutionContext, quickMarc, updateResult));
 
     switch (Objects.requireNonNull(parsedRecordDto).getRecordType()) {
@@ -283,7 +282,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var mappingMetadata = mappingMetadataProvider.getMappingData("marc-bib");
     var mappingRules = mappingMetadata.mappingRules();
     var mappingParameters = mappingMetadata.mappingParameters();
-    log.info("updateInstance:: mappingParameters: {}", objectToJsonString(mappingParameters));
     var instanceId = parsedRecordDto.getExternalIdsHolder().getInstanceId().toString();
     var parsedRecord = new ParsedRecord().withContent(parsedRecordDto.getParsedRecord().getContent());
     var parsedRecordJson = retrieveParsedContent(parsedRecord);
@@ -293,9 +291,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var mappedInstance = recordMapper.mapRecord(parsedRecordJson, mappingParameters, mappingRules);
 
     org.folio.qm.client.model.Instance existingInstance = instanceStorageClient.getInstanceById(instanceId);
-
     var updatedInstance = mergeRecords(existingInstance, mappedInstance);
-    log.info("updateById:: updated instance id: {} updatedInstance: {}", instanceId, updatedInstance.result());
 
     var updatedResponse = instanceStorageClient.updateInstance(instanceId,
       updatedInstance.result().getJsonForStorage().mapTo(org.folio.qm.client.model.Instance.class));
@@ -306,8 +302,6 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
       org.folio.qm.client.model.PrecedingSucceedingTitleCollection titleCollection = titlesJson.mapTo(
         org.folio.qm.client.model.PrecedingSucceedingTitleCollection.class);
       var response = precedingSucceedingTitlesClient.updateTitles(instanceId, titleCollection);
-      log.info("updateById:: instance update response for id: {} response: {}", instanceId,
-        response.getStatusCode());
       handleSrsRecordUpdateResult(parsedRecordId, updateResult, response, parsedRecordDto);
     } else {
       log.error("updateById:: failed to update quickMarc by parsedRecordId: {} response status: {}",
@@ -391,7 +385,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     org.folio.qm.client.model.Instance existingInstance,
     org.folio.Instance mappedInstance) {
 
-    log.info("mergeRecords:: Merging existing instance with id: {} and mapped instance",
+    log.debug("mergeRecords:: Merging existing instance with id: {} and mapped instance",
       existingInstance.getId());
     try {
       mappedInstance.setId(existingInstance.getId());
@@ -485,9 +479,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
         setErrorResult(parsedRecordId, updateResult);
       }
       var record = getNewRecord(parsedRecordDto, Objects.requireNonNull(existingRecordResponse.getBody()));
+      // Update SRS record in the SRS module
       var result = sourceStorageClient.updateSrsRecordGeneration(record.getId(), record);
-      //store updated parsedRecordDto in the SRS module
-      //var result = sourceStorageClient.putParsedRecordDto(parsedRecordDto);
       if (result.getStatusCode().is2xxSuccessful()) {
         log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
         updateResult.setResult(ResponseEntity.accepted().build());
@@ -625,9 +618,9 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private void createAuthority(ParsedRecordDto recordDto, String snapshotId, RecordCreationStatus status) {
     var authorityId = UUID.randomUUID().toString();
-    var authority = getAuthority(recordDto, authorityId);
+    var mappedAuthority = getMappedAuthority(recordDto, authorityId);
     // Create authority in the mod-entities-links
-    var createdAuthorityResponse = createAuthority(authority);
+    var createdAuthorityResponse = createAuthority(mappedAuthority);
     // Create snapshot in the SRS module
     createSnapshot(snapshotId);
     // Create SRS record  in the SRS module
@@ -635,7 +628,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     srsRecord.setMetadata(createdAuthorityResponse.getMetadata());
     var createdSrsRecordResponse = sourceStorageClient.createSrsRecord(srsRecord);
     if (!createdSrsRecordResponse.getStatusCode().is2xxSuccessful()) {
-      log.error("createNewRecord:: failed to create SRS record for Authority entity, response status: {}",
+      log.error("createAuthority:: failed to create SRS record for Authority entity, response status: {}",
         createdSrsRecordResponse.getStatusCode().value());
       throw new UnexpectedException("Failed to create SRS record for Authority entity");
     }
@@ -646,10 +639,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   private Authority createAuthority(Authority mappedAuthority) {
     ResponseEntity<Authority> response = authorityStorageClient.createAuthority(mappedAuthority);
     if (response.getStatusCode().is2xxSuccessful()) {
-      log.info("createNewRecord:: new authority created with id: {}", response.getBody().getId());
+      log.debug("createAuthority:: new authority created with id: {}", response.getBody().getId());
       return response.getBody();
     } else {
-      log.error("createNewRecord:: failed to create new authority, response status: {}",
+      log.error("createAuthority:: failed to create new authority, response status: {}",
         response.getStatusCode().value());
       throw new UnexpectedException("Failed to create new authority record");
     }
@@ -657,7 +650,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private CreationStatus getCreationStatus(RecordCreationStatus status) {
     var statusCreation = statusService.save(status);
-    log.info("createNewRecord:: new quickMarc created with qmRecordId: {}", status.getJobExecutionId());
+    log.debug("getCreationStatus:: new quickMarc created with qmRecordId: {}", status.getJobExecutionId());
     var creationStatus = new CreationStatus();
     creationStatus.setQmRecordId(statusCreation.getId());
     creationStatus.setStatus(CREATED);
@@ -844,13 +837,12 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     assert instanceHrid != null;
     var isMarcBibValid = sourceStorageClient.verifyMarcBibRecords(List.of(instanceHrid)).isMarcBibIdsValid();
     if (!isMarcBibValid) {
-      //getInvalidMarcBibIdsForConsortium
       log.error("createNewRecord:: Failed to verify instance hrid: {}", instanceHrid);
       throw new UnexpectedException("Failed to verify instance hrid: " + instanceHrid);
     }
   }
 
-  private Authority getAuthority(ParsedRecordDto recordDto, String authorityId) {
+  private Authority getMappedAuthority(ParsedRecordDto recordDto, String authorityId) {
     var mappingMetadata = mappingMetadataProvider.getMappingData("marc-authority");
     var mappingRules = mappingMetadata.mappingRules();
     var mappingParameters = mappingMetadata.mappingParameters();
@@ -875,11 +867,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     snapshot.setProcessingStartedDate(new Date());
     var snapshotResponse = sourceStorageClient.createSnapshot(snapshot);
     if (snapshotResponse.getStatusCode().is2xxSuccessful()) {
-      log.info("createNewRecord:: snapshot created for new authority with id: {}", snapshotId);
+      log.debug("createSnapshot:: snapshot created for new record with id: {}", snapshotId);
     } else {
-      log.error("createNewRecord:: failed to create snapshot for new authority, response status: {}",
+      log.error("createSnapshot:: failed to create snapshot for new record, response status: {}",
         snapshotResponse.getStatusCode().value());
-      throw new UnexpectedException("Failed to create snapshot for new authority record");
+      throw new UnexpectedException("Failed to create snapshot for new record");
     }
   }
 }

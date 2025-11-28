@@ -1,12 +1,12 @@
 package org.folio.qm.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.model.DataImportEventPayload;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Log4j2
 @UtilityClass
@@ -41,11 +41,11 @@ public class DataImportEventUtils {
       .map(recordInJson -> {
         try {
           var idNode = mapper.readTree(recordInJson).get("id");
-          var recordId = idNode != null ? UUID.fromString(idNode.asText()) : null;
+          var recordId = idNode != null ? UUID.fromString(idNode.asString()) : null;
           log.info("extractRecordIdFromRecord:: recordId: {} extracted by folioRecord: {}",
             recordId, folioRecord.getValue());
           return recordId;
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
           log.warn("extractRecordIdFromRecord:: failed to process json", e);
           throw new IllegalStateException("Failed to process json with message: " + e.getMessage());
         }

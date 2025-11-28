@@ -11,6 +11,7 @@ import org.folio.qm.client.model.ProfileInfo;
 import org.folio.qm.client.model.RawRecordsDto;
 import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.service.ChangeManagerService;
+import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +23,8 @@ public class ChangeManagerServiceImpl implements ChangeManagerService {
 
   @Override
   public SourceRecord getSourceRecordByExternalId(String externalId) {
-    return storageClient.getSourceRecord(externalId, SourceStorageClient.IdType.EXTERNAL);
+    return storageClient.getSourceRecord(externalId, SourceStorageClient.IdType.EXTERNAL)
+      .orElseThrow(() -> new NotFoundException("Source record not found by externalId: " + externalId));
   }
 
   @Override

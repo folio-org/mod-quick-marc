@@ -4,7 +4,6 @@ import static org.folio.qm.util.DataImportEventUtils.extractErrorMessage;
 import static org.folio.qm.util.DataImportEventUtils.extractExternalId;
 import static org.folio.qm.util.DataImportEventUtils.extractMarcId;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.model.DataImportEventPayload;
@@ -16,6 +15,7 @@ import org.folio.qm.util.ErrorUtils;
 import org.folio.tenant.domain.dto.Error;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 @Log4j2
 @Component

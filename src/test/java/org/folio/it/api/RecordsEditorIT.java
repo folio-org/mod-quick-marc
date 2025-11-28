@@ -141,7 +141,7 @@ class RecordsEditorIT extends BaseIT {
 
       doGet(recordsEditorPath(randomId))
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()));
+        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()));
     }
 
     @Test
@@ -151,7 +151,7 @@ class RecordsEditorIT extends BaseIT {
       mockGet(sourceStoragePath(randomId), "{\"recordType\": \"MARC_BIB\"}", SC_OK, wireMockServer);
 
       doGet(recordsEditorPath(randomId))
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
         .andExpect(jsonPath("$.message")
           .value("org.marc4j.MarcException: Premature end of input in JSON file"));
@@ -350,9 +350,9 @@ class RecordsEditorIT extends BaseIT {
       var quickMarcRecord = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
 
       doPost(recordsEditorPath(), quickMarcRecord, Map.of("x-okapi-custom", "invalid-id"))
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
-        .andExpect(jsonPath("$.code").value("UNPROCESSABLE_ENTITY"));
+        .andExpect(jsonPath("$.code").value("UNPROCESSABLE_CONTENT"));
     }
 
     @Test
@@ -362,7 +362,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().add(new FieldItem().tag("852").content("$b content"));
 
       doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
         .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
     }
@@ -374,7 +374,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().add(new FieldItem().tag("001").content("$a test content"));
 
       doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
         .andExpect(jsonPath("$.message").value(IS_UNIQUE_TAG_ERROR_MSG));
     }
@@ -386,7 +386,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().add(new FieldItem().tag("001").content("$a test content"));
 
       doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.issues.size()").value(1))
         .andExpect(jsonPath("$.issues[0].tag").value("001[1]"))
         .andExpect(jsonPath("$.issues[0].helpUrl").value("https://www.loc.gov/marc/bibliographic/bd001.html"))
@@ -403,7 +403,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("008"));
 
       doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
         .andExpect(jsonPath("$.message").value(IS_REQUIRED_TAG_ERROR_MSG));
     }
@@ -424,7 +424,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
         .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value(containsString("Connection reset executing")));
+        .andExpect(jsonPath("$.message").value(containsString("Connection reset")));
     }
 
     private void awaitAndAssertStatus(UUID qmRecordId) {

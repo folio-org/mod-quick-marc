@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -39,8 +38,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,6 +47,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.ObjectMapper;
 
 @EnableOkapi
 @EnableKafka
@@ -67,7 +67,7 @@ public class BaseIT {
 
   protected static OkapiConfiguration okapiConfiguration;
   private static boolean dbInitialized = false;
-
+  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
   @Autowired
   protected FolioModuleMetadata metadata;
   @Autowired
@@ -80,27 +80,8 @@ public class BaseIT {
   private CacheManager cacheManager;
   @Autowired
   private ObjectMapper objectMapper;
-  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
-
   @Value("${folio.okapi-url}")
   private String okapiUrl;
-
-  @BeforeEach
-  void before() throws Exception {
-    if (!dbInitialized) {
-      var body = new TenantAttributes().moduleTo("mod-quick-marc");
-      doPost("/_/tenant", body, getHeaders().toSingleValueMap())
-        .andExpect(status().isNoContent());
-
-      dbInitialized = true;
-    }
-    cacheManager.getCacheNames().forEach(name -> requireNonNull(cacheManager.getCache(name)).clear());
-  }
-
-  @AfterEach
-  void afterEach() {
-    this.wireMockServer.resetAll();
-  }
 
   protected ResultActions doGet(String uri) throws Exception {
     return mockMvc.perform(get(uri)
@@ -169,6 +150,23 @@ public class BaseIT {
 
   protected String getOkapiUrl() {
     return okapiUrl;
+  }
+
+  @BeforeEach
+  void before() throws Exception {
+    if (!dbInitialized) {
+      var body = new TenantAttributes().moduleTo("mod-quick-marc");
+      doPost("/_/tenant", body, getHeaders().toSingleValueMap())
+        .andExpect(status().isNoContent());
+
+      dbInitialized = true;
+    }
+    cacheManager.getCacheNames().forEach(name -> requireNonNull(cacheManager.getCache(name)).clear());
+  }
+
+  @AfterEach
+  void afterEach() {
+    this.wireMockServer.resetAll();
   }
 
   private RecordHeader createKafkaHeader(String headerName, String headerValue) {

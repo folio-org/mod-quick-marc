@@ -4,14 +4,15 @@ import static org.folio.qm.util.TenantContextUtils.getFolioExecutionContextFromQ
 import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import jakarta.validation.constraints.NotNull;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.folio.qm.exception.ExternalException;
+import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.qm.service.impl.DeferredResultCacheService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.FolioModuleMetadata;
-import org.folio.tenant.domain.dto.Error;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.MessageHeaders;
@@ -48,9 +49,9 @@ public class QuickMarcEventListener {
       } else {
         var errorMessage = data.getErrorMessage();
         if (isOptimisticLockingError(errorMessage)) {
-          deferredResult.setErrorResult(buildOptimisticLockingErrorResponse(errorMessage));
+          deferredResult.setErrorResult(createOptimisticLockingException(errorMessage));
         } else {
-          deferredResult.setErrorResult(buildCommonErrorResponse(errorMessage));
+          deferredResult.setErrorResult(createExternalException(errorMessage));
         }
       }
       deferredResultCacheService.evictUpdateActionResult(recordId);
@@ -58,15 +59,26 @@ public class QuickMarcEventListener {
   }
 
   @NotNull
-  private ResponseEntity<Error> buildCommonErrorResponse(String errorMessage) {
+  private ExternalException createExternalException(String errorMessage) {
     var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, errorMessage);
-    return ResponseEntity.badRequest().body(error);
+    return new ExternalException(error);
   }
 
   @NotNull
-  private ResponseEntity<Error> buildOptimisticLockingErrorResponse(String errorMessage) {
-    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, errorMessage);
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  private OptimisticLockingException createOptimisticLockingException(String errorMessage) {
+    var pattern =
+      Pattern.compile("Cannot update record ([0-9a-f-]+) .* Stored _version is (\\d+), _version of request is (\\d+)");
+    var matcher = pattern.matcher(errorMessage);
+
+    if (matcher.find()) {
+      var recordId = java.util.UUID.fromString(matcher.group(1));
+      var storedVersion = Integer.parseInt(matcher.group(2));
+      var requestVersion = Integer.parseInt(matcher.group(3));
+      return new OptimisticLockingException(recordId, storedVersion, requestVersion);
+    }
+
+    // Fallback if pattern doesn't match - create with dummy values
+    return new OptimisticLockingException(java.util.UUID.randomUUID(), 0, 0);
   }
 
   private boolean isOptimisticLockingError(String errorMessage) {

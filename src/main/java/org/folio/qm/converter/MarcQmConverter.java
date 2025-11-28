@@ -4,9 +4,6 @@ import static org.folio.qm.converter.elements.Constants.DATE_AND_TIME_OF_LATEST_
 import static org.folio.qm.util.MarcUtils.encodeToMarcDateTime;
 import static org.folio.qm.util.MarcUtils.getFieldByTag;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -23,10 +20,13 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.util.QmMarcJsonWriter;
+import org.jspecify.annotations.NonNull;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 @Component
 @RequiredArgsConstructor
@@ -74,7 +74,7 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
 
     Map<String, Queue<JsonNode>> jsonNodesByTag = new HashMap<>();
     fieldsArrayNode.forEach(node -> {
-      String tag = node.fieldNames().next();
+      String tag = node.propertyNames().iterator().next();
       jsonNodesByTag.computeIfAbsent(tag, k -> new LinkedList<>()).add(node);
     });
 

@@ -1,9 +1,9 @@
 package org.folio.qm.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Log4j2
 @UtilityClass
@@ -18,7 +18,7 @@ public class JsonUtils {
     String jsonString;
     try {
       jsonString = OBJECT_MAPPER.writeValueAsString(o);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       log.info(OBJECT_SERIALIZATION_FAILED, e);
       throw new IllegalStateException(OBJECT_SERIALIZATION_FAILED + e.getMessage());
     }
@@ -29,7 +29,7 @@ public class JsonUtils {
     T obj;
     try {
       obj = OBJECT_MAPPER.readValue(jsonString, valueType);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       log.info(OBJECT_DESERIALIZATION_FAILED, e);
       throw new IllegalStateException(OBJECT_DESERIALIZATION_FAILED + e.getMessage());
     }

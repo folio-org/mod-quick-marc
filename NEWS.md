@@ -1,6 +1,7 @@
 ## v8.0.0 YYYY-mm-DD
 ### Breaking changes
 * Update QuickMARC to use generation field from SRS for optimistic locking ([MODQM-478](https://folio-org.atlassian.net/browse/MODQM-478))
+* Upgrade module to SpringBoot 4.0.x and Spring 7.0.x ([MODQM-487](https://folio-org.atlassian.net/browse/MODQM-487))
 
 ### New APIs versions
 * Provides `API_NAME vX.Y`

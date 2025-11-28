@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.7</version>
+    <version>4.0.2</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -23,7 +23,7 @@
     <records-editor-async.yaml.file>${project.basedir}/src/main/resources/swagger.api/records-editor-async.yaml</records-editor-async.yaml.file>
     <marc-specifications.yaml.file>${project.basedir}/src/main/resources/swagger.api/marc-specifications.yaml</marc-specifications.yaml.file>
 
-    <folio-spring-support.version>10.0.0-SNAPSHOT</folio-spring-support.version>
+    <folio-spring-support.version>10.0.0-RC1</folio-spring-support.version>
     <folio-service-tools.version>5.1.0-SNAPSHOT</folio-service-tools.version>
     <mod-record-specifications-validator.version>2.1.0-SNAPSHOT</mod-record-specifications-validator.version>
     <marc4j.version>2.9.6</marc4j.version>
@@ -39,7 +39,7 @@
     <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
     <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-    <checkstyle.version>12.1.2</checkstyle.version>
+    <checkstyle.version>13.0.0</checkstyle.version>
     <folio-java-checkstyle.version>1.2.0</folio-java-checkstyle.version>
 
     <sonar.exclusions>
@@ -85,18 +85,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework.kafka</groupId>
-      <artifactId>spring-kafka</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-kafka</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jaxb-annotations</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
     <dependency>
@@ -139,6 +134,11 @@
           <artifactId>spring-boot-starter-logging</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
     </dependency>
 
     <dependency>

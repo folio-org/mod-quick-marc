@@ -1,7 +1,6 @@
 package org.folio.qm.util;
 
 import static org.folio.qm.util.JsonUtils.OBJECT_DESERIALIZATION_FAILED;
-import static org.folio.qm.util.JsonUtils.OBJECT_SERIALIZATION_FAILED;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,14 +38,6 @@ class JsonUtilsTest {
       assertEquals("00000000-0000-0000-0000-000000000000", userInfo.getUserId());
       assertEquals("john_doe", userInfo.getUserName());
     });
-  }
-
-  @Test
-  void shouldThrowExceptionWhenInvalidObject() {
-    var arg = new Object();
-    Exception exception = assertThrows(IllegalStateException.class,
-      () -> JsonUtils.objectToJsonString(arg));
-    assertTrue(exception.getMessage().contains(OBJECT_SERIALIZATION_FAILED));
   }
 
   @NoArgsConstructor

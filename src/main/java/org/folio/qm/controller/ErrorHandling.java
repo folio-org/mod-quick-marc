@@ -1,13 +1,11 @@
 package org.folio.qm.controller;
 
-import static feign.Util.UTF_8;
 import static org.folio.qm.util.ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED;
 import static org.folio.qm.util.ErrorUtils.ErrorType.INTERNAL;
 import static org.folio.qm.util.ErrorUtils.ErrorType.UNKNOWN;
 import static org.folio.qm.util.ErrorUtils.buildError;
 import static org.folio.qm.util.ErrorUtils.buildErrors;
 
-import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +28,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -42,21 +42,18 @@ public class ErrorHandling {
   private static final String ARGUMENT_NOT_VALID_MSG_PATTERN = "Parameter '%s' %s";
   private static final String CONSTRAINT_VIOLATION_MSG_PATTERN = "Parameter %s";
 
-  @ExceptionHandler(FeignException.class)
-  public Error handleFeignStatusException(FeignException e, HttpServletResponse response) {
-    var status = e.status();
-    if (status != -1) {
-      var message = e.responseBody()
-        .map(byteBuffer -> new String(byteBuffer.array(), UTF_8))
-        .orElse(e.getMessage());
-      response.setStatus(status);
-      log.warn(message);
-      return buildErrors(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
-    } else {
-      log.warn(e.getMessage());
-      response.setStatus(HttpStatus.BAD_REQUEST.value());
-      return buildError(HttpStatus.BAD_REQUEST, FOLIO_EXTERNAL_OR_UNDEFINED, e.getMessage());
+  @ExceptionHandler(HttpStatusCodeException.class)
+  public Error handleHttpStatusException(HttpStatusCodeException e, HttpServletResponse response) {
+    var status = e.getStatusCode().value();
+    var message = e.getResponseBodyAsString();
+
+    if (message.isEmpty()) {
+      message = e.getMessage();
     }
+
+    response.setStatus(status);
+    log.warn(message);
+    return buildErrors(status, FOLIO_EXTERNAL_OR_UNDEFINED, message);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -71,6 +68,13 @@ public class ErrorHandling {
     } else {
       return buildError(HttpStatus.BAD_REQUEST, INTERNAL, e.getMessage());
     }
+  }
+
+  @ExceptionHandler(ResourceAccessException.class)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public Error handleResourceAccessException(ResourceAccessException e) {
+    log.warn(e.getMessage());
+    return buildError(HttpStatus.BAD_REQUEST, FOLIO_EXTERNAL_OR_UNDEFINED, e.getMessage());
   }
 
   @ExceptionHandler(QuickMarcException.class)
@@ -110,14 +114,14 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(FieldsValidationException.class)
-  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_CONTENT)
   public Object handleFieldsValidationException(FieldsValidationException e) {
     var errors = e.getValidationResult().errors();
     return errors.size() == 1 ? buildError(errors.getFirst()) : buildErrors(errors);
   }
 
   @ExceptionHandler(MarcRecordValidationException.class)
-  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_CONTENT)
   public ValidationResult handleMarcRecordValidationException(MarcRecordValidationException e) {
     log.warn("Marc record validation error occurred: {}", e.getMessage());
     return e.getValidationResult();

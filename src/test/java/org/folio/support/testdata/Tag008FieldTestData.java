@@ -56,6 +56,7 @@ public enum Tag008FieldTestData {
     return new SimpleDateFormat("yyMMdd").format(Calendar.getInstance().getTime());
   }
 
+  @SuppressWarnings("checkstyle:MethodLength")
   private static Map<String, Object> getAuthorityNoDateEntContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Geo Subd", "n");
@@ -89,6 +90,7 @@ public enum Tag008FieldTestData {
     return content;
   }
 
+  @SuppressWarnings("checkstyle:MethodLength")
   private static Map<String, Object> getAuthorityLtLenContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Date Ent", "810824");

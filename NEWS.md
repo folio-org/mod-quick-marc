@@ -19,6 +19,7 @@
 ### Tech Dept
 * Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))
 * Restructure documentation in `README.md` ([MODQM-470](https://folio-org.atlassian.net/browse/MODQM-470))
+* Refactor code to comply with Checkstyle method length limit (max 25 lines) ([MODQM-488](https://folio-org.atlassian.net/browse/MODQM-488))
 * Add "apt upgrade" to Dockerfile, add .dockerignore
 
 ### Dependencies

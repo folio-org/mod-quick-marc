@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.folio.qm.domain.dto.FieldItem;
@@ -39,7 +40,7 @@ class CommonDataFieldConverterTest {
   @ParameterizedTest
   @MethodSource("dataFields")
   void testCanProcessField(DataField dtoField) {
-    assertTrue(converter.canProcess(dtoField, SUPPORTED_FORMATS[(int) Math.round(Math.random())]));
+    assertTrue(converter.canProcess(dtoField, SUPPORTED_FORMATS[new Random().nextInt(SUPPORTED_FORMATS.length)]));
   }
 
   @ParameterizedTest
@@ -48,6 +49,7 @@ class CommonDataFieldConverterTest {
     assertFalse(converter.canProcess(dtoField, MarcFormat.BIBLIOGRAPHIC));
   }
 
+  @SuppressWarnings("checkstyle:MethodLength")
   private static Stream<Arguments> fieldData() {
     return Stream.of(
       arguments(new DataFieldImpl("948", '1', '2'),

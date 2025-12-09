@@ -4,7 +4,7 @@
 
 ### New APIs versions
 * Provides `API_NAME vX.Y`
-* Requires `API_NAME vX.Y`
+* Changed to optional: `instance-authority-links`, `instance-authority-linking-rules`, `instance-authority-links-suggestions`
 
 ### Features
 * Add “allowedValues” to the MARC authority 008 spec response ([MODQM-455](https://folio-org.atlassian.net/browse/MODQM-455))

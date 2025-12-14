@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.7</version>
+    <version>4.0.0</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -37,9 +37,9 @@
     <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
-    <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
+    <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-    <checkstyle.version>12.1.2</checkstyle.version>
+    <checkstyle.version>12.3.0</checkstyle.version>
     <folio-java-checkstyle.version>1.2.0</folio-java-checkstyle.version>
 
     <sonar.exclusions>

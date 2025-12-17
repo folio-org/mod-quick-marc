@@ -19,7 +19,7 @@ public interface SourceStorageClient {
   Record getSrsRecord(@PathVariable("id") String id);
 
   @PutMapping(value = "/records/{id}/generation")
-  Record updateSrsRecordGeneration(@PathVariable("id") String matchId, Record record);
+  void updateSrsRecordGeneration(@PathVariable("id") String matchId, Record record);
 
   enum IdType {
     EXTERNAL

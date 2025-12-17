@@ -1,16 +1,12 @@
-package org.folio.qm.domain.entity;
+package org.folio.qm.client.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.folio.Holdings;
 
-@Getter
-@Setter
-@ToString(callSuper = true)
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class HoldingsRecord extends Holdings {
   private List<AdditionalCallNumber> additionalCallNumbers = new ArrayList<>();

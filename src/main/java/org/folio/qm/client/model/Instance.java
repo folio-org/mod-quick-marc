@@ -23,7 +23,6 @@ import org.folio.Publication;
 import org.folio.Series;
 import org.folio.Subject;
 import org.folio.Tags;
-import org.folio.qm.domain.entity.HoldingsRecord;
 
 @Data
 @NoArgsConstructor

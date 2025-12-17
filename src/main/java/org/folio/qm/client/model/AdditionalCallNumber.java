@@ -1,16 +1,12 @@
-package org.folio.qm.domain.entity;
+package org.folio.qm.client.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
+@NoArgsConstructor
 public class AdditionalCallNumber {
   private String typeId;
   private String prefix;

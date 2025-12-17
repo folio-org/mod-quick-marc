@@ -67,7 +67,7 @@ public abstract class RecordService<T> {
     var existingRecord = sourceStorageClient.getSrsRecord(parsedRecordId.toString());
     if (existingRecord == null) {
       handleError(parsedRecordId, updateResult,
-        "updateSrsRecord:: existing SRS record not found for parsedRecordId: " + parsedRecordId);
+        String.format("updateSrsRecord:: existing SRS record not found for parsedRecordId: %s", parsedRecordId));
       return;
     }
     var srsRecord = getNewRecord(parsedRecordDto, existingRecord);
@@ -90,8 +90,10 @@ public abstract class RecordService<T> {
 
   private void setErrorResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
                               String errorMessage) {
-    var error = ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
-      "Failed to update MARC record for parsedRecordId: " + parsedRecordId + ", error message: " + errorMessage);
+    var error = ErrorUtils.buildError(
+      ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
+      String.format("Failed to update MARC record for parsedRecordId: %s, error message: %s",
+        parsedRecordId, errorMessage));
     updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
   }
 

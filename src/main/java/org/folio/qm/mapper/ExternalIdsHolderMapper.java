@@ -8,9 +8,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface ExternalIdsHolderMapper {
 
-  @BeanMapping(
-    nullValuePropertyMappingStrategy =
-      NullValuePropertyMappingStrategy.IGNORE
-  )
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   ExternalIdsHolder toExternalIdsHolder(org.folio.qm.client.model.ExternalIdsHolder source);
 }

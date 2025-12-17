@@ -1,7 +1,7 @@
 package org.folio.qm.mapper;
 
 import org.folio.Holdings;
-import org.folio.qm.domain.entity.HoldingsRecord;
+import org.folio.qm.client.model.HoldingsRecord;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

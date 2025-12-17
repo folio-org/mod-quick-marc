@@ -106,6 +106,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
     var recordService = marcRecordServiceRegistry.get(Objects.requireNonNull(parsedRecordDto).getRecordType());
     recordService.update(parsedRecordId, updateResult, parsedRecordDto);
+    log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
   }
 
   @Override

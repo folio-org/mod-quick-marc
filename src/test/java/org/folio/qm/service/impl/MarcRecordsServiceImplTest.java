@@ -235,10 +235,10 @@ class MarcRecordsServiceImplTest {
   }
 
   private SourceRecord createSourceRecord() {
-    var record = new SourceRecord();
-    record.setRecordId(PARSED_RECORD_ID);
-    record.setExternalIdsHolder(new org.folio.qm.client.model.ExternalIdsHolder());
-    record.setGeneration(CURRENT_VERSION);
-    return record;
+    var newRecord = new SourceRecord();
+    newRecord.setRecordId(PARSED_RECORD_ID);
+    newRecord.setExternalIdsHolder(new org.folio.qm.client.model.ExternalIdsHolder());
+    newRecord.setGeneration(CURRENT_VERSION);
+    return newRecord;
   }
 }

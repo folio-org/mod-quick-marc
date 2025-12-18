@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -40,7 +38,6 @@ import org.folio.it.BaseIT;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
-import org.folio.qm.messaging.domain.QmCompletedEventPayload;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.spring.testing.type.IntegrationTest;
 import org.hamcrest.Matcher;
@@ -329,13 +326,6 @@ class RecordsEditorAsyncIT extends BaseIT {
 
   private void expectLinksUpdateRequests(int expected, String url) {
     wireMockServer.verify(exactly(expected), putRequestedFor(urlEqualTo(url)));
-  }
-
-  private String createEventPayload(String id, String errorMessage) throws JsonProcessingException {
-    var payload = new QmCompletedEventPayload();
-    payload.setRecordId(fromString(id));
-    payload.setErrorMessage(errorMessage);
-    return new ObjectMapper().writeValueAsString(payload);
   }
 
   private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {

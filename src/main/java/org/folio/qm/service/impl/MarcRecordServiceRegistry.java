@@ -20,6 +20,7 @@ public class MarcRecordServiceRegistry {
       ));
   }
 
+  @SuppressWarnings("java:S1452")
   public RecordService<?> get(RecordTypeEnum type) {
     RecordService<?> service = services.get(type);
     if (service == null) {

@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 import io.vertx.core.json.JsonObject;
 import java.util.Objects;
 import java.util.UUID;
-import org.folio.Holdings;
 import org.folio.Metadata;
 import org.folio.ParsedRecord;
 import org.folio.Record;
@@ -70,7 +69,6 @@ class HoldingRecordServiceTest {
 
   private ParsedRecordDto parsedRecordDto;
   private DeferredResult<ResponseEntity<Void>> updateResult;
-  private Holdings mappedHolding;
   private HoldingsRecord existingHolding;
 
   @BeforeEach

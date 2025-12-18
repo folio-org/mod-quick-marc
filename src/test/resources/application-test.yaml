@@ -19,6 +19,7 @@ spring:
       - data-import-results
       - linking-rules-results
       - specifications
+      - mapping-metadata-cache
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   kafka:

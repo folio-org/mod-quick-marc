@@ -114,7 +114,7 @@ public abstract class RecordService<T> {
       .withParsedRecord(new ParsedRecord()
         .withId(newRecordId)
         .withContent(parsedRecordDto.getParsedRecord().getContent()))
-      .withExternalIdsHolder(externalIdsHolderMapper.toExternalIdsHolder(externalIdsHolder))
+      .withExternalIdsHolder(externalIdsHolderMapper.map(externalIdsHolder))
       .withAdditionalInfo(new AdditionalInfo()
         .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().isSuppressDiscovery()))
       .withMetadata(metadata.withUpdatedDate(new Date()));

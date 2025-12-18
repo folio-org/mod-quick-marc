@@ -67,8 +67,6 @@ class RecordsEditorAsyncIT extends BaseIT {
       .andExpect(request().asyncStarted())
       .andReturn();
 
-    sendQuickMarcKafkaRecord(createEventPayload(externalId, null));
-
     mockMvc.perform(asyncDispatch(result))
       .andDo(log())
       .andExpect(status().isAccepted());
@@ -78,45 +76,6 @@ class RecordsEditorAsyncIT extends BaseIT {
     } else {
       expectLinksUpdateRequests(0, linksByInstanceIdPath(externalId));
     }
-  }
-
-  @Test
-  @DisplayName("Should fail when failed in event")
-  void testUpdateQuickMarcRecordFailedInEvent() throws Exception {
-    var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
-
-    var result = doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
-      .andExpect(request().asyncStarted())
-      .andReturn();
-
-    var errorMessage = "Some error occurred";
-    sendQuickMarcKafkaRecord(createEventPayload(INSTANCE_ID, errorMessage));
-
-    mockMvc.perform(asyncDispatch(result))
-      .andExpect(status().isBadRequest())
-      .andDo(log())
-      .andExpect(errorMessageMatch(equalTo(errorMessage)));
-
-    expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
-  }
-
-  @Test
-  @DisplayName("Should fail when failed in event by optimistic locking")
-  void testUpdateQuickMarcRecordFailedInEventByOptimisticLocking() throws Exception {
-    var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
-
-    var result = doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
-      .andExpect(request().asyncStarted())
-      .andReturn();
-
-    sendQuickMarcKafkaRecord(createEventPayload(INSTANCE_ID, olMessage(INSTANCE_ID, 1, 2)));
-    mockMvc
-      .perform(asyncDispatch(result))
-      .andExpect(status().isConflict())
-      .andDo(log())
-      .andExpect(optimisticLockingMessage(INSTANCE_ID, 1, 2));
-
-    expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
   }
 
   @Test

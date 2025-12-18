@@ -2,6 +2,10 @@ package org.folio.qm.service.impl;
 
 import static org.folio.qm.util.DataImportEventUtils.FolioRecord.MARC_HOLDINGS;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -83,7 +87,13 @@ public class HoldingRecordService extends RecordService<Holdings> {
   private HoldingsRecord convertToHoldingsRecord(HoldingsRecord existingRecord, Holdings mappedRecord) {
     mappedRecord.setId(existingRecord.getId());
     mappedRecord.setVersion(existingRecord.getVersion());
+    var statisticalCodeIds = new HashSet<>(Optional.ofNullable(existingRecord.getStatisticalCodeIds())
+      .orElse(Collections.emptySet()));
+    var administrativeNotes = new ArrayList<>(Optional.ofNullable(existingRecord.getAdministrativeNotes())
+      .orElse(Collections.emptyList()));
     mapper.merge(mappedRecord, existingRecord);
+    existingRecord.setStatisticalCodeIds(statisticalCodeIds);
+    existingRecord.setAdministrativeNotes(administrativeNotes);
     return populateUpdatedByUserIdIfNeeded(existingRecord);
   }
 
@@ -98,8 +108,9 @@ public class HoldingRecordService extends RecordService<Holdings> {
   }
 
   private String getUserId() {
-    if (StringUtils.isNotBlank(folioExecutionContext.getUserId().toString())) {
-      return folioExecutionContext.getUserId().toString();
+    var userId = folioExecutionContext.getUserId();
+    if (userId != null && StringUtils.isNotBlank(userId.toString())) {
+      return userId.toString();
     }
     return null;
   }

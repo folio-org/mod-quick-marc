@@ -22,10 +22,8 @@ import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_
 import static org.folio.support.utils.TestEntitiesUtils.getFieldWithValue;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
@@ -60,11 +58,7 @@ class RecordsEditorAsyncIT extends BaseIT {
   void testUpdateQuickMarcRecord(String filePath, String externalId) throws Exception {
     var quickMarcRecord = readQuickMarc(filePath, QuickMarcEdit.class);
 
-    var result = doPut(recordsEditorByIdPath(externalId), quickMarcRecord)
-      .andExpect(request().asyncStarted())
-      .andReturn();
-
-    mockMvc.perform(asyncDispatch(result))
+    doPut(recordsEditorByIdPath(externalId), quickMarcRecord)
       .andDo(log())
       .andExpect(status().isAccepted());
 
@@ -199,7 +193,7 @@ class RecordsEditorAsyncIT extends BaseIT {
       });
 
     doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
-      .andExpect(status().isOk());
+      .andExpect(status().isAccepted());
   }
 
   @ParameterizedTest

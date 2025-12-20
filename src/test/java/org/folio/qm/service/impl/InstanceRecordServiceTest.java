@@ -1,8 +1,7 @@
 package org.folio.qm.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -12,26 +11,32 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.vertx.core.json.JsonObject;
-import java.util.Objects;
 import java.util.UUID;
 import org.folio.Metadata;
 import org.folio.ParsedRecord;
+import org.folio.RawRecord;
 import org.folio.Record;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.ExternalIdsHolder;
 import org.folio.qm.client.model.Instance;
 import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.client.model.ParsedRecordDto;
-import org.folio.qm.client.model.PrecedingSucceedingTitleCollection;
 import org.folio.qm.client.model.RecordTypeEnum;
-import org.folio.qm.mapper.ExternalIdsHolderMapper;
+import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.mapper.InstanceRecordMapper;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.folio.qm.service.support.PrecedingSucceedingTitlesHelper;
+import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
+import org.folio.spring.FolioExecutionContext;
+import org.folio.spring.exception.NotFoundException;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +44,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
@@ -52,13 +54,12 @@ class InstanceRecordServiceTest {
   private static final String CONTENT = "{\"leader\":\"00000nam  a2200000n  4500\"}";
   private static final String TITLE = "Test Instance Title";
   private static final String SNAPSHOT_ID = UUID.randomUUID().toString();
+  private final UUID parsedRecordId = UUID.fromString(PARSED_RECORD_ID);
 
   @Mock
   private MappingMetadataProvider mappingMetadataProvider;
   @Mock
   private SourceStorageClient sourceStorageClient;
-  @Mock
-  private ExternalIdsHolderMapper externalIdsHolderMapper;
   @Mock
   private InstanceStorageClient instanceStorageClient;
   @Mock
@@ -67,136 +68,137 @@ class InstanceRecordServiceTest {
   private PrecedingSucceedingTitlesHelper precedingSucceedingTitlesHelper;
   @Mock
   private PrecedingSucceedingTitlesClient precedingSucceedingTitlesClient;
+  @Mock
+  private FolioExecutionContext folioExecutionContext;
+  @Mock
+  private MarcQmConverter<QuickMarcEdit> marcQmConverter;
+  @Mock
+  private MarcTypeMapper typeMapper;
 
   @InjectMocks
   private InstanceRecordService service;
 
-  private ParsedRecordDto parsedRecordDto;
-  private DeferredResult<ResponseEntity<Void>> updateResult;
+  private QuickMarcEdit quickMarc;
   private Instance existingInstance;
-  private PrecedingSucceedingTitleCollection titleCollection;
 
   @BeforeEach
   void setUp() {
-    lenient().when(mappingMetadataProvider.getMappingData(String.valueOf(isA(MappingRecordTypeEnum.class))))
+    lenient().when(mappingMetadataProvider.getMappingData(isA(String.class)))
       .thenReturn(new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters()));
+    var titleCollection = new InstancePrecedingSucceedingTitles();
     lenient().when(precedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(any(Instance.class)))
       .thenReturn(titleCollection);
     lenient().doNothing().when(precedingSucceedingTitlesClient).updateTitles(anyString(),
-      any(PrecedingSucceedingTitleCollection.class));
+      any(InstancePrecedingSucceedingTitles.class));
+    lenient().when(folioExecutionContext.getUserId()).thenReturn(UUID.randomUUID());
+    var objectMapper = new ObjectMapper();
+    ObjectNode parsedNode = objectMapper.createObjectNode();
+    parsedNode.put("leader", "00000nam  a2200000n  4500");
+    lenient().when(marcQmConverter.convertToParsedContent(any(QuickMarcEdit.class))).thenReturn(parsedNode);
+    lenient().when(typeMapper.toDto(any(MarcFormat.class))).thenReturn(RecordTypeEnum.BIB);
 
-    titleCollection = new PrecedingSucceedingTitleCollection();
-    updateResult = new DeferredResult<>();
-    parsedRecordDto = createParsedRecordDto();
+    quickMarc = createQuickMarc();
     existingInstance = createInstance();
   }
 
   @Test
-  void supportedType_shouldReturnBib() {
-    assertEquals(RecordTypeEnum.BIB, service.supportedType());
+  void shouldReturnBibSupportedType() {
+    assertEquals(MarcFormat.BIBLIOGRAPHIC, service.supportedType());
   }
 
   @Test
-  void update_shouldSuccessfullyUpdateInstance_positive() {
+  void shouldSuccessfullyUpdateInstance() {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenReturn(mappingData);
     when(instanceStorageClient.getInstanceById(INSTANCE_ID)).thenReturn(existingInstance);
-    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID))
+      .thenReturn(createRecord());
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    service.update(quickMarc);
 
     verify(instanceStorageClient).updateInstance(eq(INSTANCE_ID), any(Instance.class));
     verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.ACCEPTED, result.getStatusCode());
   }
 
   @Test
-  void update_shouldHandleError_whenMappingMetadataNotFound_negative() {
+  void shouldThrowMappingMetadataException_whenMappingMetadataNotFound() {
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue())).thenReturn(null);
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(MappingMetadataException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(instanceStorageClient, never()).getInstanceById(anyString());
     verify(instanceStorageClient, never()).updateInstance(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString().contains(
-      String.format("mapping metadata not found for MARC-BIB record with parsedRecordId: %s", PARSED_RECORD_ID)));
+    assertEquals(String.format("mapping metadata not found for %s record with parsedRecordId: %s",
+      MappingRecordTypeEnum.MARC_BIB.getValue(), parsedRecordId), exception.getMessage());
   }
 
   @Test
-  void update_shouldHandleError_whenInstanceNotFound_negative() {
+  void shouldThrowNotFoundException_whenInstanceNotFound() {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenReturn(mappingData);
     when(instanceStorageClient.getInstanceById(INSTANCE_ID)).thenReturn(null);
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(NotFoundException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(instanceStorageClient, never()).updateInstance(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains(String.format("Instance record with id: %s not found", INSTANCE_ID)));
+    assertEquals(String.format("Instance record with id: %s not found", INSTANCE_ID), exception.getMessage());
   }
 
   @Test
-  void update_shouldHandleError_whenSrsRecordNotFound_negative() {
+  void shouldThrowNotFoundException_whenSrsRecordNotFound() {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenReturn(mappingData);
     when(instanceStorageClient.getInstanceById(INSTANCE_ID)).thenReturn(existingInstance);
     when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(null);
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(NotFoundException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(instanceStorageClient).updateInstance(eq(INSTANCE_ID), any(Instance.class));
     verify(sourceStorageClient, never()).updateSrsRecordGeneration(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains(String.format("existing SRS record not found for parsedRecordId: %s", PARSED_RECORD_ID)));
+    assertEquals(String.format("The SRS record to update was not found for parsedRecordId: %s", parsedRecordId),
+      exception.getMessage());
   }
 
   @Test
-  void update_shouldHandleException_negative() {
+  void shouldThrowRuntimeException_whenMappingMetadataRetrievalFails() {
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenThrow(new RuntimeException("Unexpected error"));
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(RuntimeException.class, () ->
+      service.update(quickMarc)
+    );
 
+    assertEquals(String.format("Error mapping %s record with parsedRecordId: %s",
+      MappingRecordTypeEnum.MARC_BIB.getValue(), parsedRecordId), exception.getMessage());
+    verify(mappingMetadataProvider).getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue());
+    verify(instanceStorageClient, never()).getInstanceById(anyString());
     verify(instanceStorageClient, never()).updateInstance(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains(String.format("Error updating Instance record for parsedRecordId: %s", PARSED_RECORD_ID)));
   }
 
-  private ParsedRecordDto createParsedRecordDto() {
-    var dto = new ParsedRecordDto();
-    dto.setId(UUID.fromString(PARSED_RECORD_ID));
-    dto.setRecordType(RecordTypeEnum.BIB);
+  private QuickMarcEdit createQuickMarc() {
+    var quick = new QuickMarcEdit();
+    quick.setParsedRecordDtoId(UUID.fromString(PARSED_RECORD_ID));
+    quick.setParsedRecordId(UUID.fromString(PARSED_RECORD_ID));
+    quick.setExternalId(UUID.fromString(INSTANCE_ID));
+    quick.setExternalHrid("hrid-1");
+    quick.setSuppressDiscovery(false);
+    quick.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    quick.setLeader("00000nam  a2200000n  4500");
 
-    var idsHolder = new ExternalIdsHolder();
-    idsHolder.setInstanceId(UUID.fromString(INSTANCE_ID));
-    dto.setExternalIdsHolder(idsHolder);
-
-    var parsedRecord = new org.folio.qm.client.model.ParsedRecord();
-    parsedRecord.setContent(CONTENT);
-    dto.setParsedRecord(parsedRecord);
-
-    var additionalInfo = new org.folio.qm.client.model.AdditionalInfo();
-    additionalInfo.setSuppressDiscovery(false);
-    dto.setAdditionalInfo(additionalInfo);
-
-    return dto;
+    var field = new org.folio.qm.domain.dto.FieldItem();
+    field.setTag("245");
+    field.setContent("$a Test Title");
+    quick.addFieldsItem(field);
+    return quick;
   }
 
   private Instance createInstance() {
@@ -215,6 +217,7 @@ class InstanceRecordServiceTest {
     srsRecord.setRecordType(Record.RecordType.MARC_BIB);
     srsRecord.setGeneration(0);
     srsRecord.setOrder(1);
+    srsRecord.setRawRecord(new RawRecord().withId(PARSED_RECORD_ID).withContent("raw content"));
     srsRecord.setMetadata(new Metadata());
 
     var parsedRecord = new ParsedRecord();

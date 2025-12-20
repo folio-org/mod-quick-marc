@@ -1,8 +1,7 @@
 package org.folio.qm.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -12,23 +11,28 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.vertx.core.json.JsonObject;
-import java.util.Objects;
 import java.util.UUID;
 import org.folio.Authority;
 import org.folio.Metadata;
 import org.folio.ParsedRecord;
+import org.folio.RawRecord;
 import org.folio.Record;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.client.AuthorityStorageClient;
 import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.ExternalIdsHolder;
 import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.RecordTypeEnum;
+import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.mapper.AuthorityRecordMapper;
-import org.folio.qm.mapper.ExternalIdsHolderMapper;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.support.MappingMetadataProvider;
+import org.folio.spring.exception.NotFoundException;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,9 +40,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
@@ -50,37 +51,43 @@ class AuthorityRecordServiceTest {
   private static final String CONTENT = "{\"leader\":\"00000nz  a2200000n  4500\"}";
   private static final String PERSONAL_NAME = "Personal Name";
   private static final String SNAPSHOT_ID = UUID.randomUUID().toString();
+  private final UUID parsedRecordId = UUID.fromString(PARSED_RECORD_ID);
 
   @Mock
   private MappingMetadataProvider mappingMetadataProvider;
   @Mock
   private SourceStorageClient sourceStorageClient;
   @Mock
-  private ExternalIdsHolderMapper externalIdsHolderMapper;
-  @Mock
   private AuthorityStorageClient authorityStorageClient;
   @Mock
   private AuthorityRecordMapper mapper;
-
+  @Mock
+  private MarcQmConverter<QuickMarcEdit> marcQmConverter;
+  @Mock
+  private MarcTypeMapper typeMapper;
   @InjectMocks
   private AuthorityRecordService service;
 
-  private ParsedRecordDto parsedRecordDto;
-  private DeferredResult<ResponseEntity<Void>> updateResult;
+  private QuickMarcEdit quickMarc;
   private Authority existingAuthority;
 
   @BeforeEach
   void setUp() {
-    lenient().when(mappingMetadataProvider.getMappingData(String.valueOf(isA(MappingRecordTypeEnum.class))))
+    lenient().when(mappingMetadataProvider.getMappingData(isA(String.class)))
       .thenReturn(new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters()));
-    updateResult = new DeferredResult<>();
-    parsedRecordDto = createParsedRecordDto();
+    var objectMapper = new ObjectMapper();
+    ObjectNode parsedNode = objectMapper.createObjectNode();
+    parsedNode.put("leader", "00000nam  a2200000n  4500");
+    lenient().when(marcQmConverter.convertToParsedContent(any(QuickMarcEdit.class))).thenReturn(parsedNode);
+    lenient().when(typeMapper.toDto(any(MarcFormat.class))).thenReturn(RecordTypeEnum.AUTHORITY);
+
+    quickMarc = createQuickMarc();
     existingAuthority = createAuthority();
   }
 
   @Test
   void supportedType_shouldReturnAuthority() {
-    assertEquals(RecordTypeEnum.AUTHORITY, service.supportedType());
+    assertEquals(MarcFormat.AUTHORITY, service.supportedType());
   }
 
   @Test
@@ -91,64 +98,57 @@ class AuthorityRecordServiceTest {
     when(authorityStorageClient.getAuthorityById(AUTHORITY_ID)).thenReturn(existingAuthority);
     when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    service.update(quickMarc);
 
     verify(authorityStorageClient).updateAuthority(eq(AUTHORITY_ID), any(Authority.class));
     verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.ACCEPTED, result.getStatusCode());
   }
 
   @Test
-  void update_shouldHandleError_whenMappingMetadataNotFound_negative() {
+  void update_shouldThrowMappingMetadataException_whenMappingMetadataNotFound_negative() {
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue())).thenReturn(null);
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(MappingMetadataException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(authorityStorageClient, never()).getAuthorityById(anyString());
     verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains("mapping metadata not found for Authority record with parsedRecordId"));
+    assertEquals(String.format("mapping metadata not found for %s record with parsedRecordId: %s",
+      MappingRecordTypeEnum.MARC_AUTHORITY.getValue(), parsedRecordId), exception.getMessage());
   }
 
   @Test
-  void update_shouldHandleError_whenAuthorityNotFound_negative() {
+  void update_shouldThrowNotFoundException_whenAuthorityNotFound_negative() {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue()))
       .thenReturn(mappingData);
     when(authorityStorageClient.getAuthorityById(AUTHORITY_ID)).thenReturn(null);
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(NotFoundException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains(String.format("Authority record with id: %s not found", AUTHORITY_ID)));
+    assertEquals(String.format("Authority record with id: %s not found", AUTHORITY_ID), exception.getMessage());
   }
 
   @Test
-  void update_shouldHandleError_whenSrsRecordNotFound_negative() {
+  void update_shouldThrowNotFoundException_whenSrsRecordNotFound_negative() {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue()))
       .thenReturn(mappingData);
     when(authorityStorageClient.getAuthorityById(AUTHORITY_ID)).thenReturn(existingAuthority);
     when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(null);
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(NotFoundException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(authorityStorageClient).updateAuthority(eq(AUTHORITY_ID), any(Authority.class));
     verify(sourceStorageClient, never()).updateSrsRecordGeneration(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains(String.format("existing SRS record not found for parsedRecordId: %s", PARSED_RECORD_ID)));
+    assertEquals(String.format("The SRS record to update was not found for parsedRecordId: %s", parsedRecordId),
+      exception.getMessage());
   }
 
   @Test
@@ -156,34 +156,31 @@ class AuthorityRecordServiceTest {
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue()))
       .thenThrow(new RuntimeException("Unexpected error"));
 
-    service.update(UUID.fromString(PARSED_RECORD_ID), updateResult, parsedRecordDto);
+    var exception = assertThrows(RuntimeException.class, () ->
+      service.update(quickMarc)
+    );
 
     verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
-    var result = (ResponseEntity<?>) updateResult.getResult();
-    assertNotNull(result);
-    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).toString()
-      .contains(String.format("Error updating authority record for parsedRecordId: %s", PARSED_RECORD_ID)));
+    assertEquals(String.format("Error mapping %s record with parsedRecordId: %s",
+        MappingRecordTypeEnum.MARC_AUTHORITY.getValue(), parsedRecordId),
+      exception.getMessage());
   }
 
-  private ParsedRecordDto createParsedRecordDto() {
-    var dto = new ParsedRecordDto();
-    dto.setId(UUID.fromString(PARSED_RECORD_ID));
-    dto.setRecordType(RecordTypeEnum.AUTHORITY);
+  private QuickMarcEdit createQuickMarc() {
+    var quick = new QuickMarcEdit();
+    quick.setParsedRecordDtoId(UUID.fromString(PARSED_RECORD_ID));
+    quick.setParsedRecordId(UUID.fromString(PARSED_RECORD_ID));
+    quick.setExternalId(UUID.fromString(AUTHORITY_ID));
+    quick.setExternalHrid("hrid-1");
+    quick.setSuppressDiscovery(false);
+    quick.setMarcFormat(MarcFormat.AUTHORITY);
+    quick.setLeader("00000nam  a2200000n  4500");
 
-    var idsHolder = new ExternalIdsHolder();
-    idsHolder.setAuthorityId(UUID.fromString(AUTHORITY_ID));
-    dto.setExternalIdsHolder(idsHolder);
-
-    var parsedRecord = new org.folio.qm.client.model.ParsedRecord();
-    parsedRecord.setContent(CONTENT);
-    dto.setParsedRecord(parsedRecord);
-
-    var additionalInfo = new org.folio.qm.client.model.AdditionalInfo();
-    additionalInfo.setSuppressDiscovery(false);
-    dto.setAdditionalInfo(additionalInfo);
-
-    return dto;
+    var field = new org.folio.qm.domain.dto.FieldItem();
+    field.setTag("245");
+    field.setContent("$a Test Title");
+    quick.addFieldsItem(field);
+    return quick;
   }
 
   private Authority createAuthority() {
@@ -203,6 +200,7 @@ class AuthorityRecordServiceTest {
     srsRecord.setRecordType(Record.RecordType.MARC_AUTHORITY);
     srsRecord.setGeneration(0);
     srsRecord.setOrder(1);
+    srsRecord.setRawRecord(new RawRecord().withId(PARSED_RECORD_ID).withContent("raw content"));
     srsRecord.setMetadata(new Metadata());
 
     var parsedRecord = new ParsedRecord();

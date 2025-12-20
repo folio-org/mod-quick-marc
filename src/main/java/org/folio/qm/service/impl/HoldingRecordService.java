@@ -6,25 +6,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.ExternalIdsHolder;
 import org.folio.Holdings;
-import org.folio.Metadata;
 import org.folio.qm.client.HoldingsStorageClient;
 import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.HoldingsRecord;
 import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.client.model.ParsedRecordDto;
-import org.folio.qm.client.model.RecordTypeEnum;
-import org.folio.qm.mapper.ExternalIdsHolderMapper;
+import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.mapper.HoldingsRecordMapper;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.RecordService;
 import org.folio.qm.service.support.MappingMetadataProvider;
+import org.folio.rest.jaxrs.model.HoldingsRecord;
+import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.spring.FolioExecutionContext;
-import org.springframework.http.ResponseEntity;
+import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @Log4j2
@@ -36,46 +36,49 @@ public class HoldingRecordService extends RecordService<Holdings> {
 
   public HoldingRecordService(MappingMetadataProvider mappingMetadataProvider,
                               SourceStorageClient sourceStorageClient,
-                              ExternalIdsHolderMapper externalIdsHolderMapper,
+                              MarcQmConverter<QuickMarcEdit> marcQmConverter,
+                              MarcTypeMapper typeMapper,
                               HoldingsStorageClient holdingsStorageClient,
                               FolioExecutionContext folioExecutionContext,
                               HoldingsRecordMapper mapper) {
-    super(mappingMetadataProvider, sourceStorageClient, externalIdsHolderMapper);
+    super(mappingMetadataProvider, sourceStorageClient, marcQmConverter, typeMapper);
     this.holdingsStorageClient = holdingsStorageClient;
     this.folioExecutionContext = folioExecutionContext;
     this.mapper = mapper;
   }
 
   @Override
-  public RecordTypeEnum supportedType() {
-    return RecordTypeEnum.HOLDING;
+  public MarcFormat supportedType() {
+    return MarcFormat.HOLDINGS;
   }
 
   @Override
-  public void update(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                     ParsedRecordDto parsedRecordDto) {
-    try {
-      Holdings mappedHolding = getMappedRecord(parsedRecordDto, MappingRecordTypeEnum.MARC_HOLDINGS.getValue(),
-        MARC_HOLDINGS.name());
-      if (mappedHolding == null) {
-        handleError(parsedRecordDto.getId(), updateResult,
-          String.format("getMappedRecord:: mapping metadata not found for Holding record with parsedRecordId: %s",
-            parsedRecordId));
-        return;
-      }
-      var holdingId = parsedRecordDto.getExternalIdsHolder().getHoldingsId().toString();
-      var holding = holdingsStorageClient.getHoldingById(holdingId);
-      if (holding == null) {
-        handleError(parsedRecordId, updateResult, String.format("Holding record with id %s was not found", holdingId));
-        return;
-      }
-      updateHolding(holding, mappedHolding);
-      updateSrsRecord(parsedRecordId, updateResult, parsedRecordDto);
-    } catch (Exception e) {
-      handleError(parsedRecordId, updateResult,
-        String.format("Error updating holding record for parsedRecordId: %s, error: %s",
-          parsedRecordId, e.getMessage()), e);
+  public void update(QuickMarcEdit quickMarc) {
+    Holdings mappedHolding = getMappedRecord(quickMarc);
+    var holdingId = quickMarc.getExternalId().toString();
+    var holding = holdingsStorageClient.getHoldingById(holdingId);
+    if (holding == null) {
+      throw new NotFoundException(String.format("Holdings record with id: %s not found", holdingId));
     }
+    updateHolding(holding, mappedHolding);
+    updateSrsRecord(quickMarc);
+  }
+
+  @Override
+  public ExternalIdsHolder getExternalIdsHolder(QuickMarcEdit quickMarc) {
+    return new ExternalIdsHolder()
+      .withHoldingsId(quickMarc.getExternalId().toString())
+      .withHoldingsHrid(quickMarc.getExternalHrid());
+  }
+
+  @Override
+  public MappingRecordTypeEnum getMapperRecordType() {
+    return  MappingRecordTypeEnum.MARC_HOLDINGS;
+  }
+
+  @Override
+  public String getMapperName() {
+    return MARC_HOLDINGS.name();
   }
 
   private void updateHolding(HoldingsRecord holding, Holdings mappedHolding) {
@@ -86,7 +89,7 @@ public class HoldingRecordService extends RecordService<Holdings> {
 
   private HoldingsRecord convertToHoldingsRecord(HoldingsRecord existingRecord, Holdings mappedRecord) {
     mappedRecord.setId(existingRecord.getId());
-    mappedRecord.setVersion(existingRecord.getVersion());
+    mappedRecord.setVersion(existingRecord.getVersion() != null ? existingRecord.getVersion().intValue() : null);
     var statisticalCodeIds = new HashSet<>(Optional.ofNullable(existingRecord.getStatisticalCodeIds())
       .orElse(Collections.emptySet()));
     var administrativeNotes = new ArrayList<>(Optional.ofNullable(existingRecord.getAdministrativeNotes())

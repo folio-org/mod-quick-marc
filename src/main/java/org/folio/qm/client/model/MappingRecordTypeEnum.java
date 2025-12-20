@@ -1,5 +1,8 @@
 package org.folio.qm.client.model;
 
+import lombok.Getter;
+
+@Getter
 public enum MappingRecordTypeEnum {
 
   MARC_BIB("marc-bib"),
@@ -10,9 +13,5 @@ public enum MappingRecordTypeEnum {
 
   MappingRecordTypeEnum(String value) {
     this.value = value;
-  }
-
-  public String getValue() {
-    return value;
   }
 }

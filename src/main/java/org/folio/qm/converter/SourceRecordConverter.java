@@ -9,8 +9,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
+import org.folio.ParsedRecord;
 import org.folio.qm.client.model.ExternalIdsHolder;
-import org.folio.qm.client.model.ParsedRecord;
 import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcView;
@@ -58,7 +58,7 @@ public class SourceRecordConverter implements Converter<SourceRecord, QuickMarcV
       .leader(leader)
       .fields(reorderedFields)
       .marcFormat(format)
-      .parsedRecordId(parsedRecord.getId())
+      .parsedRecordId(UUID.fromString(parsedRecord.getId()))
       .parsedRecordDtoId(source.getRecordId())
       .sourceVersion(source.getGeneration())
       .externalId(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))

@@ -28,7 +28,7 @@ class InstanceRecordMapperTest {
   @Test
   void shouldUpdateNonNullFields() {
     var source = createFolioInstance(ID, SOURCE_TITLE, SOURCE_HRID, new ArrayList<>(List.of(SOURCE_NOTE)));
-    var target = createInstance(ID, TARGET_TITLE, TARGET_HRID, new ArrayList<>(List.of(TARGET_NOTE)));
+    var target = createInstance(TARGET_HRID, new ArrayList<>(List.of(TARGET_NOTE)));
 
     mapper.merge(source, target);
 
@@ -41,7 +41,7 @@ class InstanceRecordMapperTest {
   @Test
   void shouldNotOverwriteWithNullFields() {
     var source = createFolioInstance(null, null, SOURCE_HRID, Collections.emptyList());
-    var target = createInstance(ID, TARGET_TITLE, null, new ArrayList<>(List.of(TARGET_NOTE)));
+    var target = createInstance(null, new ArrayList<>(List.of(TARGET_NOTE)));
 
     mapper.merge(source, target);
 
@@ -54,7 +54,7 @@ class InstanceRecordMapperTest {
   @Test
   void shouldDoNothingIfSourceIsAllNull() {
     var source = createFolioInstance(null, null, null, null);
-    var target = createInstance(ID, TARGET_TITLE, TARGET_HRID, new ArrayList<>(List.of(TARGET_NOTE)));
+    var target = createInstance(TARGET_HRID, new ArrayList<>(List.of(TARGET_NOTE)));
 
     mapper.merge(source, target);
 
@@ -82,10 +82,10 @@ class InstanceRecordMapperTest {
     return instance;
   }
 
-  private Instance createInstance(String id, String title, String hrid, List<String> notes) {
+  private Instance createInstance(String hrid, List<String> notes) {
     Instance instance = new Instance();
-    instance.setId(id);
-    instance.setTitle(title);
+    instance.setId(ID);
+    instance.setTitle(TARGET_TITLE);
     instance.setHrid(hrid);
     if (notes != null) {
       instance.setAdministrativeNotes(notes);

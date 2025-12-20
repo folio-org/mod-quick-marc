@@ -23,6 +23,8 @@ import org.folio.Publication;
 import org.folio.Series;
 import org.folio.Subject;
 import org.folio.Tags;
+import org.folio.rest.jaxrs.model.HoldingsRecord;
+import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 
 @Data
 @NoArgsConstructor
@@ -71,9 +73,9 @@ public class Instance {
   private List<HoldingsRecord> holdingsRecords2;
   private Set<String> natureOfContentTermIds;
   @JsonIgnore
-  private List<PrecedingSucceedingTitle> precedingTitles;
+  private List<InstancePrecedingSucceedingTitle> precedingTitles;
   @JsonIgnore
-  private List<PrecedingSucceedingTitle> succeedingTitles;
+  private List<InstancePrecedingSucceedingTitle> succeedingTitles;
 
   public enum SourceRecordFormat {
 

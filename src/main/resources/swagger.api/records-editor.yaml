@@ -82,6 +82,57 @@ paths:
             schema:
               $ref: '#/components/schemas/quickMarcCreate'
         required: true
+  /records/{id}:
+    put:
+      tags:
+        - records-editor
+      responses:
+        '202':
+          description: MARC record accepted for updating
+        '400':
+          description:
+            Bad request, e.g. malformed request body or query parameter.
+            Details of the error (e.g. name of the parameter or line/character number
+            with malformed data) provided in the response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '409':
+          description: Update failed due to optimistic locking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '422':
+          description: MARC Record validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationResult'
+        '500':
+          description: Internal server error, e.g. due to misconfiguration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      description: Edit MARC record
+      operationId: putRecord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/quickMarcEdit'
+        required: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The UUID of a record
+
   /records/status:
     get:
       tags:
@@ -202,6 +253,8 @@ components:
       $ref: 'schemas/common.yaml#/quickMarcView'
     quickMarcCreate:
       $ref: 'schemas/common.yaml#/quickMarcCreate'
+    quickMarcEdit:
+      $ref: 'schemas/common.yaml#/quickMarcEdit'
     creationStatus:
       $ref: 'schemas/common.yaml#/creationStatus'
     validationResult:

@@ -8,23 +8,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
+import org.folio.ExternalIdsHolder;
 import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.client.SourceStorageClient;
 import org.folio.qm.client.model.Instance;
 import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.client.model.ParsedRecordDto;
-import org.folio.qm.client.model.RecordTypeEnum;
-import org.folio.qm.mapper.ExternalIdsHolderMapper;
+import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.mapper.InstanceRecordMapper;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.RecordService;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.folio.qm.service.support.PrecedingSucceedingTitlesHelper;
-import org.springframework.http.ResponseEntity;
+import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @Log4j2
@@ -37,12 +37,13 @@ public class InstanceRecordService extends RecordService<org.folio.Instance> {
 
   protected InstanceRecordService(MappingMetadataProvider mappingMetadataProvider,
                                   SourceStorageClient sourceStorageClient,
-                                  ExternalIdsHolderMapper externalIdsHolderMapper,
+                                  MarcQmConverter<QuickMarcEdit> marcQmConverter,
+                                  MarcTypeMapper typeMapper,
                                   InstanceStorageClient instanceStorageClient,
                                   PrecedingSucceedingTitlesHelper precedingSucceedingTitlesHelper,
                                   PrecedingSucceedingTitlesClient precedingSucceedingTitlesClient,
                                   InstanceRecordMapper mapper) {
-    super(mappingMetadataProvider, sourceStorageClient, externalIdsHolderMapper);
+    super(mappingMetadataProvider, sourceStorageClient, marcQmConverter, typeMapper);
     this.instanceStorageClient = instanceStorageClient;
     this.precedingSucceedingTitlesHelper = precedingSucceedingTitlesHelper;
     this.precedingSucceedingTitlesClient = precedingSucceedingTitlesClient;
@@ -50,36 +51,38 @@ public class InstanceRecordService extends RecordService<org.folio.Instance> {
   }
 
   @Override
-  public RecordTypeEnum supportedType() {
-    return BIB;
+  public MarcFormat supportedType() {
+    return MarcFormat.BIBLIOGRAPHIC;
   }
 
   @Override
-  public void update(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                     ParsedRecordDto parsedRecordDto) {
-    try {
-      org.folio.Instance mappedInstance = getMappedRecord(parsedRecordDto, MappingRecordTypeEnum.MARC_BIB.getValue(),
-        BIB.getValue());
-      if (mappedInstance == null) {
-        handleError(parsedRecordDto.getId(), updateResult,
-          String.format("getMappedRecord:: mapping metadata not found for MARC-BIB record with parsedRecordId: %s",
-            parsedRecordId));
-        return;
-      }
-      var instanceId = parsedRecordDto.getExternalIdsHolder().getInstanceId().toString();
-      var existingInstance = instanceStorageClient.getInstanceById(instanceId);
-      if (existingInstance == null) {
-        handleError(parsedRecordId, updateResult, String.format("Instance record with id: %s not found", instanceId));
-        return;
-      }
-      var updatedInstance = updatedInstance(existingInstance, mappedInstance, instanceId);
-      updateTitles(updatedInstance, instanceId);
-      updateSrsRecord(parsedRecordId, updateResult, parsedRecordDto);
-    } catch (Exception e) {
-      handleError(parsedRecordId, updateResult,
-        String.format("Error updating Instance record for parsedRecordId: %s, error: %s",
-          parsedRecordId, e.getMessage()), e);
+  public void update(QuickMarcEdit quickMarc) {
+    org.folio.Instance mappedInstance = getMappedRecord(quickMarc);
+    var instanceId = quickMarc.getExternalId().toString();
+    var existingInstance = instanceStorageClient.getInstanceById(instanceId);
+    if (existingInstance == null) {
+      throw new NotFoundException(String.format("Instance record with id: %s not found", instanceId));
     }
+    var updatedInstance = updatedInstance(existingInstance, mappedInstance, instanceId);
+    updateTitles(updatedInstance, instanceId);
+    updateSrsRecord(quickMarc);
+  }
+
+  @Override
+  public ExternalIdsHolder getExternalIdsHolder(QuickMarcEdit quickMarc) {
+    return new ExternalIdsHolder()
+      .withInstanceId(quickMarc.getExternalId().toString())
+      .withInstanceHrid(quickMarc.getExternalHrid());
+  }
+
+  @Override
+  public MappingRecordTypeEnum getMapperRecordType() {
+    return MappingRecordTypeEnum.MARC_BIB;
+  }
+
+  @Override
+  public String getMapperName() {
+    return BIB.getValue();
   }
 
   private Instance updatedInstance(Instance existingInstance, org.folio.Instance mappedInstance, String instanceId) {

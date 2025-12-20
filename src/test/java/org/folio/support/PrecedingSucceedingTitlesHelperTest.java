@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.UUID;
 import org.folio.qm.client.model.Instance;
-import org.folio.qm.client.model.PrecedingSucceedingTitle;
 import org.folio.qm.service.support.PrecedingSucceedingTitlesHelper;
+import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +26,10 @@ class PrecedingSucceedingTitlesHelperTest {
     var instanceId = UUID.randomUUID().toString();
     var precedingId = UUID.randomUUID().toString();
     var succeedingId = UUID.randomUUID().toString();
-    var preceding = new PrecedingSucceedingTitle(null, precedingId, null, PRECEDING_TITLE, PRECEDING_HRID, null);
-    var succeeding = new PrecedingSucceedingTitle(null, null, succeedingId, SUCCEEDING_TITLE, SUCCEEDING_HRID, null);
+    var preceding = new InstancePrecedingSucceedingTitle(null, precedingId, null, PRECEDING_TITLE, PRECEDING_HRID,
+      null, null);
+    var succeeding = new InstancePrecedingSucceedingTitle(null, null, succeedingId, SUCCEEDING_TITLE, SUCCEEDING_HRID,
+      null, null);
     var instance = createInstance(instanceId, List.of(preceding), List.of(succeeding));
 
     var result = helper.updatePrecedingSucceedingTitles(instance);
@@ -41,8 +43,9 @@ class PrecedingSucceedingTitlesHelperTest {
   void updatePrecedingSucceedingTitles_shouldReturnOnlyPreceding_whenOnlyPrecedingPresent() {
     var instanceId = UUID.randomUUID().toString();
     var precedingId = UUID.randomUUID().toString();
-    var preceding = new PrecedingSucceedingTitle(null, precedingId, null, PRECEDING_TITLE, PRECEDING_HRID, null);
-    var instance = createInstance(instanceId, List.of(preceding), null);
+    var precedingList = List.of(
+      new InstancePrecedingSucceedingTitle(null, precedingId, null, PRECEDING_TITLE, PRECEDING_HRID, null, null));
+    var instance = createInstance(instanceId, precedingList, null);
 
     var result = helper.updatePrecedingSucceedingTitles(instance);
     assertEquals(1, result.getTotalRecords());
@@ -53,8 +56,9 @@ class PrecedingSucceedingTitlesHelperTest {
   void updatePrecedingSucceedingTitles_shouldReturnOnlySucceeding_whenOnlySucceedingPresent() {
     var instanceId = UUID.randomUUID().toString();
     var succeedingId = UUID.randomUUID().toString();
-    var succeeding = new PrecedingSucceedingTitle(null, null, succeedingId, SUCCEEDING_TITLE, SUCCEEDING_HRID, null);
-    var instance = createInstance(instanceId, null, List.of(succeeding));
+    var succeedingList = List.of(
+      new InstancePrecedingSucceedingTitle(null, null, succeedingId, SUCCEEDING_TITLE, SUCCEEDING_HRID, null, null));
+    var instance = createInstance(instanceId, null, succeedingList);
 
     var result = helper.updatePrecedingSucceedingTitles(instance);
     assertEquals(1, result.getTotalRecords());
@@ -80,8 +84,8 @@ class PrecedingSucceedingTitlesHelperTest {
   }
 
   private Instance createInstance(String id,
-                                  List<PrecedingSucceedingTitle> preceding,
-                                  List<PrecedingSucceedingTitle> succeeding) {
+                                  List<InstancePrecedingSucceedingTitle> preceding,
+                                  List<InstancePrecedingSucceedingTitle> succeeding) {
     Instance instance = new Instance();
     instance.setId(id);
     instance.setPrecedingTitles(preceding);

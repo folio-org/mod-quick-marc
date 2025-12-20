@@ -1,129 +1,110 @@
 package org.folio.qm.service;
 
-import static org.folio.qm.util.JsonUtils.objectToJsonString;
-
 import io.vertx.core.json.JsonObject;
-import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.AdditionalInfo;
+import org.folio.ExternalIdsHolder;
 import org.folio.ParsedRecord;
-import org.folio.RawRecord;
 import org.folio.Record;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapperBuilder;
 import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.ParsedRecordDto;
-import org.folio.qm.client.model.RecordTypeEnum;
-import org.folio.qm.mapper.ExternalIdsHolderMapper;
+import org.folio.qm.client.model.MappingRecordTypeEnum;
+import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.exception.MappingMetadataException;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.support.MappingMetadataProvider;
-import org.folio.qm.util.ErrorUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.async.DeferredResult;
+import org.folio.spring.exception.NotFoundException;
 
 @Log4j2
 public abstract class RecordService<T> {
 
   private final MappingMetadataProvider mappingMetadataProvider;
   private final SourceStorageClient sourceStorageClient;
-  private final ExternalIdsHolderMapper externalIdsHolderMapper;
+  private final MarcQmConverter<QuickMarcEdit> marcQmConverter;
+  private final MarcTypeMapper typeMapper;
 
   protected RecordService(MappingMetadataProvider mappingMetadataProvider,
                           SourceStorageClient sourceStorageClient,
-                          ExternalIdsHolderMapper externalIdsHolderMapper) {
+                          MarcQmConverter<QuickMarcEdit> marcQmConverter,
+                          MarcTypeMapper typeMapper) {
     this.mappingMetadataProvider = mappingMetadataProvider;
     this.sourceStorageClient = sourceStorageClient;
-    this.externalIdsHolderMapper = externalIdsHolderMapper;
+    this.marcQmConverter = marcQmConverter;
+    this.typeMapper = typeMapper;
   }
 
-  public abstract RecordTypeEnum supportedType();
+  public abstract MarcFormat supportedType();
 
-  public abstract void update(UUID parsedRecordId,
-                              DeferredResult<ResponseEntity<Void>> updateResult,
-                              ParsedRecordDto parsedRecordDto);
+  public abstract void update(QuickMarcEdit quickMarc);
 
-  protected T getMappedRecord(ParsedRecordDto parsedRecordDto, String recordType, String mapperName) {
-    var mappingMetadata = mappingMetadataProvider.getMappingData(recordType);
-    if (Objects.isNull(mappingMetadata)) {
-      return null;
+  public abstract ExternalIdsHolder getExternalIdsHolder(QuickMarcEdit quickMarc);
+
+  public abstract MappingRecordTypeEnum getMapperRecordType();
+
+  public abstract String getMapperName();
+
+  protected T getMappedRecord(QuickMarcEdit quickMarc) {
+    var mappedRecordType = getMapperRecordType().getValue();
+    try {
+      var mappingMetadata = mappingMetadataProvider.getMappingData(mappedRecordType);
+      if (Objects.isNull(mappingMetadata)) {
+        throw new MappingMetadataException(
+          String.format("mapping metadata not found for %s record with parsedRecordId: %s",
+            mappedRecordType, quickMarc.getParsedRecordId()));
+      }
+      RecordMapper<T> recordMapper = RecordMapperBuilder.buildMapper(getMapperName());
+      return recordMapper.mapRecord(
+        retrieveParsedContent(quickMarc),
+        mappingMetadata.mappingParameters(),
+        mappingMetadata.mappingRules());
+    } catch (MappingMetadataException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new MappingMetadataException(
+        String.format("Error mapping %s record with parsedRecordId: %s", mappedRecordType,
+          quickMarc.getParsedRecordId()), e);
     }
-    var parsedRecordJson = retrieveParsedContent(parsedRecordDto);
-    RecordMapper<T> recordMapper = RecordMapperBuilder.buildMapper(mapperName);
-    return recordMapper.mapRecord(
-      parsedRecordJson,
-      mappingMetadata.mappingParameters(),
-      mappingMetadata.mappingRules());
   }
 
-  protected JsonObject retrieveParsedContent(ParsedRecordDto parsedRecordDto) {
-    var parsedRecordContent = parsedRecordDto.getParsedRecord().getContent();
-    return parsedRecordContent instanceof String content ? new JsonObject(content) :
-      JsonObject.mapFrom(parsedRecordContent);
-  }
-
-  protected void updateSrsRecord(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                                 ParsedRecordDto parsedRecordDto) {
-    var existingRecord = sourceStorageClient.getSrsRecord(parsedRecordId.toString());
+  protected void updateSrsRecord(QuickMarcEdit quickMarc) {
+    var existingRecord = sourceStorageClient.getSrsRecord(quickMarc.getParsedRecordId().toString());
     if (existingRecord == null) {
-      handleError(parsedRecordId, updateResult,
-        String.format("updateSrsRecord:: existing SRS record not found for parsedRecordId: %s", parsedRecordId));
-      return;
+      throw new NotFoundException(String.format("The SRS record to update was not found for parsedRecordId: %s",
+        quickMarc.getParsedRecordId()));
     }
-    var srsRecord = getNewRecord(parsedRecordDto, existingRecord);
+    var srsRecord = getUpdatedRecord(quickMarc, existingRecord);
     sourceStorageClient.updateSrsRecordGeneration(srsRecord.getId(), srsRecord);
-    log.debug("updateSrsRecord:: quickMarc update SRS record successful for parsedRecordId: {}", parsedRecordId);
-    updateResult.setResult(ResponseEntity.accepted().build());
+    log.debug("updateSrsRecord:: quickMarc update SRS record successful for parsedRecordId: {}",
+      quickMarc.getParsedRecordDtoId());
   }
 
-  protected void handleError(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                             String errorMessage) {
-    log.error("handleError:: {}", errorMessage);
-    setErrorResult(parsedRecordId, updateResult, errorMessage);
-  }
-
-  protected void handleError(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                             String errorMessage, Exception e) {
-    log.error("handleError:: {}", errorMessage, e);
-    setErrorResult(parsedRecordId, updateResult, errorMessage);
-  }
-
-  private void setErrorResult(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                              String errorMessage) {
-    var error = ErrorUtils.buildError(
-      ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED,
-      String.format("Failed to update MARC record for parsedRecordId: %s, error message: %s",
-        parsedRecordId, errorMessage));
-    updateResult.setErrorResult(ResponseEntity.badRequest().body(error));
-  }
-
-  private Record getNewRecord(ParsedRecordDto parsedRecordDto, Record existingRecord) {
-    var newRecordId = parsedRecordDto.getId().toString();
-    var externalIdsHolder = parsedRecordDto.getExternalIdsHolder();
-    var metadata = existingRecord.getMetadata();
+  private Record getUpdatedRecord(QuickMarcEdit quickMarc, Record existingRecord) {
+    var recordId = quickMarc.getParsedRecordDtoId().toString();
     return new Record()
-      .withId(newRecordId)
+      .withId(recordId)
       .withSnapshotId(existingRecord.getSnapshotId())
-      .withMatchedId(parsedRecordDto.getId().toString())
-      .withRecordType(Record.RecordType.fromValue(parsedRecordDto.getRecordType().getValue()))
+      .withMatchedId(recordId)
+      .withRecordType(Record.RecordType.fromValue(typeMapper.toDto(quickMarc.getMarcFormat()).getValue()))
       .withOrder(existingRecord.getOrder())
       .withDeleted(false)
       .withState(Record.State.ACTUAL)
       .withGeneration(existingRecord.getGeneration() + 1)
-      .withRawRecord(toRawRecord(parsedRecordDto.getParsedRecord(), newRecordId))
+      .withRawRecord(existingRecord.getRawRecord().withId(recordId))
       .withParsedRecord(new ParsedRecord()
-        .withId(newRecordId)
-        .withContent(parsedRecordDto.getParsedRecord().getContent()))
-      .withExternalIdsHolder(externalIdsHolderMapper.map(externalIdsHolder))
+        .withId(recordId)
+        .withContent(marcQmConverter.convertToParsedContent(quickMarc)))
+      .withExternalIdsHolder(getExternalIdsHolder(quickMarc))
       .withAdditionalInfo(new AdditionalInfo()
-        .withSuppressDiscovery(parsedRecordDto.getAdditionalInfo().isSuppressDiscovery()))
-      .withMetadata(metadata.withUpdatedDate(new Date()));
+        .withSuppressDiscovery(quickMarc.getSuppressDiscovery()))
+      .withMetadata(existingRecord.getMetadata());
   }
 
-  private RawRecord toRawRecord(org.folio.qm.client.model.ParsedRecord parsedRecord, String recordId) {
-    var jsonString = objectToJsonString(parsedRecord.getContent());
-    return new RawRecord()
-      .withId(recordId)
-      .withContent(jsonString);
+  private JsonObject retrieveParsedContent(QuickMarcEdit quickMarc) {
+    var parsedContent = marcQmConverter.convertToParsedContent(quickMarc);
+    return new JsonObject(parsedContent.toString());
   }
 }

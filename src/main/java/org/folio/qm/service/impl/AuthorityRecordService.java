@@ -2,22 +2,22 @@ package org.folio.qm.service.impl;
 
 import static org.folio.qm.client.model.RecordTypeEnum.AUTHORITY;
 
-import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.ActionProfile;
 import org.folio.Authority;
+import org.folio.ExternalIdsHolder;
 import org.folio.qm.client.AuthorityStorageClient;
 import org.folio.qm.client.SourceStorageClient;
 import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.client.model.ParsedRecordDto;
-import org.folio.qm.client.model.RecordTypeEnum;
+import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.mapper.AuthorityRecordMapper;
-import org.folio.qm.mapper.ExternalIdsHolderMapper;
+import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.RecordService;
 import org.folio.qm.service.support.MappingMetadataProvider;
-import org.springframework.http.ResponseEntity;
+import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 @Log4j2
@@ -30,53 +30,51 @@ public class AuthorityRecordService extends RecordService<Authority> {
 
   protected AuthorityRecordService(MappingMetadataProvider mappingMetadataProvider,
                                    SourceStorageClient sourceStorageClient,
-                                   ExternalIdsHolderMapper externalIdsHolderMapper,
+                                   MarcQmConverter<QuickMarcEdit> marcQmConverter,
+                                   MarcTypeMapper typeMapper,
                                    AuthorityStorageClient authorityStorageClient,
                                    AuthorityRecordMapper mapper) {
-    super(mappingMetadataProvider, sourceStorageClient, externalIdsHolderMapper);
+    super(mappingMetadataProvider, sourceStorageClient, marcQmConverter, typeMapper);
     this.authorityStorageClient = authorityStorageClient;
     this.mapper = mapper;
   }
 
   @Override
-  public RecordTypeEnum supportedType() {
-    return RecordTypeEnum.AUTHORITY;
+  public MarcFormat supportedType() {
+    return MarcFormat.AUTHORITY;
   }
 
   @Override
-  public void update(UUID parsedRecordId, DeferredResult<ResponseEntity<Void>> updateResult,
-                     ParsedRecordDto parsedRecordDto) {
-    try {
-      var mappedAuthority = getMappedAuthority(parsedRecordDto);
-      if (mappedAuthority == null) {
-        handleError(parsedRecordDto.getId(), updateResult,
-          String.format("getMappedRecord:: mapping metadata not found for Authority record with parsedRecordId: %s",
-            parsedRecordId));
-        return;
-      }
-      var authorityId = parsedRecordDto.getExternalIdsHolder().getAuthorityId().toString();
-      var existingAuthority = authorityStorageClient.getAuthorityById(authorityId);
-      if (existingAuthority == null) {
-        handleError(parsedRecordId, updateResult, String.format("Authority record with id: %s not found", authorityId));
-        return;
-      }
-      var updatedAuthority = prepareForUpdate(existingAuthority, mappedAuthority);
-      authorityStorageClient.updateAuthority(authorityId, updatedAuthority);
-      log.debug("Authority record with id: {} has been updated successfully", authorityId);
-      updateSrsRecord(parsedRecordId, updateResult, parsedRecordDto);
-    } catch (Exception e) {
-      handleError(parsedRecordId, updateResult,
-        String.format("Error updating authority record for parsedRecordId: %s, error: %s",
-          parsedRecordId, e.getMessage()), e);
+  public void update(QuickMarcEdit quickMarc) {
+    var mappedAuthority = getMappedRecord(quickMarc);
+    var authorityId = quickMarc.getExternalId().toString();
+    var existingAuthority = authorityStorageClient.getAuthorityById(authorityId);
+    if (existingAuthority == null) {
+      throw new NotFoundException(String.format("Authority record with id: %s not found", authorityId));
     }
+    var updatedAuthority = prepareForUpdate(existingAuthority, mappedAuthority);
+    authorityStorageClient.updateAuthority(authorityId, updatedAuthority);
+    log.debug("Authority record with id: {} has been updated successfully", authorityId);
+    updateSrsRecord(quickMarc);
   }
 
-  private Authority getMappedAuthority(ParsedRecordDto parsedRecordDto) {
-    var mapperName = Boolean.parseBoolean(System.getenv().getOrDefault(AUTHORITY_EXTENDED, "false"))
+  @Override
+  public ExternalIdsHolder getExternalIdsHolder(QuickMarcEdit quickMarc) {
+    return new ExternalIdsHolder()
+      .withAuthorityId(quickMarc.getExternalId().toString())
+      .withAuthorityHrid(quickMarc.getExternalHrid());
+  }
+
+  @Override
+  public MappingRecordTypeEnum getMapperRecordType() {
+    return MappingRecordTypeEnum.MARC_AUTHORITY;
+  }
+
+  @Override
+  public String getMapperName() {
+    return Boolean.parseBoolean(System.getenv().getOrDefault(AUTHORITY_EXTENDED, "false"))
       ? ActionProfile.FolioRecord.MARC_AUTHORITY_EXTENDED.value()
       : AUTHORITY.getValue();
-
-    return getMappedRecord(parsedRecordDto, MappingRecordTypeEnum.MARC_AUTHORITY.getValue(), mapperName);
   }
 
   private Authority prepareForUpdate(Authority existingRecord, Authority mappedRecord) {

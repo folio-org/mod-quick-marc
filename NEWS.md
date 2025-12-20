@@ -5,11 +5,11 @@
 ### New APIs versions
 * Provides `API_NAME vX.Y`
 * Changed to optional: `instance-authority-links`, `instance-authority-linking-rules`, `instance-authority-links-suggestions`
-* Provides `mapping-metadata-provider v1.1`
-* Provides `authority-storage v2.0`
-* Provides `instance-storage v11.2`
-* Provides `holdings-storage v8.8`
-* Provides `instance-preceding-succeeding-titles v0.1`
+* Optional `mapping-metadata-provider v1.1`
+* Optional `authority-storage v2.0`
+* Optional `instance-storage v11.2`
+* Optional `holdings-storage v8.8`
+* Optional `instance-preceding-succeeding-titles v0.1`
 
 ### Features
 * Add “allowedValues” to the MARC authority 008 spec response ([MODQM-455](https://folio-org.atlassian.net/browse/MODQM-455))
@@ -33,6 +33,7 @@
 * Add `LIB_NAME VERSION`
 * Remove `LIB_NAME`
 * Add `data-import-processing-core v4.5.0-SNAPSHOT`
+* Add `mod-inventory-storage-dto v30.0.0-SNAPSHOT`
 
 ---
 

@@ -71,19 +71,24 @@ public abstract class RecordService<T> {
   }
 
   protected void updateSrsRecord(QuickMarcEdit quickMarc) {
+    log.info("updateSrsRecord:: Retrieving existing SRS record for parsedRecordId: {}",
+      quickMarc.getParsedRecordId());
     var existingRecord = sourceStorageClient.getSrsRecord(quickMarc.getParsedRecordId().toString());
     if (existingRecord == null) {
       throw new NotFoundException(String.format("The SRS record to update was not found for parsedRecordId: %s",
         quickMarc.getParsedRecordId()));
     }
     var srsRecord = getUpdatedRecord(quickMarc, existingRecord);
+    log.info("updateSrsRecord:: Updating SRS record for ParsedRecordContent: {}",
+      srsRecord.getParsedRecord().getContent());
     sourceStorageClient.updateSrsRecordGeneration(srsRecord.getId(), srsRecord);
-    log.debug("updateSrsRecord:: quickMarc update SRS record successful for parsedRecordId: {}",
+    log.info("updateSrsRecord:: quickMarc update SRS record successful for parsedRecordId: {}",
       quickMarc.getParsedRecordDtoId());
   }
 
   private Record getUpdatedRecord(QuickMarcEdit quickMarc, Record existingRecord) {
     var recordId = quickMarc.getParsedRecordDtoId().toString();
+    log.info("getUpdatedRecord:: Preparing updated Record for recordId: {}", recordId);
     return new Record()
       .withId(recordId)
       .withSnapshotId(existingRecord.getSnapshotId())

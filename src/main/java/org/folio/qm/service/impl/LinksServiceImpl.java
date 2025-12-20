@@ -2,6 +2,7 @@ package org.folio.qm.service.impl;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
 import org.folio.qm.client.LinksClient.InstanceLinks;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class LinksServiceImpl implements LinksService {
 
   private final LinksClient linksClient;
@@ -39,6 +41,9 @@ public class LinksServiceImpl implements LinksService {
     }
 
     var instanceLinks = extractLinks(qmRecord);
+    log.info("Updating links for QuickMarc record [instanceId: {}, linksCount: {}]",
+      qmRecord.getExternalId(), instanceLinks.totalRecords());
+    log.info("Links to be updated: {}", instanceLinks.links());
     linksClient.putLinksByInstanceId(qmRecord.getExternalId(), instanceLinks);
   }
 

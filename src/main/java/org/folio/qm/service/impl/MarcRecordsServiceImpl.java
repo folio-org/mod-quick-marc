@@ -94,7 +94,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   @Override
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc) {
-    log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
+    log.info("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
+    log.info("updateById:: quickMarc before update getParsedRecordDtoId: {}",
+      quickMarc.getParsedRecordDtoId().toString());
+    log.info("updateById:: quickMarc before update getParsedRecordId: {}",
+      quickMarc.getParsedRecordId().toString());
     defaultValuesPopulationService.populate(quickMarc);
     validateOnUpdate(parsedRecordId, quickMarc);
 

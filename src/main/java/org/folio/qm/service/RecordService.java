@@ -97,7 +97,7 @@ public abstract class RecordService<T> {
       .withOrder(existingRecord.getOrder())
       .withDeleted(false)
       .withState(Record.State.ACTUAL)
-      .withGeneration(existingRecord.getGeneration() + 1)
+      //.withGeneration(existingRecord.getGeneration() + 1)
       .withRawRecord(existingRecord.getRawRecord().withId(recordId))
       .withParsedRecord(new ParsedRecord()
         .withId(recordId)

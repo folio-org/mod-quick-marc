@@ -57,6 +57,7 @@ public class InstanceRecordService extends RecordService<org.folio.Instance> {
 
   @Override
   public void update(QuickMarcEdit quickMarc) {
+    updateSrsRecord(quickMarc);
     org.folio.Instance mappedInstance = getMappedRecord(quickMarc);
     var instanceId = quickMarc.getExternalId().toString();
     var existingInstance = instanceStorageClient.getInstanceById(instanceId);
@@ -65,7 +66,6 @@ public class InstanceRecordService extends RecordService<org.folio.Instance> {
     }
     var updatedInstance = updatedInstance(existingInstance, mappedInstance, instanceId);
     updateTitles(updatedInstance, instanceId);
-    updateSrsRecord(quickMarc);
   }
 
   @Override

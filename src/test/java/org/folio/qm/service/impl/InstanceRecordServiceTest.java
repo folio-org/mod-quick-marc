@@ -112,8 +112,7 @@ class InstanceRecordServiceTest {
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenReturn(mappingData);
     when(instanceStorageClient.getInstanceById(INSTANCE_ID)).thenReturn(existingInstance);
-    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID))
-      .thenReturn(createRecord());
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
 
     service.update(quickMarc);
 
@@ -123,16 +122,18 @@ class InstanceRecordServiceTest {
 
   @Test
   void shouldThrowMappingMetadataException_whenMappingMetadataNotFound() {
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue())).thenReturn(null);
 
     var exception = assertThrows(MappingMetadataException.class, () ->
       service.update(quickMarc)
     );
 
-    verify(instanceStorageClient, never()).getInstanceById(anyString());
-    verify(instanceStorageClient, never()).updateInstance(anyString(), any());
     assertEquals(String.format("mapping metadata not found for %s record with parsedRecordId: %s",
       MappingRecordTypeEnum.MARC_BIB.getValue(), parsedRecordId), exception.getMessage());
+    verify(instanceStorageClient, never()).getInstanceById(anyString());
+    verify(instanceStorageClient, never()).updateInstance(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
   }
 
   @Test
@@ -140,6 +141,7 @@ class InstanceRecordServiceTest {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenReturn(mappingData);
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(instanceStorageClient.getInstanceById(INSTANCE_ID)).thenReturn(null);
 
     var exception = assertThrows(NotFoundException.class, () ->
@@ -147,22 +149,19 @@ class InstanceRecordServiceTest {
     );
 
     verify(instanceStorageClient, never()).updateInstance(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
     assertEquals(String.format("Instance record with id: %s not found", INSTANCE_ID), exception.getMessage());
   }
 
   @Test
   void shouldThrowNotFoundException_whenSrsRecordNotFound() {
-    var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
-    when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
-      .thenReturn(mappingData);
-    when(instanceStorageClient.getInstanceById(INSTANCE_ID)).thenReturn(existingInstance);
     when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(null);
 
     var exception = assertThrows(NotFoundException.class, () ->
       service.update(quickMarc)
     );
 
-    verify(instanceStorageClient).updateInstance(eq(INSTANCE_ID), any(Instance.class));
+    verify(instanceStorageClient, never()).updateInstance(eq(INSTANCE_ID), any(Instance.class));
     verify(sourceStorageClient, never()).updateSrsRecordGeneration(anyString(), any());
     assertEquals(String.format("The SRS record to update was not found for parsedRecordId: %s", parsedRecordId),
       exception.getMessage());
@@ -170,6 +169,7 @@ class InstanceRecordServiceTest {
 
   @Test
   void shouldThrowRuntimeException_whenMappingMetadataRetrievalFails() {
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue()))
       .thenThrow(new RuntimeException("Unexpected error"));
 
@@ -182,6 +182,7 @@ class InstanceRecordServiceTest {
     verify(mappingMetadataProvider).getMappingData(MappingRecordTypeEnum.MARC_BIB.getValue());
     verify(instanceStorageClient, never()).getInstanceById(anyString());
     verify(instanceStorageClient, never()).updateInstance(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any());
   }
 
   private QuickMarcEdit createQuickMarc() {

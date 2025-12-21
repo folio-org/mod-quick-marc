@@ -54,6 +54,7 @@ public class HoldingRecordService extends RecordService<Holdings> {
 
   @Override
   public void update(QuickMarcEdit quickMarc) {
+    updateSrsRecord(quickMarc);
     Holdings mappedHolding = getMappedRecord(quickMarc);
     var holdingId = quickMarc.getExternalId().toString();
     var holding = holdingsStorageClient.getHoldingById(holdingId);
@@ -61,7 +62,6 @@ public class HoldingRecordService extends RecordService<Holdings> {
       throw new NotFoundException(String.format("Holdings record with id: %s not found", holdingId));
     }
     updateHolding(holding, mappedHolding);
-    updateSrsRecord(quickMarc);
   }
 
   @Override

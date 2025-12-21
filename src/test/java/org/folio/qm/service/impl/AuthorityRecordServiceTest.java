@@ -100,26 +100,29 @@ class AuthorityRecordServiceTest {
 
     service.update(quickMarc);
 
-    verify(authorityStorageClient).updateAuthority(eq(AUTHORITY_ID), any(Authority.class));
     verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
+    verify(authorityStorageClient).updateAuthority(eq(AUTHORITY_ID), any(Authority.class));
   }
 
   @Test
   void update_shouldThrowMappingMetadataException_whenMappingMetadataNotFound_negative() {
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue())).thenReturn(null);
 
     var exception = assertThrows(MappingMetadataException.class, () ->
       service.update(quickMarc)
     );
 
-    verify(authorityStorageClient, never()).getAuthorityById(anyString());
-    verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
     assertEquals(String.format("mapping metadata not found for %s record with parsedRecordId: %s",
       MappingRecordTypeEnum.MARC_AUTHORITY.getValue(), parsedRecordId), exception.getMessage());
+    verify(authorityStorageClient, never()).getAuthorityById(anyString());
+    verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
   }
 
   @Test
   void update_shouldThrowNotFoundException_whenAuthorityNotFound_negative() {
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue()))
       .thenReturn(mappingData);
@@ -129,37 +132,36 @@ class AuthorityRecordServiceTest {
       service.update(quickMarc)
     );
 
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
     verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
     assertEquals(String.format("Authority record with id: %s not found", AUTHORITY_ID), exception.getMessage());
   }
 
   @Test
   void update_shouldThrowNotFoundException_whenSrsRecordNotFound_negative() {
-    var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
-    when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue()))
-      .thenReturn(mappingData);
-    when(authorityStorageClient.getAuthorityById(AUTHORITY_ID)).thenReturn(existingAuthority);
     when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(null);
 
     var exception = assertThrows(NotFoundException.class, () ->
       service.update(quickMarc)
     );
 
-    verify(authorityStorageClient).updateAuthority(eq(AUTHORITY_ID), any(Authority.class));
-    verify(sourceStorageClient, never()).updateSrsRecordGeneration(anyString(), any());
     assertEquals(String.format("The SRS record to update was not found for parsedRecordId: %s", parsedRecordId),
       exception.getMessage());
+    verify(authorityStorageClient, never()).getAuthorityById(AUTHORITY_ID);
+    verify(authorityStorageClient, never()).updateAuthority(eq(AUTHORITY_ID), any(Authority.class));
+    verify(sourceStorageClient, never()).updateSrsRecordGeneration(anyString(), any());
   }
 
   @Test
   void update_shouldHandleException_negative() {
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_AUTHORITY.getValue()))
       .thenThrow(new RuntimeException("Unexpected error"));
 
     var exception = assertThrows(RuntimeException.class, () ->
       service.update(quickMarc)
     );
-
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
     verify(authorityStorageClient, never()).updateAuthority(anyString(), any());
     assertEquals(String.format("Error mapping %s record with parsedRecordId: %s",
         MappingRecordTypeEnum.MARC_AUTHORITY.getValue(), parsedRecordId),

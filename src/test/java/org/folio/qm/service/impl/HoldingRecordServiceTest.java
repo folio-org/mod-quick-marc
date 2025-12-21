@@ -111,15 +111,17 @@ class HoldingRecordServiceTest {
   @Test
   void shouldThrowMappingMetadataException_whenMappingMetadataNotFound() {
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_HOLDINGS.getValue())).thenReturn(null);
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
 
     var exception = assertThrows(MappingMetadataException.class, () ->
       service.update(quickMarc)
     );
 
-    verify(holdingsStorageClient, never()).getHoldingById(anyString());
-    verify(holdingsStorageClient, never()).updateHolding(anyString(), any());
     assertEquals(String.format("mapping metadata not found for %s record with parsedRecordId: %s",
       MappingRecordTypeEnum.MARC_HOLDINGS.getValue(), parsedRecordId), exception.getMessage());
+    verify(holdingsStorageClient, never()).getHoldingById(anyString());
+    verify(holdingsStorageClient, never()).updateHolding(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
   }
 
   @Test
@@ -127,6 +129,7 @@ class HoldingRecordServiceTest {
     var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_HOLDINGS.getValue()))
       .thenReturn(mappingData);
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(holdingsStorageClient.getHoldingById(HOLDING_ID)).thenReturn(null);
 
     var exception = assertThrows(NotFoundException.class, () ->
@@ -134,22 +137,19 @@ class HoldingRecordServiceTest {
     );
 
     verify(holdingsStorageClient, never()).updateHolding(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any(Record.class));
     assertEquals(String.format("Holdings record with id: %s not found", HOLDING_ID), exception.getMessage());
   }
 
   @Test
   void shouldThrowNotFoundException_whenSrsRecordNotFound() {
-    var mappingData = new MappingMetadataProvider.MappingData(new JsonObject(), new MappingParameters());
-    when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_HOLDINGS.getValue()))
-      .thenReturn(mappingData);
-    when(holdingsStorageClient.getHoldingById(HOLDING_ID)).thenReturn(existingHolding);
     when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(null);
 
     var exception = assertThrows(NotFoundException.class, () ->
       service.update(quickMarc)
     );
 
-    verify(holdingsStorageClient).updateHolding(eq(HOLDING_ID), any());
+    verify(holdingsStorageClient, never()).updateHolding(eq(HOLDING_ID), any());
     verify(sourceStorageClient, never()).updateSrsRecordGeneration(anyString(), any());
     assertEquals(String.format("The SRS record to update was not found for parsedRecordId: %s", parsedRecordId),
       exception.getMessage());
@@ -157,6 +157,7 @@ class HoldingRecordServiceTest {
 
   @Test
   void shouldThrowRuntimeException_whenMappingMetadataRetrievalFails() {
+    when(sourceStorageClient.getSrsRecord(PARSED_RECORD_ID)).thenReturn(createRecord());
     when(mappingMetadataProvider.getMappingData(MappingRecordTypeEnum.MARC_HOLDINGS.getValue()))
       .thenThrow(new RuntimeException("Unexpected error"));
 
@@ -165,6 +166,7 @@ class HoldingRecordServiceTest {
     );
 
     verify(holdingsStorageClient, never()).updateHolding(anyString(), any());
+    verify(sourceStorageClient).updateSrsRecordGeneration(anyString(), any());
     assertEquals(String.format("Error mapping %s record with parsedRecordId: %s",
       MappingRecordTypeEnum.MARC_HOLDINGS.getValue(), parsedRecordId), exception.getMessage());
   }

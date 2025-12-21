@@ -46,6 +46,7 @@ public class AuthorityRecordService extends RecordService<Authority> {
 
   @Override
   public void update(QuickMarcEdit quickMarc) {
+    updateSrsRecord(quickMarc);
     var mappedAuthority = getMappedRecord(quickMarc);
     var authorityId = quickMarc.getExternalId().toString();
     var existingAuthority = authorityStorageClient.getAuthorityById(authorityId);
@@ -55,7 +56,6 @@ public class AuthorityRecordService extends RecordService<Authority> {
     var updatedAuthority = prepareForUpdate(existingAuthority, mappedAuthority);
     authorityStorageClient.updateAuthority(authorityId, updatedAuthority);
     log.debug("Authority record with id: {} has been updated successfully", authorityId);
-    updateSrsRecord(quickMarc);
   }
 
   @Override

@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
-import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
@@ -32,14 +31,9 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
   }
 
   @Override
-  public ResponseEntity<CreationStatus> getRecordCreationStatus(UUID qmRecordId) {
-    return ResponseEntity.ok(marcRecordsService.getCreationStatusByQmRecordId(qmRecordId));
-  }
-
-  @Override
-  public ResponseEntity<CreationStatus> createNewRecord(@Valid QuickMarcCreate quickMarc) {
-    CreationStatus status = marcRecordsService.createNewRecord(quickMarc);
-    return ResponseEntity.status(CREATED).body(status);
+  public ResponseEntity<QuickMarcView> createNewRecord(@Valid QuickMarcCreate quickMarc) {
+    var newRecord = marcRecordsService.createRecord(quickMarc);
+    return ResponseEntity.status(CREATED).body(newRecord);
   }
 
   @Override

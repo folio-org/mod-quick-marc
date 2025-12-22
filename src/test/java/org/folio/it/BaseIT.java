@@ -5,7 +5,6 @@ import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
 import static org.folio.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
 import static org.folio.support.utils.ApiTestUtils.TENANT_ID;
-import static org.folio.support.utils.InputOutputTestUtils.readFile;
 import static org.folio.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.support.utils.TestEntitiesUtils.JOHN_USER_ID;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -33,7 +32,6 @@ import org.folio.spring.testing.extension.EnablePostgres;
 import org.folio.spring.testing.extension.impl.OkapiConfiguration;
 import org.folio.support.DisplayNameLogger;
 import org.folio.tenant.domain.dto.TenantAttributes;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +41,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -59,9 +56,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @SuppressWarnings("java:S5786")
 public class BaseIT {
 
-  protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
-  protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
-  protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
   protected static final String SPECIFICATION_COMPLETE_TOPIC_NAME =
     "folio.test.specification-storage.specification.updated";
 
@@ -70,8 +64,6 @@ public class BaseIT {
 
   @Autowired
   protected FolioModuleMetadata metadata;
-  @Autowired
-  protected JdbcTemplate jdbcTemplate;
   @Autowired
   protected KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
@@ -135,21 +127,6 @@ public class BaseIT {
         .contentType(APPLICATION_JSON)
         .content(""))
       .andDo(log());
-  }
-
-  @SneakyThrows
-  protected void sendDataImportKafkaRecord(String eventPayloadFilePath, String topicName) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
-    String message = jsonObject.toString();
-    sendKafkaRecord(message, topicName);
-  }
-
-  @SneakyThrows
-  protected void sendQuickMarcKafkaRecord(String eventPayload) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), BaseIT.QM_COMPLETE_TOPIC_NAME);
   }
 
   @SneakyThrows

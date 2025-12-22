@@ -12,25 +12,19 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.folio.Instance;
 import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.SourceRecord;
-import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
-import org.folio.qm.domain.entity.RecordCreationStatus;
 import org.folio.qm.exception.OptimisticLockingException;
-import org.folio.qm.mapper.CreationStatusMapper;
 import org.folio.qm.service.ChangeManagerService;
-import org.folio.qm.service.DataImportJobService;
 import org.folio.qm.service.LinksService;
 import org.folio.qm.service.RecordService;
-import org.folio.qm.service.StatusService;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.validation.ValidationResult;
 import org.folio.spring.FolioExecutionContext;
@@ -57,17 +51,11 @@ class MarcRecordsServiceImplTest {
   private static final Integer OLD_VERSION = 0;
 
   @Mock
-  private DataImportJobService dataImportJobService;
-  @Mock
   private DefaultValuesPopulationService populationService;
   @Mock
   private ValidationService validationService;
   @Mock
   private ConversionService conversionService;
-  @Mock
-  private StatusService statusService;
-  @Mock
-  private CreationStatusMapper statusMapper;
   @Mock
   private ChangeManagerService changeManagerService;
   @Mock
@@ -165,10 +153,10 @@ class MarcRecordsServiceImplTest {
     verify(linksService).updateRecordLinks(quickMarcEdit);
   }
 
-  @MethodSource("createNewRecordCleanupTestData")
+  @MethodSource("createRecordCleanupTestData")
   @ParameterizedTest
-  void createNewRecord_positive_shouldRemoveFieldsBasedOnRecordType(MarcFormat marcFormat, List<FieldItem> input,
-                                                                    List<FieldItem> output) {
+  void createRecord_positive_shouldRemoveFieldsBasedOnRecordType(MarcFormat marcFormat, List<FieldItem> input,
+                                                                 List<FieldItem> output) {
     // Arrange
     var marc = new QuickMarcCreate().marcFormat(marcFormat);
     marc.getFields().addAll(input);
@@ -176,12 +164,9 @@ class MarcRecordsServiceImplTest {
     doNothing().when(populationService).populate(marc);
     when(validationService.validate(marc)).thenReturn(new ValidationResult(true, Collections.emptyList()));
     when(conversionService.convert(marcCaptor.capture(), eq(ParsedRecordDto.class))).thenReturn(new ParsedRecordDto());
-    when(statusService.findByJobExecutionId(any())).thenReturn(Optional.of(new RecordCreationStatus()));
-    when(statusMapper.fromEntity(any())).thenReturn(new CreationStatus());
-    when(dataImportJobService.executeDataImportJob(any(), any())).thenReturn(UUID.randomUUID());
 
     // Act
-    recordsService.createNewRecord(marc);
+    recordsService.createRecord(marc);
 
     // Assert
     var value = marcCaptor.getValue();
@@ -190,7 +175,7 @@ class MarcRecordsServiceImplTest {
       .containsExactlyElementsOf(output);
   }
 
-  public static Stream<Arguments> createNewRecordCleanupTestData() {
+  public static Stream<Arguments> createRecordCleanupTestData() {
     // Should keep 001 for Authority
     var field001 = new FieldItem().tag("001").content("001-content");
     var fieldNormal = new FieldItem().tag("100").content("$a 100-content");

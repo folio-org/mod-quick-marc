@@ -27,7 +27,7 @@ public class SpecificationEventListener {
     groupId = "#{folioKafkaProperties.listener['specification-updated'].groupId}",
     topicPattern = "#{folioKafkaProperties.listener['specification-updated'].topicPattern}",
     concurrency = "#{folioKafkaProperties.listener['specification-updated'].concurrency}",
-    containerFactory = "specificationUpdatedKafkaListenerContainerFactory")
+    containerFactory = "specificationContainerFactory")
   public void specificationUpdatedListener(SpecificationUpdatedEvent event, MessageHeaders messageHeaders) {
     runInFolioContext(getFolioExecutionContextFromSpecification(messageHeaders, event.tenantId(), moduleMetadata),
       () -> specificationService.updateSpecificationCache(event));

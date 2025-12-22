@@ -230,57 +230,6 @@ updateInfo:
       description: Information about the user who last updated the record (when available)
       $ref: '#/userInfo'
 
-creationStatus:
-  description: Status of MARC bibliographic record creation
-  type: object
-  properties:
-    qmRecordId:
-      description: ID of ParsedRecord to be created
-      type: string
-      format: uuid
-      example: c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1
-    externalId:
-      description: ID of created external record
-      type: string
-      format: uuid
-      example: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
-    marcId:
-      description: ID of created MARC record
-      type: string
-      format: uuid
-      example: 55a76b7b-841d-45b9-9e64-d0827b9e2480
-    jobExecutionId:
-      description: ID of job
-      type: string
-      format: uuid
-      example: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
-    status:
-      type: string
-      description: Status of creation
-      example: CREATED
-      enum:
-        - NEW
-        - IN_PROGRESS
-        - CREATED
-        - ERROR
-    errorMessage:
-      type: string
-      description: Error message for 'ERROR' status
-      example: Failed to create instance
-    metadata:
-      type: object
-      properties:
-        createdAt:
-          description: Date and time of creation of the status
-          type: string
-          format: date-time
-          example: '2020-07-14T12:20:10.000'
-        updatedAt:
-          description: Date and time of last successful update of the status
-          type: string
-          format: date-time
-          example: '2020-07-14T12:20:10.000'
-
 srsFieldItem:
   type: object
   description: MARC Field content

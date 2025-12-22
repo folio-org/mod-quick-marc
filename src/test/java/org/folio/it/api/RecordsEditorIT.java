@@ -6,11 +6,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static java.util.UUID.fromString;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.folio.support.utils.ApiTestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
@@ -25,9 +22,6 @@ import static org.folio.support.utils.ApiTestUtils.recordsEditorStatusPath;
 import static org.folio.support.utils.ApiTestUtils.recordsEditorValidatePath;
 import static org.folio.support.utils.ApiTestUtils.sourceStoragePath;
 import static org.folio.support.utils.ApiTestUtils.usersByIdPath;
-import static org.folio.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.support.utils.DataBaseTestUtils.getCreationStatusById;
-import static org.folio.support.utils.DataBaseTestUtils.saveCreationStatus;
 import static org.folio.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.support.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.support.utils.JsonTestUtils.readQuickMarc;
@@ -69,16 +63,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import lombok.extern.log4j.Log4j2;
 import org.folio.it.BaseIT;
-import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.ValidatableRecord;
-import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.spring.testing.extension.DatabaseCleanup;
 import org.folio.spring.testing.type.IntegrationTest;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
@@ -241,7 +232,6 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Nested
-  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   class GetCreationStatusCases {
 
     @Test
@@ -249,12 +239,10 @@ class RecordsEditorIT extends BaseIT {
     void testGetCreationStatus() throws Exception {
       var id = UUID.randomUUID().toString();
       var expectedDatePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+");
-      saveCreationStatus(id, id, metadata, jdbcTemplate);
 
       doGet(recordsEditorStatusPath(QM_RECORD_ID, id))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.qmRecordId").value(id))
-        .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
         .andExpect(jsonPath("$.metadata").value(notNullValue()))
         .andExpect(jsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern)));
     }
@@ -299,7 +287,6 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Nested
-  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   class CreateRecordCases {
 
     public static Stream<Arguments> testCreateMarcRecordWithout001FieldCases() {
@@ -323,19 +310,9 @@ class RecordsEditorIT extends BaseIT {
     void testCreateMarcRecordPositive(String requestBody, String eventBody) throws Exception {
       var quickMarcRecord = readQuickMarc(requestBody, QuickMarcCreate.class);
 
-      var result = doPost(recordsEditorPath(), quickMarcRecord)
+      doPost(recordsEditorPath(), quickMarcRecord)
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.jobExecutionId").value(JOB_EXECUTION_ID))
-        .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
-        .andReturn().getResponse().getContentAsString();
-
-      var qmRecordId = getObjectFromJson(result, CreationStatus.class).getQmRecordId();
-
-      // send DI_COMPLETE topic event
-      sendDataImportKafkaRecord(eventBody, DI_COMPLETE_TOPIC_NAME);
-
-      // wait until the status of creation changed to CREATED
-      awaitAndAssertStatus(qmRecordId);
+        .andExpect(jsonPath("$.jobExecutionId").value(JOB_EXECUTION_ID));
     }
 
     @ParameterizedTest
@@ -346,19 +323,9 @@ class RecordsEditorIT extends BaseIT {
       // remove the 001 field from the record and try to create a record
       quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("001"));
 
-      var result = doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
+      doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.jobExecutionId").value(JOB_EXECUTION_ID))
-        .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
-        .andReturn().getResponse().getContentAsString();
-
-      var qmRecordId = getObjectFromJson(result, CreationStatus.class).getQmRecordId();
-
-      // send DI_COMPLETE topic event
-      sendDataImportKafkaRecord(eventBody, DI_COMPLETE_TOPIC_NAME);
-
-      // wait until the status of creation changed to CREATED
-      awaitAndAssertStatus(qmRecordId);
+        .andExpect(jsonPath("$.jobExecutionId").value(JOB_EXECUTION_ID));
     }
 
     @Test
@@ -442,18 +409,6 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
         .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
         .andExpect(jsonPath("$.message").value(containsString("Connection reset executing")));
-    }
-
-    private void awaitAndAssertStatus(UUID qmRecordId) {
-      await().atMost(5, SECONDS)
-        .untilAsserted(() -> assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
-          .isEqualTo(RecordCreationStatusEnum.CREATED));
-      var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
-      assertThat(creationStatus)
-        .hasNoNullFieldsOrPropertiesExcept("errorMessage")
-        .hasFieldOrPropertyWithValue("id", qmRecordId)
-        .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
-        .hasFieldOrPropertyWithValue("jobExecutionId", UUID.fromString(JOB_EXECUTION_ID));
     }
   }
 

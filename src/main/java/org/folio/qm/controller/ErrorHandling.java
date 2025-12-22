@@ -14,7 +14,6 @@ import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.ValidationResult;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.exception.FieldsValidationException;
-import org.folio.qm.exception.JobProfileNotFoundException;
 import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
@@ -145,12 +144,6 @@ public class ErrorHandling {
     log.warn(e.getMessage());
     var message = String.format(TYPE_MISMATCH_MSG_PATTERN, e.getParameter().getParameterName());
     return buildBadRequestResponse(message);
-  }
-
-  @ExceptionHandler(JobProfileNotFoundException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Error handleJobProfileNotFoundException(JobProfileNotFoundException e) {
-    return buildBadRequestResponse(e.getMessage());
   }
 
   @ExceptionHandler(ConstraintViolationException.class)

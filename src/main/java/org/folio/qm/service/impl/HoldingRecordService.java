@@ -1,6 +1,6 @@
 package org.folio.qm.service.impl;
 
-import static org.folio.qm.util.DataImportEventUtils.FolioRecord.MARC_HOLDINGS;
+import static org.folio.qm.client.model.RecordTypeEnum.HOLDING;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +78,7 @@ public class HoldingRecordService extends RecordService<Holdings> {
 
   @Override
   public String getMapperName() {
-    return MARC_HOLDINGS.name();
+    return HOLDING.getValue();
   }
 
   private void updateHolding(HoldingsRecord holding, Holdings mappedHolding) {

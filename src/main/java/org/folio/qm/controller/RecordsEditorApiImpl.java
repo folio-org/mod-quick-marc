@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarcCreate;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.rest.resource.RecordsEditorApi;
 import org.folio.qm.service.MarcRecordsService;
@@ -47,5 +48,11 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
                                                            Boolean ignoreAutoLinkingEnabled) {
     var quickMarc = marcRecordsService.suggestLinks(quickMarcView, authoritySearchParameter, ignoreAutoLinkingEnabled);
     return ResponseEntity.ok(quickMarc);
+  }
+
+  @Override
+  public ResponseEntity<Void> putRecord(UUID id, QuickMarcEdit quickMarc) {
+    marcRecordsService.updateById(id, quickMarc);
+    return ResponseEntity.accepted().build();
   }
 }

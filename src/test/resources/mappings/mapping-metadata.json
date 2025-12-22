@@ -1,0 +1,43 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/mapping-metadata/type/marc-bib"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "mapping-metadata/marcBibMappingMetadata.json"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/mapping-metadata/type/marc-authority"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "mapping-metadata/marcAuthorityMappingMetadata.json"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/mapping-metadata/type/marc-holdings"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "mapping-metadata/marcHoldingsMappingMetadata.json"
+      }
+    }
+  ]
+}

@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import org.folio.qm.client.model.ParsedRecord;
+import org.folio.ParsedRecord;
 import org.folio.qm.converter.field.FieldItemConverter;
 import org.folio.qm.converter.field.VariableFieldConverter;
 import org.folio.qm.domain.dto.FieldItem;

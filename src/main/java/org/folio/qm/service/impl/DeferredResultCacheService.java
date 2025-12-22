@@ -2,7 +2,6 @@ package org.folio.qm.service.impl;
 
 import static java.util.Objects.requireNonNull;
 import static org.folio.qm.config.CacheNames.DATA_IMPORT_RESULT_CACHE;
-import static org.folio.qm.config.CacheNames.QM_UPDATE_RESULT_CACHE;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +20,6 @@ public class DeferredResultCacheService {
 
   private final CacheManager cacheManager;
   private final FolioExecutionContext context;
-
-  @Cacheable(cacheNames = QM_UPDATE_RESULT_CACHE, key = "@folioExecutionContext.tenantId + ':' + #recordId")
-  public DeferredResult<ResponseEntity<Void>> getUpdateActionResult(UUID recordId) {
-    log.info("New DeferredResult was created for [UPDATE] action and [{}] recordId", recordId);
-    return new DeferredResult<>(60000L);
-  }
-
-  public void evictUpdateActionResult(UUID recordId) {
-    var key = context.getTenantId() + ":" + recordId;
-    log.debug("evictUpdateActionResult:: trying to evict [UPDATE] action by key: {}", key);
-    requireNonNull(cacheManager.getCache(QM_UPDATE_RESULT_CACHE)).evict(key);
-  }
 
   @Cacheable(cacheNames = DATA_IMPORT_RESULT_CACHE, key = "@folioExecutionContext.tenantId + ':' + #jobId")
   public DeferredResult<ResponseEntity<Void>> getDataImportActionResult(UUID jobId) {

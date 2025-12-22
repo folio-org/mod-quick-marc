@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import lombok.RequiredArgsConstructor;
+import org.folio.ParsedRecord;
 import org.folio.qm.client.model.AdditionalInfo;
-import org.folio.qm.client.model.ParsedRecord;
 import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
@@ -41,7 +41,7 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
     var format = source.getMarcFormat();
     return new ParsedRecordDto()
       .setRecordType(typeMapper.toDto(format))
-      .setParsedRecord(new ParsedRecord(convertToParsedContent(source)))
+      .setParsedRecord(new ParsedRecord().withContent(convertToParsedContent(source)))
       .setAdditionalInfo(new AdditionalInfo(source.getSuppressDiscovery()));
   }
 
@@ -55,7 +55,7 @@ public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, P
     return quickMarc;
   }
 
-  private JsonNode convertToParsedContent(T source) {
+  public JsonNode convertToParsedContent(T source) {
     var marcRecord = recordConverter.convert(source);
     try (ByteArrayOutputStream os = new ByteArrayOutputStream();
          QmMarcJsonWriter writer = new QmMarcJsonWriter(os)) {

@@ -15,6 +15,7 @@ import org.folio.qm.domain.dto.ValidationResult;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.JobProfileNotFoundException;
+import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.QuickMarcException;
@@ -170,6 +171,13 @@ public class ErrorHandling {
   @ResponseStatus(HttpStatus.CONFLICT)
   public Error handleOptimisticLockingException(OptimisticLockingException e) {
     return ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, e.getMessage());
+  }
+
+  @ExceptionHandler(MappingMetadataException.class)
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+  public Error handleMappingMetadataException(MappingMetadataException e) {
+    log.error("Mapping metadata error occurred: ", e);
+    return buildError(HttpStatus.UNPROCESSABLE_ENTITY, INTERNAL, e.getMessage());
   }
 
   @ExceptionHandler(Exception.class)

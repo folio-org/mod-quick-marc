@@ -3,6 +3,7 @@ package org.folio.qm.client.model;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.folio.ParsedRecord;
 
 @Data
 @NoArgsConstructor

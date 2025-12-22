@@ -47,10 +47,10 @@ spring:
   cache:
     cache-names:
       - job-profiles
-      - qm-update-results
       - data-import-results
       - linking-rules-results
       - specifications
+      - mapping-metadata-cache
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
   cloud:
@@ -104,10 +104,6 @@ folio:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
         topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.DI_ERROR
         group-id: ${folio.environment}-mod-quick-marc-di-error-group
-      qm-completed:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.QM_COMPLETED
-        group-id: ${folio.environment}-mod-quick-marc-qm-group
       specification-updated:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:1}
         topic-pattern: (${folio.environment}\.)(.*\.)specification-storage\.specification\.updated

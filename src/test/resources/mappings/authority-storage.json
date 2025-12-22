@@ -1,0 +1,29 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/authority-storage/authorities/00000000-0000-0000-0000-000000000003"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"id\":\"00000000-0000-0000-0000-000000000003\",\"personalName\":\"Mozart, Wolfgang Amadeus, 1756-1791.\",\"sftPersonalName\":[],\"saftPersonalName\":[],\"sftPersonalNameTitle\":[],\"saftPersonalNameTitle\":[],\"sftCorporateName\":[],\"saftCorporateName\":[],\"sftCorporateNameTitle\":[],\"saftCorporateNameTitle\":[],\"sftMeetingName\":[],\"saftMeetingName\":[],\"sftMeetingNameTitle\":[],\"saftMeetingNameTitle\":[],\"sftUniformTitle\":[],\"saftUniformTitle\":[],\"sftNamedEvent\":[],\"saftNamedEvent\":[],\"sftChronTerm\":[],\"saftChronTerm\":[],\"sftMediumPerfTerm\":[],\"saftMediumPerfTerm\":[],\"sftGeographicSubdivision\":[],\"saftGeographicSubdivision\":[],\"sftChronSubdivision\":[],\"saftChronSubdivision\":[],\"sftFormSubdivision\":[],\"saftFormSubdivision\":[],\"sftGeneralSubdivision\":[],\"saftGeneralSubdivision\":[],\"sftTopicalTerm\":[],\"saftTopicalTerm\":[],\"subjectHeadings\":\"a\",\"sftGeographicName\":[],\"saftGeographicName\":[],\"sftGenreTerm\":[],\"saftGenreTerm\":[],\"identifiers\":[{\"value\":\"393893\",\"identifierTypeId\":\"5d164f4b-0b15-4e42-ae75-cfcf85318ad9\"},{\"value\":\"(OCoLC)63611770\",\"identifierTypeId\":\"7e591197-f335-4afb-bc6d-a6d76ca3bace\"},{\"value\":\"2001000234\",\"identifierTypeId\":\"c858e4f2-2b6b-4385-842b-60732ee14abb\"},{\"value\":\"393893\",\"identifierTypeId\":\"7e591197-f335-4afb-bc6d-a6d76ca3bace\"}],\"notes\":[],\"naturalId\":\"393893\"}"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/authority-storage/authorities/00000000-0000-0000-0000-000000000003"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

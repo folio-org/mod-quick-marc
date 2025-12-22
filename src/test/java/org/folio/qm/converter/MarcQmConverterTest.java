@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.folio.qm.client.model.ParsedRecord;
+import org.folio.ParsedRecord;
 import org.folio.qm.client.model.ParsedRecordDto;
 import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.domain.dto.QuickMarcEdit;

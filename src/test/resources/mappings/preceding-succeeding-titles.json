@@ -1,0 +1,17 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/preceding-succeeding-titles/instances/00000000-0000-0000-0000-000000000001"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"precedingSucceedingTitles\":[],\"totalRecords\":0}"
+      }
+    }
+  ]
+}

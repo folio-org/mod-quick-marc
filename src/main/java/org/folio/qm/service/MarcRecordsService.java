@@ -6,8 +6,6 @@ import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.async.DeferredResult;
 
 public interface MarcRecordsService {
 
@@ -24,9 +22,8 @@ public interface MarcRecordsService {
    *
    * @param parsedRecordId DTO id
    * @param quickMarc      QuickMarc object
-   * @param updateResult   result to set handlers on it
    */
-  void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc, DeferredResult<ResponseEntity<Void>> updateResult);
+  void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc);
 
   /**
    * This method retrieves status of new record creation.

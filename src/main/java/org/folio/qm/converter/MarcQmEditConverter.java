@@ -27,7 +27,7 @@ public class MarcQmEditConverter extends MarcQmConverter<QuickMarcEdit> {
   @Override
   public ParsedRecordDto convert(@NonNull QuickMarcEdit source) {
     var parsedRecordDto = Objects.requireNonNull(super.convert(updateRecordTimestamp(source)));
-    parsedRecordDto.getParsedRecord().setId(source.getParsedRecordId());
+    parsedRecordDto.getParsedRecord().setId(source.getParsedRecordId().toString());
     return parsedRecordDto
       .setId(source.getParsedRecordDtoId())
       .setExternalIdsHolder(convertExternalIdsHolder(source));

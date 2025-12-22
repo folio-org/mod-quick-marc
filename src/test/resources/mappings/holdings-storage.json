@@ -1,0 +1,29 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/holdings-storage/holdings/00000000-0000-0000-0000-000000000002"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"id\":\"00000000-0000-0000-0000-000000000002\",\"hrid\":\"393893\",\"holdingsTypeId\":\"03c9c400-b9e3-4a07-ac0e-05ab470233ed\",\"formerIds\":[\"(OCoLC)63611770\",\"393893\"],\"electronicAccess\":[],\"notes\":[],\"holdingsStatements\":[],\"holdingsStatementsForIndexes\":[],\"holdingsStatementsForSupplements\":[],\"administrativeNotes\":[],\"statisticalCodeIds\":[],\"sourceId\":\"036ee84a-6afd-4c3c-9ad3-4a12ab875f59\"}"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/holdings-storage/holdings/00000000-0000-0000-0000-000000000002"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

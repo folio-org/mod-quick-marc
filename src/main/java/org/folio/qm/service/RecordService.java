@@ -99,8 +99,7 @@ public abstract class RecordService<T> {
         .withContent(marcQmConverter.convertToParsedContent(quickMarc)))
       .withExternalIdsHolder(getExternalIdsHolder(quickMarc))
       .withAdditionalInfo(new AdditionalInfo()
-        .withSuppressDiscovery(quickMarc.getSuppressDiscovery()))
-      .withMetadata(existingRecord.getMetadata());
+        .withSuppressDiscovery(quickMarc.getSuppressDiscovery()));
   }
 
   private JsonObject retrieveParsedContent(QuickMarcEdit quickMarc) {

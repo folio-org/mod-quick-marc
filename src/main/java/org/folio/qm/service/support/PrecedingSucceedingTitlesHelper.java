@@ -3,7 +3,7 @@ package org.folio.qm.service.support;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.folio.qm.client.model.Instance;
+import org.folio.qm.domain.InstanceRecord;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
 import org.springframework.stereotype.Component;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrecedingSucceedingTitlesHelper {
 
-  public InstancePrecedingSucceedingTitles updatePrecedingSucceedingTitles(Instance instance) {
+  public InstancePrecedingSucceedingTitles updatePrecedingSucceedingTitles(InstanceRecord instance) {
     List<InstancePrecedingSucceedingTitle> titlesList = new ArrayList<>();
     preparePrecedingTitles(instance, titlesList);
     prepareSucceedingTitles(instance, titlesList);
     return new InstancePrecedingSucceedingTitles(titlesList, (long) titlesList.size());
   }
 
-  private void preparePrecedingTitles(Instance instance, List<InstancePrecedingSucceedingTitle> preparedTitles) {
+  private void preparePrecedingTitles(InstanceRecord instance, List<InstancePrecedingSucceedingTitle> preparedTitles) {
     if (instance.getPrecedingTitles() != null) {
       for (InstancePrecedingSucceedingTitle parent : instance.getPrecedingTitles()) {
         var precedingSucceedingTitle = new InstancePrecedingSucceedingTitle(
@@ -34,7 +34,7 @@ public class PrecedingSucceedingTitlesHelper {
     }
   }
 
-  private void prepareSucceedingTitles(Instance instance, List<InstancePrecedingSucceedingTitle> preparedTitles) {
+  private void prepareSucceedingTitles(InstanceRecord instance, List<InstancePrecedingSucceedingTitle> preparedTitles) {
     if (instance.getSucceedingTitles() != null) {
       for (InstancePrecedingSucceedingTitle child : instance.getSucceedingTitles()) {
         var precedingSucceedingTitle = new InstancePrecedingSucceedingTitle(

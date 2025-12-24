@@ -7,12 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
-@Primary
-@Component
+//@Primary
+//@Component
 @RequiredArgsConstructor
 public class MarcQmToMarc4jConverter implements Converter<BaseMarcRecord, Record> {
 

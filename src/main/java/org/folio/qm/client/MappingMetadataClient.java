@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface MappingMetadataClient {
 
   @GetMapping(value = "/type/{recordType}")
-  MappingMetadata getMappingMetadata(@PathVariable("recordType") String recordType);
+  MappingMetadata getMappingMetadata(@PathVariable String recordType);
 
   record MappingMetadata(String mappingRules, String mappingParams) {
   }

@@ -1,53 +1,28 @@
 package org.folio.qm.service.impl;
 
-import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
-import static org.apache.commons.lang3.BooleanUtils.isTrue;
-import static org.folio.qm.client.model.RecordTypeEnum.BIB;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.ExternalIdsHolder;
-import org.folio.qm.client.InstanceStorageClient;
-import org.folio.qm.client.PrecedingSucceedingTitlesClient;
-import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.Instance;
-import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.InstanceRecord;
+import org.folio.qm.domain.QuickMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarcEdit;
-import org.folio.qm.mapper.InstanceRecordMapper;
-import org.folio.qm.mapper.MarcTypeMapper;
+import org.folio.qm.service.MarcMappingService;
 import org.folio.qm.service.RecordService;
-import org.folio.qm.service.support.MappingMetadataProvider;
-import org.folio.qm.service.support.PrecedingSucceedingTitlesHelper;
-import org.folio.spring.exception.NotFoundException;
+import org.folio.qm.service.storage.folio.FolioRecordService;
+import org.folio.qm.service.storage.source.SourceRecordService;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class InstanceRecordService extends RecordService<org.folio.Instance> {
+public class InstanceRecordService extends RecordService<InstanceRecord> {
 
-  private final InstanceStorageClient instanceStorageClient;
-  private final PrecedingSucceedingTitlesHelper precedingSucceedingTitlesHelper;
-  private final PrecedingSucceedingTitlesClient precedingSucceedingTitlesClient;
-  private final InstanceRecordMapper mapper;
+  private final FolioRecordService<InstanceRecord> folioRecordService;
 
-  protected InstanceRecordService(MappingMetadataProvider mappingMetadataProvider,
-                                  SourceStorageClient sourceStorageClient,
-                                  MarcQmConverter<QuickMarcEdit> marcQmConverter,
-                                  MarcTypeMapper typeMapper,
-                                  InstanceStorageClient instanceStorageClient,
-                                  PrecedingSucceedingTitlesHelper precedingSucceedingTitlesHelper,
-                                  PrecedingSucceedingTitlesClient precedingSucceedingTitlesClient,
-                                  InstanceRecordMapper mapper) {
-    super(mappingMetadataProvider, sourceStorageClient, marcQmConverter, typeMapper);
-    this.instanceStorageClient = instanceStorageClient;
-    this.precedingSucceedingTitlesHelper = precedingSucceedingTitlesHelper;
-    this.precedingSucceedingTitlesClient = precedingSucceedingTitlesClient;
-    this.mapper = mapper;
+  protected InstanceRecordService(SourceRecordService sourceRecordService,
+                                  MarcMappingService<InstanceRecord> mappingService,
+                                  FolioRecordService<InstanceRecord> folioRecordService) {
+    super(sourceRecordService, mappingService);
+    this.folioRecordService = folioRecordService;
   }
 
   @Override
@@ -56,81 +31,42 @@ public class InstanceRecordService extends RecordService<org.folio.Instance> {
   }
 
   @Override
-  public void update(QuickMarcEdit quickMarc) {
-    updateSrsRecord(quickMarc);
-    org.folio.Instance mappedInstance = getMappedRecord(quickMarc);
-    var instanceId = quickMarc.getExternalId().toString();
-    var existingInstance = instanceStorageClient.getInstanceById(instanceId);
-    if (existingInstance == null) {
-      throw new NotFoundException(String.format("Instance record with id: %s not found", instanceId));
-    }
-    var updatedInstance = updatedInstance(existingInstance, mappedInstance, instanceId);
-    updateTitles(updatedInstance, instanceId);
+  public void update(QuickMarcRecord qmRecord) {
+    log.debug("update:: Updating instance record with id: {}", qmRecord.getExternalId());
+
+    updateSrsRecord(qmRecord);
+    var instanceId = qmRecord.getExternalId();
+    var existingInstance = folioRecordService.get(instanceId);
+    var mappedInstance = getMappedRecord(qmRecord, existingInstance);
+    folioRecordService.update(instanceId, mappedInstance);
   }
 
   @Override
-  public ExternalIdsHolder getExternalIdsHolder(QuickMarcEdit quickMarc) {
+  public ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
     return new ExternalIdsHolder()
-      .withInstanceId(quickMarc.getExternalId().toString())
-      .withInstanceHrid(quickMarc.getExternalHrid());
+      .withInstanceId(qmRecord.getExternalId().toString())
+      .withInstanceHrid(qmRecord.getExternalHrid());
   }
 
   @Override
-  public MappingRecordTypeEnum getMapperRecordType() {
-    return MappingRecordTypeEnum.MARC_BIB;
-  }
+  public void create(QuickMarcRecord qmRecord) {
+    log.debug("create:: Creating new instance record");
 
-  @Override
-  public String getMapperName() {
-    return BIB.getValue();
-  }
+    // Step 1: Map QuickMarcRecord to org.folio.Instance using ParsedContent
+    var mappedInstance = getMappedRecord(qmRecord);
 
-  private Instance updatedInstance(Instance existingInstance, org.folio.Instance mappedInstance, String instanceId) {
-    var updatedInstance = mergeRecords(existingInstance, mappedInstance);
-    instanceStorageClient.updateInstance(instanceId, updatedInstance);
-    log.debug("Instance record with id: {} has been updated successfully", instanceId);
-    return updatedInstance;
-  }
+    // Step 2: Convert to client model and create in storage (gets generated ID and HRID)
+    var createdInstance = folioRecordService.create(mappedInstance);
+    log.debug("create:: Instance created with id: {}", createdInstance.getId());
 
-  private void updateTitles(Instance updatedInstance, String instanceId) {
-    var titles = precedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(updatedInstance);
-    precedingSucceedingTitlesClient.updateTitles(instanceId, titles);
-    log.debug("Preceding/succeeding title records for instance id: {} have been updated successfully", instanceId);
-  }
+    // Step 4: Update QuickMarcRecord with generated IDs
+    qmRecord.setExternalId(UUID.fromString(createdInstance.getId()));
+    qmRecord.setExternalHrid(createdInstance.getHrid());
 
-  private Instance mergeRecords(Instance existingInstance, org.folio.Instance mappedInstance) {
+    // Step 5: Create SRS record with external IDs (add 001 field for Instance)
+    createSrsRecord(qmRecord, true);  // true = add 001 field with HRID
 
-    log.debug("mergeRecords:: Merging existing instance with id: {} and mapped instance",
-      existingInstance.getId());
-    try {
-      mappedInstance.setId(existingInstance.getId());
-      mappedInstance.setVersion(existingInstance.getVersion());
-      if (isNotTrue(existingInstance.getDeleted()) && isTrue(mappedInstance.getDeleted())) {
-        mappedInstance.withDiscoverySuppress(true);
-        mappedInstance.withStaffSuppress(true);
-      } else {
-        mappedInstance.withStaffSuppress(existingInstance.getStaffSuppress());
-        mappedInstance.withDiscoverySuppress(existingInstance.getDiscoverySuppress());
-      }
-      mergeInstances(existingInstance, mappedInstance);
-      return existingInstance;
-    } catch (Exception e) {
-      log.error("Error updating instance", e);
-      throw e;
-    }
-  }
-
-  private void mergeInstances(Instance existing, org.folio.Instance mapped) {
-    var statisticalCodeIds = new HashSet<>(Optional.ofNullable(existing.getStatisticalCodeIds())
-      .orElse(Collections.emptySet()));
-    var natureOfContentTermIds = new HashSet<>(Optional.ofNullable(existing.getNatureOfContentTermIds())
-      .orElse(Collections.emptySet()));
-    @SuppressWarnings("VariableDeclarationUsageDistance")
-    var administrativeNotes = new ArrayList<>(Optional.ofNullable(existing.getAdministrativeNotes())
-      .orElse(Collections.emptyList()));
-    mapper.merge(mapped, existing);
-    existing.setStatisticalCodeIds(statisticalCodeIds);
-    existing.setNatureOfContentTermIds(natureOfContentTermIds);
-    existing.setAdministrativeNotes(administrativeNotes);
+    // Step 6: Convert to QuickMarcView and return
+    qmRecord.setFolioRecord(createdInstance);
   }
 }

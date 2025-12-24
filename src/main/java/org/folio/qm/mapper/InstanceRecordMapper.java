@@ -1,5 +1,7 @@
 package org.folio.qm.mapper;
 
+import org.folio.Instance;
+import org.folio.qm.domain.InstanceRecord;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -9,5 +11,5 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface InstanceRecordMapper {
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void merge(org.folio.Instance source, @MappingTarget org.folio.qm.client.model.Instance target);
+  void merge(Instance source, @MappingTarget InstanceRecord target);
 }

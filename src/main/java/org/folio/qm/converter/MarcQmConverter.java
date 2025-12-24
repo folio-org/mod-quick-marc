@@ -26,9 +26,8 @@ import org.folio.qm.util.QmMarcJsonWriter;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class MarcQmConverter<T extends BaseMarcRecord> implements Converter<T, ParsedRecordDto> {
 

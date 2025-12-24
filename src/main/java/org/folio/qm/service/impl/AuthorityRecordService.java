@@ -1,42 +1,28 @@
 package org.folio.qm.service.impl;
 
-import static org.folio.qm.client.model.RecordTypeEnum.AUTHORITY;
-
+import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
-import org.folio.ActionProfile;
-import org.folio.Authority;
 import org.folio.ExternalIdsHolder;
-import org.folio.qm.client.AuthorityStorageClient;
-import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.MappingRecordTypeEnum;
-import org.folio.qm.converter.MarcQmConverter;
+import org.folio.qm.domain.AuthorityRecord;
+import org.folio.qm.domain.QuickMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarcEdit;
-import org.folio.qm.mapper.AuthorityRecordMapper;
-import org.folio.qm.mapper.MarcTypeMapper;
+import org.folio.qm.service.MarcMappingService;
 import org.folio.qm.service.RecordService;
-import org.folio.qm.service.support.MappingMetadataProvider;
-import org.folio.spring.exception.NotFoundException;
+import org.folio.qm.service.storage.folio.FolioRecordService;
+import org.folio.qm.service.storage.source.SourceRecordService;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class AuthorityRecordService extends RecordService<Authority> {
+public class AuthorityRecordService extends RecordService<AuthorityRecord> {
 
-  private static final String AUTHORITY_EXTENDED = "AUTHORITY_EXTENDED";
+  private final FolioRecordService<AuthorityRecord> folioRecordService;
 
-  private final AuthorityStorageClient authorityStorageClient;
-  private final AuthorityRecordMapper mapper;
-
-  protected AuthorityRecordService(MappingMetadataProvider mappingMetadataProvider,
-                                   SourceStorageClient sourceStorageClient,
-                                   MarcQmConverter<QuickMarcEdit> marcQmConverter,
-                                   MarcTypeMapper typeMapper,
-                                   AuthorityStorageClient authorityStorageClient,
-                                   AuthorityRecordMapper mapper) {
-    super(mappingMetadataProvider, sourceStorageClient, marcQmConverter, typeMapper);
-    this.authorityStorageClient = authorityStorageClient;
-    this.mapper = mapper;
+  protected AuthorityRecordService(SourceRecordService sourceRecordService,
+                                   MarcMappingService<AuthorityRecord> mappingService,
+                                   FolioRecordService<AuthorityRecord> folioRecordService) {
+    super(sourceRecordService, mappingService);
+    this.folioRecordService = folioRecordService;
   }
 
   @Override
@@ -45,43 +31,43 @@ public class AuthorityRecordService extends RecordService<Authority> {
   }
 
   @Override
-  public void update(QuickMarcEdit quickMarc) {
-    updateSrsRecord(quickMarc);
-    var mappedAuthority = getMappedRecord(quickMarc);
-    var authorityId = quickMarc.getExternalId().toString();
-    var existingAuthority = authorityStorageClient.getAuthorityById(authorityId);
-    if (existingAuthority == null) {
-      throw new NotFoundException(String.format("Authority record with id: %s not found", authorityId));
-    }
-    var updatedAuthority = prepareForUpdate(existingAuthority, mappedAuthority);
-    authorityStorageClient.updateAuthority(authorityId, updatedAuthority);
-    log.debug("Authority record with id: {} has been updated successfully", authorityId);
+  public void update(QuickMarcRecord qmRecord) {
+    log.debug("update:: Updating authority record");
+
+    updateSrsRecord(qmRecord);
+    var authorityId = qmRecord.getExternalId();
+    var existingAuthority = folioRecordService.get(authorityId);
+    var mappedAuthority = getMappedRecord(qmRecord, existingAuthority);
+    folioRecordService.update(authorityId, mappedAuthority);
+    log.debug("update:: Authority record with id: {} has been updated successfully", authorityId);
   }
 
   @Override
-  public ExternalIdsHolder getExternalIdsHolder(QuickMarcEdit quickMarc) {
+  public ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
     return new ExternalIdsHolder()
-      .withAuthorityId(quickMarc.getExternalId().toString())
-      .withAuthorityHrid(quickMarc.getExternalHrid());
+      .withAuthorityId(qmRecord.getExternalId().toString())
+      .withAuthorityHrid(qmRecord.getExternalHrid());
   }
 
   @Override
-  public MappingRecordTypeEnum getMapperRecordType() {
-    return MappingRecordTypeEnum.MARC_AUTHORITY;
-  }
+  public void create(QuickMarcRecord qmRecord) {
+    log.debug("create:: Creating new authority record");
 
-  @Override
-  public String getMapperName() {
-    return Boolean.parseBoolean(System.getenv().getOrDefault(AUTHORITY_EXTENDED, "false"))
-      ? ActionProfile.FolioRecord.MARC_AUTHORITY_EXTENDED.value()
-      : AUTHORITY.getValue();
-  }
+    // Step 1: Map QuickMarcRecord to Authority
+    var mappedAuthority = getMappedRecord(qmRecord);
 
-  private Authority prepareForUpdate(Authority existingRecord, Authority mappedRecord) {
-    mappedRecord.setId(existingRecord.getId());
-    mappedRecord.setVersion(existingRecord.getVersion());
-    mappedRecord.setSource(Authority.Source.MARC);
-    mapper.merge(mappedRecord, existingRecord);
-    return existingRecord;
+    // Step 2: Create Authority in storage (gets generated ID and natural ID)
+    var createdAuthority = folioRecordService.create(mappedAuthority);
+    log.debug("create:: Authority created with id: {}", createdAuthority.getId());
+
+    // Step 3: Update QuickMarcRecord with generated IDs
+    qmRecord.setExternalId(UUID.fromString(createdAuthority.getId()));
+    qmRecord.setExternalHrid(createdAuthority.getNaturalId());
+
+    // Step 4: Create SRS record with external IDs (no 001 field for Authority)
+    createSrsRecord(qmRecord, false);  // false = don't add 001 field
+
+    // Step 5: Convert to QuickMarcView and return
+    qmRecord.setFolioRecord(createdAuthority);
   }
 }

@@ -22,13 +22,6 @@ public class TestEntitiesUtils {
   public static final String SOURCE_RECORD_BIB_PATH = SOURCE_RECORDS_DIR + "/bibliographic.json";
   public static final String SOURCE_RECORD_HOLDINGS_PATH = SOURCE_RECORDS_DIR + "/holdings.json";
   public static final String SOURCE_RECORD_AUTHORITY_PATH = SOURCE_RECORDS_DIR + "/authority.json";
-  public static final String DI_EVENT_DIR = SAMPLES_DIR + "/di-event";
-  public static final String DI_EVENT_WITH_INSTANCE = DI_EVENT_DIR + "/complete-event-with-instance.json";
-  public static final String DI_EVENT_WITH_AUTHORITY = DI_EVENT_DIR + "/complete-event-with-authority.json";
-  public static final String DI_EVENT_WITH_HOLDINGS = DI_EVENT_DIR + "/complete-event-with-holdings.json";
-  public static final String DI_EVENT_WITHOUT_RECORD = DI_EVENT_DIR + "/complete-event-without-external-record.json";
-  public static final String DI_EVENT_WITH_INVALID_JSON = DI_EVENT_DIR + "/complete-event-with-invalid-json.json";
-  public static final String DI_ERROR_EVENT = DI_EVENT_DIR + "/error-event.json";
 
   public static final String JOB_EXECUTION_ID = "a7fb1c32-1ffb-4a22-a76a-4067284fe68d";
   public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";

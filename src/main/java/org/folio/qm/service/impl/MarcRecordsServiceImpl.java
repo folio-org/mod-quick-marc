@@ -12,23 +12,25 @@ import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
 import org.folio.qm.client.model.SourceRecord;
+import org.folio.qm.converter.QuickMarcRecordConverter;
+import org.folio.qm.converter.SourceRecordConverter;
+import org.folio.qm.domain.QuickMarcRecord;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.exception.FieldsValidationException;
-import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.mapper.LinksSuggestionsMapper;
 import org.folio.qm.mapper.UserMapper;
-import org.folio.qm.service.ChangeManagerService;
 import org.folio.qm.service.FieldProtectionSetterService;
 import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
+import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.validation.SkippedValidationError;
 import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
-import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,10 +38,8 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class MarcRecordsServiceImpl implements MarcRecordsService {
 
-  private final ChangeManagerService changeManagerService;
-  private final DefaultValuesPopulationService defaultValuesPopulationService;
+  private final SourceRecordService sourceRecordService;
   private final FieldProtectionSetterService protectionSetterService;
-  private final ConversionService conversionService;
   private final ValidationService validationService;
   private final LinksService linksService;
   private final MarcRecordServiceRegistry marcRecordServiceRegistry;
@@ -49,12 +49,16 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
 
   private final LinksSuggestionsMapper linksSuggestionsMapper;
   private final UserMapper userMapper;
+  private final Converter<QuickMarcCreate, QuickMarcRecord> quickMarcCreateQuickMarcRecordConverter;
+  private final Converter<QuickMarcEdit, QuickMarcRecord> quickMarcEditQuickMarcRecordConverter;
+  private final QuickMarcRecordConverter quickMarcRecordConverter;
+  private final SourceRecordConverter sourceRecordConverter;
 
   @Override
   public QuickMarcView findByExternalId(UUID externalId) {
     log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
-    var sourceRecord = changeManagerService.getSourceRecordByExternalId(externalId.toString());
-    var quickMarc = conversionService.convert(sourceRecord, QuickMarcView.class);
+    var sourceRecord = sourceRecordService.getByExternalId(externalId);
+    var quickMarc = sourceRecordConverter.convert(sourceRecord);
     protectionSetterService.applyFieldProtection(quickMarc);
     linksService.setRecordLinks(quickMarc);
     setUserInfo(quickMarc, sourceRecord);
@@ -65,11 +69,10 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
-    defaultValuesPopulationService.populate(quickMarc);
+    var quickMarcRecord = quickMarcEditQuickMarcRecordConverter.convert(quickMarc);
     validateOnUpdate(parsedRecordId, quickMarc);
-
     var recordService = marcRecordServiceRegistry.get(quickMarc.getMarcFormat());
-    recordService.update(quickMarc);
+    recordService.update(quickMarcRecord);
     linksService.updateRecordLinks(quickMarc);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
   }
@@ -77,12 +80,14 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public QuickMarcView createRecord(QuickMarcCreate quickMarc) {
     log.debug("createRecord:: trying to create a new quickMarc");
-    defaultValuesPopulationService.populate(quickMarc);
+
+    var quickMarcRecord = quickMarcCreateQuickMarcRecordConverter.convert(quickMarc);
+
     validateOnCreate(quickMarc);
     var recordService = marcRecordServiceRegistry.get(quickMarc.getMarcFormat());
-    var result = recordService.create(quickMarc);
-    log.info("createRecord:: new quickMarc created with qmRecordId: {}", result.getExternalId());
-    return result;
+    recordService.create(quickMarcRecord);
+    log.info("createRecord:: new quickMarc created with qmRecordId: {}", quickMarcRecord.getExternalId());
+    return quickMarcRecordConverter.convert(quickMarcRecord);
   }
 
   @Override
@@ -100,19 +105,13 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     return quickMarcView;
   }
 
-  private void validateOnCreate(QuickMarcCreate quickMarc) {
+  private void validateOnCreate(BaseMarcRecord quickMarc) {
     var skippedValidationError = new SkippedValidationError(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
     validationService.validateMarcRecord(quickMarc, List.of(skippedValidationError));
     validateMarcRecord(quickMarc);
   }
 
   private void validateOnUpdate(UUID parsedRecordId, QuickMarcEdit quickMarc) {
-    var requestVersion = quickMarc.getSourceVersion();
-    var storedVersion =
-      changeManagerService.getSourceRecordByExternalId(quickMarc.getExternalId().toString()).getGeneration();
-    if (requestVersion != null && !requestVersion.equals(storedVersion)) {
-      throw new OptimisticLockingException(parsedRecordId, storedVersion, requestVersion);
-    }
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcRecord(quickMarc);

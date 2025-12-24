@@ -1,9 +1,12 @@
 package org.folio.qm.client;
 
-import org.folio.qm.client.model.Instance;
+import java.util.Optional;
+import java.util.UUID;
+import org.folio.qm.domain.InstanceRecord;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface InstanceStorageClient {
 
   @GetMapping(value = "/instances/{id}")
-  Instance getInstanceById(@PathVariable("id") String id);
+  Optional<InstanceRecord> getInstanceById(@PathVariable UUID id);
+
+  @PostMapping(value = "/instances")
+  InstanceRecord createInstance(@RequestBody InstanceRecord instance);
 
   @PutMapping(value = "/instances/{id}")
-  void updateInstance(@PathVariable("id") String id, @RequestBody Instance instance);
+  void updateInstance(@PathVariable UUID id, @RequestBody InstanceRecord instance);
 }

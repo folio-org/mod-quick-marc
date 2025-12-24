@@ -24,7 +24,7 @@
 //import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 //import org.folio.qm.client.SourceStorageClient;
 //import org.folio.qm.client.model.Instance;
-//import org.folio.qm.client.model.MappingRecordType;
+//import org.folio.qm.domain.model.MappingRecordType;
 //import org.folio.qm.client.model.RecordTypeEnum;
 //import org.folio.qm.converter.MarcQmConverter;
 //import org.folio.qm.domain.dto.MarcFormat;

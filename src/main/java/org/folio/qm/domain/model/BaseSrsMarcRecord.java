@@ -1,4 +1,4 @@
-package org.folio.qm.client.model;
+package org.folio.qm.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;

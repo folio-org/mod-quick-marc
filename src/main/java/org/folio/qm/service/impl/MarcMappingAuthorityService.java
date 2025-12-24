@@ -3,7 +3,7 @@ package org.folio.qm.service.impl;
 import org.folio.Authority;
 import org.folio.processing.mapping.defaultmapper.MarcToAuthorityMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
-import org.folio.qm.domain.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityRecord;
 import org.folio.qm.mapper.AuthorityRecordMapper;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.jspecify.annotations.NonNull;

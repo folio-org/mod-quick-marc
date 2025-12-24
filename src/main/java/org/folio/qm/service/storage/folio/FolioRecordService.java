@@ -1,7 +1,7 @@
 package org.folio.qm.service.storage.folio;
 
 import java.util.UUID;
-import org.folio.qm.domain.FolioRecord;
+import org.folio.qm.domain.model.FolioRecord;
 
 public interface FolioRecordService<T extends FolioRecord> {
 

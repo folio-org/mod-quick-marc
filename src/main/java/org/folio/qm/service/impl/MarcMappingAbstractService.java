@@ -2,8 +2,8 @@ package org.folio.qm.service.impl;
 
 import java.util.Objects;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
-import org.folio.qm.domain.FolioRecord;
-import org.folio.qm.domain.QuickMarcRecord;
+import org.folio.qm.domain.model.FolioRecord;
+import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.service.MarcMappingService;
 import org.folio.qm.service.support.MappingMetadataProvider;

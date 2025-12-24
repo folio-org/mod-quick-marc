@@ -4,14 +4,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
+import org.folio.ExternalIdsHolder;
 import org.folio.ParsedRecord;
-import org.folio.qm.client.model.ExternalIdsHolder;
-import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.RecordState;
@@ -26,9 +26,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SourceRecordConverter implements Converter<SourceRecord, QuickMarcView> {
+public class SourceRecordConverter implements Converter<org.folio.Record, QuickMarcView> {
 
-  private static final Map<MarcFormat, Function<ExternalIdsHolder, UUID>> EXTERNAL_ID_EXTRACTORS = Map.of(
+  private static final Map<MarcFormat, Function<ExternalIdsHolder, String>> EXTERNAL_ID_EXTRACTORS = Map.of(
     MarcFormat.BIBLIOGRAPHIC, ExternalIdsHolder::getInstanceId,
     MarcFormat.HOLDINGS, ExternalIdsHolder::getHoldingsId,
     MarcFormat.AUTHORITY, ExternalIdsHolder::getAuthorityId
@@ -45,7 +45,7 @@ public class SourceRecordConverter implements Converter<SourceRecord, QuickMarcV
   private final MarcFieldsConverter fieldsConverter;
 
   @Override
-  public QuickMarcView convert(@NonNull SourceRecord source) {
+  public QuickMarcView convert(@NonNull org.folio.Record source) {
     var parsedRecord = source.getParsedRecord();
     var marcRecord = extractMarcRecord(parsedRecord);
 
@@ -59,14 +59,19 @@ public class SourceRecordConverter implements Converter<SourceRecord, QuickMarcV
       .fields(reorderedFields)
       .marcFormat(format)
       .parsedRecordId(UUID.fromString(parsedRecord.getId()))
-      .parsedRecordDtoId(source.getRecordId())
+      .parsedRecordDtoId(UUID.fromString(source.getId()))
       .sourceVersion(source.getGeneration())
-      .externalId(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
+      .externalId(UUID.fromString(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder())))
       .externalHrid(EXTERNAL_HRID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))
-      .suppressDiscovery(source.getAdditionalInfo().isSuppressDiscovery())
+      .suppressDiscovery(source.getAdditionalInfo().getSuppressDiscovery())
       .updateInfo(new UpdateInfo()
         .recordState(RecordState.ACTUAL)
-        .updateDate(source.getMetadata().getUpdatedDate()));
+        .updateDate(getUpdatedDate(source)));
+  }
+
+  private OffsetDateTime getUpdatedDate(org.folio.Record source) {
+    var updatedDate = source.getMetadata().getUpdatedDate();
+    return updatedDate != null ? updatedDate.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
   }
 
   private Record extractMarcRecord(ParsedRecord parsedRecord) {

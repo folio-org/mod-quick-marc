@@ -1,9 +1,9 @@
 package org.folio.qm.converter;
 
 import lombok.RequiredArgsConstructor;
-import org.folio.qm.domain.QuickMarcRecord;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.mapper.MarcTypeMapper;
 import org.folio.qm.service.impl.DefaultValuesPopulationService;
 import org.marc4j.marc.Record;

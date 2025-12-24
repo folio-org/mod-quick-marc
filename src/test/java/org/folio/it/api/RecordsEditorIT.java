@@ -9,7 +9,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.folio.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
-import static org.folio.support.utils.ApiTestUtils.changeManagerResourceByIdPath;
 import static org.folio.support.utils.ApiTestUtils.linksByInstanceIdPath;
 import static org.folio.support.utils.ApiTestUtils.mockGet;
 import static org.folio.support.utils.ApiTestUtils.recordsEditorByIdPath;
@@ -364,7 +363,7 @@ class RecordsEditorIT extends BaseIT {
       doPut(recordsEditorByIdPath(wrongUuid), quickMarcRecord)
         .andExpect(status().isNotFound());
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(wrongUuid));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(wrongUuid));
     }
 
     @Test
@@ -380,8 +379,8 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isBadRequest())
         .andExpect(errorMessageMatch(equalTo("Request id and entity id are not equal")));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(pathId));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(pathId));
     }
 
     @Test
@@ -394,7 +393,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isBadRequest())
         .andExpect(errorMessageMatch(equalTo("Parameter 'fields[0].tag' must match \"^[0-9]{3}$\"")));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
     }
 
     @Test
@@ -404,7 +403,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isBadRequest())
         .andExpect(errorMessageMatch(containsString("Required request body is missing")));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
     }
 
     @Test
@@ -423,7 +422,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(jsonPath("$.errors[1].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
         .andExpect(jsonPath("$.errors[1].parameters[0].key").value("008"));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
     }
 
     @Test
@@ -443,7 +442,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isUnprocessableEntity())
         .andExpect(errorMessageMatch(equalTo("Invalid Date1 field length, must be 4 characters")));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
     }
 
     @Test
@@ -479,7 +478,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
         .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(id));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
     }
 
     @ParameterizedTest
@@ -498,7 +497,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
         .andExpect(jsonPath("$.issues[0].message").value("Field 001 is required."));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(id));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
     }
 
     @Test
@@ -512,7 +511,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isUnprocessableEntity())
         .andExpect(errorMessageMatch(equalTo(IS_UNIQUE_TAG_ERROR_MSG)));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(HOLDINGS_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(HOLDINGS_ID));
     }
 
     @ParameterizedTest
@@ -527,7 +526,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isUnprocessableEntity())
         .andExpect(errorMessageMatch(equalTo(IS_REQUIRED_TAG_ERROR_MSG)));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(id));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
     }
 
     @ParameterizedTest
@@ -545,7 +544,7 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(status().isBadRequest())
         .andExpect(errorMessageMatch(equalTo(String.format("Parameter '%s' must not be null", fieldName))));
 
-      expectLinksUpdateRequests(0, changeManagerResourceByIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
     }
 
     private QuickMarcEdit prepareRecordWithInvalidIndicators() {

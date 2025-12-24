@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.Record;
 import org.folio.qm.client.SourceStorageClient;
-import org.folio.qm.client.model.SourceRecord;
-import org.folio.qm.client.model.SourceRecordSnapshot;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,7 @@ public class SourceRecordServiceImpl implements SourceRecordService {
   }
 
   @Override
-  public SourceRecord getByExternalId(UUID externalId) {
+  public Record getByExternalId(UUID externalId) {
     return sourceStorageClient.getSourceRecord(externalId, SourceStorageClient.IdType.EXTERNAL)
       .orElseThrow(() ->
         new NotFoundException(String.format("The source record was not found by externalId: %s", externalId)));
@@ -32,8 +30,7 @@ public class SourceRecordServiceImpl implements SourceRecordService {
 
   @Override
   public Record create(Record sourceRecord) {
-    var snapshot = SourceRecordSnapshot.snapshot();
-    var createdSnapshot = sourceStorageClient.createSnapshot(snapshot);
+    var createdSnapshot = sourceStorageClient.createSnapshot(SourceStorageClient.SourceRecordSnapshot.snapshot());
     log.debug("createSrsRecord:: Snapshot created with id: {}", createdSnapshot.jobExecutionId());
     sourceRecord.setSnapshotId(createdSnapshot.jobExecutionId().toString());
     var createdRecord = sourceStorageClient.createSourceRecord(sourceRecord);

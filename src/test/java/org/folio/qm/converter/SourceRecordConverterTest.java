@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.folio.qm.client.model.SourceRecord;
+import org.folio.Record;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.mapper.MarcTypeMapperImpl;
 import org.folio.spring.testing.type.UnitTest;
@@ -54,7 +54,7 @@ class SourceRecordConverterTest {
     when(fieldsConverter.convertDtoFields(any(), any(), any())).thenReturn(expected.getFields());
     when(fieldsConverter.reorderFieldsBasedOnParsedRecordOrder(any(), any())).thenReturn(expected.getFields());
 
-    var sourceRecord = getMockAsObject(sourceRecordPath, SourceRecord.class);
+    var sourceRecord = getMockAsObject(sourceRecordPath, Record.class);
     var actual = converter.convert(sourceRecord);
 
     assertEquals(expected, actual);

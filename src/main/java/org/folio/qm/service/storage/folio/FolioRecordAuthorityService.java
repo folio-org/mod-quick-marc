@@ -3,7 +3,7 @@ package org.folio.qm.service.storage.folio;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.AuthorityStorageClient;
-import org.folio.qm.domain.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityRecord;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 

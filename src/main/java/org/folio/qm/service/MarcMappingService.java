@@ -1,7 +1,7 @@
 package org.folio.qm.service;
 
-import org.folio.qm.domain.FolioRecord;
-import org.folio.qm.domain.QuickMarcRecord;
+import org.folio.qm.domain.model.FolioRecord;
+import org.folio.qm.domain.model.QuickMarcRecord;
 
 public interface MarcMappingService<T extends FolioRecord> {
 

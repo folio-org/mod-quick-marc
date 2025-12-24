@@ -2,7 +2,7 @@ package org.folio.qm.client;
 
 import java.util.Optional;
 import java.util.UUID;
-import org.folio.qm.domain.HoldingsRecord;
+import org.folio.qm.domain.model.HoldingsRecord;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

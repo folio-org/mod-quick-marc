@@ -7,6 +7,7 @@ import java.util.List;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.domain.dto.ValidatableRecordFieldsInner;
+import org.folio.qm.domain.model.ValidatableRecordDelegate;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 

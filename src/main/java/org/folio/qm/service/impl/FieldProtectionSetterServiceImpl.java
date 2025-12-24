@@ -9,10 +9,10 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.folio.qm.client.FieldProtectionSettingsClient;
-import org.folio.qm.client.model.MarcFieldProtectionSetting;
-import org.folio.qm.client.model.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.domain.model.MarcFieldProtectionSetting;
+import org.folio.qm.domain.model.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.service.FieldProtectionSetterService;
 import org.springframework.stereotype.Service;
 

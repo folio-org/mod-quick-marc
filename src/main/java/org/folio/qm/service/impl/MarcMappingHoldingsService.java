@@ -3,7 +3,7 @@ package org.folio.qm.service.impl;
 import org.folio.Holdings;
 import org.folio.processing.mapping.defaultmapper.MarcToHoldingsMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
-import org.folio.qm.domain.HoldingsRecord;
+import org.folio.qm.domain.model.HoldingsRecord;
 import org.folio.qm.mapper.HoldingsRecordMapper;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.jspecify.annotations.NonNull;

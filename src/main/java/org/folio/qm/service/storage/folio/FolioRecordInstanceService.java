@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
-import org.folio.qm.domain.InstanceRecord;
+import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.qm.service.support.PrecedingSucceedingTitlesHelper;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;

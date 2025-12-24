@@ -4,7 +4,7 @@
 //import static java.util.Objects.requireNonNull;
 //import static java.util.Optional.ofNullable;
 //import static org.assertj.core.api.Assertions.assertThat;
-//import static org.folio.qm.client.model.MappingRecordType.MARC_AUTHORITY;
+//import static org.folio.qm.domain.model.MappingRecordType.MARC_AUTHORITY;
 //import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 //import static org.junit.jupiter.params.provider.Arguments.arguments;
 //import static org.mockito.Mockito.when;

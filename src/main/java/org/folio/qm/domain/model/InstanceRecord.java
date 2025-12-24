@@ -1,4 +1,4 @@
-package org.folio.qm.domain;
+package org.folio.qm.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;

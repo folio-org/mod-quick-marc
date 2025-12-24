@@ -1,7 +1,7 @@
 package org.folio.qm.client;
 
-import org.folio.qm.client.model.EntitiesLinksSuggestions;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
+import org.folio.qm.domain.model.EntitiesLinksSuggestions;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

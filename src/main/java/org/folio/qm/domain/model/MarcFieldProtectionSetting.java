@@ -1,4 +1,4 @@
-package org.folio.qm.client.model;
+package org.folio.qm.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

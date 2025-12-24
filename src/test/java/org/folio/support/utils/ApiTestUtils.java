@@ -22,17 +22,13 @@ public class ApiTestUtils {
   public static final String TENANT_ID = "test";
   public static final String RECORDS_EDITOR_RECORDS_PATH = "/records-editor/records";
   public static final String RECORDS_EDITOR_VALIDATE_PATH = "/records-editor/validate";
-  public static final String RECORDS_EDITOR_RECORDS_STATUS_PATH = "/records-editor/records/status";
-  public static final String SOURCE_STORAGE_RECORDS_PATH = "/source-storage/source-records";
-  public static final String CHANGE_MANAGER_PARSED_RECORDS_PATH = "/change-manager/parsedRecords";
-  public static final String CHANGE_MANAGER_JOB_EXECUTION_PATH = "/change-manager/jobExecutions";
+  public static final String SOURCE_STORAGE_RECORDS_PATH = "/source-storage/records";
   public static final String USERS_PATH = "/users";
   public static final String LINKS_PATH = "/links";
   public static final String LINKS_INSTANCES_PATH = LINKS_PATH + "/instances";
   public static final String MARC_SPECIFICATIONS_PATH = "/marc-specifications";
 
   public static final String EXTERNAL_ID = "externalId";
-  public static final String QM_RECORD_ID = "qmRecordId";
 
   public static final Map<String, String> JOHN_USER_ID_HEADER = Map.of(USER_ID, TestEntitiesUtils.JOHN_USER_ID);
 
@@ -68,28 +64,12 @@ public class ApiTestUtils {
     return marcSpecificationsPath() + "/" + recordType + "/" + fieldTag;
   }
 
-  public static String recordsEditorStatusPath() {
-    return RECORDS_EDITOR_RECORDS_STATUS_PATH;
-  }
-
-  public static String recordsEditorStatusPath(String parameter, String value) {
-    return recordsEditorStatusPath() + buildQuery(parameter, value);
-  }
-
   public static String recordsEditorByIdPath(String id) {
     return recordsEditorPath() + "/" + id;
   }
 
   public static String sourceStoragePath(String id) {
-    return SOURCE_STORAGE_RECORDS_PATH + "/" + id + buildQuery("idType", "EXTERNAL");
-  }
-
-  public static String changeManagerPath() {
-    return CHANGE_MANAGER_PARSED_RECORDS_PATH;
-  }
-
-  public static String changeManagerResourceByIdPath(String id) {
-    return changeManagerPath() + "/" + id;
+    return SOURCE_STORAGE_RECORDS_PATH + "/" + id + "/formatted" + buildQuery("idType", "EXTERNAL");
   }
 
   public static String linksByInstanceIdPath(String instanceId) {

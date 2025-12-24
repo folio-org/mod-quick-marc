@@ -3,7 +3,7 @@ package org.folio.qm.service.impl;
 import org.folio.Instance;
 import org.folio.processing.mapping.defaultmapper.MarcToInstanceMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
-import org.folio.qm.domain.InstanceRecord;
+import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.qm.mapper.InstanceRecordMapper;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.jspecify.annotations.NonNull;

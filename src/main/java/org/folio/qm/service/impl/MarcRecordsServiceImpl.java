@@ -9,17 +9,17 @@ import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.folio.Record;
 import org.folio.qm.client.LinksSuggestionsClient;
 import org.folio.qm.client.UsersClient;
-import org.folio.qm.client.model.SourceRecord;
 import org.folio.qm.converter.QuickMarcRecordConverter;
 import org.folio.qm.converter.SourceRecordConverter;
-import org.folio.qm.domain.QuickMarcRecord;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.mapper.LinksSuggestionsMapper;
 import org.folio.qm.mapper.UserMapper;
@@ -124,7 +124,7 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     }
   }
 
-  private void setUserInfo(QuickMarcView quickMarc, SourceRecord sourceRecord) {
+  private void setUserInfo(QuickMarcView quickMarc, Record sourceRecord) {
     if (sourceRecord.getMetadata() != null && sourceRecord.getMetadata().getUpdatedByUserId() != null) {
       usersClient.fetchUserById(sourceRecord.getMetadata().getUpdatedByUserId())
         .ifPresent(userDto -> {

@@ -3,7 +3,7 @@ package org.folio.qm.service.support;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.folio.qm.domain.InstanceRecord;
+import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
 import org.springframework.stereotype.Component;

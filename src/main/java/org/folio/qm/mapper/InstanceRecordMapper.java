@@ -1,7 +1,7 @@
 package org.folio.qm.mapper;
 
 import org.folio.Instance;
-import org.folio.qm.domain.InstanceRecord;
+import org.folio.qm.domain.model.InstanceRecord;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

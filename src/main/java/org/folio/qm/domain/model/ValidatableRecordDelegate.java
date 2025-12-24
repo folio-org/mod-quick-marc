@@ -1,4 +1,4 @@
-package org.folio.qm.domain;
+package org.folio.qm.domain.model;
 
 import java.util.List;
 import org.folio.qm.domain.dto.BaseMarcRecord;

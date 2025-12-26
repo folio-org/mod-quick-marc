@@ -24,6 +24,7 @@ import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.mapping.MarcMappingService;
 import org.folio.qm.service.population.DefaultValuesPopulationService;
+import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.SkippedValidationError;
 import org.folio.qm.service.validation.ValidationService;
@@ -35,23 +36,26 @@ import org.springframework.http.HttpStatus;
 @Log4j2
 public abstract class AbstractChangeRecordService<T extends FolioRecord> implements ChangeRecordService {
 
-  public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
+  private static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
 
   private final ValidationService validationService;
   private final RecordConversionService conversionService;
   private final MarcMappingService<T> marcMappingService;
   private final SourceRecordService sourceRecordService;
+  private final FolioRecordService<T> folioRecordService;
   private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   protected AbstractChangeRecordService(ValidationService validationService,
                                         RecordConversionService conversionService,
                                         SourceRecordService sourceRecordService,
                                         MarcMappingService<T> marcMappingService,
+                                        FolioRecordService<T> folioRecordService,
                                         DefaultValuesPopulationService defaultValuesPopulationService) {
     this.validationService = validationService;
     this.conversionService = conversionService;
     this.marcMappingService = marcMappingService;
     this.sourceRecordService = sourceRecordService;
+    this.folioRecordService = folioRecordService;
     this.defaultValuesPopulationService = defaultValuesPopulationService;
   }
 
@@ -60,9 +64,12 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", recordId);
     defaultValuesPopulationService.populate(qmEditRecord);
     validateIdsMatch(qmEditRecord, recordId);
-    var quickMarcRecord = conversionService.convert(qmEditRecord, QuickMarcRecord.class);
     validateOnUpdate(qmEditRecord);
-    updateRecord(quickMarcRecord);
+
+    var quickMarcRecord = conversionService.convert(qmEditRecord, QuickMarcRecord.class);
+    updateSrsRecord(quickMarcRecord);
+    updateFolioRecord(quickMarcRecord);
+    postProcess(quickMarcRecord);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", recordId);
   }
 
@@ -70,39 +77,40 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
   public QuickMarcView create(QuickMarcCreate qmCreateRecord) {
     log.debug("createRecord:: trying to create a new quickMarc");
     defaultValuesPopulationService.populate(qmCreateRecord);
-    var quickMarcRecord = conversionService.convert(qmCreateRecord, QuickMarcRecord.class);
-
     validateOnCreate(qmCreateRecord);
-    createRecord(quickMarcRecord);
+
+    var quickMarcRecord = conversionService.convert(qmCreateRecord, QuickMarcRecord.class);
+    createFolioRecord(quickMarcRecord);
+    createSrsRecord(quickMarcRecord);
     log.info("createRecord:: new quickMarc created with qmRecordId: {}", quickMarcRecord.getExternalId());
     return conversionService.convert(quickMarcRecord, QuickMarcView.class);
   }
 
-  public void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
-    if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
-      log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
-        quickMarc.getParsedRecordId(), parsedRecordId);
-      var error =
-        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
-      throw new ValidationException(error);
-    }
+  protected void postProcess(QuickMarcRecord qmRecord) {
+    log.debug("postProcess:: Post processing of record with externalId: {}", qmRecord.getExternalId());
   }
-
-  protected abstract void updateRecord(QuickMarcRecord quickMarcRecord);
-
-  protected abstract void createRecord(QuickMarcRecord quickMarcRecord);
 
   protected abstract ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord);
 
-  protected T getMappedRecord(QuickMarcRecord qmRecord) {
+  protected abstract boolean adding001FieldRequired();
+
+  private void createFolioRecord(QuickMarcRecord qmRecord) {
+    var mappedRecord = getMappedRecord(qmRecord);
+    var createdRecord = folioRecordService.create(mappedRecord);
+    qmRecord.setExternalId(UUID.fromString(createdRecord.getId()));
+    qmRecord.setExternalHrid(createdRecord.getHrid());
+    qmRecord.setFolioRecord(createdRecord);
+  }
+
+  private T getMappedRecord(QuickMarcRecord qmRecord) {
     return marcMappingService.mapNewRecord(qmRecord);
   }
 
-  protected T getMappedRecord(QuickMarcRecord qmRecord, T existingRecord) {
+  private T getMappedRecord(QuickMarcRecord qmRecord, T existingRecord) {
     return marcMappingService.mapUpdatedRecord(qmRecord, existingRecord);
   }
 
-  protected void updateSrsRecord(QuickMarcRecord qmRecord) {
+  private void updateSrsRecord(QuickMarcRecord qmRecord) {
     var recordId = qmRecord.getParsedRecordId();
     var existingRecord = sourceRecordService.get(recordId);
     var storedVersion = existingRecord.getGeneration();
@@ -115,25 +123,26 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
       qmRecord.getParsedRecordDtoId());
   }
 
-  protected void createSrsRecord(QuickMarcRecord qmRecord, boolean add001Field) {
-    // Step 2: Modify MARC record to add required fields
-    addRequiredFieldsToMarcRecord(qmRecord, add001Field);
-
-    // Step 3: Build SRS record with snapshot ID
+  private void createSrsRecord(QuickMarcRecord qmRecord) {
+    addRequiredFieldsToMarcRecord(qmRecord, adding001FieldRequired());
     var srsRecord = buildNewSrsRecord(qmRecord);
 
-    // Step 4: Create SRS record
     var createdRecord = sourceRecordService.create(srsRecord);
 
-    // Step 5: Update QuickMarcRecord with generated IDs
     qmRecord.setParsedRecordId(UUID.fromString(createdRecord.getParsedRecord().getId()));
     qmRecord.setParsedRecordDtoId(UUID.fromString(createdRecord.getId()));
   }
 
+  private void updateFolioRecord(QuickMarcRecord qmRecord) {
+    var externalId = qmRecord.getExternalId();
+    var existingRecord = folioRecordService.get(externalId);
+    var mappedRecord = getMappedRecord(qmRecord, existingRecord);
+    folioRecordService.update(externalId, mappedRecord);
+  }
+
   private void addRequiredFieldsToMarcRecord(QuickMarcRecord qmRecord, boolean add001Field) {
     try {
-      // Parse existing MARC record from ParsedContent
-      org.marc4j.marc.Record marcRecord = qmRecord.getMarcRecord();
+      var marcRecord = qmRecord.getMarcRecord();
 
       // Add 999 field with external ID in subfield $i
       if (qmRecord.getExternalId() != null) {
@@ -208,6 +217,16 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     var validationResult = validationService.validate(marcRecord);
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);
+    }
+  }
+
+  private void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
+    if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
+      log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
+        quickMarc.getParsedRecordId(), parsedRecordId);
+      var error =
+        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
+      throw new ValidationException(error);
     }
   }
 }

@@ -1,6 +1,5 @@
 package org.folio.qm.service.change;
 
-import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.ExternalIdsHolder;
 import org.folio.qm.convertion.RecordConversionService;
@@ -18,16 +17,14 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class AuthorityChangeRecordService extends AbstractChangeRecordService<AuthorityRecord> {
 
-  private final FolioRecordService<AuthorityRecord> folioRecordService;
-
   protected AuthorityChangeRecordService(ValidationService validationService,
                                          RecordConversionService conversionService,
                                          SourceRecordService sourceRecordService,
                                          MarcMappingService<AuthorityRecord> mappingService,
                                          FolioRecordService<AuthorityRecord> folioRecordService,
                                          DefaultValuesPopulationService defaultValuesPopulationService) {
-    super(validationService, conversionService, sourceRecordService, mappingService, defaultValuesPopulationService);
-    this.folioRecordService = folioRecordService;
+    super(validationService, conversionService, sourceRecordService, mappingService, folioRecordService,
+      defaultValuesPopulationService);
   }
 
   @Override
@@ -36,43 +33,14 @@ public class AuthorityChangeRecordService extends AbstractChangeRecordService<Au
   }
 
   @Override
-  protected void updateRecord(QuickMarcRecord qmRecord) {
-    log.debug("update:: Updating authority record");
-
-    updateSrsRecord(qmRecord);
-    var authorityId = qmRecord.getExternalId();
-    var existingAuthority = folioRecordService.get(authorityId);
-    var mappedAuthority = getMappedRecord(qmRecord, existingAuthority);
-    folioRecordService.update(authorityId, mappedAuthority);
-    log.debug("update:: Authority record with id: {} has been updated successfully", authorityId);
-  }
-
-  @Override
-  protected void createRecord(QuickMarcRecord qmRecord) {
-    log.debug("create:: Creating new authority record");
-
-    // Step 1: Map QuickMarcRecord to Authority
-    var mappedAuthority = getMappedRecord(qmRecord);
-
-    // Step 2: Create Authority in storage (gets generated ID and natural ID)
-    var createdAuthority = folioRecordService.create(mappedAuthority);
-    log.debug("create:: Authority created with id: {}", createdAuthority.getId());
-
-    // Step 3: Update QuickMarcRecord with generated IDs
-    qmRecord.setExternalId(UUID.fromString(createdAuthority.getId()));
-    qmRecord.setExternalHrid(createdAuthority.getNaturalId());
-
-    // Step 4: Create SRS record with external IDs (no 001 field for Authority)
-    createSrsRecord(qmRecord, false);  // false = don't add 001 field
-
-    // Step 5: Convert to QuickMarcView and return
-    qmRecord.setFolioRecord(createdAuthority);
-  }
-
-  @Override
   protected ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
     return new ExternalIdsHolder()
       .withAuthorityId(qmRecord.getExternalId().toString())
       .withAuthorityHrid(qmRecord.getExternalHrid());
+  }
+
+  @Override
+  protected boolean adding001FieldRequired() {
+    return false;
   }
 }

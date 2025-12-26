@@ -1,15 +1,15 @@
 package org.folio.qm.service.validation;
 
-import static org.folio.qm.converter.elements.Constants.COMMON_LEADER_ITEMS;
-import static org.folio.qm.converter.elements.LeaderItem.BASE_ADDRESS;
-import static org.folio.qm.converter.elements.LeaderItem.RECORD_LENGTH;
+import static org.folio.qm.convertion.elements.Constants.COMMON_LEADER_ITEMS;
+import static org.folio.qm.convertion.elements.LeaderItem.BASE_ADDRESS;
+import static org.folio.qm.convertion.elements.LeaderItem.RECORD_LENGTH;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.folio.qm.converter.elements.Constants;
-import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.convertion.elements.Constants;
+import org.folio.qm.convertion.elements.LeaderItem;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 
 public abstract class LeaderValidationRule implements ValidationRule {

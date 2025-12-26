@@ -3,18 +3,16 @@ package org.folio.qm.service.change;
 import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.ExternalIdsHolder;
-import org.folio.qm.converter.QuickMarcRecordConverter;
+import org.folio.qm.convertion.RecordConversionService;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarcCreate;
-import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.links.LinksService;
 import org.folio.qm.service.mapping.MarcMappingService;
+import org.folio.qm.service.population.DefaultValuesPopulationService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.ValidationService;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,14 +23,13 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   private final LinksService linksService;
 
   protected InstanceChangeRecordService(ValidationService validationService,
-                                        Converter<QuickMarcCreate, QuickMarcRecord> quickMarcCreateQuickMarcRecordConverter,
-                                        Converter<QuickMarcEdit, QuickMarcRecord> quickMarcEditQuickMarcRecordConverter,
-                                        QuickMarcRecordConverter quickMarcRecordConverter,
+                                        RecordConversionService conversionService,
                                         SourceRecordService sourceRecordService,
                                         MarcMappingService<InstanceRecord> mappingService,
                                         FolioRecordService<InstanceRecord> folioRecordService,
-                                        LinksService linksService) {
-    super(validationService, quickMarcCreateQuickMarcRecordConverter, quickMarcEditQuickMarcRecordConverter, quickMarcRecordConverter, sourceRecordService, mappingService);
+                                        LinksService linksService,
+                                        DefaultValuesPopulationService defaultValuesPopulationService) {
+    super(validationService, conversionService, sourceRecordService, mappingService, defaultValuesPopulationService);
     this.folioRecordService = folioRecordService;
     this.linksService = linksService;
   }
@@ -43,7 +40,7 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   }
 
   @Override
-  public void update(QuickMarcRecord qmRecord) {
+  protected void updateRecord(QuickMarcRecord qmRecord) {
     log.debug("update:: Updating instance record with id: {}", qmRecord.getExternalId());
 
     updateSrsRecord(qmRecord);
@@ -55,14 +52,7 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   }
 
   @Override
-  public ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
-    return new ExternalIdsHolder()
-      .withInstanceId(qmRecord.getExternalId().toString())
-      .withInstanceHrid(qmRecord.getExternalHrid());
-  }
-
-  @Override
-  public void create(QuickMarcRecord qmRecord) {
+  protected void createRecord(QuickMarcRecord qmRecord) {
     log.debug("create:: Creating new instance record");
 
     // Step 1: Map QuickMarcRecord to org.folio.Instance using ParsedContent
@@ -81,5 +71,12 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
 
     // Step 6: Convert to QuickMarcView and return
     qmRecord.setFolioRecord(createdInstance);
+  }
+
+  @Override
+  protected ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
+    return new ExternalIdsHolder()
+      .withInstanceId(qmRecord.getExternalId().toString())
+      .withInstanceHrid(qmRecord.getExternalHrid());
   }
 }

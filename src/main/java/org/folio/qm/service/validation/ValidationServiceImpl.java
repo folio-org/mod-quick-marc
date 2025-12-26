@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.converter.MarcQmToValidatableRecordConverter;
+import org.folio.qm.convertion.converter.BaseMarcRecordToValidatableRecordConverter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
@@ -39,7 +39,7 @@ public class ValidationServiceImpl implements ValidationService {
   private final List<ValidationRule> validationRules;
   private final MarcSpecificationService marcSpecificationService;
   private final SpecificationGuidedValidator validatableRecordValidator;
-  private final MarcQmToValidatableRecordConverter converter;
+  private final BaseMarcRecordToValidatableRecordConverter converter;
   private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   @Override

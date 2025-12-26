@@ -1,6 +1,6 @@
 package org.folio.qm.service.validation.impl.common;
 
-import static org.folio.qm.converter.elements.Constants.TAG_008_CONTROL_FIELD;
+import static org.folio.qm.convertion.elements.Constants.TAG_008_CONTROL_FIELD;
 import static org.folio.qm.domain.dto.MarcFormat.AUTHORITY;
 import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
 import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;

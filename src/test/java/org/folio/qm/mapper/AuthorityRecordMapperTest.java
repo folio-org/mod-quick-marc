@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import org.folio.Authority;
+import java.util.List;
 import org.folio.Note_;
-import org.folio.qm.converter.AuthorityRecordMapper;
+import org.folio.qm.convertion.merger.AuthorityRecordMerger;
+import org.folio.qm.domain.model.AuthorityRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -23,12 +23,12 @@ class AuthorityRecordMapperTest {
   private static final String TARGET_FILE_ID = "targetFileId";
   private static final String NOTE_TEXT = "Existing note";
 
-  private final AuthorityRecordMapper mapper = Mappers.getMapper(AuthorityRecordMapper.class);
+  private final AuthorityRecordMerger mapper = Mappers.getMapper(AuthorityRecordMerger.class);
 
   @Test
   void shouldUpdateNonNullFields() {
-    Authority source = createAuthority(ID, SOURCE_NAME, SOURCE_FILE_ID, null);
-    Authority target = createAuthority(ID, TARGET_NAME, TARGET_FILE_ID, null);
+    var source = createAuthority(ID, SOURCE_NAME, SOURCE_FILE_ID, null);
+    var target = createAuthority(ID, TARGET_NAME, TARGET_FILE_ID, null);
 
     mapper.merge(source, target);
 
@@ -39,9 +39,9 @@ class AuthorityRecordMapperTest {
 
   @Test
   void shouldNotOverwriteWithNullFields() {
-    Authority source = createAuthority(null, null, SOURCE_FILE_ID, Collections.emptyList());
-    java.util.List<Note_> notes = new ArrayList<>(Collections.singletonList(new Note_().withNote(NOTE_TEXT)));
-    Authority target = createAuthority(ID, TARGET_NAME, TARGET_FILE_ID, notes);
+    var source = createAuthority(null, null, SOURCE_FILE_ID, Collections.emptyList());
+    var notes = Collections.singletonList(new Note_().withNote(NOTE_TEXT));
+    var target = createAuthority(ID, TARGET_NAME, TARGET_FILE_ID, notes);
 
     mapper.merge(source, target);
 
@@ -53,8 +53,8 @@ class AuthorityRecordMapperTest {
 
   @Test
   void shouldDoNothingIfSourceIsAllNull() {
-    Authority source = createAuthority(null, null, null, null);
-    Authority target = createAuthority(ID, TARGET_NAME, TARGET_FILE_ID, null);
+    var source = createAuthority(null, null, null, null);
+    var target = createAuthority(ID, TARGET_NAME, TARGET_FILE_ID, null);
 
     mapper.merge(source, target);
 
@@ -65,12 +65,12 @@ class AuthorityRecordMapperTest {
 
   @Test
   void shouldThrowIfTargetIsNull() {
-    Authority source = createAuthority(ID, null, null, null);
+    var source = createAuthority(ID, null, null, null);
     assertThrows(NullPointerException.class, () -> mapper.merge(source, null));
   }
 
-  private Authority createAuthority(String id, String personalName, String sourceFileId, java.util.List<Note_> notes) {
-    Authority authority = new Authority();
+  private AuthorityRecord createAuthority(String id, String personalName, String sourceFileId, List<Note_> notes) {
+    var authority = new AuthorityRecord();
     authority.setId(id);
     authority.setPersonalName(personalName);
     authority.setSourceFileId(sourceFileId);

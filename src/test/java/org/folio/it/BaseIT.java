@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.folio.qm.ModQuickMarcApplication;
@@ -33,7 +34,9 @@ import org.folio.spring.testing.extension.impl.OkapiConfiguration;
 import org.folio.support.DisplayNameLogger;
 import org.folio.tenant.domain.dto.TenantAttributes;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +49,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+@Log4j2
 @EnableOkapi
 @EnableKafka
 @EnablePostgres
@@ -92,6 +96,11 @@ public class BaseIT {
   @AfterEach
   void afterEach() {
     this.wireMockServer.resetAll();
+  }
+
+  @Test
+  void contextLoads() {
+    Assertions.assertTrue(true, "Context loaded successfully");
   }
 
   protected ResultActions doGet(String uri) throws Exception {

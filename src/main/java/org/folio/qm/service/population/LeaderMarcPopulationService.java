@@ -1,9 +1,9 @@
 package org.folio.qm.service.population;
 
-import static org.folio.qm.converter.elements.Constants.LEADER_LENGTH;
+import static org.folio.qm.convertion.elements.Constants.LEADER_LENGTH;
 
 import java.util.List;
-import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.convertion.elements.LeaderItem;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 
 public abstract class LeaderMarcPopulationService implements MarcPopulationService {

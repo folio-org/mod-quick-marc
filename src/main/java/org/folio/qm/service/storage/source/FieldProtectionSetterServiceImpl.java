@@ -2,17 +2,17 @@ package org.folio.qm.service.storage.source;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.folio.qm.converter.elements.Constants.CONTROL_FIELD_PATTERN;
+import static org.folio.qm.convertion.elements.Constants.CONTROL_FIELD_PATTERN;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.folio.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.domain.model.MarcFieldProtectionSetting;
-import org.folio.qm.domain.model.MarcFieldProtectionSettingsCollection;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.springframework.stereotype.Service;
 
 @Service

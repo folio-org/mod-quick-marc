@@ -1,16 +1,16 @@
 package org.folio.qm.service.validation.impl.holdings;
 
-import static org.folio.qm.converter.elements.LeaderItem.HOLDINGS_ENCODING_LEVEL;
-import static org.folio.qm.converter.elements.LeaderItem.HOLDINGS_RECORD_STATUS;
-import static org.folio.qm.converter.elements.LeaderItem.HOLDINGS_RECORD_TYPE;
-import static org.folio.qm.converter.elements.LeaderItem.ITEM_INFORMATION;
-import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_19;
-import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_7;
-import static org.folio.qm.converter.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_8;
+import static org.folio.qm.convertion.elements.LeaderItem.HOLDINGS_ENCODING_LEVEL;
+import static org.folio.qm.convertion.elements.LeaderItem.HOLDINGS_RECORD_STATUS;
+import static org.folio.qm.convertion.elements.LeaderItem.HOLDINGS_RECORD_TYPE;
+import static org.folio.qm.convertion.elements.LeaderItem.ITEM_INFORMATION;
+import static org.folio.qm.convertion.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_19;
+import static org.folio.qm.convertion.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_7;
+import static org.folio.qm.convertion.elements.LeaderItem.UNDEFINED_CHARACTER_POSITION_8;
 
 import java.util.List;
 import java.util.Optional;
-import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.convertion.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.service.validation.LeaderValidationRule;
 import org.folio.qm.service.validation.ValidationError;

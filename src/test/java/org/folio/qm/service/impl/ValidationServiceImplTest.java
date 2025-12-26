@@ -1,7 +1,7 @@
 package org.folio.qm.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
+import static org.folio.qm.convertion.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_FIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.MISSING_SUBFIELD;
 import static org.folio.rspec.validation.validator.marc.model.MarcRuleCode.NON_REPEATABLE_FIELD;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import org.folio.qm.converter.MarcQmToValidatableRecordConverter;
+import org.folio.qm.convertion.converter.BaseMarcRecordToValidatableRecordConverter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
@@ -55,7 +55,7 @@ class ValidationServiceImplTest {
 
   private @Mock MarcSpecificationService marcSpecificationService;
   private @Mock SpecificationGuidedValidator validatableRecordValidator;
-  private @Mock MarcQmToValidatableRecordConverter converter;
+  private @Mock BaseMarcRecordToValidatableRecordConverter converter;
   private @Mock DefaultValuesPopulationService defaultValuesPopulationService;
 
   private @InjectMocks ValidationServiceImpl service;

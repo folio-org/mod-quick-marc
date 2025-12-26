@@ -2,10 +2,10 @@ package org.folio.qm.service.population.impl;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.folio.qm.converter.elements.Constants.LCCN_CONTROL_FIELD;
-import static org.folio.qm.converter.elements.Constants.LCCN_NEW_PREFIX_LENGTH;
-import static org.folio.qm.converter.elements.Constants.LCCN_OLD_PREFIX_LENGTH;
-import static org.folio.qm.converter.elements.Constants.SPACE_CHARACTER;
+import static org.folio.qm.convertion.elements.Constants.LCCN_CONTROL_FIELD;
+import static org.folio.qm.convertion.elements.Constants.LCCN_NEW_PREFIX_LENGTH;
+import static org.folio.qm.convertion.elements.Constants.LCCN_OLD_PREFIX_LENGTH;
+import static org.folio.qm.convertion.elements.Constants.SPACE_CHARACTER;
 import static org.folio.qm.util.MarcUtils.extractSubfields;
 
 import java.util.Optional;

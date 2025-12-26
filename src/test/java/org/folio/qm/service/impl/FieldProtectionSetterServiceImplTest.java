@@ -7,13 +7,14 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.stream.Stream;
+import org.folio.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.domain.model.MarcFieldProtectionSetting;
-import org.folio.qm.domain.model.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.service.storage.source.FieldProtectionSetterServiceImpl;
+import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.spring.testing.type.UnitTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,21 +27,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class FieldProtectionSetterServiceImplTest {
 
+  private static final String ANY = "*";
+  private static final String EMPTY = "";
+
   @Mock
   private FieldProtectionSettingsClient protectionSettingsClient;
 
   @InjectMocks
   private FieldProtectionSetterServiceImpl service;
-
-  public static Stream<Arguments> nonProtectedTestData() {
-    return Stream.of(
-      arguments(
-        new MarcFieldProtectionSetting().setField("245").setIndicator1("*").setIndicator2("*").setSubfield("b")
-          .setData("*"),
-        new FieldItem().tag("245").indicators(List.of("\\", "\\")).content("$a test")
-      )
-    );
-  }
 
   @ParameterizedTest
   @MethodSource("testData")
@@ -57,10 +51,11 @@ class FieldProtectionSetterServiceImplTest {
       .contains(tuple(setting.getField(), true));
   }
 
-  @ParameterizedTest
-  @MethodSource("nonProtectedTestData")
-  void testNonProtectedFieldProtectionSettingsSet(MarcFieldProtectionSetting setting, FieldItem fieldItem) {
+  @Test
+  void testNonProtectedFieldProtectionSettingsSet() {
+    var fieldItem = createFieldItem("245", List.of("\\", "\\"), "$a test");
     var settingsCollection = new MarcFieldProtectionSettingsCollection();
+    var setting = createMarcFieldProtectionSetting("245", ANY, ANY, "b", ANY);
     settingsCollection.setMarcFieldProtectionSettings(List.of(setting));
     when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
 
@@ -76,45 +71,51 @@ class FieldProtectionSetterServiceImplTest {
   private static Stream<Arguments> testData() {
     return Stream.of(
       arguments(
-        new MarcFieldProtectionSetting().setField("001").setIndicator1("").setIndicator2("").setSubfield("")
-          .setData("*"),
-        new FieldItem().tag("001").content("test")
+        createMarcFieldProtectionSetting("001", EMPTY, EMPTY, EMPTY, ANY),
+        createFieldItem("001", List.of(), "test")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("999").setIndicator1("f").setIndicator2("f").setSubfield("*")
-          .setData("*"),
-        new FieldItem().tag("999").indicators(List.of("f", "f")).content("test")
+        createMarcFieldProtectionSetting("999", "f", "f", ANY, ANY),
+        createFieldItem("999", List.of("f", "f"), "test")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("010").setIndicator1("").setIndicator2("").setSubfield("*").setData(
-          "bcdefghijklmn"),
-        new FieldItem().tag("010").indicators(List.of("\\", "\\")).content("$a bcdefghijklmn")
+        createMarcFieldProtectionSetting("010", EMPTY, EMPTY, ANY, "bcdefghijklmn"),
+        createFieldItem("010", List.of("\\", "\\"), "$a bcdefghijklmn")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("010").setIndicator1("*").setIndicator2("*").setSubfield("a")
-          .setData("*"),
-        new FieldItem().tag("010").indicators(List.of("1", "a")).content("$a test")
+        createMarcFieldProtectionSetting("010", ANY, ANY, "a", ANY),
+        createFieldItem("010", List.of("1", "a"), "$a test")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("035").setIndicator1("*").setIndicator2("*").setSubfield("a")
-          .setData("(OCoLC)123"),
-        new FieldItem().tag("035").indicators(List.of("\\", "a")).content("$a (OCoLC)123")
+        createMarcFieldProtectionSetting("035", ANY, ANY, "a", "(OCoLC)123"),
+        createFieldItem("035", List.of("\\", "a"), "$a (OCoLC)123")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("040").setIndicator1("*").setIndicator2("*").setSubfield("c")
-          .setData("UPB"),
+        createMarcFieldProtectionSetting("040", ANY, ANY, "c", "UPB"),
         new FieldItem().tag("040").content("$c UPB")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("300").setIndicator1("*").setIndicator2("2").setSubfield("*")
-          .setData("v."),
-        new FieldItem().tag("300").indicators(List.of("1", "2")).content("$a test $1 v.eqq")
+        createMarcFieldProtectionSetting("300", ANY, "2", ANY, "v."),
+        createFieldItem("300", List.of("1", "2"), "$a test $1 v.eqq")
       ),
       arguments(
-        new MarcFieldProtectionSetting().setField("505").setIndicator1("*").setIndicator2("*").setSubfield("a")
-          .setData("Purchase price: $325.00, 1980 August."),
-        new FieldItem().tag("505").content("$a Purchase price: $325.00, 1980 August. $b test")
+        createMarcFieldProtectionSetting("505", ANY, ANY, "a", "Purchase price: $325.00, 1980 August."),
+        createFieldItem("505", List.of(), "$a Purchase price: $325.00, 1980 August. $b test")
       )
     );
+  }
+
+  private static FieldItem createFieldItem(String tag, List<String> indicators, String content) {
+    return new FieldItem().tag(tag).indicators(indicators).content(content);
+  }
+
+  private static MarcFieldProtectionSetting createMarcFieldProtectionSetting(String tag, String i1, String i2,
+                                                                             String subfield, String data) {
+    return new MarcFieldProtectionSetting()
+      .withField(tag)
+      .withSubfield(subfield)
+      .withIndicator1(i1)
+      .withIndicator2(i2)
+      .withData(data);
   }
 }

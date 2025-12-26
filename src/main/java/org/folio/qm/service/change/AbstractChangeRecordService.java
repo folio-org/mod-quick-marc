@@ -1,6 +1,6 @@
 package org.folio.qm.service.change;
 
-import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
+import static org.folio.qm.convertion.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorUtils.buildError;
 
 import java.util.Collections;
@@ -12,7 +12,7 @@ import org.folio.ExternalIdsHolder;
 import org.folio.ParsedRecord;
 import org.folio.RawRecord;
 import org.folio.Record;
-import org.folio.qm.converter.QuickMarcRecordConverter;
+import org.folio.qm.convertion.RecordConversionService;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
@@ -23,13 +23,13 @@ import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.ValidationException;
 import org.folio.qm.service.mapping.MarcMappingService;
+import org.folio.qm.service.population.DefaultValuesPopulationService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.SkippedValidationError;
 import org.folio.qm.service.validation.ValidationService;
 import org.folio.qm.util.ErrorUtils;
 import org.folio.qm.util.MarcRecordModifier;
 import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 
 @Log4j2
@@ -38,49 +38,45 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
   public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
 
   private final ValidationService validationService;
-  private final Converter<QuickMarcCreate, QuickMarcRecord> quickMarcCreateQuickMarcRecordConverter;
-  private final Converter<QuickMarcEdit, QuickMarcRecord> quickMarcEditQuickMarcRecordConverter;
-  private final QuickMarcRecordConverter quickMarcRecordConverter;
+  private final RecordConversionService conversionService;
   private final MarcMappingService<T> marcMappingService;
   private final SourceRecordService sourceRecordService;
+  private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   protected AbstractChangeRecordService(ValidationService validationService,
-                                        Converter<QuickMarcCreate, QuickMarcRecord> quickMarcCreateQuickMarcRecordConverter,
-                                        Converter<QuickMarcEdit, QuickMarcRecord> quickMarcEditQuickMarcRecordConverter,
-                                        QuickMarcRecordConverter quickMarcRecordConverter,
+                                        RecordConversionService conversionService,
                                         SourceRecordService sourceRecordService,
-                                        MarcMappingService<T> marcMappingService) {
+                                        MarcMappingService<T> marcMappingService,
+                                        DefaultValuesPopulationService defaultValuesPopulationService) {
     this.validationService = validationService;
-    this.quickMarcCreateQuickMarcRecordConverter = quickMarcCreateQuickMarcRecordConverter;
-    this.quickMarcEditQuickMarcRecordConverter = quickMarcEditQuickMarcRecordConverter;
-    this.quickMarcRecordConverter = quickMarcRecordConverter;
+    this.conversionService = conversionService;
     this.marcMappingService = marcMappingService;
     this.sourceRecordService = sourceRecordService;
+    this.defaultValuesPopulationService = defaultValuesPopulationService;
   }
 
   @Override
   public void update(UUID recordId, QuickMarcEdit qmEditRecord) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", recordId);
+    defaultValuesPopulationService.populate(qmEditRecord);
     validateIdsMatch(qmEditRecord, recordId);
-    var quickMarcRecord = quickMarcEditQuickMarcRecordConverter.convert(qmEditRecord);
+    var quickMarcRecord = conversionService.convert(qmEditRecord, QuickMarcRecord.class);
     validateOnUpdate(qmEditRecord);
-    update(quickMarcRecord);
+    updateRecord(quickMarcRecord);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", recordId);
   }
 
   @Override
   public QuickMarcView create(QuickMarcCreate qmCreateRecord) {
     log.debug("createRecord:: trying to create a new quickMarc");
-
-    var quickMarcRecord = quickMarcCreateQuickMarcRecordConverter.convert(qmCreateRecord);
+    defaultValuesPopulationService.populate(qmCreateRecord);
+    var quickMarcRecord = conversionService.convert(qmCreateRecord, QuickMarcRecord.class);
 
     validateOnCreate(qmCreateRecord);
-    create(quickMarcRecord);
+    createRecord(quickMarcRecord);
     log.info("createRecord:: new quickMarc created with qmRecordId: {}", quickMarcRecord.getExternalId());
-    return quickMarcRecordConverter.convert(quickMarcRecord);
+    return conversionService.convert(quickMarcRecord, QuickMarcView.class);
   }
-
-  public abstract ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord);
 
   public void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
     if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
@@ -92,9 +88,11 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     }
   }
 
-  protected abstract void update(QuickMarcRecord quickMarcRecord);
+  protected abstract void updateRecord(QuickMarcRecord quickMarcRecord);
 
-  protected abstract void create(QuickMarcRecord quickMarcRecord);
+  protected abstract void createRecord(QuickMarcRecord quickMarcRecord);
+
+  protected abstract ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord);
 
   protected T getMappedRecord(QuickMarcRecord qmRecord) {
     return marcMappingService.mapNewRecord(qmRecord);

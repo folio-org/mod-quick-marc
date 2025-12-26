@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.folio.Holdings;
-import org.folio.qm.converter.HoldingsRecordMapper;
-import org.folio.rest.jaxrs.model.HoldingsRecord;
+import org.folio.qm.convertion.merger.HoldingsRecordMerger;
+import org.folio.qm.domain.model.HoldingsRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -26,7 +26,7 @@ class HoldingsRecordMapperTest {
   private static final String SOURCE_NOTE_2 = "sourceNote2";
   private static final String TARGET_NOTE = "targetNote";
 
-  private final HoldingsRecordMapper mapper = Mappers.getMapper(HoldingsRecordMapper.class);
+  private final HoldingsRecordMerger mapper = Mappers.getMapper(HoldingsRecordMerger.class);
 
   @Test
   void shouldUpdateNonNullFields() {

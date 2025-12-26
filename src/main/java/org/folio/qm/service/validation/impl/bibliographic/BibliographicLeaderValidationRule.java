@@ -1,15 +1,15 @@
 package org.folio.qm.service.validation.impl.bibliographic;
 
-import static org.folio.qm.converter.elements.LeaderItem.BIBLIOGRAPHIC_LEVEL;
-import static org.folio.qm.converter.elements.LeaderItem.BIB_RECORD_STATUS;
-import static org.folio.qm.converter.elements.LeaderItem.BIB_RECORD_TYPE;
-import static org.folio.qm.converter.elements.LeaderItem.CATALOGING_FORM;
-import static org.folio.qm.converter.elements.LeaderItem.CONTROL_TYPE;
-import static org.folio.qm.converter.elements.LeaderItem.RESOURCE_RECORD_LEVEL;
+import static org.folio.qm.convertion.elements.LeaderItem.BIBLIOGRAPHIC_LEVEL;
+import static org.folio.qm.convertion.elements.LeaderItem.BIB_RECORD_STATUS;
+import static org.folio.qm.convertion.elements.LeaderItem.BIB_RECORD_TYPE;
+import static org.folio.qm.convertion.elements.LeaderItem.CATALOGING_FORM;
+import static org.folio.qm.convertion.elements.LeaderItem.CONTROL_TYPE;
+import static org.folio.qm.convertion.elements.LeaderItem.RESOURCE_RECORD_LEVEL;
 
 import java.util.List;
 import java.util.Optional;
-import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.convertion.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.service.validation.LeaderValidationRule;
 import org.folio.qm.service.validation.ValidationError;

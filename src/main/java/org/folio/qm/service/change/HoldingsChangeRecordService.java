@@ -3,17 +3,15 @@ package org.folio.qm.service.change;
 import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.folio.ExternalIdsHolder;
-import org.folio.qm.converter.QuickMarcRecordConverter;
+import org.folio.qm.convertion.RecordConversionService;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.QuickMarcCreate;
-import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.model.HoldingsRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.mapping.MarcMappingService;
+import org.folio.qm.service.population.DefaultValuesPopulationService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.ValidationService;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,13 +21,12 @@ public class HoldingsChangeRecordService extends AbstractChangeRecordService<Hol
   private final FolioRecordService<HoldingsRecord> folioRecordService;
 
   public HoldingsChangeRecordService(ValidationService validationService,
-                                     Converter<QuickMarcCreate, QuickMarcRecord> quickMarcCreateQuickMarcRecordConverter,
-                                     Converter<QuickMarcEdit, QuickMarcRecord> quickMarcEditQuickMarcRecordConverter,
-                                     QuickMarcRecordConverter quickMarcRecordConverter,
+                                     RecordConversionService conversionService,
                                      SourceRecordService sourceRecordService,
                                      MarcMappingService<HoldingsRecord> mappingService,
-                                     FolioRecordService<HoldingsRecord> folioRecordService) {
-    super(validationService, quickMarcCreateQuickMarcRecordConverter, quickMarcEditQuickMarcRecordConverter, quickMarcRecordConverter, sourceRecordService, mappingService);
+                                     FolioRecordService<HoldingsRecord> folioRecordService,
+                                     DefaultValuesPopulationService defaultValuesPopulationService) {
+    super(validationService, conversionService, sourceRecordService, mappingService, defaultValuesPopulationService);
     this.folioRecordService = folioRecordService;
   }
 
@@ -39,7 +36,7 @@ public class HoldingsChangeRecordService extends AbstractChangeRecordService<Hol
   }
 
   @Override
-  public void update(QuickMarcRecord qmRecord) {
+  protected void updateRecord(QuickMarcRecord qmRecord) {
     log.debug("update:: Updating holdings record with id: {}", qmRecord.getExternalId());
 
     updateSrsRecord(qmRecord);
@@ -52,14 +49,7 @@ public class HoldingsChangeRecordService extends AbstractChangeRecordService<Hol
   }
 
   @Override
-  public ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
-    return new ExternalIdsHolder()
-      .withHoldingsId(qmRecord.getExternalId().toString())
-      .withHoldingsHrid(qmRecord.getExternalHrid());
-  }
-
-  @Override
-  public void create(QuickMarcRecord qmRecord) {
+  protected void createRecord(QuickMarcRecord qmRecord) {
     log.debug("create:: Creating new holdings record");
 
     // Step 1: Map QuickMarcRecord to Holdings using ParsedContent
@@ -78,5 +68,12 @@ public class HoldingsChangeRecordService extends AbstractChangeRecordService<Hol
 
     // Step 6: Convert to QuickMarcView and return
     qmRecord.setFolioRecord(createdHoldings);
+  }
+
+  @Override
+  protected ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
+    return new ExternalIdsHolder()
+      .withHoldingsId(qmRecord.getExternalId().toString())
+      .withHoldingsHrid(qmRecord.getExternalHrid());
   }
 }

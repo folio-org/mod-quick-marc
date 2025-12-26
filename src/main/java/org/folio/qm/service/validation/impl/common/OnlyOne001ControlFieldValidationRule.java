@@ -1,6 +1,6 @@
 package org.folio.qm.service.validation.impl.common;
 
-import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
+import static org.folio.qm.convertion.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 
 import java.util.List;

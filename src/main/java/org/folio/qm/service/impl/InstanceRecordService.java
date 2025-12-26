@@ -6,6 +6,7 @@ import org.folio.ExternalIdsHolder;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
+import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcMappingService;
 import org.folio.qm.service.RecordService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
@@ -17,12 +18,15 @@ import org.springframework.stereotype.Service;
 public class InstanceRecordService extends RecordService<InstanceRecord> {
 
   private final FolioRecordService<InstanceRecord> folioRecordService;
+  private final LinksService linksService;
 
   protected InstanceRecordService(SourceRecordService sourceRecordService,
                                   MarcMappingService<InstanceRecord> mappingService,
-                                  FolioRecordService<InstanceRecord> folioRecordService) {
+                                  FolioRecordService<InstanceRecord> folioRecordService,
+                                  LinksService linksService) {
     super(sourceRecordService, mappingService);
     this.folioRecordService = folioRecordService;
+    this.linksService = linksService;
   }
 
   @Override
@@ -39,6 +43,7 @@ public class InstanceRecordService extends RecordService<InstanceRecord> {
     var existingInstance = folioRecordService.get(instanceId);
     var mappedInstance = getMappedRecord(qmRecord, existingInstance);
     folioRecordService.update(instanceId, mappedInstance);
+    linksService.updateRecordLinks(qmRecord);
   }
 
   @Override

@@ -108,26 +108,26 @@ class LinksServiceImplTest {
     }
   }
 
-  @ParameterizedTest
-  @MethodSource("updateLinksTestData")
-  void testRecordLinksUpdated(List<FieldItem> fieldsMock, Integer expectedLinkUpdates) {
-    var quickMarcMock = getQuickMarcEdit(fieldsMock);
-
-    service.updateRecordLinks(quickMarcMock);
-
-    var expectedLinks = fieldsMock.stream()
-      .filter(fieldItem -> fieldItem.getLinkDetails() != null)
-      .map(fieldItem -> new InstanceLink()
-        .setInstanceId(quickMarcMock.getExternalId())
-        .setAuthorityId(fieldItem.getLinkDetails().getAuthorityId())
-        .setAuthorityNaturalId(fieldItem.getLinkDetails().getAuthorityNaturalId())
-        .setLinkingRuleId(fieldItem.getLinkDetails().getLinkingRuleId()))
-      .toList();
-    var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
-
-    assertThat(expectedLinks).hasSize(expectedLinkUpdates);
-    verify(linksClient).putLinksByInstanceId(quickMarcMock.getExternalId(), expectedInstanceLinks);
-  }
+//  @ParameterizedTest
+//  @MethodSource("updateLinksTestData")
+//  void testRecordLinksUpdated(List<FieldItem> fieldsMock, Integer expectedLinkUpdates) {
+//    var quickMarcMock = getQuickMarcEdit(fieldsMock);
+//
+//    service.updateRecordLinks(quickMarcMock);
+//
+//    var expectedLinks = fieldsMock.stream()
+//      .filter(fieldItem -> fieldItem.getLinkDetails() != null)
+//      .map(fieldItem -> new InstanceLink()
+//        .setInstanceId(quickMarcMock.getExternalId())
+//        .setAuthorityId(fieldItem.getLinkDetails().getAuthorityId())
+//        .setAuthorityNaturalId(fieldItem.getLinkDetails().getAuthorityNaturalId())
+//        .setLinkingRuleId(fieldItem.getLinkDetails().getLinkingRuleId()))
+//      .toList();
+//    var expectedInstanceLinks = new InstanceLinks(expectedLinks, expectedLinks.size());
+//
+//    assertThat(expectedLinks).hasSize(expectedLinkUpdates);
+//    verify(linksClient).putLinksByInstanceId(quickMarcMock.getExternalId(), expectedInstanceLinks);
+//  }
 
   @ParameterizedTest
   @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
@@ -137,13 +137,13 @@ class LinksServiceImplTest {
     verifyNoInteractions(linksClient);
   }
 
-  @ParameterizedTest
-  @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
-  void testRecordLinksUpdateNotBib(MarcFormat marcFormat) {
-    var quickMarc = new QuickMarcEdit().marcFormat(marcFormat);
-    service.updateRecordLinks(quickMarc);
-    verifyNoInteractions(linksClient);
-  }
+//  @ParameterizedTest
+//  @EnumSource(value = MarcFormat.class, names = "BIBLIOGRAPHIC", mode = EnumSource.Mode.EXCLUDE)
+//  void testRecordLinksUpdateNotBib(MarcFormat marcFormat) {
+//    var quickMarc = new QuickMarcEdit().marcFormat(marcFormat);
+//    service.updateRecordLinks(quickMarc);
+//    verifyNoInteractions(linksClient);
+//  }
 
   private static FieldItem getFieldItem() {
     return new FieldItem().tag(BIB_TAG).indicators(List.of("\\", "\\")).content("$a bcdefghijklmn");

@@ -5,24 +5,23 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.service.RecordService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MarcRecordServiceRegistry {
-  private final Map<MarcFormat, RecordService<?>> services;
+  private final Map<MarcFormat, ChangeRecordService<?>> services;
 
-  public MarcRecordServiceRegistry(List<RecordService<?>> serviceList) {
+  public MarcRecordServiceRegistry(List<ChangeRecordService<?>> serviceList) {
     this.services = serviceList.stream()
       .collect(Collectors.toUnmodifiableMap(
-        RecordService::supportedType,
+        ChangeRecordService::supportedType,
         Function.identity()
       ));
   }
 
   @SuppressWarnings("java:S1452")
-  public RecordService<?> get(MarcFormat marcFormat) {
-    RecordService<?> service = services.get(marcFormat);
+  public ChangeRecordService<?> get(MarcFormat marcFormat) {
+    ChangeRecordService<?> service = services.get(marcFormat);
     if (service == null) {
       throw new IllegalArgumentException(
         "No MARC RecordService found for record type: " + marcFormat);

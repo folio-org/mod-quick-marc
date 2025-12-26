@@ -7,20 +7,19 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.model.AuthorityRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.MarcMappingService;
-import org.folio.qm.service.RecordService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class AuthorityRecordService extends RecordService<AuthorityRecord> {
+public class AuthorityChangeRecordService extends ChangeRecordService<AuthorityRecord> {
 
   private final FolioRecordService<AuthorityRecord> folioRecordService;
 
-  protected AuthorityRecordService(SourceRecordService sourceRecordService,
-                                   MarcMappingService<AuthorityRecord> mappingService,
-                                   FolioRecordService<AuthorityRecord> folioRecordService) {
+  protected AuthorityChangeRecordService(SourceRecordService sourceRecordService,
+                                         MarcMappingService<AuthorityRecord> mappingService,
+                                         FolioRecordService<AuthorityRecord> folioRecordService) {
     super(sourceRecordService, mappingService);
     this.folioRecordService = folioRecordService;
   }

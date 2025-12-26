@@ -7,20 +7,19 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.model.HoldingsRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.MarcMappingService;
-import org.folio.qm.service.RecordService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class HoldingsRecordService extends RecordService<HoldingsRecord> {
+public class HoldingsChangeRecordService extends ChangeRecordService<HoldingsRecord> {
 
   private final FolioRecordService<HoldingsRecord> folioRecordService;
 
-  public HoldingsRecordService(SourceRecordService sourceRecordService,
-                               MarcMappingService<HoldingsRecord> mappingService,
-                               FolioRecordService<HoldingsRecord> folioRecordService) {
+  public HoldingsChangeRecordService(SourceRecordService sourceRecordService,
+                                     MarcMappingService<HoldingsRecord> mappingService,
+                                     FolioRecordService<HoldingsRecord> folioRecordService) {
     super(sourceRecordService, mappingService);
     this.folioRecordService = folioRecordService;
   }

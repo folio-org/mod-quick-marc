@@ -8,22 +8,21 @@ import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcMappingService;
-import org.folio.qm.service.RecordService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class InstanceRecordService extends RecordService<InstanceRecord> {
+public class InstanceChangeRecordService extends ChangeRecordService<InstanceRecord> {
 
   private final FolioRecordService<InstanceRecord> folioRecordService;
   private final LinksService linksService;
 
-  protected InstanceRecordService(SourceRecordService sourceRecordService,
-                                  MarcMappingService<InstanceRecord> mappingService,
-                                  FolioRecordService<InstanceRecord> folioRecordService,
-                                  LinksService linksService) {
+  protected InstanceChangeRecordService(SourceRecordService sourceRecordService,
+                                        MarcMappingService<InstanceRecord> mappingService,
+                                        FolioRecordService<InstanceRecord> folioRecordService,
+                                        LinksService linksService) {
     super(sourceRecordService, mappingService);
     this.folioRecordService = folioRecordService;
     this.linksService = linksService;

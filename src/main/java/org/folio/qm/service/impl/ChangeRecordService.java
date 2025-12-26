@@ -1,4 +1,4 @@
-package org.folio.qm.service;
+package org.folio.qm.service.impl;
 
 import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.converter.elements.Constants.TAG_999_FIELD;
@@ -18,11 +18,12 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.model.FolioRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.OptimisticLockingException;
+import org.folio.qm.service.MarcMappingService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.util.MarcRecordModifier;
 
 @Log4j2
-public abstract class RecordService<T extends FolioRecord> {
+public abstract class ChangeRecordService<T extends FolioRecord> {
 
   private static final Predicate<FieldItem> FIELD_001_PREDICATE =
     qmFields -> qmFields.getTag().equals(TAG_001_CONTROL_FIELD);
@@ -35,7 +36,7 @@ public abstract class RecordService<T extends FolioRecord> {
   private final MarcMappingService<T> marcMappingService;
   private final SourceRecordService sourceRecordService;
 
-  protected RecordService(SourceRecordService sourceRecordService, MarcMappingService<T> marcMappingService) {
+  protected ChangeRecordService(SourceRecordService sourceRecordService, MarcMappingService<T> marcMappingService) {
     this.marcMappingService = marcMappingService;
     this.sourceRecordService = sourceRecordService;
   }

@@ -10,6 +10,8 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.rest.resource.RecordsEditorApi;
+import org.folio.qm.service.FetchRecordService;
+import org.folio.qm.service.LinksSuggestionService;
 import org.folio.qm.service.MarcRecordsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,12 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecordsEditorApiImpl implements RecordsEditorApi {
 
   private final MarcRecordsService marcRecordsService;
-
-  @Override
-  public ResponseEntity<QuickMarcView> getRecordByExternalId(UUID externalId) {
-    var quickMarc = marcRecordsService.findByExternalId(externalId);
-    return ResponseEntity.ok(quickMarc);
-  }
+  private final FetchRecordService fetchRecordService;
+  private final LinksSuggestionService linksSuggestionService;
 
   @Override
   public ResponseEntity<QuickMarcView> createNewRecord(@Valid QuickMarcCreate quickMarc) {
@@ -37,10 +35,19 @@ public class RecordsEditorApiImpl implements RecordsEditorApi {
   }
 
   @Override
+  public ResponseEntity<QuickMarcView> getRecordByExternalId(UUID externalId) {
+    var quickMarc = fetchRecordService.fetchByExternalId(externalId);
+    return ResponseEntity.ok(quickMarc);
+  }
+
+  @Override
   public ResponseEntity<QuickMarcView> linksSuggestionPost(QuickMarcView quickMarcView,
                                                            AuthoritySearchParameter authoritySearchParameter,
                                                            Boolean ignoreAutoLinkingEnabled) {
-    var quickMarc = marcRecordsService.suggestLinks(quickMarcView, authoritySearchParameter, ignoreAutoLinkingEnabled);
+    var quickMarc = linksSuggestionService.suggestLinks(
+      quickMarcView,
+      authoritySearchParameter,
+      ignoreAutoLinkingEnabled);
     return ResponseEntity.ok(quickMarc);
   }
 

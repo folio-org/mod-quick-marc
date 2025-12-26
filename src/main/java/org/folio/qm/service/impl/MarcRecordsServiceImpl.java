@@ -2,6 +2,7 @@ package org.folio.qm.service.impl;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
+import static org.folio.qm.util.ErrorUtils.buildError;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
+import org.folio.qm.exception.ValidationException;
 import org.folio.qm.mapper.LinksSuggestionsMapper;
 import org.folio.qm.mapper.UserMapper;
 import org.folio.qm.service.FieldProtectionSetterService;
@@ -28,15 +30,19 @@ import org.folio.qm.service.LinksService;
 import org.folio.qm.service.MarcRecordsService;
 import org.folio.qm.service.ValidationService;
 import org.folio.qm.service.storage.source.SourceRecordService;
+import org.folio.qm.util.ErrorUtils;
 import org.folio.qm.validation.SkippedValidationError;
 import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class MarcRecordsServiceImpl implements MarcRecordsService {
+
+  public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
 
   private final SourceRecordService sourceRecordService;
   private final FieldProtectionSetterService protectionSetterService;
@@ -69,11 +75,11 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
   @Override
   public void updateById(UUID parsedRecordId, QuickMarcEdit quickMarc) {
     log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", parsedRecordId);
+    validateIdsMatch(quickMarc, parsedRecordId);
     var quickMarcRecord = quickMarcEditQuickMarcRecordConverter.convert(quickMarc);
-    validateOnUpdate(parsedRecordId, quickMarc);
+    validateOnUpdate(quickMarc);
     var recordService = marcRecordServiceRegistry.get(quickMarc.getMarcFormat());
     recordService.update(quickMarcRecord);
-    linksService.updateRecordLinks(quickMarc);
     log.info("updateById:: quickMarc updated by parsedRecordId: {}", parsedRecordId);
   }
 
@@ -111,9 +117,8 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     validateMarcRecord(quickMarc);
   }
 
-  private void validateOnUpdate(UUID parsedRecordId, QuickMarcEdit quickMarc) {
+  private void validateOnUpdate(BaseMarcRecord quickMarc) {
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
-    validationService.validateIdsMatch(quickMarc, parsedRecordId);
     validateMarcRecord(quickMarc);
   }
 
@@ -121,6 +126,16 @@ public class MarcRecordsServiceImpl implements MarcRecordsService {
     var validationResult = validationService.validate(marcRecord);
     if (!validationResult.isValid()) {
       throw new FieldsValidationException(validationResult);
+    }
+  }
+
+  public void validateIdsMatch(QuickMarcEdit quickMarc, UUID parsedRecordId) {
+    if (!quickMarc.getParsedRecordId().equals(parsedRecordId)) {
+      log.warn("validateIdsMatch:: request id: {} and entity id: {} are not equal",
+        quickMarc.getParsedRecordId(), parsedRecordId);
+      var error =
+        buildError(HttpStatus.BAD_REQUEST, ErrorUtils.ErrorType.INTERNAL, REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE);
+      throw new ValidationException(error);
     }
   }
 

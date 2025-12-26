@@ -7,7 +7,6 @@ import static org.folio.support.utils.TestEntitiesUtils.LINK_ERROR_CAUSE;
 import static org.folio.support.utils.TestEntitiesUtils.LINK_STATUS_ERROR;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 

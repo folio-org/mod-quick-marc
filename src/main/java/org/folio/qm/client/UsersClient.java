@@ -1,6 +1,7 @@
 package org.folio.qm.client;
 
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UsersClient {
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  Optional<UserDto> fetchUserById(@PathVariable("id") String id);
+  Optional<UserDto> fetchUserById(@PathVariable UUID id);
 
   record UserDto(String id, String username, UserPersonal personal) {
 

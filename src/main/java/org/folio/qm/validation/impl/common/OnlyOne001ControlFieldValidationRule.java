@@ -1,8 +1,6 @@
 package org.folio.qm.validation.impl.common;
 
 import static org.folio.qm.converter.elements.Constants.TAG_001_CONTROL_FIELD;
-import static org.folio.qm.domain.dto.MarcFormat.AUTHORITY;
-import static org.folio.qm.domain.dto.MarcFormat.BIBLIOGRAPHIC;
 import static org.folio.qm.domain.dto.MarcFormat.HOLDINGS;
 
 import java.util.List;
@@ -31,6 +29,6 @@ public class OnlyOne001ControlFieldValidationRule extends FieldValidationRule {
    */
   @Override
   public boolean supportFormat(MarcFormat marcFormat) {
-    return BIBLIOGRAPHIC == marcFormat || HOLDINGS == marcFormat || AUTHORITY == marcFormat;
+    return HOLDINGS == marcFormat;
   }
 }

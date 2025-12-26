@@ -29,8 +29,8 @@
 //import org.folio.qm.domain.dto.MarcFormat;
 //import org.folio.qm.domain.dto.QuickMarcEdit;
 //import org.folio.qm.exception.MappingMetadataException;
-//import org.folio.qm.mapper.AuthorityRecordMapper;
-//import org.folio.qm.mapper.MarcTypeMapper;
+//import org.folio.qm.converter.AuthorityRecordMapper;
+//import org.folio.qm.converter.MarcTypeMapper;
 //import org.folio.qm.service.support.MappingMetadataProvider;
 //import org.folio.spring.exception.NotFoundException;
 //import org.folio.spring.testing.type.UnitTest;

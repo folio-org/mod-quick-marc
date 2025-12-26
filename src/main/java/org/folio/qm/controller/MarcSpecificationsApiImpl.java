@@ -5,7 +5,7 @@ import org.folio.qm.domain.dto.MarcSpec;
 import org.folio.qm.domain.entity.MarcSpecification;
 import org.folio.qm.domain.entity.RecordType;
 import org.folio.qm.rest.resource.MarcSpecificationsApi;
-import org.folio.qm.service.MarcSpecificationsService;
+import org.folio.qm.service.storage.specification.MarcSpecificationsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -23,10 +23,10 @@
 //import org.folio.qm.domain.dto.QuickMarcEdit;
 //import org.folio.qm.exception.OptimisticLockingException;
 //import org.folio.qm.service.ChangeManagerService;
-//import org.folio.qm.service.LinksService;
+//import org.folio.qm.service.links.LinksService;
 //import org.folio.qm.service.RecordService;
-//import org.folio.qm.service.ValidationService;
-//import org.folio.qm.validation.ValidationResult;
+//import org.folio.qm.service.validation.ValidationService;
+//import org.folio.qm.service.validation.ValidationResult;
 //import org.folio.spring.FolioExecutionContext;
 //import org.folio.spring.FolioModuleMetadata;
 //import org.junit.jupiter.api.BeforeEach;

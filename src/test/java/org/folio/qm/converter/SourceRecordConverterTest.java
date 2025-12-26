@@ -19,7 +19,6 @@ import lombok.SneakyThrows;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.folio.Record;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.mapper.MarcTypeMapperImpl;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;

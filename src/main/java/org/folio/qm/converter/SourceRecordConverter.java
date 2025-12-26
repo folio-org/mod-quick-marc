@@ -17,7 +17,6 @@ import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.RecordState;
 import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
-import org.folio.qm.mapper.MarcTypeMapper;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;

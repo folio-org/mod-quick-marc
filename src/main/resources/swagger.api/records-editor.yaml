@@ -117,7 +117,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
       description: Edit MARC record
-      operationId: putRecord
+      operationId: updateRecord
       requestBody:
         content:
           application/json:
@@ -137,6 +137,7 @@ paths:
     post:
       tags:
         - records-editor
+      operationId: suggestLinks
       parameters:
         - name: authoritySearchParameter
           in: query
@@ -179,7 +180,8 @@ paths:
   /validate:
     post:
       tags:
-        - records-validator
+        - records-editor
+      operationId: validateRecord
       responses:
         '200':
           description: MARC Record validation result

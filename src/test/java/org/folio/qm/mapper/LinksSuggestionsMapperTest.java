@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
+import org.folio.qm.converter.LinksSuggestionsMapper;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.QuickMarcView;

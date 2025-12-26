@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.util.UUID;
 import org.folio.qm.client.SpecificationStorageClient;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.service.storage.specification.MarcSpecificationServiceImpl;
 import org.folio.rspec.domain.dto.Family;
 import org.folio.rspec.domain.dto.FamilyProfile;
 import org.folio.rspec.domain.dto.SpecificationDto;

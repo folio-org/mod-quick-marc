@@ -12,6 +12,7 @@ import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.MarcFieldProtectionSetting;
 import org.folio.qm.domain.model.MarcFieldProtectionSettingsCollection;
+import org.folio.qm.service.storage.source.FieldProtectionSetterServiceImpl;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

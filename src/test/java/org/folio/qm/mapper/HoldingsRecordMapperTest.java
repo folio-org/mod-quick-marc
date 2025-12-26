@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.folio.Holdings;
+import org.folio.qm.converter.HoldingsRecordMapper;
 import org.folio.rest.jaxrs.model.HoldingsRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;

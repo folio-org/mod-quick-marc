@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.folio.Authority;
 import org.folio.Note_;
+import org.folio.qm.converter.AuthorityRecordMapper;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

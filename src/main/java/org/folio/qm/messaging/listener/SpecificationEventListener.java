@@ -5,7 +5,7 @@ import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.service.MarcSpecificationService;
+import org.folio.qm.service.storage.specification.MarcSpecificationService;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.FolioModuleMetadata;
 import org.springframework.kafka.annotation.KafkaListener;

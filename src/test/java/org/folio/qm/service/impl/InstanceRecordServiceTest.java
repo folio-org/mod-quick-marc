@@ -30,8 +30,8 @@
 //import org.folio.qm.domain.dto.MarcFormat;
 //import org.folio.qm.domain.dto.QuickMarcEdit;
 //import org.folio.qm.exception.MappingMetadataException;
-//import org.folio.qm.mapper.InstanceRecordMapper;
-//import org.folio.qm.mapper.MarcTypeMapper;
+//import org.folio.qm.converter.InstanceRecordMapper;
+//import org.folio.qm.converter.MarcTypeMapper;
 //import org.folio.qm.service.support.MappingMetadataProvider;
 //import org.folio.qm.service.support.PrecedingSucceedingTitlesHelper;
 //import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;

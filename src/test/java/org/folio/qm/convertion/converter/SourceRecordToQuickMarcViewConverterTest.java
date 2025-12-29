@@ -11,7 +11,6 @@ import static org.folio.support.utils.TestEntitiesUtils.SOURCE_RECORD_HOLDINGS_P
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,19 +24,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
-class SourceRecordConverterTest {
+class SourceRecordToQuickMarcViewConverterTest {
 
+  private @Mock MarcFieldsConverter fieldsConverter;
+  private @Spy RecordTypeToMarcFormatConverter recordTypeConverter;
   private SourceRecordToQuickMarcViewConverter converter;
-  private MarcFieldsConverter fieldsConverter;
 
   @BeforeEach
   void setUp() {
-    fieldsConverter = mock(MarcFieldsConverter.class);
-    converter = new SourceRecordToQuickMarcViewConverter(new ObjectMapper(), new RecordTypeToMarcFormatConverter(), fieldsConverter);
+    converter = new SourceRecordToQuickMarcViewConverter(new ObjectMapper(), recordTypeConverter, fieldsConverter);
   }
 
   @SneakyThrows

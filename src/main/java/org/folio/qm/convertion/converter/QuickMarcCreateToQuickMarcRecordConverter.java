@@ -1,8 +1,11 @@
 package org.folio.qm.convertion.converter;
 
 import lombok.RequiredArgsConstructor;
+import org.folio.Record.RecordType;
 import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcCreate;
+import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
@@ -17,8 +20,8 @@ import org.springframework.stereotype.Component;
 public class QuickMarcCreateToQuickMarcRecordConverter implements Converter<QuickMarcCreate, QuickMarcRecord> {
 
   private final Converter<BaseMarcRecord, Record> marcConverter;
-  private final MarcFormatToMappingRecordTypeConverter toMappingRecordTypeConverter;
-  private final MarcFormatToRecordTypeConverter toSrsRecordTypeConverter;
+  private final Converter<MarcFormat, MappingRecordType> toMappingRecordTypeConverter;
+  private final Converter<MarcFormat, RecordType> toRecordTypeConverter;
 
   @Override
   public QuickMarcRecord convert(QuickMarcCreate source) {
@@ -28,7 +31,7 @@ public class QuickMarcCreateToQuickMarcRecordConverter implements Converter<Quic
       .source(source)
       .marcRecord(marcRecord)
       .marcFormat(source.getMarcFormat())
-      .srsRecordType(toSrsRecordTypeConverter.convert(source.getMarcFormat()))
+      .srsRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
       .mappingRecordType(toMappingRecordTypeConverter.convert(source.getMarcFormat()))
       .suppressDiscovery(source.getSuppressDiscovery())
       .build();

@@ -1,6 +1,6 @@
 package org.folio.qm.service.storage.specification;
 
-import static org.folio.qm.config.CacheNames.SPECIFICATION_STORAGE_CACHE;
+import static org.folio.qm.config.CacheConfig.SPECIFICATION_STORAGE_CACHE;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

@@ -1,6 +1,6 @@
 package org.folio.qm.service.links;
 
-import static org.folio.qm.config.CacheNames.QM_FETCH_LINKING_RULES_RESULTS;
+import static org.folio.qm.config.CacheConfig.QM_FETCH_LINKING_RULES_RESULTS;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;

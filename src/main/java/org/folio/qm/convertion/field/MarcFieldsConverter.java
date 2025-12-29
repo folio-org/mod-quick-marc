@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MarcFieldsConverter {
 
-  public static final String TAG_REGEX = "\\{(\\d{3})=([^}]+)";
+  private static final Pattern TAG_REGEX = Pattern.compile("\\{(\\d{3})=([^}]+)");
   private final List<FieldItemConverter> fieldItemConverters;
   private final List<VariableFieldConverter<DataField>> dataFieldConverters;
   private final List<VariableFieldConverter<ControlField>> controlFieldConverters;
@@ -52,6 +52,11 @@ public class MarcFieldsConverter {
       .orElseThrow(() -> new IllegalArgumentException("Field converter not found"));
   }
 
+  public List<FieldItem> reorderFieldsBasedOnParsedRecordOrder(List<FieldItem> fieldItems, ParsedRecord parsedRecord) {
+    var parsedRecordTags = extractTagsFromParsedRecord(parsedRecord);
+    return reorderMarcRecordFields(fieldItems, parsedRecordTags);
+  }
+
   private FieldItem controlFieldToQuickMarcField(ControlField field, Leader leader, MarcFormat marcFormat) {
     return controlFieldConverters.stream()
       .filter(converter -> converter.canProcess(field, marcFormat))
@@ -69,16 +74,10 @@ public class MarcFieldsConverter {
       .orElseThrow(() -> new IllegalArgumentException("No data field converter found"));
   }
 
-  public List<FieldItem> reorderFieldsBasedOnParsedRecordOrder(List<FieldItem> fieldItems, ParsedRecord parsedRecord) {
-    var parsedRecordTags =  extractTagsFromParsedRecord(parsedRecord);
-    return reorderMarcRecordFields(fieldItems, parsedRecordTags);
-  }
-
   private List<String> extractTagsFromParsedRecord(ParsedRecord parsedRecord) {
     List<String> tagList = new ArrayList<>();
 
-    var pattern = Pattern.compile(TAG_REGEX);
-    var matcher = pattern.matcher(parsedRecord.getContent().toString());
+    var matcher = TAG_REGEX.matcher(parsedRecord.getContent().toString());
 
     while (matcher.find()) {
       String tag = matcher.group(1);

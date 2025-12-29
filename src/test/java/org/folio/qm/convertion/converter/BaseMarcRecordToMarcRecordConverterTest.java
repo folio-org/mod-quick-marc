@@ -18,13 +18,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
-class MarcQmToMarcRecordConverterTest {
+class BaseMarcRecordToMarcRecordConverterTest {
 
-  @Mock
-  private MarcFieldsConverter fieldsConverter;
-
-  @InjectMocks
-  private BaseMarcRecordToMarcRecordConverter converter;
+  private @Mock MarcFieldsConverter fieldsConverter;
+  private @InjectMocks BaseMarcRecordToMarcRecordConverter converter;
 
   @Test
   void convert_emptyFieldContent() {

@@ -1,7 +1,7 @@
 package org.folio.qm.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.folio.qm.config.CacheNames.SPECIFICATION_STORAGE_CACHE;
+import static org.folio.qm.config.CacheConfig.SPECIFICATION_STORAGE_CACHE;
 import static org.folio.support.utils.ApiTestUtils.TENANT_ID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;

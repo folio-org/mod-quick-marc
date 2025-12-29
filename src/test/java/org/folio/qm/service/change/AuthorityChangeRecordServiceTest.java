@@ -104,9 +104,9 @@ class AuthorityChangeRecordServiceTest {
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
-    var existingSrsRecord = createSrsRecord();
-    existingSrsRecord.setGeneration(1);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSrsRecord);
+    var existingSourceRecord = createSourceRecord();
+    existingSourceRecord.setGeneration(1);
+    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
 
     var authorityRecord = createAuthorityRecord();
     when(folioRecordService.get(quickMarcEdit.getExternalId())).thenReturn(authorityRecord);
@@ -153,9 +153,9 @@ class AuthorityChangeRecordServiceTest {
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
-    var existingSrsRecord = createSrsRecord();
-    existingSrsRecord.setGeneration(2);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSrsRecord);
+    var existingSourceRecord = createSourceRecord();
+    existingSourceRecord.setGeneration(2);
+    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
 
     assertThrows(OptimisticLockingException.class, () -> service.update(recordId, quickMarcEdit));
 
@@ -192,8 +192,8 @@ class AuthorityChangeRecordServiceTest {
     var authorityRecord = createAuthorityRecord();
     when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(authorityRecord);
     when(folioRecordService.create(authorityRecord)).thenReturn(authorityRecord);
-    var createdSrsRecord = createSrsRecord();
-    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSrsRecord);
+    var createdSourceRecord = createSourceRecord();
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSourceRecord);
     var quickMarcView = new QuickMarcView();
     when(conversionService.convert(quickMarcRecord, QuickMarcView.class)).thenReturn(quickMarcView);
 
@@ -220,8 +220,8 @@ class AuthorityChangeRecordServiceTest {
     var authorityRecord = createAuthorityRecord();
     when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(authorityRecord);
     when(folioRecordService.create(authorityRecord)).thenReturn(authorityRecord);
-    var createdSrsRecord = createSrsRecord();
-    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSrsRecord);
+    var createdSourceRecord = createSourceRecord();
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSourceRecord);
     when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
 
     service.create(quickMarcCreate);
@@ -244,7 +244,7 @@ class AuthorityChangeRecordServiceTest {
     var authorityRecord = createAuthorityRecord();
     when(mappingService.mapNewRecord(any())).thenReturn(authorityRecord);
     when(folioRecordService.create(any())).thenReturn(authorityRecord);
-    when(sourceRecordService.create(any())).thenReturn(createSrsRecord());
+    when(sourceRecordService.create(any())).thenReturn(createSourceRecord());
     when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
 
     service.create(quickMarcCreate);
@@ -271,7 +271,7 @@ class AuthorityChangeRecordServiceTest {
     when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(authorityRecord);
     when(folioRecordService.create(authorityRecord)).thenReturn(authorityRecord);
 
-    when(sourceRecordService.create(any(Record.class))).thenReturn(createSrsRecord());
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createSourceRecord());
     when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
 
     service.create(quickMarcCreate);
@@ -364,7 +364,7 @@ class AuthorityChangeRecordServiceTest {
     return authorityRecord;
   }
 
-  private Record createSrsRecord() {
+  private Record createSourceRecord() {
     var recordId = randomUUID().toString();
     var parsedRecordId = randomUUID().toString();
 

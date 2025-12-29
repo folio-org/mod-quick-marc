@@ -40,7 +40,9 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   @Override
   protected void postProcess(QuickMarcRecord qmRecord) {
     super.postProcess(qmRecord);
+    log.debug("postProcess:: Updating links for instance with id: {}", qmRecord.getExternalId());
     linksService.updateRecordLinks(qmRecord);
+    log.debug("postProcess:: Links updated successfully for instance with id: {}", qmRecord.getExternalId());
   }
 
   @Override

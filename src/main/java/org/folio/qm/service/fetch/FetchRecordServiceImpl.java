@@ -26,7 +26,7 @@ public class FetchRecordServiceImpl implements FetchRecordService {
 
   @Override
   public QuickMarcView fetchByExternalId(UUID externalId) {
-    log.debug("findByExternalId:: trying to find quickMarc by externalId: {}", externalId);
+    log.debug("findByExternalId:: trying to find source record by externalId: {}", externalId);
     var sourceRecord = sourceRecordService.getByExternalId(externalId);
     var quickMarc = conversionService.convert(sourceRecord, QuickMarcView.class);
     protectionSetterService.applyFieldProtection(quickMarc);

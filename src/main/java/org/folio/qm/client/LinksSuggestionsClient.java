@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface LinksSuggestionsClient {
 
   @PostMapping("/marc")
-  LinksSuggestions postLinksSuggestions(LinksSuggestions srsMarcRecord,
+  LinksSuggestions postLinksSuggestions(LinksSuggestions linksSuggestions,
                                         @RequestParam AuthoritySearchParameter authoritySearchParameter,
                                         @RequestParam Boolean ignoreAutoLinkingEnabled);
 }

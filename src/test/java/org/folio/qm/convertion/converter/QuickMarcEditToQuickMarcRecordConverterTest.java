@@ -54,7 +54,7 @@ class QuickMarcEditToQuickMarcRecordConverterTest {
     assertSame(quickMarcEdit, result.getSource());
     assertEquals(MarcFormat.BIBLIOGRAPHIC, result.getMarcFormat());
     assertEquals(MappingRecordType.MARC_BIB, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_BIB, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_BIB, result.getSourceRecordType());
     assertEquals(quickMarcEdit.getSourceVersion(), result.getSourceVersion());
     assertEquals(quickMarcEdit.getSuppressDiscovery(), result.isSuppressDiscovery());
     assertEquals(quickMarcEdit.getExternalId(), result.getExternalId());
@@ -79,7 +79,7 @@ class QuickMarcEditToQuickMarcRecordConverterTest {
     assertNotNull(result);
     assertEquals(MarcFormat.AUTHORITY, result.getMarcFormat());
     assertEquals(MappingRecordType.MARC_AUTHORITY, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_AUTHORITY, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_AUTHORITY, result.getSourceRecordType());
   }
 
   @Test
@@ -94,7 +94,7 @@ class QuickMarcEditToQuickMarcRecordConverterTest {
     assertNotNull(result);
     assertEquals(MarcFormat.HOLDINGS, result.getMarcFormat());
     assertEquals(MappingRecordType.MARC_HOLDINGS, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_HOLDING, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_HOLDING, result.getSourceRecordType());
   }
 
   @Test
@@ -149,7 +149,7 @@ class QuickMarcEditToQuickMarcRecordConverterTest {
     verify(toMappingRecordTypeConverter).convert(MarcFormat.BIBLIOGRAPHIC);
     verify(toRecordTypeConverter).convert(MarcFormat.BIBLIOGRAPHIC);
     assertEquals(MappingRecordType.MARC_BIB, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_BIB, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_BIB, result.getSourceRecordType());
   }
 
   private QuickMarcEdit createQuickMarcEdit(MarcFormat marcFormat) {

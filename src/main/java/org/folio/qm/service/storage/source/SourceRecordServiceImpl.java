@@ -17,29 +17,39 @@ public class SourceRecordServiceImpl implements SourceRecordService {
 
   @Override
   public Record get(UUID id) {
+    log.debug("get:: Retrieving source record by id: {}", id);
     return sourceStorageClient.getSourceRecord(id)
-      .orElseThrow(() -> new NotFoundException(String.format("The source record was not found by id: %s", id)));
+      .orElseThrow(() -> {
+        log.error("get:: Source record not found by id: {}", id);
+        return new NotFoundException(String.format("The source record was not found by id: %s", id));
+      });
   }
 
   @Override
   public Record getByExternalId(UUID externalId) {
+    log.debug("getByExternalId:: Retrieving source record by externalId: {}", externalId);
     return sourceStorageClient.getSourceRecord(externalId, SourceStorageClient.IdType.EXTERNAL)
-      .orElseThrow(() ->
-        new NotFoundException(String.format("The source record was not found by externalId: %s", externalId)));
+      .orElseThrow(() -> {
+        log.error("getByExternalId:: Source record not found by externalId: {}", externalId);
+        return new NotFoundException(String.format("The source record was not found by externalId: %s", externalId));
+      });
   }
 
   @Override
   public Record create(Record sourceRecord) {
+    log.debug("create:: Creating source record");
     var createdSnapshot = sourceStorageClient.createSnapshot(SourceStorageClient.SourceRecordSnapshot.snapshot());
-    log.debug("createSrsRecord:: Snapshot created with id: {}", createdSnapshot.jobExecutionId());
+    log.debug("create:: Snapshot created with id: {}", createdSnapshot.jobExecutionId());
     sourceRecord.setSnapshotId(createdSnapshot.jobExecutionId().toString());
     var createdRecord = sourceStorageClient.createSourceRecord(sourceRecord);
-    log.debug("createSrsRecord:: SRS record created with id: {}", createdRecord.getId());
+    log.info("create:: Source record created with id: {}", createdRecord.getId());
     return createdRecord;
   }
 
   @Override
   public void update(UUID id, Record sourceRecord) {
+    log.debug("update:: Updating source record with id: {}", id);
     sourceStorageClient.updateSourceRecord(id, sourceRecord);
+    log.info("update:: Source record updated successfully with id: {}", id);
   }
 }

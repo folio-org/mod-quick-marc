@@ -61,29 +61,29 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
 
   @Override
   public void update(UUID recordId, QuickMarcEdit qmEditRecord) {
-    log.debug("updateById:: trying to update quickMarc by parsedRecordId: {}", recordId);
+    log.debug("updateById:: trying to update record by id: {}", recordId);
     defaultValuesPopulationService.populate(qmEditRecord);
     validateIdsMatch(qmEditRecord, recordId);
     validateOnUpdate(qmEditRecord);
 
-    var quickMarcRecord = conversionService.convert(qmEditRecord, QuickMarcRecord.class);
-    updateSrsRecord(quickMarcRecord);
-    updateFolioRecord(quickMarcRecord);
-    postProcess(quickMarcRecord);
-    log.info("updateById:: quickMarc updated by parsedRecordId: {}", recordId);
+    var qmRecord = conversionService.convert(qmEditRecord, QuickMarcRecord.class);
+    updateSourceRecord(qmRecord);
+    updateFolioRecord(qmRecord);
+    postProcess(qmRecord);
+    log.info("updateById:: quickMarc updated by id: {}", recordId);
   }
 
   @Override
   public QuickMarcView create(QuickMarcCreate qmCreateRecord) {
-    log.debug("createRecord:: trying to create a new quickMarc");
+    log.debug("createRecord:: trying to create a new record");
     defaultValuesPopulationService.populate(qmCreateRecord);
     validateOnCreate(qmCreateRecord);
 
-    var quickMarcRecord = conversionService.convert(qmCreateRecord, QuickMarcRecord.class);
-    createFolioRecord(quickMarcRecord);
-    createSrsRecord(quickMarcRecord);
-    log.info("createRecord:: new quickMarc created with qmRecordId: {}", quickMarcRecord.getExternalId());
-    return conversionService.convert(quickMarcRecord, QuickMarcView.class);
+    var qmRecord = conversionService.convert(qmCreateRecord, QuickMarcRecord.class);
+    createFolioRecord(qmRecord);
+    createSourceRecord(qmRecord);
+    log.info("createRecord:: new record created with externalId: {}", qmRecord.getExternalId());
+    return conversionService.convert(qmRecord, QuickMarcView.class);
   }
 
   protected void postProcess(QuickMarcRecord qmRecord) {
@@ -94,14 +94,6 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
 
   protected abstract boolean adding001FieldRequired();
 
-  private void createFolioRecord(QuickMarcRecord qmRecord) {
-    var mappedRecord = getMappedRecord(qmRecord);
-    var createdRecord = folioRecordService.create(mappedRecord);
-    qmRecord.setExternalId(UUID.fromString(createdRecord.getId()));
-    qmRecord.setExternalHrid(createdRecord.getHrid());
-    qmRecord.setFolioRecord(createdRecord);
-  }
-
   private T getMappedRecord(QuickMarcRecord qmRecord) {
     return marcMappingService.mapNewRecord(qmRecord);
   }
@@ -110,34 +102,47 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     return marcMappingService.mapUpdatedRecord(qmRecord, existingRecord);
   }
 
-  private void updateSrsRecord(QuickMarcRecord qmRecord) {
+  private void updateSourceRecord(QuickMarcRecord qmRecord) {
     var recordId = qmRecord.getParsedRecordId();
+    log.debug("updateSourceRecord:: Updating source record for parsedRecordId: {}", recordId);
     var existingRecord = sourceRecordService.get(recordId);
-    var storedVersion = existingRecord.getGeneration();
-    if (qmRecord.getSourceVersion() != null && !qmRecord.getSourceVersion().equals(storedVersion)) {
-      throw new OptimisticLockingException(recordId, storedVersion, qmRecord.getSourceVersion());
-    }
-    var srsRecord = buildUpdatedRecord(qmRecord, existingRecord);
-    sourceRecordService.update(recordId, srsRecord);
-    log.debug("updateSrsRecord:: quickMarc update SRS record successful for parsedRecordId: {}",
+    validateRecordVersion(qmRecord, existingRecord);
+    var sourceRecord = buildUpdatedRecord(qmRecord, existingRecord);
+    sourceRecordService.update(recordId, sourceRecord);
+    log.debug("updateSourceRecord:: Source record updated successfully for parsedRecordId: {}",
       qmRecord.getParsedRecordDtoId());
   }
 
-  private void createSrsRecord(QuickMarcRecord qmRecord) {
+  private void createSourceRecord(QuickMarcRecord qmRecord) {
+    log.debug("createSourceRecord:: Creating source record");
     addRequiredFieldsToMarcRecord(qmRecord, adding001FieldRequired());
-    var srsRecord = buildNewSrsRecord(qmRecord);
+    var sourceRecord = buildNewSourceRecord(qmRecord);
 
-    var createdRecord = sourceRecordService.create(srsRecord);
+    var createdRecord = sourceRecordService.create(sourceRecord);
 
     qmRecord.setParsedRecordId(UUID.fromString(createdRecord.getParsedRecord().getId()));
     qmRecord.setParsedRecordDtoId(UUID.fromString(createdRecord.getId()));
+    log.debug("createSrsRecord:: Source record created successfully with parsedRecordId: {}",
+      qmRecord.getParsedRecordId());
   }
 
   private void updateFolioRecord(QuickMarcRecord qmRecord) {
     var externalId = qmRecord.getExternalId();
+    log.debug("updateFolioRecord:: Updating folio record with id: {}", externalId);
     var existingRecord = folioRecordService.get(externalId);
     var mappedRecord = getMappedRecord(qmRecord, existingRecord);
     folioRecordService.update(externalId, mappedRecord);
+    log.debug("updateFolioRecord:: Folio record updated successfully for id: {}", externalId);
+  }
+
+  private void createFolioRecord(QuickMarcRecord qmRecord) {
+    log.debug("createFolioRecord:: Creating folio record");
+    var mappedRecord = getMappedRecord(qmRecord);
+    var createdRecord = folioRecordService.create(mappedRecord);
+    qmRecord.setExternalId(UUID.fromString(createdRecord.getId()));
+    qmRecord.setExternalHrid(createdRecord.getHrid());
+    qmRecord.setFolioRecord(createdRecord);
+    log.debug("createFolioRecord:: Folio record created successfully with id: {}", qmRecord.getExternalId());
   }
 
   private void addRequiredFieldsToMarcRecord(QuickMarcRecord qmRecord, boolean add001Field) {
@@ -160,13 +165,13 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     }
   }
 
-  private Record buildNewSrsRecord(QuickMarcRecord qmRecord) {
+  private Record buildNewSourceRecord(QuickMarcRecord qmRecord) {
     var recordId = UUID.randomUUID().toString();
 
     return new Record()
       .withId(recordId)
       .withMatchedId(recordId)
-      .withRecordType(qmRecord.getSrsRecordType())
+      .withRecordType(qmRecord.getSourceRecordType())
       .withOrder(0)
       .withDeleted(false)
       .withState(Record.State.ACTUAL)
@@ -188,7 +193,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
       .withId(recordId)
       .withSnapshotId(existingRecord.getSnapshotId())
       .withMatchedId(recordId)
-      .withRecordType(qmRecord.getSrsRecordType())
+      .withRecordType(qmRecord.getSourceRecordType())
       .withOrder(existingRecord.getOrder())
       .withDeleted(false)
       .withState(Record.State.ACTUAL)
@@ -203,20 +208,36 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
   }
 
   private void validateOnCreate(BaseMarcRecord quickMarc) {
+    log.debug("validateOnCreate:: Validating MARC record on create");
     var skippedValidationError = new SkippedValidationError(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
     validationService.validateMarcRecord(quickMarc, List.of(skippedValidationError));
     validateMarcRecord(quickMarc);
+    log.debug("validateOnCreate:: Validation successful");
   }
 
   private void validateOnUpdate(BaseMarcRecord quickMarc) {
+    log.debug("validateOnUpdate:: Validating MARC record on update");
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validateMarcRecord(quickMarc);
+    log.debug("validateOnUpdate:: Validation successful");
   }
 
   private void validateMarcRecord(BaseMarcRecord marcRecord) {
+    log.trace("validateMarcRecord:: Running custom validation rules");
     var validationResult = validationService.validate(marcRecord);
     if (!validationResult.isValid()) {
+      log.warn("validateMarcRecord:: Validation failed with {} errors", validationResult.errors().size());
       throw new FieldsValidationException(validationResult);
+    }
+  }
+
+  private void validateRecordVersion(QuickMarcRecord qmRecord, Record existingRecord) {
+    var storedVersion = existingRecord.getGeneration();
+    var recordId = qmRecord.getParsedRecordId();
+    if (qmRecord.getSourceVersion() != null && !qmRecord.getSourceVersion().equals(storedVersion)) {
+      log.warn("updateSourceRecord:: Version mismatch for recordId: {}. Expected: {}, Actual: {}",
+        recordId, qmRecord.getSourceVersion(), storedVersion);
+      throw new OptimisticLockingException(recordId, storedVersion, qmRecord.getSourceVersion());
     }
   }
 

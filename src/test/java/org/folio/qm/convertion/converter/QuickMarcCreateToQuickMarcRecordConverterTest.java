@@ -55,7 +55,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     assertSame(quickMarcCreate, result.getSource());
     assertEquals(MarcFormat.BIBLIOGRAPHIC, result.getMarcFormat());
     assertEquals(MappingRecordType.MARC_BIB, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_BIB, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_BIB, result.getSourceRecordType());
     assertFalse(result.isSuppressDiscovery());
 
     verify(marcConverter).convert(quickMarcCreate);
@@ -75,7 +75,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     assertNotNull(result);
     assertEquals(MarcFormat.AUTHORITY, result.getMarcFormat());
     assertEquals(MappingRecordType.MARC_AUTHORITY, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_AUTHORITY, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_AUTHORITY, result.getSourceRecordType());
   }
 
   @Test
@@ -90,7 +90,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     assertNotNull(result);
     assertEquals(MarcFormat.HOLDINGS, result.getMarcFormat());
     assertEquals(MappingRecordType.MARC_HOLDINGS, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_HOLDING, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_HOLDING, result.getSourceRecordType());
   }
 
   @Test
@@ -145,7 +145,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     verify(toMappingRecordTypeConverter).convert(MarcFormat.BIBLIOGRAPHIC);
     verify(toRecordTypeConverter).convert(MarcFormat.BIBLIOGRAPHIC);
     assertEquals(MappingRecordType.MARC_BIB, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_BIB, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_BIB, result.getSourceRecordType());
   }
 
   @Test
@@ -159,7 +159,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     verify(toMappingRecordTypeConverter).convert(MarcFormat.AUTHORITY);
     verify(toRecordTypeConverter).convert(MarcFormat.AUTHORITY);
     assertEquals(MappingRecordType.MARC_AUTHORITY, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_AUTHORITY, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_AUTHORITY, result.getSourceRecordType());
   }
 
   @Test
@@ -173,7 +173,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     verify(toMappingRecordTypeConverter).convert(MarcFormat.HOLDINGS);
     verify(toRecordTypeConverter).convert(MarcFormat.HOLDINGS);
     assertEquals(MappingRecordType.MARC_HOLDINGS, result.getMappingRecordType());
-    assertEquals(RecordType.MARC_HOLDING, result.getSrsRecordType());
+    assertEquals(RecordType.MARC_HOLDING, result.getSourceRecordType());
   }
 
   @Test
@@ -220,7 +220,7 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     assertNotNull(result.getMarcRecord());
     assertNotNull(result.getMarcFormat());
     assertNotNull(result.getMappingRecordType());
-    assertNotNull(result.getSrsRecordType());
+    assertNotNull(result.getSourceRecordType());
   }
 
   private QuickMarcCreate createQuickMarcCreate(MarcFormat marcFormat) {

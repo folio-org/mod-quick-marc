@@ -32,7 +32,7 @@ public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickM
       .source(source)
       .marcFormat(source.getMarcFormat())
       .mappingRecordType(toMappingRecordTypeConverter.convert(source.getMarcFormat()))
-      .srsRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
+      .sourceRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
       .sourceVersion(source.getSourceVersion())
       .suppressDiscovery(source.getSuppressDiscovery())
       .externalId(source.getExternalId())

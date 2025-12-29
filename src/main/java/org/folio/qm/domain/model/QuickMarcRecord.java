@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.util.QmMarcJsonWriter;
 import org.marc4j.marc.Record;
@@ -26,13 +25,6 @@ import org.marc4j.marc.Record;
  * Domain object that holds all related context and records for QuickMARC operations.
  * This class serves as a central holder for MARC record data along with its associated
  * Folio record, metadata, and versioning information.
- * 
- * <p>The conversion flow:
- * <ol>
- *   <li>QuickMarcEdit/Create (DTO) → marc4j Record</li>
- *   <li>marc4j Record → ParsedContent (JsonNode)</li>
- *   <li>ParsedContent used for SRS and Folio record operations</li>
- * </ol>
  */
 @Data
 @Builder
@@ -67,6 +59,9 @@ public class QuickMarcRecord {
    */
   private MarcFormat marcFormat;
 
+  /**
+   * Mapping record type.
+   */
   private MappingRecordType mappingRecordType;
 
   /**
@@ -100,10 +95,9 @@ public class QuickMarcRecord {
   private UUID parsedRecordDtoId;
 
   /**
-   * Update information including timestamp and user details.
+   * Source record type.
    */
-  private UpdateInfo updateInfo;
-  private org.folio.Record.RecordType srsRecordType;
+  private org.folio.Record.RecordType sourceRecordType;
 
   /**
    * Gets the ID from the associated Folio record.
@@ -121,33 +115,6 @@ public class QuickMarcRecord {
    */
   public String getFolioRecordHrid() {
     return folioRecord != null ? folioRecord.getHrid() : null;
-  }
-
-  /**
-   * Checks if this is a bibliographic record.
-   *
-   * @return true if format is BIBLIOGRAPHIC
-   */
-  public boolean isBibliographic() {
-    return MarcFormat.BIBLIOGRAPHIC.equals(marcFormat);
-  }
-
-  /**
-   * Checks if this is a holdings record.
-   *
-   * @return true if format is HOLDINGS
-   */
-  public boolean isHoldings() {
-    return MarcFormat.HOLDINGS.equals(marcFormat);
-  }
-
-  /**
-   * Checks if this is an authority record.
-   *
-   * @return true if format is AUTHORITY
-   */
-  public boolean isAuthority() {
-    return MarcFormat.AUTHORITY.equals(marcFormat);
   }
 
   public JsonObject getParsedContent() {

@@ -31,7 +31,7 @@ public class QuickMarcCreateToQuickMarcRecordConverter implements Converter<Quic
       .source(source)
       .marcRecord(marcRecord)
       .marcFormat(source.getMarcFormat())
-      .srsRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
+      .sourceRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
       .mappingRecordType(toMappingRecordTypeConverter.convert(source.getMarcFormat()))
       .suppressDiscovery(source.getSuppressDiscovery())
       .build();

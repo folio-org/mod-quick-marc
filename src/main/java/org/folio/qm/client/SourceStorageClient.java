@@ -26,10 +26,10 @@ public interface SourceStorageClient {
   Optional<Record> getSourceRecord(@PathVariable UUID id);
 
   @PostMapping(value = "/records", produces = MediaType.APPLICATION_JSON_VALUE)
-  Record createSourceRecord(@RequestBody Record srsRecord);
+  Record createSourceRecord(@RequestBody Record sourceRecord);
 
   @PutMapping(value = "/records/{id}/generation")
-  void updateSourceRecord(@PathVariable UUID id, Record srsRecord);
+  void updateSourceRecord(@PathVariable UUID id, Record sourceRecord);
 
   @PostMapping(value = "/source-records/snapshot")
   SourceRecordSnapshot createSnapshot(SourceRecordSnapshot snapshot);

@@ -20,24 +20,33 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
 
   @Override
   public InstanceRecord get(UUID id) {
+    log.debug("get:: Retrieving instance record by id: {}", id);
     return storageClient.getInstanceById(id)
-      .orElseThrow(() -> new NotFoundException(String.format("Authority record with id: %s not found", id)));
+      .orElseThrow(() -> {
+        log.error("get:: Instance record not found with id: {}", id);
+        return new NotFoundException(String.format("Authority record with id: %s not found", id));
+      });
   }
 
   @Override
   public InstanceRecord create(InstanceRecord folioRecord) {
+    log.debug("create:: Creating instance record");
     var instance = storageClient.createInstance(folioRecord);
+    log.info("create:: Instance record created with id: {}", instance.getId());
     updateTitles(instance.getId(), folioRecord);
     return instance;
   }
 
   @Override
   public void update(UUID id, InstanceRecord folioRecord) {
+    log.debug("update:: Updating instance record with id: {}", id);
     storageClient.updateInstance(id, folioRecord);
+    log.info("update:: Instance record updated successfully with id: {}", id);
     updateTitles(id.toString(), folioRecord);
   }
 
   private void updateTitles(String id, InstanceRecord updatedInstance) {
+    log.trace("updateTitles:: Updating preceding/succeeding titles for instance id: {}", id);
     var titles = PrecedingSucceedingTitlesHelper.collectPrecedingSucceedingTitles(updatedInstance);
     precedingSucceedingTitlesClient.updateTitles(id, titles);
     log.debug("Preceding/succeeding title records for instance id: {} have been updated successfully",

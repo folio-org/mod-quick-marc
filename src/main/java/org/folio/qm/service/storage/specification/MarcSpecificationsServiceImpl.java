@@ -19,7 +19,13 @@ public class MarcSpecificationsServiceImpl implements MarcSpecificationsService 
 
   @Override
   public MarcSpecification findByRecordTypeAndFieldTag(RecordType recordType, String fieldTag) {
+    log.debug("findByRecordTypeAndFieldTag:: Fetching MARC specification for recordType: {}, fieldTag: {}", 
+      recordType, fieldTag);
     return marcSpecificationRepository.findByRecordTypeAndFieldTag(recordType, fieldTag)
-        .orElseThrow(() -> new NotFoundException(String.format(MESSAGE_TEMPLATE, recordType, fieldTag)));
+        .orElseThrow(() -> {
+          log.error("findByRecordTypeAndFieldTag:: MARC specification not found for recordType: {}, fieldTag: {}", 
+            recordType, fieldTag);
+          return new NotFoundException(String.format(MESSAGE_TEMPLATE, recordType, fieldTag));
+        });
   }
 }

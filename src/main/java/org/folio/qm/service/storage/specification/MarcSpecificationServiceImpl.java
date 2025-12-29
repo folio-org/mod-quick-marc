@@ -26,16 +26,22 @@ public class MarcSpecificationServiceImpl implements MarcSpecificationService {
              unless = "#result == null",
              key = "@folioExecutionContext.tenantId + ':' + #marcFormat")
   public SpecificationDto getSpecification(MarcFormat marcFormat) {
+    log.debug("getSpecification:: Fetching specification for marcFormat: {}", marcFormat);
     for (FamilyProfile profile : FamilyProfile.values()) {
       if (profile.name().equals(marcFormat.name())) {
-        return specificationStorageClient.getSpecifications(profile.getValue()).getSpecifications().getFirst();
+        var specifications = specificationStorageClient.getSpecifications(profile.getValue()).getSpecifications();
+        log.info("getSpecification:: Specification retrieved for marcFormat: {}", marcFormat);
+        return specifications.getFirst();
       }
     }
+    log.error("getSpecification:: Unknown format: {}", marcFormat);
     throw new IllegalArgumentException("Unknown format: " + marcFormat.name());
   }
 
   @Override
   public void updateSpecificationCache(SpecificationUpdatedEvent specificationUpdate) {
+    log.debug("updateSpecificationCache:: Updating specification cache for tenant: {}, specificationId: {}", 
+      specificationUpdate.tenantId(), specificationUpdate.specificationId());
     var specification = specificationStorageClient.getSpecification(specificationUpdate.specificationId());
     var cache = cacheManager.getCache(SPECIFICATION_STORAGE_CACHE);
 
@@ -45,7 +51,7 @@ public class MarcSpecificationServiceImpl implements MarcSpecificationService {
     }
 
     cache.put(specificationUpdate.tenantId() + ":" + specification.getProfile().name(), specification);
-    log.debug("updateSpecificationCache:: updated for tenant {}, profile {}",
+    log.info("updateSpecificationCache:: updated for tenant {}, profile {}",
       specificationUpdate.tenantId(), specification.getProfile().name());
   }
 }

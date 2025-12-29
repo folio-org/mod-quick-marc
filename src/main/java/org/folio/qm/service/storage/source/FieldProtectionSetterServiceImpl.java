@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.folio.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
@@ -15,6 +16,7 @@ import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterService {
@@ -26,8 +28,13 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
 
   @Override
   public void applyFieldProtection(QuickMarcView qmRecord) {
+    log.debug("applyFieldProtection:: Applying field protection for record with {} fields", 
+      qmRecord.getFields().size());
     var fieldProtectionSettings = dicsClient.getFieldProtectionSettings();
+    log.trace("applyFieldProtection:: Retrieved {} field protection settings", 
+      fieldProtectionSettings.getMarcFieldProtectionSettings().size());
     qmRecord.getFields().forEach(field -> setProtectedStatus(field, fieldProtectionSettings));
+    log.debug("applyFieldProtection:: Field protection applied successfully");
   }
 
   private void setProtectedStatus(FieldItem field, MarcFieldProtectionSettingsCollection settings) {

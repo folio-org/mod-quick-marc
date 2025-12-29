@@ -108,9 +108,9 @@ class InstanceChangeRecordServiceTest {
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
-    var existingSrsRecord = createSrsRecord();
-    existingSrsRecord.setGeneration(1);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSrsRecord);
+    var existingSourceRecord = createSourceRecord();
+    existingSourceRecord.setGeneration(1);
+    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
 
     var instanceRecord = createInstanceRecord();
     when(folioRecordService.get(quickMarcEdit.getExternalId())).thenReturn(instanceRecord);
@@ -158,9 +158,9 @@ class InstanceChangeRecordServiceTest {
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
-    var existingSrsRecord = createSrsRecord();
-    existingSrsRecord.setGeneration(2);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSrsRecord);
+    var existingSourceRecord = createSourceRecord();
+    existingSourceRecord.setGeneration(2);
+    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
 
     assertThrows(OptimisticLockingException.class, () -> service.update(recordId, quickMarcEdit));
 
@@ -198,8 +198,8 @@ class InstanceChangeRecordServiceTest {
     var instanceRecord = createInstanceRecord();
     when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(instanceRecord);
     when(folioRecordService.create(instanceRecord)).thenReturn(instanceRecord);
-    var createdSrsRecord = createSrsRecord();
-    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSrsRecord);
+    var createdSourceRecord = createSourceRecord();
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSourceRecord);
     var quickMarcView = new QuickMarcView();
     when(conversionService.convert(quickMarcRecord, QuickMarcView.class)).thenReturn(quickMarcView);
 
@@ -226,8 +226,8 @@ class InstanceChangeRecordServiceTest {
     var instanceRecord = createInstanceRecord();
     when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(instanceRecord);
     when(folioRecordService.create(instanceRecord)).thenReturn(instanceRecord);
-    var createdSrsRecord = createSrsRecord();
-    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSrsRecord);
+    var createdSourceRecord = createSourceRecord();
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createdSourceRecord);
     when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
 
     service.create(quickMarcCreate);
@@ -250,7 +250,7 @@ class InstanceChangeRecordServiceTest {
     var instanceRecord = createInstanceRecord();
     when(mappingService.mapNewRecord(any())).thenReturn(instanceRecord);
     when(folioRecordService.create(any())).thenReturn(instanceRecord);
-    when(sourceRecordService.create(any())).thenReturn(createSrsRecord());
+    when(sourceRecordService.create(any())).thenReturn(createSourceRecord());
     when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
 
     service.create(quickMarcCreate);
@@ -277,7 +277,7 @@ class InstanceChangeRecordServiceTest {
     when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(instanceRecord);
     when(folioRecordService.create(instanceRecord)).thenReturn(instanceRecord);
 
-    when(sourceRecordService.create(any(Record.class))).thenReturn(createSrsRecord());
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createSourceRecord());
     when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
 
     service.create(quickMarcCreate);
@@ -370,7 +370,7 @@ class InstanceChangeRecordServiceTest {
     return instanceRecord;
   }
 
-  private Record createSrsRecord() {
+  private Record createSourceRecord() {
     var recordId = randomUUID().toString();
     var parsedRecordId = randomUUID().toString();
 

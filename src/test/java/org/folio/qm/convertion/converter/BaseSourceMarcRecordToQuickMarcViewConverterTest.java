@@ -35,9 +35,9 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
       .setLinkDetails(linkDetails)
       .setSubfields(subfields));
 
-    var srsRecord = new BaseSourceMarcRecord().setLeader(leader).setFields(List.of(sourceField));
+    var sourceRecord = new BaseSourceMarcRecord().setLeader(leader).setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     assertNotNull(result);
     assertEquals(leader, result.getLeader());
@@ -57,11 +57,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
       Map.of("b", "another $$ test"));
 
     var sourceField = Map.of("245", new SourceFieldItem().setSubfields(subfields));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals("$a test {dollar} value $b another {dollar}{dollar} test", fieldItem.getContent());
@@ -71,11 +71,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
   void shouldHandleFieldWithoutIndicators() {
     var subfields = List.of(Map.of("a", "test value"));
     var sourceField = Map.of("100", new SourceFieldItem().setSubfields(subfields));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertNotNull(fieldItem.getIndicators());
@@ -88,11 +88,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
     var sourceField = Map.of("100", new SourceFieldItem()
       .setInd1("1")
       .setSubfields(subfields));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals(List.of("1"), fieldItem.getIndicators());
@@ -105,11 +105,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
       .setInd1("1")
       .setInd2("0")
       .setSubfields(subfields));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals(List.of("1", "0"), fieldItem.getIndicators());
@@ -118,11 +118,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
   @Test
   void shouldHandleFieldWithoutSubfields() {
     var sourceField = Map.of("100", new SourceFieldItem().setSubfields(null));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals("100", fieldItem.getTag());
@@ -132,11 +132,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
   @Test
   void shouldHandleFieldWithEmptySubfields() {
     var sourceField = Map.of("100", new SourceFieldItem().setSubfields(List.of()));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals("100", fieldItem.getTag());
@@ -152,11 +152,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
     var field3 = Map.of("650", new SourceFieldItem()
       .setSubfields(List.of(Map.of("a", "Subject"))));
 
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(field1, field2, field3));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     assertEquals(3, result.getFields().size());
     assertEquals("100", result.getFields().get(0).getTag());
@@ -171,11 +171,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
       Map.of("b", "Second"),
       Map.of("c", "Third"));
     var sourceField = Map.of("100", new SourceFieldItem().setSubfields(subfields));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals("$a First $b Second $c Third", fieldItem.getContent());
@@ -189,11 +189,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
       .setLinkDetails(linkDetails)
       .setSubfields(List.of(Map.of("a", "Test"))));
 
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertEquals(linkDetails, fieldItem.getLinkDetails());
@@ -205,11 +205,11 @@ class BaseSourceMarcRecordToQuickMarcViewConverterTest {
   void shouldHandleFieldWithoutLinkDetails() {
     var sourceField = Map.of("100", new SourceFieldItem()
       .setSubfields(List.of(Map.of("a", "Test"))));
-    var srsRecord = new BaseSourceMarcRecord()
+    var sourceRecord = new BaseSourceMarcRecord()
       .setLeader("leader")
       .setFields(List.of(sourceField));
 
-    var result = converter.convert(srsRecord);
+    var result = converter.convert(sourceRecord);
 
     var fieldItem = result.getFields().getFirst();
     assertNull(fieldItem.getLinkDetails());

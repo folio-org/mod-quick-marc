@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
 import org.folio.qm.domain.model.FolioRecord;
+import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.service.support.MappingMetadataProvider;
@@ -25,35 +26,19 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
 
   @Override
   public F mapNewRecord(QuickMarcRecord qmRecord) {
-    return toFolioRecord(getMappedRecord(qmRecord), null);
+    log.debug("mapNewRecord:: Mapping new record with parsedRecordId: {}", qmRecord.getParsedRecordId());
+    var result = toFolioRecord(getMappedRecord(qmRecord), null);
+    log.info("mapNewRecord:: New record mapped successfully");
+    return result;
   }
 
   @Override
   public F mapUpdatedRecord(QuickMarcRecord qmRecord, F folioRecord) {
-    return toFolioRecord(getMappedRecord(qmRecord), folioRecord);
-  }
-
-  protected E getMappedRecord(QuickMarcRecord qmRecord) {
-    var mappingRecordType = qmRecord.getMappingRecordType();
-    try {
-      var mappingMetadata = mappingMetadataProvider.getMappingData(mappingRecordType);
-      if (Objects.isNull(mappingMetadata)) {
-        throw new MappingMetadataException(
-          String.format("mapping metadata not found for %s record with parsedRecordId: %s",
-            mappingRecordType, qmRecord.getParsedRecordId()));
-      }
-      var recordMapper = getRecordMapper();
-      return recordMapper.mapRecord(
-        qmRecord.getParsedContent(),
-        mappingMetadata.mappingParameters(),
-        mappingMetadata.mappingRules());
-    } catch (MappingMetadataException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new MappingMetadataException(
-        String.format("Error mapping %s record with parsedRecordId: %s", mappingRecordType,
-          qmRecord.getParsedRecordId()), e);
-    }
+    log.debug("mapUpdatedRecord:: Mapping updated record with parsedRecordId: {}, folioRecordId: {}",
+      qmRecord.getParsedRecordId(), folioRecord.getId());
+    var result = toFolioRecord(getMappedRecord(qmRecord), folioRecord);
+    log.info("mapUpdatedRecord:: Updated record mapped successfully");
+    return result;
   }
 
   protected abstract RecordMapper<E> getRecordMapper();
@@ -62,6 +47,37 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
 
   protected void postProcess(F folioRecord) {
     log.debug("Post processing of folio record: {}", folioRecord);
+  }
+
+  private E getMappedRecord(QuickMarcRecord qmRecord) {
+    var mappingRecordType = qmRecord.getMappingRecordType();
+    var recordId = qmRecord.getParsedRecordId();
+    log.debug("getMappedRecord:: Mapping record with parsedRecordId: {}, type: {}", recordId, mappingRecordType);
+    try {
+      var mappingMetadata = retrieveMappingMetadata(mappingRecordType);
+      var recordMapper = getRecordMapper();
+      var mappedRecord = recordMapper.mapRecord(
+        qmRecord.getParsedContent(),
+        mappingMetadata.mappingParameters(),
+        mappingMetadata.mappingRules());
+      log.debug("getMappedRecord:: Record mapped successfully for parsedRecordId: {}", recordId);
+      return mappedRecord;
+    } catch (MappingMetadataException e) {
+      throw e;
+    } catch (Exception e) {
+      log.error("getMappedRecord:: Error mapping {} record with parsedRecordId: {}", mappingRecordType, recordId, e);
+      throw new MappingMetadataException(
+        String.format("Error mapping %s record with parsedRecordId: %s", mappingRecordType, recordId), e);
+    }
+  }
+
+  private MappingMetadataProvider.MappingData retrieveMappingMetadata(MappingRecordType mappingRecordType) {
+    var mappingMetadata = mappingMetadataProvider.getMappingData(mappingRecordType);
+    if (Objects.isNull(mappingMetadata)) {
+      log.error("retrieveMappingMetadata:: Mapping metadata not found for {} record", mappingRecordType);
+      throw new MappingMetadataException(String.format("mapping metadata not found for %s record", mappingRecordType));
+    }
+    return mappingMetadata;
   }
 
   private F toFolioRecord(@NonNull E mappedRecord, @Nullable F folioRecord) {

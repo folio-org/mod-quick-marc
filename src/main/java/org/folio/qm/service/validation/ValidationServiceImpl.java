@@ -44,6 +44,7 @@ public class ValidationServiceImpl implements ValidationService {
 
   @Override
   public ValidationResult validate(BaseMarcRecord quickMarc) {
+    log.debug("validate:: Validating MARC record with format: {}", quickMarc.getMarcFormat());
     var validationErrors = validationRules.stream()
       .filter(rule -> rule.supportFormat(quickMarc.getMarcFormat()))
       .map(rule -> rule.validate(quickMarc))
@@ -52,59 +53,73 @@ public class ValidationServiceImpl implements ValidationService {
       .toList();
 
     if (validationErrors.isEmpty()) {
+      log.debug("validate:: Validation successful - no errors found");
       return new ValidationResult(true, Collections.emptyList());
     } else {
+      log.warn("validate:: Validation failed with {} errors", validationErrors.size());
       return new ValidationResult(false, validationErrors);
     }
   }
 
   @Override
   public List<ValidationIssue> validate(ValidatableRecord validatableRecord) {
+    log.debug("validate:: Validating validatable record with format: {}", validatableRecord.getMarcFormat());
     defaultValuesPopulationService.populate(validatableRecord);
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
-    return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
+    var issues = validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
       .stream()
       .map(validationError -> toValidationIssue(validationError, specification))
       .toList();
+    log.debug("validate:: Found {} validation issues", issues.size());
+    return issues;
   }
 
   @Override
   public void validateMarcRecord(BaseMarcRecord marcRecord, List<SkippedValidationError> skippedValidationErrors) {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
-      log.debug("validateMarcRecord:: validate a quickMarc record");
+      log.debug("validateMarcRecord:: validate a quickMarc record with format: {}", marcRecord.getMarcFormat());
       var validatableRecord = converter.convert(marcRecord);
       if (validatableRecord == null) {
+        log.warn("validateMarcRecord:: Converted validatableRecord is null, skipping validation");
         return;
       }
 
       var validationIssues = getValidationIssues(validatableRecord, skippedValidationErrors);
       if (!CollectionUtils.isEmpty(validationIssues)) {
+        log.warn("validateMarcRecord:: Validation failed with {} issues", validationIssues.size());
         throw new MarcRecordValidationException(
           new org.folio.qm.domain.dto.ValidationResult()
             .issues(validationIssues));
       }
+      log.debug("validateMarcRecord:: Validation successful");
+    } else {
+      log.debug("validateMarcRecord:: Skipping validation for HOLDINGS format");
     }
   }
 
   @Override
   public void validateMarcRecord(QuickMarcRecord marcRecord, List<SkippedValidationError> skippedValidationErrors) {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
-      log.debug("validateMarcRecord:: validate a quickMarc record");
+      log.debug("validateMarcRecord:: validate a quickMarc record with format: {}", marcRecord.getMarcFormat());
 
       var validationIssues = getValidationIssues(marcRecord.getMarcRecord(), skippedValidationErrors,
         marcRecord.getMarcFormat());
       if (!CollectionUtils.isEmpty(validationIssues)) {
+        log.warn("validateMarcRecord:: Validation failed with {} issues", validationIssues.size());
         throw new MarcRecordValidationException(
           new org.folio.qm.domain.dto.ValidationResult()
             .issues(validationIssues));
       }
+      log.debug("validateMarcRecord:: Validation successful");
+    } else {
+      log.debug("validateMarcRecord:: Skipping validation for HOLDINGS format");
     }
   }
 
   private List<ValidationIssue> getValidationIssues(Record validatableRecord,
                                                     List<SkippedValidationError> skippedValidationErrors,
                                                     MarcFormat marcFormat) {
-
+    log.trace("getValidationIssues:: Validating MARC record with format: {}", marcFormat);
     var specification = marcSpecificationService.getSpecification(marcFormat);
     return validatableRecordValidator.validate(validatableRecord, specification)
       .stream()
@@ -115,7 +130,7 @@ public class ValidationServiceImpl implements ValidationService {
 
   private List<ValidationIssue> getValidationIssues(
     ValidatableRecord validatableRecord, List<SkippedValidationError> skippedValidationErrors) {
-
+    log.trace("getValidationIssues:: Validating validatable record with format: {}", validatableRecord.getMarcFormat());
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
     return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)
       .stream()

@@ -25,15 +25,15 @@ public class LinksSuggestionServiceImpl implements LinksSuggestionService {
   public QuickMarcView suggestLinks(QuickMarcView quickMarcView, AuthoritySearchParameter authoritySearchParameter,
                                     Boolean ignoreAutoLinkingEnabled) {
     log.debug("suggestLinks:: trying to suggest links");
-    var baseSrsMarcRecord = conversionService.convert(quickMarcView, BaseSourceMarcRecord.class);
-    var suggestionRequest = new LinksSuggestions().setRecords(List.of(baseSrsMarcRecord));
-    var srsRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(
+    var baseSourceMarcRecord = conversionService.convert(quickMarcView, BaseSourceMarcRecord.class);
+    var suggestionRequest = new LinksSuggestions().setRecords(List.of(baseSourceMarcRecord));
+    var sourceRecordsWithSuggestions = linksSuggestionsClient.postLinksSuggestions(
       suggestionRequest,
       authoritySearchParameter,
       ignoreAutoLinkingEnabled);
-    if (isNotEmpty(srsRecordsWithSuggestions.getRecords())) {
-      log.info("suggestLinks:: links was suggested");
-      return conversionService.convert(srsRecordsWithSuggestions.getRecords().getFirst(), QuickMarcView.class);
+    if (isNotEmpty(sourceRecordsWithSuggestions.getRecords())) {
+      log.info("suggestLinks:: links were suggested");
+      return conversionService.convert(sourceRecordsWithSuggestions.getRecords().getFirst(), QuickMarcView.class);
     }
     return quickMarcView;
   }

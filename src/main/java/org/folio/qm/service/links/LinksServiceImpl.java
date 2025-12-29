@@ -2,6 +2,7 @@ package org.folio.qm.service.links;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.LinksClient;
 import org.folio.qm.client.LinksClient.InstanceLink;
 import org.folio.qm.client.LinksClient.InstanceLinks;
@@ -12,6 +13,7 @@ import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class LinksServiceImpl implements LinksService {
@@ -21,22 +23,35 @@ public class LinksServiceImpl implements LinksService {
 
   @Override
   public void setRecordLinks(QuickMarcView qmRecord) {
+    log.debug("setRecordLinks:: Setting record links for externalId: {}, format: {}", 
+      qmRecord.getExternalId(), qmRecord.getMarcFormat());
     if (!verifyFormat(qmRecord.getMarcFormat())) {
+      log.debug("setRecordLinks:: Skipping links for non-bibliographic format: {}", qmRecord.getMarcFormat());
       return;
     }
 
     var instanceLinksOptional = linksClient.fetchLinksByInstanceId(qmRecord.getExternalId());
-    instanceLinksOptional.ifPresent(instanceLinks -> populateLinks(qmRecord, instanceLinks));
+    instanceLinksOptional.ifPresent(instanceLinks -> {
+      log.debug("setRecordLinks:: Found {} links for externalId: {}", 
+        instanceLinks.totalRecords(), qmRecord.getExternalId());
+      populateLinks(qmRecord, instanceLinks);
+    });
+    log.info("setRecordLinks:: Record links set successfully for externalId: {}", qmRecord.getExternalId());
   }
 
   @Override
   public void updateRecordLinks(QuickMarcRecord qmRecord) {
+    log.debug("updateRecordLinks:: Updating record links for externalId: {}, format: {}", 
+      qmRecord.getExternalId(), qmRecord.getMarcFormat());
     if (!verifyFormat(qmRecord.getMarcFormat())) {
+      log.debug("updateRecordLinks:: Skipping links update for non-bibliographic format: {}", qmRecord.getMarcFormat());
       return;
     }
 
     var instanceLinks = extractLinks(qmRecord);
+    log.debug("updateRecordLinks:: Extracted {} links from record", instanceLinks.totalRecords());
     linksClient.putLinksByInstanceId(qmRecord.getExternalId(), instanceLinks);
+    log.info("updateRecordLinks:: Record links updated successfully for externalId: {}", qmRecord.getExternalId());
   }
 
   private boolean verifyFormat(MarcFormat marcFormat) {
@@ -44,6 +59,7 @@ public class LinksServiceImpl implements LinksService {
   }
 
   private InstanceLinks extractLinks(QuickMarcRecord qmRecord) {
+    log.trace("extractLinks:: Extracting links from QuickMarcRecord");
     var links = qmRecord.getSource().getFields().stream()
       .filter(fieldItem -> fieldItem.getLinkDetails() != null)
       .map(fieldItem -> new InstanceLink()
@@ -53,11 +69,14 @@ public class LinksServiceImpl implements LinksService {
         .setLinkingRuleId(fieldItem.getLinkDetails().getLinkingRuleId()))
       .toList();
 
+    log.trace("extractLinks:: Extracted {} links", links.size());
     return new InstanceLinks(links, links.size());
   }
 
   private void populateLinks(QuickMarcView qmRecord, InstanceLinks instanceLinks) {
+    log.trace("populateLinks:: Populating links for {} instance links", instanceLinks.totalRecords());
     var linkingRules = linkingRulesService.getLinkingRules();
+    log.trace("populateLinks:: Retrieved {} linking rules", linkingRules.size());
     instanceLinks.links().forEach(instanceLink ->
       linkingRules.stream()
         .filter(rule -> rule.getId().equals(instanceLink.getLinkingRuleId()))
@@ -77,10 +96,15 @@ public class LinksServiceImpl implements LinksService {
           }
         })
     );
+    log.trace("populateLinks:: Links populated successfully");
   }
 
   private void populateLink(FieldItem fieldItem, InstanceLink instanceLink) {
     var linkDetails = fieldItem.getLinkDetails();
+    if (linkDetails == null) {
+      linkDetails = new LinkDetails();
+      fieldItem.setLinkDetails(linkDetails);
+    }
     linkDetails.setAuthorityId(instanceLink.getAuthorityId());
     linkDetails.setAuthorityNaturalId(instanceLink.getAuthorityNaturalId());
     linkDetails.setLinkingRuleId(instanceLink.getLinkingRuleId());

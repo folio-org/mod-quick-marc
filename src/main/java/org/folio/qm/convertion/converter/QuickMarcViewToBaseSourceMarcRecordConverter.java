@@ -26,17 +26,17 @@ public class QuickMarcViewToBaseSourceMarcRecordConverter implements Converter<Q
   }
 
   private Map<String, SourceFieldItem> toSourceField(FieldItem fieldItem) {
-    var srsContent = new SourceFieldItem();
+    var sourceContent = new SourceFieldItem();
     var indicators = fieldItem.getIndicators();
     if (isNotEmpty(indicators)) {
-      srsContent.setInd1(indicators.get(0));
-      srsContent.setInd2(indicators.get(1));
+      sourceContent.setInd1(indicators.get(0));
+      sourceContent.setInd2(indicators.get(1));
     }
     if (fieldItem.getContent() instanceof String) {
-      srsContent.setSubfields(mapStringToSubfields(fieldItem));
+      sourceContent.setSubfields(mapStringToSubfields(fieldItem));
     }
-    srsContent.setLinkDetails(fieldItem.getLinkDetails());
-    return Map.of(fieldItem.getTag(), srsContent);
+    sourceContent.setLinkDetails(fieldItem.getLinkDetails());
+    return Map.of(fieldItem.getTag(), sourceContent);
   }
 
   private List<Map<String, String>> mapStringToSubfields(FieldItem fieldItem) {

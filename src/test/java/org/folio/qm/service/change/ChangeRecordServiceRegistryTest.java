@@ -65,6 +65,6 @@ class ChangeRecordServiceRegistryTest {
       () -> registry.get(MarcFormat.AUTHORITY));
 
     assertNotNull(exception);
-    assertEquals("No MARC RecordService found for record type: AUTHORITY", exception.getMessage());
+    assertEquals("No record service found for record type: AUTHORITY", exception.getMessage());
   }
 }

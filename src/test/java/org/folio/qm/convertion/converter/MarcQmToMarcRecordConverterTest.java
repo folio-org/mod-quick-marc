@@ -1,4 +1,4 @@
-package org.folio.qm.convertion;
+package org.folio.qm.convertion.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import org.folio.qm.convertion.converter.BaseMarcRecordToMarcRecordConverter;
 import org.folio.qm.convertion.field.MarcFieldsConverter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.spring.testing.type.UnitTest;

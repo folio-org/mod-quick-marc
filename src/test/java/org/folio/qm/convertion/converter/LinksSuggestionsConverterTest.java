@@ -1,11 +1,9 @@
-package org.folio.qm.mapper;
+package org.folio.qm.convertion.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-import org.folio.qm.convertion.converter.BaseSourceMarcRecordToQuickMarcViewConverter;
-import org.folio.qm.convertion.converter.QuickMarcViewToBaseSourceMarcRecordConverter;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.LinkDetails;
 import org.folio.qm.domain.dto.QuickMarcView;
@@ -15,7 +13,7 @@ import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 
 @UnitTest
-class LinksSuggestionsMapperTest {
+class LinksSuggestionsConverterTest {
 
   private static final String LEADER = "test leader";
   private static final BaseSourceMarcRecordToQuickMarcViewConverter TO_QUICK_MARC_CONVERTER =

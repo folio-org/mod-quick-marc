@@ -1,9 +1,8 @@
-package org.folio.qm.convertion;
+package org.folio.qm.convertion.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import org.folio.qm.convertion.converter.BaseMarcRecordToValidatableRecordConverter;
 import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;

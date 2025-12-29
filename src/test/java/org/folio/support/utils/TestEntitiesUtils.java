@@ -18,12 +18,11 @@ public class TestEntitiesUtils {
   public static final String QM_RECORD_CREATE_AUTHORITY_PATH = RECORDS_EDITOR_DIR + "/quickMarcAuthorityCreate.json";
   public static final String QM_RECORD_EDIT_AUTHORITY_PATH = RECORDS_EDITOR_DIR + "/quickMarcAuthorityEdit.json";
   public static final String QM_RECORD_VIEW_AUTHORITY_PATH = RECORDS_EDITOR_DIR + "/quickMarcAuthorityView.json";
-  public static final String SOURCE_RECORDS_DIR = SAMPLES_DIR + "/source-records";
+  public static final String SOURCE_RECORDS_DIR = SAMPLES_DIR + "/source-storage";
   public static final String SOURCE_RECORD_BIB_PATH = SOURCE_RECORDS_DIR + "/bibliographic.json";
   public static final String SOURCE_RECORD_HOLDINGS_PATH = SOURCE_RECORDS_DIR + "/holdings.json";
   public static final String SOURCE_RECORD_AUTHORITY_PATH = SOURCE_RECORDS_DIR + "/authority.json";
 
-  public static final String JOB_EXECUTION_ID = "a7fb1c32-1ffb-4a22-a76a-4067284fe68d";
   public static final String JOHN_USER_ID = "38d3a441-c100-5e8d-bd12-71bde492b723";
   public static final String LINK_STATUS_ERROR = "ERROR";
   public static final String LINK_ERROR_CAUSE = "test";

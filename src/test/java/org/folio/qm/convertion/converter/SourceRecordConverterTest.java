@@ -1,4 +1,4 @@
-package org.folio.qm.convertion;
+package org.folio.qm.convertion.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.support.utils.JsonTestUtils.getMockAsObject;
@@ -18,8 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.folio.Record;
-import org.folio.qm.convertion.converter.RecordTypeToMarcFormatConverter;
-import org.folio.qm.convertion.converter.SourceRecordToQuickMarcViewConverter;
 import org.folio.qm.convertion.field.MarcFieldsConverter;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.spring.testing.type.UnitTest;

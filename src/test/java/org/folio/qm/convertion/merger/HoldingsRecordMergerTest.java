@@ -1,4 +1,4 @@
-package org.folio.qm.mapper;
+package org.folio.qm.convertion.merger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.folio.Holdings;
-import org.folio.qm.convertion.merger.HoldingsRecordMerger;
 import org.folio.qm.domain.model.HoldingsRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 @UnitTest
-class HoldingsRecordMapperTest {
+class HoldingsRecordMergerTest {
 
   private static final String ID = "id";
   private static final String SOURCE_CALL_NUMBER = "sourceCallNumber";

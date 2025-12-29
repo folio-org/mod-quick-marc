@@ -1,4 +1,4 @@
-package org.folio.qm.service.impl;
+package org.folio.qm.service.storage.source;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -11,7 +11,6 @@ import org.folio.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.client.FieldProtectionSettingsClient;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.service.storage.source.FieldProtectionSetterServiceImpl;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package org.folio.qm.service.impl;
+package org.folio.qm.service.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.qm.convertion.elements.Constants.TAG_001_CONTROL_FIELD;
@@ -25,8 +25,6 @@ import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.service.population.DefaultValuesPopulationService;
 import org.folio.qm.service.storage.specification.MarcSpecificationService;
-import org.folio.qm.service.validation.SkippedValidationError;
-import org.folio.qm.service.validation.ValidationServiceImpl;
 import org.folio.rspec.domain.dto.DefinitionType;
 import org.folio.rspec.domain.dto.SeverityType;
 import org.folio.rspec.domain.dto.SpecificationDto;

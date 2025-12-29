@@ -38,7 +38,7 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
   }
 
   private void updateTitles(String id, InstanceRecord updatedInstance) {
-    var titles = PrecedingSucceedingTitlesHelper.updatePrecedingSucceedingTitles(updatedInstance);
+    var titles = PrecedingSucceedingTitlesHelper.collectPrecedingSucceedingTitles(updatedInstance);
     precedingSucceedingTitlesClient.updateTitles(id, titles);
     log.debug("Preceding/succeeding title records for instance id: {} have been updated successfully",
       updatedInstance.getId());

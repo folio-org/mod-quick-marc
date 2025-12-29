@@ -11,7 +11,7 @@ import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
 @UtilityClass
 public class PrecedingSucceedingTitlesHelper {
 
-  public static InstancePrecedingSucceedingTitles updatePrecedingSucceedingTitles(InstanceRecord instance) {
+  public static InstancePrecedingSucceedingTitles collectPrecedingSucceedingTitles(InstanceRecord instance) {
     List<InstancePrecedingSucceedingTitle> titlesList = new ArrayList<>();
     preparePrecedingTitles(instance, titlesList);
     prepareSucceedingTitles(instance, titlesList);

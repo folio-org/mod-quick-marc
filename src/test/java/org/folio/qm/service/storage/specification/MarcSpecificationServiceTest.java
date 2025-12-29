@@ -1,4 +1,4 @@
-package org.folio.qm.service.impl;
+package org.folio.qm.service.storage.specification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.qm.config.CacheConfig.SPECIFICATION_STORAGE_CACHE;
@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import java.util.UUID;
 import org.folio.qm.client.SpecificationStorageClient;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.service.storage.specification.MarcSpecificationServiceImpl;
 import org.folio.rspec.domain.dto.Family;
 import org.folio.rspec.domain.dto.FamilyProfile;
 import org.folio.rspec.domain.dto.SpecificationDto;

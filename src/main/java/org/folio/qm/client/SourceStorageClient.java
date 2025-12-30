@@ -31,7 +31,7 @@ public interface SourceStorageClient {
   @PutMapping(value = "/records/{id}/generation")
   void updateSourceRecord(@PathVariable UUID id, Record sourceRecord);
 
-  @PostMapping(value = "/source-records/snapshot")
+  @PostMapping(value = "/snapshots")
   SourceRecordSnapshot createSnapshot(SourceRecordSnapshot snapshot);
 
   enum IdType {

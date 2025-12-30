@@ -135,7 +135,7 @@
     {
       "request": {
         "method": "POST",
-        "url": "/source-storage/source-records/snapshot"
+        "url": "/source-storage/snapshots"
       },
       "response": {
         "status": 201,

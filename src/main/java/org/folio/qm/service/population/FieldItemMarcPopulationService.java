@@ -2,15 +2,15 @@ package org.folio.qm.service.population;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 
 @Log4j2
 public abstract class FieldItemMarcPopulationService implements MarcPopulationService {
 
   @Override
-  public void populate(BaseMarcRecord qmRecord) {
+  public void populate(BaseQuickMarcRecord qmRecord) {
     log.trace("populate:: Populating field items for format: {}", qmRecord.getMarcFormat());
     var fields = qmRecord.getFields();
     var format = qmRecord.getMarcFormat();
@@ -22,7 +22,7 @@ public abstract class FieldItemMarcPopulationService implements MarcPopulationSe
         populateValues(fieldItem, format);
         processedCount.getAndIncrement();
       });
-    
+
     log.trace("populate:: Processed {} field items", processedCount.get());
   }
 

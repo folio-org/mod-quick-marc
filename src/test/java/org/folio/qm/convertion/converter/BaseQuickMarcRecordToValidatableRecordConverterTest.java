@@ -6,17 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Collections;
 import java.util.List;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
 import org.junit.jupiter.api.Test;
 
 @UnitTest
-class BaseMarcRecordToValidatableRecordConverterTest {
+class BaseQuickMarcRecordToValidatableRecordConverterTest {
 
-  private final BaseMarcRecordToValidatableRecordConverter converter =
-    new BaseMarcRecordToValidatableRecordConverter();
+  private final BaseQuickMarcRecordToValidatableRecordConverter converter =
+    new BaseQuickMarcRecordToValidatableRecordConverter();
 
   @Test
   void shouldConvertBaseMarcRecordWithAllFields() {
@@ -25,10 +25,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
       new FieldItem().tag("001").content("test001"),
       new FieldItem().tag("245").content("$a Test title").indicators(List.of("0", "0"))
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader(leader)
-      .fields(fields)
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leader, fields);
 
     var result = converter.convert(baseMarcRecord);
 
@@ -36,7 +33,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     assertEquals(MarcFormat.BIBLIOGRAPHIC, result.getMarcFormat());
     assertEquals(leader, result.getLeader());
     assertThat(result.getFields()).hasSize(2);
-    
+
     var firstField = result.getFields().getFirst();
     assertEquals("001", firstField.getTag());
     assertEquals("test001", firstField.getContent());
@@ -50,10 +47,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
   @Test
   void shouldConvertBaseMarcRecordWithEmptyFields() {
     var leader = "00000nam\\\\2200000\\u\\4500";
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader(leader)
-      .fields(Collections.emptyList())
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leader, Collections.emptyList());
 
     var result = converter.convert(baseMarcRecord);
 
@@ -69,10 +63,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     var fields = List.of(
       new FieldItem().tag("100").content("$a Author name").indicators(List.of("1", " "))
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader(leader)
-      .fields(fields)
-      .marcFormat(MarcFormat.AUTHORITY);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.AUTHORITY, leader, fields);
 
     var result = converter.convert(baseMarcRecord);
 
@@ -89,10 +80,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     var fields = List.of(
       new FieldItem().tag("852").content("$b Library").indicators(List.of(" ", " "))
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader(leader)
-      .fields(fields)
-      .marcFormat(MarcFormat.HOLDINGS);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.HOLDINGS, leader, fields);
 
     var result = converter.convert(baseMarcRecord);
 
@@ -111,11 +99,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
       new FieldItem().tag("245").content("$a Title").indicators(List.of("0", "0")),
       new FieldItem().tag("650").content("$a Subject").indicators(List.of(" ", "0"))
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader("00000nam\\\\2200000\\u\\4500")
-      .fields(fields)
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
-
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, "00000nam\\\\2200000\\u\\4500", fields);
     var result = converter.convert(baseMarcRecord);
 
     assertNotNull(result);
@@ -132,10 +116,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     var fields = List.of(
       new FieldItem().tag("245").content(content).indicators(List.of("1", "0"))
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader("00000nam\\\\2200000\\u\\4500")
-      .fields(fields)
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, "00000nam\\\\2200000\\u\\4500", fields);
 
     var result = converter.convert(baseMarcRecord);
 
@@ -149,10 +130,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     var fields = List.of(
       new FieldItem().tag("245").content("$a Title").indicators(List.of("1", "4"))
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader("00000nam\\\\2200000\\u\\4500")
-      .fields(fields)
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, "00000nam\\\\2200000\\u\\4500", fields);
 
     var result = converter.convert(baseMarcRecord);
 
@@ -166,10 +144,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     var fields = List.of(
       new FieldItem().tag("001").content("test001")
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader("00000nam\\\\2200000\\u\\4500")
-      .fields(fields)
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, "00000nam\\\\2200000\\u\\4500", fields);
 
     var result = converter.convert(baseMarcRecord);
 
@@ -182,10 +157,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
   @Test
   void shouldPreserveLeader() {
     var leader = "00000nam a2200000 a 4500";
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader(leader)
-      .fields(Collections.emptyList())
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leader, Collections.emptyList());
 
     var result = converter.convert(baseMarcRecord);
 
@@ -198,10 +170,7 @@ class BaseMarcRecordToValidatableRecordConverterTest {
     var fields = List.of(
       new FieldItem().tag("001")
     );
-    var baseMarcRecord = new BaseMarcRecord()
-      .leader("00000nam\\\\2200000\\u\\4500")
-      .fields(fields)
-      .marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var baseMarcRecord = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, "00000nam\\\\2200000\\u\\4500", fields);
 
     var result = converter.convert(baseMarcRecord);
 

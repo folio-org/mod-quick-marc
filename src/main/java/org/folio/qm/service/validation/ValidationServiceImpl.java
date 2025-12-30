@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.convertion.converter.BaseMarcRecordToValidatableRecordConverter;
-import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.convertion.converter.BaseQuickMarcRecordToValidatableRecordConverter;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
 import org.folio.qm.domain.dto.ValidationIssue;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.domain.model.ValidatableRecordDelegate;
 import org.folio.qm.exception.MarcRecordValidationException;
@@ -33,17 +33,16 @@ import org.springframework.util.CollectionUtils;
 @Log4j2
 public class ValidationServiceImpl implements ValidationService {
 
-  public static final String REQUEST_AND_ENTITY_ID_NOT_EQUAL_MESSAGE = "Request id and entity id are not equal";
   public static final String TAG_NAME_REGEX = "^%s\\[\\d+]";
 
   private final List<ValidationRule> validationRules;
   private final MarcSpecificationService marcSpecificationService;
   private final SpecificationGuidedValidator validatableRecordValidator;
-  private final BaseMarcRecordToValidatableRecordConverter converter;
+  private final BaseQuickMarcRecordToValidatableRecordConverter converter;
   private final DefaultValuesPopulationService defaultValuesPopulationService;
 
   @Override
-  public ValidationResult validate(BaseMarcRecord quickMarc) {
+  public ValidationResult validate(BaseQuickMarcRecord quickMarc) {
     log.debug("validate:: Validating MARC record with format: {}", quickMarc.getMarcFormat());
     var validationErrors = validationRules.stream()
       .filter(rule -> rule.supportFormat(quickMarc.getMarcFormat()))
@@ -75,7 +74,7 @@ public class ValidationServiceImpl implements ValidationService {
   }
 
   @Override
-  public void validateMarcRecord(BaseMarcRecord marcRecord, List<SkippedValidationError> skippedValidationErrors) {
+  public void validateMarcRecord(BaseQuickMarcRecord marcRecord, List<SkippedValidationError> skippedValidationErrors) {
     if (marcRecord.getMarcFormat() != MarcFormat.HOLDINGS) {
       log.debug("validateMarcRecord:: validate a quickMarc record with format: {}", marcRecord.getMarcFormat());
       var validatableRecord = converter.convert(marcRecord);
@@ -128,8 +127,8 @@ public class ValidationServiceImpl implements ValidationService {
       .toList();
   }
 
-  private List<ValidationIssue> getValidationIssues(
-    ValidatableRecord validatableRecord, List<SkippedValidationError> skippedValidationErrors) {
+  private List<ValidationIssue> getValidationIssues(ValidatableRecord validatableRecord,
+                                                    List<SkippedValidationError> skippedValidationErrors) {
     log.trace("getValidationIssues:: Validating validatable record with format: {}", validatableRecord.getMarcFormat());
     var specification = marcSpecificationService.getSpecification(validatableRecord.getMarcFormat());
     return validatableRecordValidator.validate(new ValidatableRecordDelegate(validatableRecord), specification)

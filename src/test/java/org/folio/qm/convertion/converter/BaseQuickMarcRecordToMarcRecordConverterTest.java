@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.folio.qm.convertion.field.MarcFieldsConverter;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.marc4j.marc.impl.DataFieldImpl;
@@ -18,14 +18,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
-class BaseMarcRecordToMarcRecordConverterTest {
+class BaseQuickMarcRecordToMarcRecordConverterTest {
 
   private @Mock MarcFieldsConverter fieldsConverter;
-  private @InjectMocks BaseMarcRecordToMarcRecordConverter converter;
+  private @InjectMocks BaseQuickMarcRecordToMarcRecordConverter converter;
 
   @Test
   void convert_emptyFieldContent() {
-    var source = new BaseMarcRecord().leader("test");
+    var source = new StubQuickMarcRecord();
+    source.setLeader("test");
     var tag = "245";
 
     when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, '/', '/')));
@@ -40,7 +41,8 @@ class BaseMarcRecordToMarcRecordConverterTest {
 
   @Test
   void convert_emptyFieldIndicatorContent() {
-    var source = new BaseMarcRecord().leader("test");
+    var source = new StubQuickMarcRecord();
+    source.setLeader("test");
     var tag = "245";
 
     when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, ' ', '\\')));
@@ -57,7 +59,8 @@ class BaseMarcRecordToMarcRecordConverterTest {
 
   @Test
   void convert_invalidFieldIndicatorContent() {
-    var source = new BaseMarcRecord().leader("test");
+    var source = new StubQuickMarcRecord();
+    source.setLeader("test");
     var tag = "245";
 
     when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, '#', '#')));

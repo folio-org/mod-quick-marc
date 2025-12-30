@@ -18,10 +18,10 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import org.folio.qm.convertion.converter.BaseMarcRecordToValidatableRecordConverter;
-import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.convertion.converter.BaseQuickMarcRecordToValidatableRecordConverter;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.service.population.DefaultValuesPopulationService;
 import org.folio.qm.service.storage.specification.MarcSpecificationService;
@@ -32,6 +32,7 @@ import org.folio.rspec.domain.dto.ValidationError;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
 import org.folio.rspec.validation.validator.marc.model.MarcRuleCode;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -53,7 +54,7 @@ class ValidationServiceImplTest {
 
   private @Mock MarcSpecificationService marcSpecificationService;
   private @Mock SpecificationGuidedValidator validatableRecordValidator;
-  private @Mock BaseMarcRecordToValidatableRecordConverter converter;
+  private @Mock BaseQuickMarcRecordToValidatableRecordConverter converter;
   private @Mock DefaultValuesPopulationService defaultValuesPopulationService;
 
   private @InjectMocks ValidationServiceImpl service;
@@ -84,7 +85,7 @@ class ValidationServiceImplTest {
   @ParameterizedTest
   @MethodSource("getSkippedValidationErrors")
   void validate_shouldValidateWithoutIssues(List<SkippedValidationError> skippedValidationErrors) {
-    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = getMarcRecord();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(Collections.emptyList());
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
@@ -102,7 +103,7 @@ class ValidationServiceImplTest {
       .ruleCode(MISSING_SUBFIELD.getCode())
       .message(SUBFIELD_ERROR_MESSAGE)
       .build();
-    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = getMarcRecord();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
@@ -125,7 +126,7 @@ class ValidationServiceImplTest {
       .definitionType(DefinitionType.SUBFIELD)
       .ruleCode(UNDEFINED_SUBFIELD.getCode())
       .build();
-    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = getMarcRecord();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
@@ -142,7 +143,7 @@ class ValidationServiceImplTest {
       .ruleCode(MISSING_FIELD.getCode())
       .message(FIELD_ERROR_MESSAGE)
       .build();
-    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = getMarcRecord();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
@@ -160,7 +161,7 @@ class ValidationServiceImplTest {
       .ruleCode(NON_REPEATABLE_FIELD.getCode())
       .message(NON_REPEATABLE_FIELD_ERROR_MESSAGE)
       .build();
-    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = getMarcRecord();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(List.of(error));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
     when(converter.convert(marcRecord)).thenReturn(new ValidatableRecord());
@@ -191,7 +192,7 @@ class ValidationServiceImplTest {
       .ruleCode(MISSING_FIELD.getCode())
       .message(FIELD_ERROR_MESSAGE)
       .build();
-    var marcRecord = new BaseMarcRecord().marcFormat(MarcFormat.BIBLIOGRAPHIC);
+    var marcRecord = getMarcRecord();
     when(validatableRecordValidator.validate(any(), any())).thenReturn(
       List.of(nonRepeatableFieldError, missingFieldError));
     when(marcSpecificationService.getSpecification(any())).thenReturn(new SpecificationDto());
@@ -201,6 +202,12 @@ class ValidationServiceImplTest {
       new SkippedValidationError(TAG_001_CONTROL_FIELD, MISSING_FIELD));
 
     assertDoesNotThrow(() -> service.validateMarcRecord(marcRecord, skippedValidationFields));
+  }
+
+  private BaseQuickMarcRecord getMarcRecord() {
+    var marcRecord = new StubQuickMarcRecord();
+    marcRecord.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    return marcRecord;
   }
 
   private static Stream<Arguments> getSkippedValidationErrors() {

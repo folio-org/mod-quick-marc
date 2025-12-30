@@ -13,10 +13,10 @@ import org.folio.ParsedRecord;
 import org.folio.RawRecord;
 import org.folio.Record;
 import org.folio.qm.convertion.RecordConversionService;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.FolioRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
@@ -207,7 +207,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
         .withSuppressDiscovery(qmRecord.isSuppressDiscovery()));
   }
 
-  private void validateOnCreate(BaseMarcRecord quickMarc) {
+  private void validateOnCreate(BaseQuickMarcRecord quickMarc) {
     log.debug("validateOnCreate:: Validating MARC record on create");
     var skippedValidationError = new SkippedValidationError(TAG_001_CONTROL_FIELD, MarcRuleCode.MISSING_FIELD);
     validationService.validateMarcRecord(quickMarc, List.of(skippedValidationError));
@@ -215,14 +215,14 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     log.debug("validateOnCreate:: Validation successful");
   }
 
-  private void validateOnUpdate(BaseMarcRecord quickMarc) {
+  private void validateOnUpdate(BaseQuickMarcRecord quickMarc) {
     log.debug("validateOnUpdate:: Validating MARC record on update");
     validationService.validateMarcRecord(quickMarc, Collections.emptyList());
     validateMarcRecord(quickMarc);
     log.debug("validateOnUpdate:: Validation successful");
   }
 
-  private void validateMarcRecord(BaseMarcRecord marcRecord) {
+  private void validateMarcRecord(BaseQuickMarcRecord marcRecord) {
     log.trace("validateMarcRecord:: Running custom validation rules");
     var validationResult = validationService.validate(marcRecord);
     if (!validationResult.isValid()) {

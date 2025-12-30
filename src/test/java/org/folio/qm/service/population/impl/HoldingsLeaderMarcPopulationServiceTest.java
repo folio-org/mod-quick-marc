@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
 import org.junit.jupiter.api.Test;
 
 @UnitTest
@@ -55,8 +55,9 @@ class HoldingsLeaderMarcPopulationServiceTest {
     assertEquals(VALID_LEADER, quickMarc.getLeader());
   }
 
-  private BaseMarcRecord getQuickMarc(String leader) {
-    return new BaseMarcRecord()
-      .leader(leader);
+  private StubQuickMarcRecord getQuickMarc(String leader) {
+    var marcRecord = new StubQuickMarcRecord();
+    marcRecord.setLeader(leader);
+    return marcRecord;
   }
 }

@@ -2,13 +2,13 @@ package org.folio.qm.service.validation;
 
 import java.util.List;
 import java.util.Optional;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 
 public interface ValidationRule {
 
-  Optional<ValidationError> validate(BaseMarcRecord qmRecord);
+  Optional<ValidationError> validate(BaseQuickMarcRecord qmRecord);
 
   boolean supportFormat(MarcFormat marcFormat);
 

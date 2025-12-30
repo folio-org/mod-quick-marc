@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.marc4j.marc.Subfield;
 
 public final class MarcUtils {
@@ -38,7 +38,7 @@ public final class MarcUtils {
     return localDateTime.format(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
-  public static Optional<FieldItem> getFieldByTag(BaseMarcRecord quickMarc, String tag) {
+  public static Optional<FieldItem> getFieldByTag(BaseQuickMarcRecord quickMarc, String tag) {
     return quickMarc.getFields().stream()
       .filter(field -> tag.equals(field.getTag()))
       .findFirst();

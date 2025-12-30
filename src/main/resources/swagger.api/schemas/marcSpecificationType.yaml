@@ -1,0 +1,26 @@
+type: object
+description: Specification type definition
+properties:
+  code:
+    description: Type codename
+    type: string
+    example: books
+  identifiedBy:
+    description: Conditions used to identify MARC specification type
+    type: object
+    properties:
+      or:
+        description: Single condition
+        type: array
+        items:
+          $ref: 'marcSpecificationCondition.yaml'
+    required:
+      - or
+  items:
+    type: array
+    items:
+      $ref: 'marcSpecificationItem.yaml'
+required:
+  - code
+  - identifiedBy
+  - items

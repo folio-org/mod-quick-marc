@@ -21,13 +21,13 @@ import org.folio.RawRecord;
 import org.folio.Record;
 import org.folio.Record.RecordType;
 import org.folio.qm.convertion.RecordConversionService;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
@@ -115,7 +115,7 @@ class AuthorityChangeRecordServiceTest {
     service.update(recordId, quickMarcEdit);
 
     verify(defaultValuesPopulationService).populate(quickMarcEdit);
-    verify(validationService).validateMarcRecord(any(BaseMarcRecord.class), eq(Collections.emptyList()));
+    verify(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), eq(Collections.emptyList()));
     verify(validationService).validate(quickMarcEdit);
     verify(sourceRecordService).update(eq(recordId), any(Record.class));
     verify(folioRecordService).update(quickMarcEdit.getExternalId(), authorityRecord);
@@ -171,7 +171,7 @@ class AuthorityChangeRecordServiceTest {
     var validationResult = new ValidationResult(false, Collections.emptyList());
 
     mockDefaultValuesPopulation(quickMarcCreate);
-    doNothing().when(validationService).validateMarcRecord(any(BaseMarcRecord.class), anyList());
+    doNothing().when(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), anyList());
     when(validationService.validate(quickMarcCreate)).thenReturn(validationResult);
 
     assertThrows(FieldsValidationException.class, () -> service.create(quickMarcCreate));
@@ -202,7 +202,7 @@ class AuthorityChangeRecordServiceTest {
     assertNotNull(result);
     assertEquals(quickMarcView, result);
     verify(defaultValuesPopulationService).populate(quickMarcCreate);
-    verify(validationService).validateMarcRecord(any(BaseMarcRecord.class), anyList());
+    verify(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), anyList());
     verify(validationService).validate(quickMarcCreate);
     verify(folioRecordService).create(authorityRecord);
     verify(sourceRecordService).create(any(Record.class));
@@ -286,24 +286,24 @@ class AuthorityChangeRecordServiceTest {
     quickMarcCreate.setMarcFormat(MarcFormat.AUTHORITY);
 
     mockDefaultValuesPopulation(quickMarcCreate);
-    doNothing().when(validationService).validateMarcRecord(any(BaseMarcRecord.class), anyList());
+    doNothing().when(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), anyList());
     when(validationService.validate(quickMarcCreate))
       .thenReturn(new ValidationResult(false, Collections.emptyList()));
 
     assertThrows(FieldsValidationException.class, () -> service.create(quickMarcCreate));
 
-    verify(validationService).validateMarcRecord(any(BaseMarcRecord.class), anyList());
+    verify(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), anyList());
     verify(validationService).validate(quickMarcCreate);
     verify(folioRecordService, never()).create(any());
     verify(sourceRecordService, never()).create(any());
   }
 
-  private void mockDefaultValuesPopulation(BaseMarcRecord quickMarcRecord) {
+  private void mockDefaultValuesPopulation(BaseQuickMarcRecord quickMarcRecord) {
     doNothing().when(defaultValuesPopulationService).populate(quickMarcRecord);
   }
 
-  private void mockSuccessfulValidation(BaseMarcRecord quickMarcRecord) {
-    doNothing().when(validationService).validateMarcRecord(any(BaseMarcRecord.class), anyList());
+  private void mockSuccessfulValidation(BaseQuickMarcRecord quickMarcRecord) {
+    doNothing().when(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), anyList());
     when(validationService.validate(quickMarcRecord))
       .thenReturn(new ValidationResult(true, Collections.emptyList()));
   }
@@ -317,7 +317,7 @@ class AuthorityChangeRecordServiceTest {
     parsedContent.put("leader", "00000nz  a2200000n  4500");
     parsedContent.put("fields", new io.vertx.core.json.JsonArray());
 
-    var baseMarcRecord = new BaseMarcRecord();
+    var baseMarcRecord = new QuickMarcCreate();
     baseMarcRecord.setLeader("00000nz  a2200000n  4500");
     baseMarcRecord.setFields(List.of(new FieldItem().tag("100").content("Test")));
     baseMarcRecord.setMarcFormat(MarcFormat.AUTHORITY);
@@ -340,7 +340,7 @@ class AuthorityChangeRecordServiceTest {
     parsedContent.put("leader", "00000nz  a2200000n  4500");
     parsedContent.put("fields", new io.vertx.core.json.JsonArray());
 
-    var baseMarcRecord = new BaseMarcRecord();
+    var baseMarcRecord = new QuickMarcEdit();
     baseMarcRecord.setLeader("00000nz  a2200000n  4500");
     baseMarcRecord.setFields(List.of(new FieldItem().tag("100").content("Test")));
 

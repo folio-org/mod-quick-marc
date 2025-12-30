@@ -11,8 +11,8 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 
 public abstract class FieldValidationRule implements ValidationRule {
 
@@ -23,7 +23,7 @@ public abstract class FieldValidationRule implements ValidationRule {
   public static final String IS_REQUIRED_TAG_ERROR_MSG = "Is required tag";
 
   @Override
-  public Optional<ValidationError> validate(BaseMarcRecord qmRecord) {
+  public Optional<ValidationError> validate(BaseQuickMarcRecord qmRecord) {
     return validate(qmRecord.getFields());
   }
 

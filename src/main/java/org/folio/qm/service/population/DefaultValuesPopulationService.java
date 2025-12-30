@@ -3,9 +3,9 @@ package org.folio.qm.service.population;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.ValidatableRecord;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class DefaultValuesPopulationService {
     this.conversionService = conversionService;
   }
 
-  public void populate(BaseMarcRecord quickMarc) {
+  public void populate(BaseQuickMarcRecord quickMarc) {
     log.debug("populate:: Populating default values for MARC record with format: {}", quickMarc.getMarcFormat());
     findMatchingServices(quickMarc.getMarcFormat())
       .forEach(marcPopulationService -> marcPopulationService.populate(quickMarc));
@@ -32,7 +32,7 @@ public class DefaultValuesPopulationService {
   public void populate(ValidatableRecord validatableRecord) {
     log.debug("populate:: Populating default values for validatable record with format: {}",
       validatableRecord.getMarcFormat());
-    var baseMarcRecord = conversionService.convert(validatableRecord, BaseMarcRecord.class);
+    var baseMarcRecord = conversionService.convert(validatableRecord, BaseQuickMarcRecord.class);
 
     findMatchingServices(validatableRecord.getMarcFormat())
       .forEach(marcPopulationService -> marcPopulationService.populate(baseMarcRecord));

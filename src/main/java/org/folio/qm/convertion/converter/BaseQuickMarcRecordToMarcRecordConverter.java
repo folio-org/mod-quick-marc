@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.convertion.field.MarcFieldsConverter;
-import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.rspec.validation.validator.marc.model.MarcControlField;
 import org.folio.rspec.validation.validator.marc.model.MarcDataField;
 import org.folio.rspec.validation.validator.marc.model.MarcIndicator;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Primary
 @Component
 @RequiredArgsConstructor
-public class BaseMarcRecordToMarcRecordConverter implements Converter<BaseMarcRecord, MarcRecord> {
+public class BaseQuickMarcRecordToMarcRecordConverter implements Converter<BaseQuickMarcRecord, MarcRecord> {
 
   private static final char EMPTY_SPACE_VALUE = ' ';
   private static final char QUICK_MARC_INDICATOR_EMPTY_VALUE = '\\';
@@ -35,7 +35,7 @@ public class BaseMarcRecordToMarcRecordConverter implements Converter<BaseMarcRe
   private final MarcFieldsConverter fieldsConverter;
 
   @Override
-  public MarcRecord convert(BaseMarcRecord source) {
+  public MarcRecord convert(BaseQuickMarcRecord source) {
     List<MarcControlField> controlFields = new ArrayList<>();
     List<MarcDataField> dataFields = new ArrayList<>();
 

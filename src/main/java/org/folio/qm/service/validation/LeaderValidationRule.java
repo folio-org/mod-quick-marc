@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.folio.qm.convertion.elements.Constants;
 import org.folio.qm.convertion.elements.LeaderItem;
-import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 
 public abstract class LeaderValidationRule implements ValidationRule {
 
   @Override
-  public Optional<ValidationError> validate(BaseMarcRecord qmRecord) {
+  public Optional<ValidationError> validate(BaseQuickMarcRecord qmRecord) {
     return validate(qmRecord.getLeader());
   }
 
@@ -48,8 +48,8 @@ public abstract class LeaderValidationRule implements ValidationRule {
 
   private Optional<ValidationError> validateLeaderLength(String leader) {
     return Constants.LEADER_LENGTH == leader.length()
-      ? Optional.empty()
-      : Optional.of(createValidationError(leader, "Wrong leader length"));
+           ? Optional.empty()
+           : Optional.of(createValidationError(leader, "Wrong leader length"));
   }
 
   private Optional<ValidationError> validateLeaderNumberFields(String leader, int start, int length) {
@@ -64,6 +64,6 @@ public abstract class LeaderValidationRule implements ValidationRule {
 
   private boolean isValidLeaderValue(String leader, LeaderItem item) {
     return item.getPossibleValues().contains(leader.charAt(item.getPosition()))
-      || item.getPossibleValues().contains(Character.toLowerCase(leader.charAt(item.getPosition())));
+           || item.getPossibleValues().contains(Character.toLowerCase(leader.charAt(item.getPosition())));
   }
 }

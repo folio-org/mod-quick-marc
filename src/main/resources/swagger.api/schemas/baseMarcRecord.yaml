@@ -1,0 +1,27 @@
+type: object
+title: Base MARC record for QuickMARC
+description: Common properties for all MARC record types in QuickMARC
+properties:
+  leader:
+    type: string
+    description: MARC record's leader
+  fields:
+    description: MARC record's fields
+    type: array
+    items:
+      $ref: 'fieldItem.yaml'
+  suppressDiscovery:
+    type: boolean
+    default: false
+    description: Flag indicates if the record is displayed during a search
+  marcFormat:
+    $ref: 'marcFormat.yaml'
+  sourceVersion:
+    type: integer
+    description: Version of the source record
+    default: -1
+    example: 1
+required:
+  - marcFormat
+  - leader
+  - fields

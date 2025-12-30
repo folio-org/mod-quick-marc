@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.LinkedList;
 import java.util.List;
 import org.folio.qm.convertion.elements.LeaderItem;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
 import org.junit.jupiter.api.Test;
 
 @UnitTest
@@ -141,8 +141,9 @@ class LeaderMarcPopulationServiceTest {
     };
   }
 
-  private BaseMarcRecord getQuickMarc(String leader) {
-    return new BaseMarcRecord()
-      .leader(leader);
+  private StubQuickMarcRecord getQuickMarc(String leader) {
+    var marcRecord = new StubQuickMarcRecord();
+    marcRecord.setLeader(leader);
+    return marcRecord;
   }
 }

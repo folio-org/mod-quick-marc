@@ -10,9 +10,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 import org.folio.Record.RecordType;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ import org.springframework.core.convert.converter.Converter;
 @ExtendWith(MockitoExtension.class)
 class QuickMarcEditToQuickMarcRecordConverterTest {
 
-  private @Mock Converter<BaseMarcRecord, Record> marcConverter;
+  private @Mock Converter<BaseQuickMarcRecord, Record> marcConverter;
   private @Spy MarcFormatToMappingRecordTypeConverter toMappingRecordTypeConverter;
   private @Spy MarcFormatToRecordTypeConverter toRecordTypeConverter;
   private QuickMarcEditToQuickMarcRecordConverter converter;

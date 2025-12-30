@@ -17,12 +17,10 @@ import org.folio.qm.service.links.LinksSuggestionService;
 import org.folio.qm.service.validation.ValidationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping(value = "/records-editor")
 @RequiredArgsConstructor
 public class RecordsEditorApiImpl implements RecordsEditorApi {
 

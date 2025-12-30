@@ -1,14 +1,49 @@
 openapi: 3.0.0
 info:
   title: quickMARC MARC Specifications
-  version: 1.0
+  version: "1.2"
+  description: API for retrieving MARC field specifications by record type and field tag
+  contact:
+    name: FOLIO
+tags:
+  - name: marc-specifications
+    description: Operations for retrieving MARC field specifications
 servers:
-  - url: /marc-specifications/
+  - url: https://folio-edev-spitfire-diku.ci.folio.org
+    description: Development environment.
+  - url: https://folio-etesting-{environment}.ci.folio.org
+    description: Reference environments.
+    variables:
+      environment:
+        default: snapshot-diku
+        enum:
+          - snapshot-diku
+          - sprint-fs09000000
 paths:
-  /{recordType}/{fieldTag}:
+  /marc-specifications/{recordType}/{fieldTag}:
     get:
       tags:
         - marc-specifications
+      summary: Get MARC specification
+      description: Retrieves MARC field specification for the given record type and field tag
+      operationId: getMarcSpecification
+      parameters:
+        - name: recordType
+          in: path
+          required: true
+          description: Type of MARC record
+          schema:
+            type: string
+            enum: [ bibliographic, holdings, authority ]
+          example: bibliographic
+        - name: fieldTag
+          in: path
+          required: true
+          description: Three-digit MARC field tag
+          schema:
+            type: string
+            pattern: ^[0-9]{3}$
+          example: "008"
       responses:
         '200':
           description: MARC specification successfully retrieved
@@ -17,49 +52,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/marcSpec'
         '400':
-          description:
-            Bad request, e.g. malformed request body or query parameter.
-            Details of the error (e.g. name of the parameter or line/character number
-            with malformed data) provided in the response.
+          description: Bad request, e.g. invalid record type or field tag format
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '404':
-          description: MARC specification with a given recordType and fieldTag not found
+          description: MARC specification not found for the given record type and field tag
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '500':
-          description: Internal server error, e.g. due to misconfiguration
+          description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-      description: Get MARC specification by recordType and fieldTag
-      operationId: getMarcSpecification
-      parameters:
-        - name: recordType
-          in: path
-          required: true
-          description: Record type
-          schema:
-            type: string
-            enum: [bibliographic,holdings,authority]
-            example: bibliographic
-        - name: fieldTag
-          in: path
-          required: true
-          description: Field's tag
-          schema:
-            type: string
-            pattern: ^[0-9]{3}$
-            example: 008
 components:
   schemas:
     error:
       type: object
+      description: Error response
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: may not be null
+        type:
+          type: string
+          description: Error type identifier
+          example: "1"
+        code:
+          type: string
+          description: Error code
+          example: "-1"
+        parameters:
+          type: array
+          description: Additional error parameters
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: moduleTo
+              value:
+                type: string
+                example: "null"
     marcSpec:
-      $ref: 'schemas/common.yaml#/marcSpecification'
+      $ref: 'schemas/marcSpecification.yaml'
 

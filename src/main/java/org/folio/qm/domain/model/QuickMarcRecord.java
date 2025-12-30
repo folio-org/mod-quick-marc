@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.exception.ConverterException;
@@ -32,7 +31,7 @@ import org.marc4j.marc.Record;
 @AllArgsConstructor
 public class QuickMarcRecord {
 
-  private BaseMarcRecord source;
+  private BaseQuickMarcRecord source;
 
   /**
    * Marc4j Record representation of the MARC record.

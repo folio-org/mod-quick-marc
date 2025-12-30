@@ -1,7 +1,6 @@
 package org.folio.qm.convertion.field;
 
 import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.substring;
 
 import java.util.Arrays;
@@ -27,14 +26,14 @@ public interface VariableFieldConverter<T extends VariableField> {
       );
   }
 
+  default String extractElementFromContent(String content, ControlFieldItem element, int delta) {
+    return substring(content, element.getPosition() + delta, element.getPosition() + delta + element.getLength());
+  }
+
   private Object getControlFieldElementContent(String content, ControlFieldItem element, int delta) {
     var elementFromContent = extractElementFromContent(content, element, delta);
     return element.isArray()
-      ? Arrays.asList(elementFromContent.split(EMPTY))
-      : elementFromContent;
-  }
-
-  default String extractElementFromContent(String content, ControlFieldItem element, int delta) {
-    return substring(content, element.getPosition() + delta, element.getPosition() + delta + element.getLength());
+           ? Arrays.asList(elementFromContent.chars().mapToObj(c -> (char) c).toArray(Character[]::new))
+           : elementFromContent;
   }
 }

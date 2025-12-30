@@ -50,7 +50,7 @@ public final class MarcRecordModifier {
       // Create new 999 field with $i subfield
       DataField field999 = FACTORY.newDataField(TAG_999, INDICATOR_F, INDICATOR_F);
       field999.addSubfield(FACTORY.newSubfield(SUBFIELD_I, externalId));
-      
+
       marcRecord.addVariableField(field999);
       log.debug("add999Field:: Added 999 field with externalId: {}", externalId);
       return true;
@@ -64,7 +64,7 @@ public final class MarcRecordModifier {
    * Adds or updates 001 field with HRID value.
    *
    * @param marcRecord the marc4j Record to modify
-   * @param hrid the HRID value to set
+   * @param hrid       the HRID value to set
    * @return true if successful, false otherwise
    */
   public static boolean add001Field(Record marcRecord, String hrid) {
@@ -108,7 +108,7 @@ public final class MarcRecordModifier {
       return new JsonObject(os.toString()).encode();
     } catch (Exception e) {
       log.error("toJsonContent:: Failed to convert MARC record to JSON", e);
-      throw new RuntimeException("Failed to convert MARC record to JSON", e);
+      throw new IllegalArgumentException("Failed to convert MARC record to JSON", e);
     }
   }
 
@@ -121,14 +121,14 @@ public final class MarcRecordModifier {
   public static Record fromJsonContent(String jsonContent) {
     try {
       MarcJsonReader reader = new MarcJsonReader(
-          new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8)));
+        new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8)));
       if (reader.hasNext()) {
         return reader.next();
       }
       throw new IllegalArgumentException("No MARC record found in JSON content");
     } catch (Exception e) {
       log.error("fromJsonContent:: Failed to parse JSON content", e);
-      throw new RuntimeException("Failed to parse JSON content", e);
+      throw new IllegalArgumentException("Failed to parse JSON content", e);
     }
   }
 
@@ -136,15 +136,15 @@ public final class MarcRecordModifier {
    * Gets a single field by tag and indicators 'f' 'f'.
    *
    * @param marcRecord the marc4j Record
-   * @param tag the field tag
+   * @param tag        the field tag
    * @return the field if found, null otherwise
    */
   private static VariableField getSingleFieldByIndicators(Record marcRecord, String tag) {
     for (VariableField field : marcRecord.getVariableFields(tag)) {
-      if (field instanceof DataField dataField) {
-        if (dataField.getIndicator1() == INDICATOR_F && dataField.getIndicator2() == INDICATOR_F) {
-          return field;
-        }
+      if (field instanceof DataField dataField
+          && dataField.getIndicator1() == INDICATOR_F
+          && dataField.getIndicator2() == INDICATOR_F) {
+        return field;
       }
     }
     return null;

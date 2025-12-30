@@ -10,6 +10,7 @@ import static org.folio.qm.util.ErrorUtils.buildInternalError;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.folio.qm.convertion.elements.ControlFieldItem;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
@@ -61,7 +62,16 @@ public interface FieldItemConverter {
   private String getItemValue(Map<String, Object> map, ControlFieldItem item) {
     var itemValue = map.get(item.getName());
     if (itemValue instanceof List && item.isArray()) {
-      return String.join(EMPTY, (List<String>) itemValue);
+      if (!((List<?>) itemValue).isEmpty()) {
+        if (((List<?>) itemValue).getFirst() instanceof String) {
+          return String.join(EMPTY, (List<String>) itemValue);
+        } else if (((List<?>) itemValue).getFirst() instanceof Character) {
+          return ((List<Character>) itemValue).stream()
+            .map(String::valueOf)
+            .collect(Collectors.joining());
+        }
+      }
+      throw new IllegalArgumentException("Invalid control field item value type");
     } else {
       return itemValue.toString();
     }

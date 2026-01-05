@@ -1,13 +1,13 @@
 package org.folio.qm.client;
 
-import org.folio.qm.client.model.MarcFieldProtectionSettingsCollection;
+import org.folio.MarcFieldProtectionSettingsCollection;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.service.annotation.GetExchange;
-import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.bind.annotation.GetMapping;
 
-@HttpExchange(url = "field-protection-settings", accept = MediaType.APPLICATION_JSON_VALUE)
+@FeignClient(value = "field-protection-settings")
 public interface FieldProtectionSettingsClient {
 
-  @GetExchange(value = "/marc?limit=1000")
+  @GetMapping(value = "/marc?limit=1000", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
   MarcFieldProtectionSettingsCollection getFieldProtectionSettings();
 }

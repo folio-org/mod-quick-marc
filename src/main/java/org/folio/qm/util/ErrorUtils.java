@@ -1,7 +1,7 @@
 package org.folio.qm.util;
 
 import java.util.List;
-import org.folio.qm.validation.ValidationError;
+import org.folio.qm.service.validation.ValidationError;
 import org.folio.tenant.domain.dto.Error;
 import org.folio.tenant.domain.dto.Errors;
 import org.folio.tenant.domain.dto.Parameter;

@@ -133,7 +133,7 @@ public enum Tag008FieldTestData {
     content.put("Repro", "u");
     content.put("Rept date", "\\1\\\\\\\\");
     content.put("Sep/comp", "\\");
-    content.put("Spec ret", List.of("\\", "\\", "\\"));
+    content.put("Spec ret", List.of('\\', '\\', '\\'));
     return content;
   }
 
@@ -150,7 +150,7 @@ public enum Tag008FieldTestData {
     content.put("Repro", "u");
     content.put("Rept date", "\\1\\\\\\\\");
     content.put("Sep/comp", "\\");
-    content.put("Spec ret", List.of("\\", "\\", "\\"));
+    content.put("Spec ret", List.of('\\', '\\', '\\'));
     return content;
   }
 
@@ -168,7 +168,7 @@ public enum Tag008FieldTestData {
     content.put("Repro", "\\");
     content.put("Rept date", "\\\\\\\\\\\\");
     content.put("Sep/comp", "\\");
-    content.put("Spec ret", List.of("\\", "\\", "\\"));
+    content.put("Spec ret", List.of('\\', '\\', '\\'));
     return content;
   }
 
@@ -189,10 +189,10 @@ public enum Tag008FieldTestData {
     content.put("Lang", "stu");
     content.put("MRec", "v");
     content.put("Srce", "w");
-    content.put("Ills", List.of("a", "b", "c", "d"));
+    content.put("Ills", List.of('a', 'b', 'c', 'd'));
     content.put("Audn", "e");
     content.put("Form", "f");
-    content.put("Cont", List.of("g", "h", "i", "j"));
+    content.put("Cont", List.of('g', 'h', 'i', 'j'));
     content.put("GPub", "k");
     content.put("Conf", "l");
     content.put("Fest", "m");
@@ -232,10 +232,10 @@ public enum Tag008FieldTestData {
     content.put("Lang", "stu");
     content.put("MRec", "v");
     content.put("Srce", "w");
-    content.put("Ills", List.of("a", "b", "c", "d"));
+    content.put("Ills", List.of('a', 'b', 'c', 'd'));
     content.put("Audn", "e");
     content.put("Form", "\\");
-    content.put("Cont", List.of("\\", "\\", "\\", "\\"));
+    content.put("Cont", List.of('\\', '\\', '\\', '\\'));
     content.put("GPub", "k");
     content.put("Conf", "l");
     content.put("Fest", "m");
@@ -257,10 +257,10 @@ public enum Tag008FieldTestData {
     content.put("Lang", "\\\\\\");
     content.put("MRec", "\\");
     content.put("Srce", "\\");
-    content.put("Ills", List.of("\\", "\\", "\\", "\\"));
+    content.put("Ills", List.of('\\', '\\', '\\', '\\'));
     content.put("Audn", "\\");
     content.put("Form", "\\");
-    content.put("Cont", List.of("\\", "\\", "\\", "\\"));
+    content.put("Cont", List.of('\\', '\\', '\\', '\\'));
     content.put("GPub", "\\");
     content.put("Conf", "\\");
     content.put("Fest", "\\");
@@ -288,7 +288,7 @@ public enum Tag008FieldTestData {
     content.put("Orig", "d");
     content.put("Form", "e");
     content.put("EntW", "f");
-    content.put("Cont", List.of("g", "h", "i"));
+    content.put("Cont", List.of('g', 'h', 'i'));
     content.put("GPub", "j");
     content.put("Conf", "k");
     content.put("Alph", "l");
@@ -327,13 +327,13 @@ public enum Tag008FieldTestData {
     content.put("Lang", "stu");
     content.put("MRec", "v");
     content.put("Srce", "w");
-    content.put("Relf", List.of("a", "b", "c", "d"));
+    content.put("Relf", List.of('a', 'b', 'c', 'd'));
     content.put("Proj", "ef");
     content.put("CrTp", "g");
     content.put("GPub", "h");
     content.put("Form", "i");
     content.put("Indx", "j");
-    content.put("SpFm", List.of("k", "l"));
+    content.put("SpFm", List.of('k', 'l'));
     return content;
   }
 
@@ -370,8 +370,8 @@ public enum Tag008FieldTestData {
     content.put("Part", "d");
     content.put("Audn", "e");
     content.put("Form", "f");
-    content.put("AccM", List.of("g", "h", "i", "j", "k", "l"));
-    content.put("LTxt", List.of("m", "n"));
+    content.put("AccM", List.of('g', 'h', 'i', 'j', 'k', 'l'));
+    content.put("LTxt", List.of('m', 'n'));
     content.put("TrAr", "o");
     return content;
   }
@@ -393,8 +393,8 @@ public enum Tag008FieldTestData {
     content.put("Part", "d");
     content.put("Audn", "e");
     content.put("Form", "f");
-    content.put("AccM", List.of("g", "h", "i", "j", "k", "l"));
-    content.put("LTxt", List.of("m", "n"));
+    content.put("AccM", List.of('g', 'h', 'i', 'j', 'k', 'l'));
+    content.put("LTxt", List.of('m', 'n'));
     content.put("TrAr", "o");
     return content;
   }
@@ -427,7 +427,7 @@ public enum Tag008FieldTestData {
     content.put("Lang", "stu");
     content.put("MRec", "v");
     content.put("Srce", "w");
-    content.put("Time", List.of("a", "b", "c"));
+    content.put("Time", List.of('a', 'b', 'c'));
     content.put("Audn", "d");
     content.put("GPub", "e");
     content.put("Form", "f");

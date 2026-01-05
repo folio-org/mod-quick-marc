@@ -1,18 +1,16 @@
 package org.folio.qm.client;
 
-import org.folio.qm.client.model.EntitiesLinksSuggestions;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.folio.qm.domain.model.LinksSuggestions;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.service.annotation.HttpExchange;
-import org.springframework.web.service.annotation.PostExchange;
 
-@HttpExchange(url = "links-suggestions", accept = MediaType.APPLICATION_JSON_VALUE)
+@FeignClient(value = "links-suggestions", dismiss404 = true)
 public interface LinksSuggestionsClient {
 
-  @PostExchange("/marc")
-  EntitiesLinksSuggestions postLinksSuggestions(@RequestBody EntitiesLinksSuggestions srsMarcRecord,
-                                                @RequestParam AuthoritySearchParameter authoritySearchParameter,
-                                                @RequestParam Boolean ignoreAutoLinkingEnabled);
+  @PostMapping("/marc")
+  LinksSuggestions postLinksSuggestions(LinksSuggestions linksSuggestions,
+                                        @RequestParam AuthoritySearchParameter authoritySearchParameter,
+                                        @RequestParam Boolean ignoreAutoLinkingEnabled);
 }

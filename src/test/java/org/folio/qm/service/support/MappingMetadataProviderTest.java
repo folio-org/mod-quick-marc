@@ -4,7 +4,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.folio.qm.client.model.MappingRecordTypeEnum.MARC_AUTHORITY;
+import static org.folio.qm.domain.model.MappingRecordType.MARC_AUTHORITY;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.when;
@@ -63,10 +63,10 @@ class MappingMetadataProviderTest {
   void getMappingData_positive() {
     var mappingRules = new JsonObject("{\"test\": \"test\"}");
     var mappingParams = new MappingParameters().withIdentifierTypes(List.of(new IdentifierType().withId("test")));
-    when(client.getMappingMetadata(MARC_AUTHORITY.getValue())).thenReturn(
+    when(client.getMappingMetadata(MARC_AUTHORITY.value())).thenReturn(
       new MappingMetadataClient.MappingMetadata(mappingRules.encode(), MAPPER.writeValueAsString(mappingParams)));
 
-    var metadata = provider.getMappingData(MARC_AUTHORITY.getValue());
+    var metadata = provider.getMappingData(MARC_AUTHORITY);
 
     assertThat(metadata.mappingRules()).isEqualTo(mappingRules);
     assertThat(metadata.mappingParameters().getIdentifierTypes()).isEqualTo(mappingParams.getIdentifierTypes());
@@ -78,8 +78,8 @@ class MappingMetadataProviderTest {
 
   @Test
   void getMappingData_negative_serverError() {
-    when(client.getMappingMetadata(MARC_AUTHORITY.getValue())).thenThrow(NotFoundException.class);
-    var metadata = provider.getMappingData(MARC_AUTHORITY.getValue());
+    when(client.getMappingMetadata(MARC_AUTHORITY.value())).thenThrow(NotFoundException.class);
+    var metadata = provider.getMappingData(MARC_AUTHORITY);
     assertThat(metadata).isNull();
     var cachedValue = getCachedValue();
     assertThat(cachedValue).isEmpty();
@@ -87,8 +87,8 @@ class MappingMetadataProviderTest {
 
   @Test
   void getMappingData_negative_nullServerResponse() {
-    when(client.getMappingMetadata(MARC_AUTHORITY.getValue())).thenReturn(null);
-    var metadata = provider.getMappingData(MARC_AUTHORITY.getValue());
+    when(client.getMappingMetadata(MARC_AUTHORITY.value())).thenReturn(null);
+    var metadata = provider.getMappingData(MARC_AUTHORITY);
     assertThat(metadata).isNull();
     var cachedValue = getCachedValue();
     assertThat(cachedValue).isEmpty();
@@ -98,8 +98,8 @@ class MappingMetadataProviderTest {
   @MethodSource("emptyMappingMetadataArguments")
   void getMappingData_negative_emptyServerResponse(String mappingRules, String mappingParams) {
     var mappingMetadata = new MappingMetadataClient.MappingMetadata(mappingRules, mappingParams);
-    when(client.getMappingMetadata(MARC_AUTHORITY.getValue())).thenReturn(mappingMetadata);
-    var metadata = provider.getMappingData(MARC_AUTHORITY.getValue());
+    when(client.getMappingMetadata(MARC_AUTHORITY.value())).thenReturn(mappingMetadata);
+    var metadata = provider.getMappingData(MARC_AUTHORITY);
     assertThat(metadata).isNull();
     var cachedValue = getCachedValue();
     assertThat(cachedValue).isEmpty();
@@ -126,7 +126,7 @@ class MappingMetadataProviderTest {
 
   private Optional<MappingMetadataProvider.MappingData> getCachedValue() {
     return ofNullable(cacheManager.getCache(CACHE_NAME))
-      .map(cache -> cache.get(TENANT_ID + MARC_AUTHORITY.getValue()))
+      .map(cache -> cache.get(TENANT_ID + MARC_AUTHORITY.name()))
       .map(Cache.ValueWrapper::get)
       .map(cached -> (MappingMetadataProvider.MappingData) cached);
   }

@@ -5,7 +5,6 @@ import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.URL;
 import static org.folio.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
 import static org.folio.support.utils.ApiTestUtils.TENANT_ID;
-import static org.folio.support.utils.InputOutputTestUtils.readFile;
 import static org.folio.support.utils.JsonTestUtils.getObjectAsJson;
 import static org.folio.support.utils.TestEntitiesUtils.JOHN_USER_ID;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -16,10 +15,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.folio.qm.ModQuickMarcApplication;
@@ -32,23 +33,23 @@ import org.folio.spring.testing.extension.EnablePostgres;
 import org.folio.spring.testing.extension.impl.OkapiConfiguration;
 import org.folio.support.DisplayNameLogger;
 import org.folio.tenant.domain.dto.TenantAttributes;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import tools.jackson.databind.ObjectMapper;
 
+@Log4j2
 @EnableOkapi
 @EnableKafka
 @EnablePostgres
@@ -59,19 +60,14 @@ import tools.jackson.databind.ObjectMapper;
 @SuppressWarnings("java:S5786")
 public class BaseIT {
 
-  protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
-  protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
-  protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
   protected static final String SPECIFICATION_COMPLETE_TOPIC_NAME =
     "folio.test.specification-storage.specification.updated";
 
   protected static OkapiConfiguration okapiConfiguration;
   private static boolean dbInitialized = false;
-  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
+
   @Autowired
   protected FolioModuleMetadata metadata;
-  @Autowired
-  protected JdbcTemplate jdbcTemplate;
   @Autowired
   protected KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
@@ -80,8 +76,32 @@ public class BaseIT {
   private CacheManager cacheManager;
   @Autowired
   private ObjectMapper objectMapper;
+  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
+
   @Value("${folio.okapi-url}")
   private String okapiUrl;
+
+  @BeforeEach
+  void before() throws Exception {
+    if (!dbInitialized) {
+      var body = new TenantAttributes().moduleTo("mod-quick-marc");
+      doPost("/_/tenant", body, getHeaders().toSingleValueMap())
+        .andExpect(status().isNoContent());
+
+      dbInitialized = true;
+    }
+    cacheManager.getCacheNames().forEach(name -> requireNonNull(cacheManager.getCache(name)).clear());
+  }
+
+  @AfterEach
+  void afterEach() {
+    this.wireMockServer.resetAll();
+  }
+
+  @Test
+  void contextLoads() {
+    Assertions.assertTrue(true, "Context loaded successfully");
+  }
 
   protected ResultActions doGet(String uri) throws Exception {
     return mockMvc.perform(get(uri)
@@ -119,21 +139,6 @@ public class BaseIT {
   }
 
   @SneakyThrows
-  protected void sendDataImportKafkaRecord(String eventPayloadFilePath, String topicName) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
-    String message = jsonObject.toString();
-    sendKafkaRecord(message, topicName);
-  }
-
-  @SneakyThrows
-  protected void sendQuickMarcKafkaRecord(String eventPayload) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), BaseIT.QM_COMPLETE_TOPIC_NAME);
-  }
-
-  @SneakyThrows
   protected void sendSpecificationKafkaRecord(SpecificationUpdatedEvent eventPayload) {
     var payload = objectMapper.writeValueAsString(eventPayload);
     sendKafkaRecord(payload, BaseIT.SPECIFICATION_COMPLETE_TOPIC_NAME);
@@ -150,23 +155,6 @@ public class BaseIT {
 
   protected String getOkapiUrl() {
     return okapiUrl;
-  }
-
-  @BeforeEach
-  void before() throws Exception {
-    if (!dbInitialized) {
-      var body = new TenantAttributes().moduleTo("mod-quick-marc");
-      doPost("/_/tenant", body, getHeaders().toSingleValueMap())
-        .andExpect(status().isNoContent());
-
-      dbInitialized = true;
-    }
-    cacheManager.getCacheNames().forEach(name -> requireNonNull(cacheManager.getCache(name)).clear());
-  }
-
-  @AfterEach
-  void afterEach() {
-    this.wireMockServer.resetAll();
   }
 
   private RecordHeader createKafkaHeader(String headerName, String headerValue) {

@@ -1,0 +1,21 @@
+type: object
+description: Specification condition definition
+properties:
+  tag:
+    description: Field's tag
+    type: string
+    pattern: ^([0-9]{3})|(LDR)$
+    example: "001"
+  positions:
+    description: Map of condition definitions
+    type: object
+    additionalProperties:
+      type: array
+      items:
+        type: string
+        minLength: 1
+        maxLength: 1
+        example: a
+required:
+  - tag
+  - positions

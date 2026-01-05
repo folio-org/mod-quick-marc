@@ -61,11 +61,11 @@ public interface FieldItemConverter {
   @SuppressWarnings("unchecked")
   private String getItemValue(Map<String, Object> map, ControlFieldItem item) {
     var itemValue = map.get(item.getName());
-    if (itemValue instanceof List && item.isArray()) {
-      if (!((List<?>) itemValue).isEmpty()) {
-        if (((List<?>) itemValue).getFirst() instanceof String) {
+    if (itemValue instanceof List<?> itemValueList && item.isArray()) {
+      if (!itemValueList.isEmpty()) {
+        if (itemValueList.getFirst() instanceof String) {
           return String.join(EMPTY, (List<String>) itemValue);
-        } else if (((List<?>) itemValue).getFirst() instanceof Character) {
+        } else if (itemValueList.getFirst() instanceof Character) {
           return ((List<Character>) itemValue).stream()
             .map(String::valueOf)
             .collect(Collectors.joining());

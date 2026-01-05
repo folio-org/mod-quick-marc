@@ -23,7 +23,6 @@ public class ChangeRecordServiceRegistry {
     log.info("ChangeRecordServiceRegistry:: Initialized with {} record services", services.size());
   }
 
-  @SuppressWarnings("java:S1452")
   public ChangeRecordService get(MarcFormat marcFormat) {
     log.debug("get:: Retrieving service for format: {}", marcFormat);
     var service = services.get(marcFormat);

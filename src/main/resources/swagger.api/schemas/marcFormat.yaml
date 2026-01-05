@@ -1,0 +1,6 @@
+type: string
+description: MARC Format
+enum:
+  - BIBLIOGRAPHIC
+  - HOLDINGS
+  - AUTHORITY

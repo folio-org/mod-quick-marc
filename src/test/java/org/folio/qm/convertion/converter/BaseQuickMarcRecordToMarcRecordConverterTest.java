@@ -1,0 +1,77 @@
+package org.folio.qm.convertion.converter;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import org.folio.qm.convertion.field.MarcFieldsConverter;
+import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.marc4j.marc.impl.DataFieldImpl;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@UnitTest
+@ExtendWith(MockitoExtension.class)
+class BaseQuickMarcRecordToMarcRecordConverterTest {
+
+  private @Mock MarcFieldsConverter fieldsConverter;
+  private @InjectMocks BaseQuickMarcRecordToMarcRecordConverter converter;
+
+  @Test
+  void convert_emptyFieldContent() {
+    var source = new StubQuickMarcRecord();
+    source.setLeader("test");
+    var tag = "245";
+
+    when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, '/', '/')));
+
+    var actual = converter.convert(source);
+
+    assertThat(actual).isNotNull();
+    assertThat(actual.dataFields()).hasSize(1);
+    assertThat(actual.dataFields().getFirst())
+      .matches(field -> tag.equals(field.tag()) && field.subfields().isEmpty());
+  }
+
+  @Test
+  void convert_emptyFieldIndicatorContent() {
+    var source = new StubQuickMarcRecord();
+    source.setLeader("test");
+    var tag = "245";
+
+    when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, ' ', '\\')));
+
+    var actual = converter.convert(source);
+
+    assertThat(actual).isNotNull();
+    assertThat(actual.dataFields()).hasSize(1);
+    var dataField = actual.dataFields().getFirst();
+    assertThat(dataField.indicators()).isNotNull();
+    assertThat(dataField.indicators()).hasSize(2);
+    dataField.indicators().forEach(ind -> assertEquals('#', ind.value()));
+  }
+
+  @Test
+  void convert_invalidFieldIndicatorContent() {
+    var source = new StubQuickMarcRecord();
+    source.setLeader("test");
+    var tag = "245";
+
+    when(fieldsConverter.convertQmFields(any(), any())).thenReturn(List.of(new DataFieldImpl(tag, '#', '#')));
+
+    var actual = converter.convert(source);
+
+    assertThat(actual).isNotNull();
+    assertThat(actual.dataFields()).hasSize(1);
+    var dataField = actual.dataFields().getFirst();
+    assertThat(dataField.indicators()).isNotNull();
+    assertThat(dataField.indicators()).hasSize(2);
+    dataField.indicators().forEach(ind -> assertEquals('\\', ind.value()));
+  }
+}

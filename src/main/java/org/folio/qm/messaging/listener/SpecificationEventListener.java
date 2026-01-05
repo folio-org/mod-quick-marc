@@ -5,7 +5,7 @@ import static org.folio.qm.util.TenantContextUtils.runInFolioContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.qm.service.MarcSpecificationService;
+import org.folio.qm.service.storage.specification.MarcSpecificationService;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
 import org.folio.spring.FolioModuleMetadata;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -27,7 +27,7 @@ public class SpecificationEventListener {
     groupId = "#{folioKafkaProperties.listener['specification-updated'].groupId}",
     topicPattern = "#{folioKafkaProperties.listener['specification-updated'].topicPattern}",
     concurrency = "#{folioKafkaProperties.listener['specification-updated'].concurrency}",
-    containerFactory = "specificationUpdatedKafkaListenerContainerFactory")
+    containerFactory = "specificationContainerFactory")
   public void specificationUpdatedListener(SpecificationUpdatedEvent event, MessageHeaders messageHeaders) {
     runInFolioContext(getFolioExecutionContextFromSpecification(messageHeaders, event.tenantId(), moduleMetadata),
       () -> specificationService.updateSpecificationCache(event));

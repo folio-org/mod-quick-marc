@@ -1,0 +1,11 @@
+type: object
+description: Specification item value definition
+properties:
+  code:
+    description: Value code
+    type: string
+    example: e
+  name:
+    description: Value name
+    type: string
+    example: Detailed date

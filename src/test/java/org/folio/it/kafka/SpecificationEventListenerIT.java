@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.folio.it.BaseIT;
 import org.folio.qm.domain.dto.ValidatableRecord;
-import org.folio.qm.messaging.topic.KafkaTopicsInitializer;
 import org.folio.rspec.domain.dto.Family;
 import org.folio.rspec.domain.dto.FamilyProfile;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
@@ -37,8 +36,6 @@ class SpecificationEventListenerIT extends BaseIT {
   @Autowired
   private BeanFactory beanFactory;
   @Autowired
-  private KafkaTopicsInitializer topicsInitializer;
-  @Autowired
   private KafkaListenerEndpointRegistry listenerEndpointRegistry;
 
   @PostConstruct
@@ -49,7 +46,11 @@ class SpecificationEventListenerIT extends BaseIT {
     if (!configurableBeanFactory.containsBean(beanName)) {
       configurableBeanFactory.registerSingleton(beanName, topic);
       kafkaAdmin.initialize();
-      topicsInitializer.restartEventListeners();
+      listenerEndpointRegistry.getAllListenerContainers().forEach(container -> {
+          container.stop();
+          container.start();
+        }
+      );
     }
   }
 

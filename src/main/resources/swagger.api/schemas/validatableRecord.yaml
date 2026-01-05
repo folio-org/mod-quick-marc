@@ -1,0 +1,27 @@
+type: object
+description: Validatable MARC Record
+properties:
+  leader:
+    type: string
+    description: MARC record's leader
+  fields:
+    description: MARC record's fields
+    type: array
+    items:
+      type: object
+      properties:
+        tag:
+          description: Field's tag
+          type: string
+        content:
+          description: Field's content
+          type: object
+        indicators:
+          description: Field's indicators
+          type: array
+          items:
+            type: string
+  marcFormat:
+    $ref: 'marcFormat.yaml'
+required:
+  - marcFormat

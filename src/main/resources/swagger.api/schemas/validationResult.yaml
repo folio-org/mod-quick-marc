@@ -1,0 +1,8 @@
+type: object
+description: Collection of validation issues found during MARC record validation
+properties:
+  issues:
+    description: List of issues
+    type: array
+    items:
+      $ref: 'validationIssue.yaml'

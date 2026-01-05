@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
-import org.folio.qm.client.model.DataImportEventPayload;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.FolioModuleMetadata;
@@ -26,17 +25,6 @@ public class TenantContextUtils {
     headers.put(XOkapiHeaders.TENANT, Collections.singletonList(tenant));
 
     return new DefaultFolioExecutionContext(context.getFolioModuleMetadata(), headers);
-  }
-
-  public static FolioExecutionContext getFolioExecutionContextFromDataImportEvent(DataImportEventPayload data,
-                                                                                  MessageHeaders headers,
-                                                                                  FolioModuleMetadata moduleMetadata) {
-    return getContextFromKafkaHeaders(data.getTenant(), data.getOkapiUrl(), data.getToken(), headers, moduleMetadata);
-  }
-
-  public static FolioExecutionContext getFolioExecutionContextFromQuickMarcEvent(MessageHeaders headers,
-                                                                                 FolioModuleMetadata moduleMetadata) {
-    return getContextFromKafkaHeaders(null, null, null, headers, moduleMetadata);
   }
 
   public static FolioExecutionContext getFolioExecutionContextFromSpecification(MessageHeaders headers, String tenantId,

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.client.MappingMetadataClient;
+import org.folio.qm.domain.model.MappingRecordType;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,10 @@ public class MappingMetadataProvider {
   @Cacheable(cacheNames = "mapping-metadata-cache",
     key = "@folioExecutionContext.tenantId + #recordType",
     unless = "#result == null")
-  public MappingData getMappingData(String recordType) {
+  public MappingData getMappingData(MappingRecordType recordType) {
     log.trace("getMappingData:: fetching mapping metadata");
     try {
-      var metadata = client.getMappingMetadata(recordType);
+      var metadata = client.getMappingMetadata(recordType.value());
       if (metadata == null || isBlank(metadata.mappingParams()) || isBlank(metadata.mappingRules())) {
         log.warn("Failed to fetch mapping metadata");
         return null;

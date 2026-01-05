@@ -1,0 +1,43 @@
+type: object
+description: Specification item definition
+properties:
+  code:
+    description: Item code
+    type: string
+    example: Entered
+  name:
+    description: Item name
+    type: string
+    example: Date entered on file
+  order:
+    description: Item order
+    type: integer
+    example: 0
+  position:
+    description: Position in field
+    type: integer
+    example: 0
+  length:
+    description: Length from position
+    type: integer
+    example: 5
+  isArray:
+    description: Is item an array of values
+    type: boolean
+    example: false
+  readOnly:
+    description: Is item read only
+    type: boolean
+    example: true
+  allowedValues:
+    type: array
+    items:
+      $ref: 'marcSpecificationItemValue.yaml'
+required:
+  - code
+  - name
+  - order
+  - position
+  - length
+  - isArray
+  - readOnly

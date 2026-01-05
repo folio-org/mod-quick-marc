@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.validation.ValidationError;
-import org.folio.qm.validation.impl.holdings.HoldingsLeaderValidationRule;
+import org.folio.qm.service.validation.ValidationError;
+import org.folio.qm.service.validation.impl.holdings.HoldingsLeaderValidationRule;
 import org.folio.spring.testing.type.UnitTest;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package org.folio.qm.client;
 
-import org.folio.qm.client.model.EntitiesLinksSuggestions;
 import org.folio.qm.domain.dto.AuthoritySearchParameter;
+import org.folio.qm.domain.model.LinksSuggestions;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface LinksSuggestionsClient {
 
   @PostMapping("/marc")
-  EntitiesLinksSuggestions postLinksSuggestions(EntitiesLinksSuggestions srsMarcRecord,
-                                                @RequestParam AuthoritySearchParameter authoritySearchParameter,
-                                                @RequestParam Boolean ignoreAutoLinkingEnabled);
+  LinksSuggestions postLinksSuggestions(LinksSuggestions linksSuggestions,
+                                        @RequestParam AuthoritySearchParameter authoritySearchParameter,
+                                        @RequestParam Boolean ignoreAutoLinkingEnabled);
 }

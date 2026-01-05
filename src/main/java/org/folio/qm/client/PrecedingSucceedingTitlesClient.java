@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.PutMapping;
 public interface PrecedingSucceedingTitlesClient {
 
   @PutMapping(value = "/instances/{id}")
-  void updateTitles(@PathVariable("id") String id, InstancePrecedingSucceedingTitles titles);
+  void updateTitles(@PathVariable String id, InstancePrecedingSucceedingTitles titles);
 }

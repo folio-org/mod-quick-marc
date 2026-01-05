@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="MODQM-455@@drop-job_profile-table" author="psmagin">
+    <dropTable cascadeConstraints="true" tableName="job_profile"/>
+  </changeSet>
+
+  <changeSet id="MODQM-455@@drop-record_creation_status-table" author="psmagin">
+    <dropTable cascadeConstraints="true" tableName="record_creation_status"/>
+  </changeSet>
+
+  <changeSet id="MODQM-455@@drop-status-enum-cast" author="psmahin">
+    <sql>
+      DROP CAST IF EXISTS (character varying as Status);
+    </sql>
+  </changeSet>
+
+  <changeSet id="MODQM-455@@drop-status-enum" author="psmagin">
+    <sql>
+      DROP TYPE IF EXISTS Status;
+    </sql>
+  </changeSet>
+
+  <changeSet id="MODQM-455@@drop-trigger_set_status_updated_at-function" author="psmagin">
+    <sql>
+      DROP FUNCTION IF EXISTS trigger_set_status_updated_at();
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

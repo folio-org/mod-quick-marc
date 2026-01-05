@@ -1,0 +1,30 @@
+type: object
+description: User Display Information
+properties:
+  userId:
+    description: ID of the user
+    type: string
+    format: uuid
+    readOnly: true
+  username:
+    description: Username of the user
+    type: string
+    readOnly: true
+  lastName:
+    type: string
+    readOnly: true
+    description: Last name of the user
+  firstName:
+    type: string
+    readOnly: true
+    description: First name of the user
+  middleName:
+    type: string
+    readOnly: true
+    description: Middle name or initial of the user
+example:
+  userId: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
+  username: john-doe
+  lastName: Doe
+  firstName: John
+  middleName: X.

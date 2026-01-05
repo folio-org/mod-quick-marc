@@ -30,10 +30,10 @@ public enum Tag006FieldTestData {
   private static Map<String, Object> getBooksContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "a");
-    content.put("Ills", List.of("a", "b", "c", "d"));
+    content.put("Ills", List.of('a', 'b', 'c', 'd'));
     content.put("Audn", "e");
     content.put("Form", "f");
-    content.put("Cont", List.of("g", "h", "i", "j"));
+    content.put("Cont", List.of('g', 'h', 'i', 'j'));
     content.put("GPub", "k");
     content.put("Conf", "l");
     content.put("Fest", "m");
@@ -46,10 +46,10 @@ public enum Tag006FieldTestData {
   private static Map<String, Object> getBooksWithEmptyItemsContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "a");
-    content.put("Ills", List.of("a", "b", "c", "d"));
+    content.put("Ills", List.of('a', 'b', 'c', 'd'));
     content.put("Audn", "e");
     content.put("Form", "\\");
-    content.put("Cont", List.of("\\", "\\", "\\", "\\"));
+    content.put("Cont", List.of('\\', '\\', '\\', '\\'));
     content.put("GPub", "k");
     content.put("Conf", "l");
     content.put("Fest", "m");
@@ -68,7 +68,7 @@ public enum Tag006FieldTestData {
     content.put("Orig", "d");
     content.put("Form", "e");
     content.put("EntW", "f");
-    content.put("Cont", List.of("g", "h", "i"));
+    content.put("Cont", List.of('g', 'h', 'i'));
     content.put("GPub", "j");
     content.put("Conf", "k");
     content.put("Alph", "l");
@@ -89,13 +89,13 @@ public enum Tag006FieldTestData {
   private static Map<String, Object> getMapsContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "e");
-    content.put("Relf", List.of("a", "b", "c", "d"));
+    content.put("Relf", List.of('a', 'b', 'c', 'd'));
     content.put("Proj", "ef");
     content.put("CrTp", "g");
     content.put("GPub", "h");
     content.put("Form", "i");
     content.put("Indx", "j");
-    content.put("SpFm", List.of("k", "l"));
+    content.put("SpFm", List.of('k', 'l'));
     return content;
   }
 
@@ -114,8 +114,8 @@ public enum Tag006FieldTestData {
     content.put("Part", "d");
     content.put("Audn", "e");
     content.put("Form", "f");
-    content.put("AccM", List.of("g", "h", "i", "j", "k", "l"));
-    content.put("LTxt", List.of("m", "n"));
+    content.put("AccM", List.of('g', 'h', 'i', 'j', 'k', 'l'));
+    content.put("LTxt", List.of('m', 'n'));
     content.put("TrAr", "o");
     return content;
   }
@@ -128,8 +128,8 @@ public enum Tag006FieldTestData {
     content.put("Part", "d");
     content.put("Audn", "e");
     content.put("Form", "f");
-    content.put("AccM", List.of("g", "h", "i", "j", "k", "l"));
-    content.put("LTxt", List.of("m", "n"));
+    content.put("AccM", List.of('g', 'h', 'i', 'j', 'k', 'l'));
+    content.put("LTxt", List.of('m', 'n'));
     content.put("TrAr", "o");
     return content;
   }
@@ -144,7 +144,7 @@ public enum Tag006FieldTestData {
   private static Map<String, Object> getVisualContent() {
     Map<String, Object> content = new LinkedHashMap<>();
     content.put("Type", "g");
-    content.put("Time", List.of("a", "b", "c"));
+    content.put("Time", List.of('a', 'b', 'c'));
     content.put("Audn", "d");
     content.put("GPub", "e");
     content.put("Form", "f");

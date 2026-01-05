@@ -1,7 +1,5 @@
 package org.folio.qm.util;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -10,19 +8,11 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
-import org.folio.qm.client.model.RecordTypeEnum;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
-import org.folio.qm.domain.dto.MarcFormat;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.marc4j.marc.Subfield;
 
 public final class MarcUtils {
-
-  public static final BiMap<RecordTypeEnum, MarcFormat> TYPE_MAP = ImmutableBiMap.of(
-    RecordTypeEnum.BIB, MarcFormat.BIBLIOGRAPHIC,
-    RecordTypeEnum.AUTHORITY, MarcFormat.AUTHORITY,
-    RecordTypeEnum.HOLDING, MarcFormat.HOLDINGS
-  );
 
   private static final Pattern SPLIT_PATTERN = Pattern.compile("(?=[$][a-zA-Z0-9])");
   private static final int TOKEN_MIN_LENGTH = 3;
@@ -48,7 +38,7 @@ public final class MarcUtils {
     return localDateTime.format(DATE_AND_TIME_OF_LATEST_TRANSACTION_FIELD_FORMATTER);
   }
 
-  public static Optional<FieldItem> getFieldByTag(BaseMarcRecord quickMarc, String tag) {
+  public static Optional<FieldItem> getFieldByTag(BaseQuickMarcRecord quickMarc, String tag) {
     return quickMarc.getFields().stream()
       .filter(field -> tag.equals(field.getTag()))
       .findFirst();

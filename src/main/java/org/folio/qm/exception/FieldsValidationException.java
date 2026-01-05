@@ -1,7 +1,7 @@
 package org.folio.qm.exception;
 
 import lombok.Getter;
-import org.folio.qm.validation.ValidationResult;
+import org.folio.qm.service.validation.ValidationResult;
 
 @Getter
 public class FieldsValidationException extends RuntimeException {

@@ -1,14 +1,41 @@
 openapi: 3.0.0
 info:
   title: quickMARC Record Editor
-  version: 5.5
+  version: "6.0"
+  description: API for creating, editing, and managing MARC records in the quickMARC editor
+  contact:
+    name: FOLIO
+tags:
+  - name: records-editor
+    description: Operations for managing MARC records
 servers:
-  - url: /records-editor/
+  - url: https://folio-edev-spitfire-diku.ci.folio.org
+    description: Development environment.
+  - url: https://folio-etesting-{environment}.ci.folio.org
+    description: Reference environments.
+    variables:
+      environment:
+        default: snapshot-diku
+        enum:
+          - snapshot-diku
+          - sprint-fs09000000
 paths:
-  /records:
+  /records-editor/records:
     get:
       tags:
         - records-editor
+      summary: Get MARC record by external ID
+      description: Retrieves a MARC record associated with the provided external entity UUID
+      operationId: getRecordByExternalId
+      parameters:
+        - name: externalId
+          in: query
+          required: true
+          description: UUID of the external entity that is related to the MARC record
+          schema:
+            type: string
+            format: uuid
+          example: b9a5f035-de63-4e2c-92c2-07240c89b817
       responses:
         '200':
           description: MARC record successfully retrieved
@@ -16,169 +43,136 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/quickMarcView'
+              example:
+                parsedRecordId: c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1
+                parsedRecordDtoId: c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c
+                externalId: b9a5f035-de63-4e2c-92c2-07240c89b817
+                externalHrid: in00000000001
+                marcFormat: BIBLIOGRAPHIC
+                leader: 01587ccm a2200361   4500
+                fields:
+                  - tag: "100"
+                    content:
+                      $a: "Mozart, Wolfgang Amadeus,"
+                      $d: "1756-1791."
+                    indicators: [ "1", " " ]
+                  - tag: "245"
+                    content:
+                      $a: "Test Title"
+                    indicators: [ "1", "0" ]
         '400':
-          description:
-            Bad request, e.g. malformed request body or query parameter.
-            Details of the error (e.g. name of the parameter or line/character number
-            with malformed data) provided in the response.
+          description: Bad request, e.g. malformed request body or query parameter
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '404':
-          description: MARC record with a given ID not found
+          description: MARC record with the given external ID not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '500':
-          description: Internal server error, e.g. due to misconfiguration
+          description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-      description: Get MARC record by externalId
-      operationId: getRecordByExternalId
-      parameters:
-        - name: externalId
-          in: query
-          required: true
-          description: UUID of the external that is related to the MARC record
-          schema:
-            type: string
-            format: uuid
     post:
       tags:
         - records-editor
+      summary: Create new MARC record
+      description: Creates a new MARC record with the provided data
       operationId: createNewRecord
+      requestBody:
+        required: true
+        description: MARC record data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/quickMarcCreate'
       responses:
         '201':
-          description: MARC Record status created
+          description: MARC record successfully created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/creationStatus'
+                $ref: '#/components/schemas/quickMarcView'
         '400':
-          description: Bad Request
+          description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '422':
-          description: MARC Record validation error
+          description: Unprocessable Entity - MARC record validation error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/validationResult'
         '500':
-          description: Internal server error, e.g. due to misconfiguration
+          description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/quickMarcCreate'
-        required: true
-  /records/{id}:
+  /records-editor/records/{id}:
     put:
       tags:
         - records-editor
+      summary: Update MARC record
+      description: Updates an existing MARC record with the provided data
+      operationId: updateRecord
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The UUID of the MARC record
+          schema:
+            type: string
+            format: uuid
+          example: c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1
+      requestBody:
+        required: true
+        description: MARC record data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/quickMarcEdit'
       responses:
         '202':
           description: MARC record accepted for updating
         '400':
-          description:
-            Bad request, e.g. malformed request body or query parameter.
-            Details of the error (e.g. name of the parameter or line/character number
-            with malformed data) provided in the response.
+          description: Bad request, e.g. malformed request body or query parameter
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '409':
-          description: Update failed due to optimistic locking
+          description: Conflict - Update failed due to optimistic locking
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '422':
-          description: MARC Record validation error
+          description: Unprocessable Entity - MARC record validation error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/validationResult'
         '500':
-          description: Internal server error, e.g. due to misconfiguration
+          description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-      description: Edit MARC record
-      operationId: putRecord
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/quickMarcEdit'
-        required: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The UUID of a record
-
-  /records/status:
-    get:
-      tags:
-        - records-editor
-      responses:
-        '200':
-          description: Status of MARC bibliographic record creation successfully retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/creationStatus'
-        '400':
-          description:
-            Bad request, e.g. malformed request body or query parameter.
-            Details of the error (e.g. name of the parameter or line/character number
-            with malformed data) provided in the response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        '404':
-          description: MARC record with a given ID not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        '500':
-          description: Internal server error, e.g. due to misconfiguration
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-      description: Get status of MARC bibliographic record creation
-      operationId: getRecordCreationStatus
-      parameters:
-        - name: qmRecordId
-          in: query
-          required: true
-          description: UUID of ParsedRecord to be created
-          schema:
-            type: string
-            format: uuid
-  /links/suggestion:
+  /records-editor/links/suggestion:
     post:
       tags:
         - records-editor
+      summary: Suggest links for MARC record
+      description: Analyzes MARC record and suggests authority links based on the specified search parameter
+      operationId: suggestLinks
       parameters:
         - name: authoritySearchParameter
           in: query
@@ -193,76 +187,105 @@ paths:
           schema:
             type: boolean
             default: false
+      requestBody:
+        required: true
+        description: MARC record to analyze for link suggestions
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/quickMarcView'
       responses:
         '201':
-          description: MARC Record status created
+          description: Link suggestions successfully generated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/quickMarcView'
         '400':
-          description: Bad Request
+          description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '500':
-          description: Internal server error, e.g. due to misconfiguration
+          description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  /records-editor/validate:
+    post:
+      tags:
+        - records-editor
+      summary: Validate MARC record
+      description: Validates a MARC record against defined rules and specifications
+      operationId: validateRecord
       requestBody:
+        required: true
+        description: MARC record data to validate
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/quickMarcView'
-        required: true
-  /validate:
-    post:
-      tags:
-        - records-validator
+              $ref: '#/components/schemas/validatableRecord'
       responses:
         '200':
-          description: MARC Record validation result
+          description: MARC record validation completed (may contain validation issues)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/validationResult'
         '400':
-          description: Bad Request
+          description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         '500':
-          description: Internal server error, e.g. due to misconfiguration
+          description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/validatableRecord'
-        required: true
 components:
   schemas:
     quickMarcView:
-      $ref: 'schemas/common.yaml#/quickMarcView'
+      $ref: 'schemas/quickMarcView.yaml'
     quickMarcCreate:
-      $ref: 'schemas/common.yaml#/quickMarcCreate'
+      $ref: 'schemas/quickMarcCreate.yaml'
     quickMarcEdit:
-      $ref: 'schemas/common.yaml#/quickMarcEdit'
-    creationStatus:
-      $ref: 'schemas/common.yaml#/creationStatus'
+      $ref: 'schemas/quickMarcEdit.yaml'
     validationResult:
-      $ref: 'schemas/common.yaml#/validationResult'
+      $ref: 'schemas/validationResult.yaml'
     validatableRecord:
-      $ref: 'schemas/common.yaml#/validatableRecord'
+      $ref: 'schemas/validatableRecord.yaml'
     error:
       type: object
+      description: Error response
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: may not be null
+        type:
+          type: string
+          description: Error type identifier
+          example: "1"
+        code:
+          type: string
+          description: Error code
+          example: "-1"
+        parameters:
+          type: array
+          description: Additional error parameters
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: moduleTo
+              value:
+                type: string
+                example: "null"
     authoritySearchParameter:
       description: Authority search parameter for link suggestions
       type: string

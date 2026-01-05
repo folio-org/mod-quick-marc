@@ -1,0 +1,24 @@
+type: object
+description: MARC record view model with read-only metadata
+x-implements: ['org.folio.qm.domain.model.BaseQuickMarcRecord']
+allOf:
+  - $ref: 'baseMarcRecord.yaml'
+  - type: object
+    properties:
+      parsedRecordId:
+        description: MARC record Id
+        type: string
+        format: uuid
+      parsedRecordDtoId:
+        description: ParsedRecordDto identifier
+        type: string
+        format: uuid
+      externalId:
+        description: Identifier of external entity
+        type: string
+        format: uuid
+      externalHrid:
+        description: HRID of external entity
+        type: string
+      updateInfo:
+        $ref: 'updateInfo.yaml'

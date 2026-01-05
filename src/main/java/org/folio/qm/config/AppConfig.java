@@ -1,6 +1,6 @@
 package org.folio.qm.config;
 
-import org.folio.qm.domain.dto.BaseMarcRecord;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.rspec.i18n.TranslationProvider;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
 import org.folio.rspec.validation.validator.marc.model.MarcRecord;
@@ -36,7 +36,8 @@ public class AppConfig {
 
   @Bean("validatableRecordValidator")
   public SpecificationGuidedValidator validatableRecordValidator(TranslationProvider translationProvider,
-                                                                 Converter<BaseMarcRecord, MarcRecord> converter) {
-    return new SpecificationGuidedValidator(translationProvider, source -> converter.convert((BaseMarcRecord) source));
+                                                                 Converter<BaseQuickMarcRecord, MarcRecord> converter) {
+    return new SpecificationGuidedValidator(translationProvider,
+      source -> converter.convert((BaseQuickMarcRecord) source));
   }
 }

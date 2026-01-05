@@ -1,6 +1,6 @@
 package org.folio.qm.client;
 
-import org.folio.qm.client.model.MarcFieldProtectionSettingsCollection;
+import org.folio.MarcFieldProtectionSettingsCollection;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

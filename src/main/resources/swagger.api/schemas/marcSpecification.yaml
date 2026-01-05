@@ -1,0 +1,42 @@
+type: object
+description: MARC specification definition
+properties:
+  tag:
+    description: Field's tag
+    type: string
+    pattern: ^[0-9]{3}$
+    example: "008"
+  format:
+    $ref: 'marcFormat.yaml'
+  label:
+    description: Label of the specification
+    type: string
+  url:
+    description: Url to details about field spec
+    type: string
+    format: uri
+  repeatable:
+    description: If this field can appear multiple time in MARC record
+    type: boolean
+  required:
+    description: If this field is required in MARC record
+    type: boolean
+  spec:
+    type: object
+    description: Details of the specification
+    properties:
+      types:
+        description: Array of types
+        type: array
+        items:
+          $ref: 'marcSpecificationType.yaml'
+    required:
+      - types
+required:
+  - tag
+  - format
+  - label
+  - url
+  - repeatable
+  - required
+  - spec

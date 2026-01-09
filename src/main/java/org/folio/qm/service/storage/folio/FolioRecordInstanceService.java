@@ -33,6 +33,7 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
     log.debug("create:: Creating instance record");
     var instance = storageClient.createInstance(folioRecord);
     log.info("create:: Instance record created with id: {}", instance.getId());
+    folioRecord.setId(instance.getId());
     updateTitles(instance.getId(), folioRecord);
     return instance;
   }

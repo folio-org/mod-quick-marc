@@ -18,6 +18,7 @@
 * Use unique consumer group per instance for specification-storage.specification.updated topic ([MODQM-483](https://folio-org.atlassian.net/browse/MODQM-483))
 * Ignore empty subfields during conversion from DTO ([MODQM-445](https://folio-org.atlassian.net/browse/MODQM-445))
 * Implement MARC Record Update Flow ([MODQM-490](https://folio-org.atlassian.net/browse/MODQM-490))
+* Handle 003 and 035 fields in MARC Record Create flow ([MODQM-497](https://folio-org.atlassian.net/browse/MODQM-497))
 
 ### Bug fixes
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))

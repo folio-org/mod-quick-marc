@@ -1,5 +1,6 @@
 package org.folio.qm.service.change;
 
+import static org.folio.Record.RecordType.MARC_BIB;
 import static org.folio.qm.convertion.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorUtils.buildError;
 
@@ -80,6 +81,8 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     validateOnCreate(qmCreateRecord);
 
     var qmRecord = conversionService.convert(qmCreateRecord, QuickMarcRecord.class);
+    // rawContent should be without adding required fields and updating non-required fields
+    qmRecord.setRawContent(qmRecord.getParsedContent().encode());
     createFolioRecord(qmRecord);
     createSourceRecord(qmRecord);
     log.info("createRecord:: new record created with externalId: {}", qmRecord.getExternalId());
@@ -108,7 +111,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     var existingRecord = sourceRecordService.get(recordId);
     validateRecordVersion(qmRecord, existingRecord);
     var sourceRecord = buildUpdatedRecord(qmRecord, existingRecord);
-    sourceRecordService.update(recordId, sourceRecord);
+    sourceRecordService.update(UUID.fromString(sourceRecord.getMatchedId()), sourceRecord);
     log.debug("updateSourceRecord:: Source record updated successfully for parsedRecordId: {}",
       qmRecord.getParsedRecordDtoId());
   }
@@ -137,6 +140,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
 
   private void createFolioRecord(QuickMarcRecord qmRecord) {
     log.debug("createFolioRecord:: Creating folio record");
+    updateNonRequiredFields(qmRecord);
     var mappedRecord = getMappedRecord(qmRecord);
     var createdRecord = folioRecordService.create(mappedRecord);
     qmRecord.setExternalId(UUID.fromString(createdRecord.getId()));
@@ -165,6 +169,20 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     }
   }
 
+  private void updateNonRequiredFields(QuickMarcRecord qmRecord) {
+    var marcRecord = qmRecord.getMarcRecord();
+    if (MARC_BIB.equals(qmRecord.getSourceRecordType())
+      || Record.RecordType.MARC_HOLDING.equals(qmRecord.getSourceRecordType())) {
+      log.debug("updateNonRequiredFields:: removing 003 fields if exists");
+      MarcRecordModifier.remove003Field(marcRecord);
+      if (MARC_BIB.equals(qmRecord.getSourceRecordType())) {
+        log.debug("updateNonRequiredFields:: normalizing 035 fields if exists");
+        MarcRecordModifier.normalize035Field(marcRecord);
+      }
+      qmRecord.buildParsedContent();
+    }
+  }
+
   private Record buildNewSourceRecord(QuickMarcRecord qmRecord) {
     var recordId = UUID.randomUUID().toString();
 
@@ -178,10 +196,10 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
       .withGeneration(0)
       .withRawRecord(new RawRecord()
         .withId(recordId)
-        .withContent(qmRecord.getParsedContent().encode()))
+        .withContent(qmRecord.getRawContent()))
       .withParsedRecord(new ParsedRecord()
         .withId(recordId)
-        .withContent(qmRecord.getParsedContent()))
+        .withContent(qmRecord.getParsedContent().encode()))
       .withExternalIdsHolder(getExternalIdsHolder(qmRecord))
       .withAdditionalInfo(new AdditionalInfo()
         .withSuppressDiscovery(qmRecord.isSuppressDiscovery()));
@@ -192,7 +210,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     return new Record()
       .withId(recordId)
       .withSnapshotId(existingRecord.getSnapshotId())
-      .withMatchedId(recordId)
+      .withMatchedId(existingRecord.getMatchedId())
       .withRecordType(qmRecord.getSourceRecordType())
       .withOrder(existingRecord.getOrder())
       .withDeleted(false)
@@ -201,7 +219,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
       .withRawRecord(existingRecord.getRawRecord().withId(recordId))
       .withParsedRecord(new ParsedRecord()
         .withId(recordId)
-        .withContent(qmRecord.getParsedContent()))  // Use precomputed ParsedContent
+        .withContent(qmRecord.getParsedContent().encode()))  // Use precomputed ParsedContent
       .withExternalIdsHolder(getExternalIdsHolder(qmRecord))
       .withAdditionalInfo(new AdditionalInfo()
         .withSuppressDiscovery(qmRecord.isSuppressDiscovery()));

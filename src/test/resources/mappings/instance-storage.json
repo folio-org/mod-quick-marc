@@ -37,6 +37,19 @@
         },
         "bodyFileName": "instance-storage/instance.json"
       }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/instance-storage/instances?query=hrid==in00001&limit=10&offset=0"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "instance-storage/instances.json"
+      }
     }
   ]
 }

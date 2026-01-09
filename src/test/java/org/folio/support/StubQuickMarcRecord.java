@@ -34,12 +34,14 @@ public class StubQuickMarcRecord implements BaseQuickMarcRecord {
 
   @Override
   public BaseQuickMarcRecord fields(List<FieldItem> fields) {
-    throw new UnsupportedOperationException();
+    this.fields = fields;
+    return this;
   }
 
   @Override
   public BaseQuickMarcRecord addFieldsItem(FieldItem fieldsItem) {
-    throw new UnsupportedOperationException();
+    fields.add(fieldsItem);
+    return this;
   }
 
   @Override

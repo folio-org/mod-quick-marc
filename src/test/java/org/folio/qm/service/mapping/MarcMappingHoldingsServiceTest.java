@@ -8,10 +8,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.vertx.core.json.JsonObject;
+import java.util.List;
+import java.util.UUID;
 import org.folio.Holdings;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
+import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
 import org.folio.qm.domain.model.HoldingsRecord;
+import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
@@ -20,6 +24,7 @@ import org.folio.qm.service.support.MappingMetadataProvider.MappingData;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.marc4j.marc.MarcFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,19 +35,25 @@ class MarcMappingHoldingsServiceTest {
 
   private @Mock MappingMetadataProvider mappingMetadataProvider;
   private @Mock FolioRecordMerger<HoldingsRecord, Holdings> merger;
+  private @Mock InstanceStorageClient instanceStorageClient;
   private @InjectMocks MarcMappingHoldingsService service;
 
   @Test
   void shouldMapNewRecord() {
-    var qmRecord = createQuickMarcRecord();
     var mappingData = createMappingData();
-
     when(mappingMetadataProvider.getMappingData(MappingRecordType.MARC_HOLDINGS))
       .thenReturn(mappingData);
+    var instanceRecord = new InstanceRecord();
+    var instanceId = UUID.randomUUID().toString();
+    instanceRecord.setId(instanceId);
+    when(instanceStorageClient.getInstanceByHrid(any()))
+      .thenReturn(new InstanceStorageClient.InstanceResult(List.of(instanceRecord), 1));
+    var qmRecord = createQuickMarcRecord();
 
     var result = service.mapNewRecord(qmRecord);
 
     assertNotNull(result);
+    assertEquals(instanceId, result.getInstanceId());
     verify(mappingMetadataProvider).getMappingData(MappingRecordType.MARC_HOLDINGS);
     verify(merger).merge(any(), any());
   }
@@ -125,6 +136,9 @@ class MarcMappingHoldingsServiceTest {
 
   private QuickMarcRecord createQuickMarcRecord() {
     var qmRecord = new QuickMarcRecord();
+    var marcRecord = MarcFactory.newInstance().newRecord();
+    marcRecord.addVariableField(MarcFactory.newInstance().newControlField("004", "instanceHrid"));
+    qmRecord.setMarcRecord(marcRecord);
     qmRecord.setMappingRecordType(MappingRecordType.MARC_HOLDINGS);
     qmRecord.setParsedRecordId(java.util.UUID.randomUUID());
     qmRecord.setParsedContent(new JsonObject().put("leader", "00000naa a2200000"));

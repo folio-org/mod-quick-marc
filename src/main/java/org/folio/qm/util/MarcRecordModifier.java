@@ -5,12 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.MarcJsonWriter;
@@ -32,13 +28,16 @@ public final class MarcRecordModifier {
   public static final String TAG_001 = "001";
   public static final String TAG_003 = "003";
   public static final String TAG_004 = "004";
-  public static final String TAG_005 = "005";
   public static final String TAG_035 = "035";
   public static final char INDICATOR_F = 'f';
   public static final char SUBFIELD_I = 'i';
+  private static final String DOT_OR_WHITESPACE_REGEX = "[.\\s]";
+  private static final String DIGITS_REGEX = "\\d+";
+  private static final String PREFIX_ZEROS_REGEX = "^0+";
   private static final String OCLC_PREFIX = "(OCoLC)";
   private static final String OCLC = "OCoLC";
   private static final String OCLC_PATTERN = "\\((" + OCLC + ")\\)((ocm|ocn|on)?0*|([a-zA-Z]+)0*)(\\d+\\w*)";
+  private static final Pattern OCLC_COMPILED = Pattern.compile(OCLC_PATTERN);
 
   private static final MarcFactory FACTORY = MarcFactory.newInstance();
 
@@ -115,10 +114,13 @@ public final class MarcRecordModifier {
    * @param marcRecord the marc4j Record to modify
    */
   public static void normalize035Field(Record marcRecord) {
-    var subfields = get035SubfieldOclcValues(marcRecord, TAG_035);
+    if (marcRecord == null) {
+      return;
+    }
+    var subfields = get035SubfieldOclcValues(marcRecord);
     if (!subfields.isEmpty()) {
       formatOclc(subfields);
-      deduplicateOclc(marcRecord, subfields, TAG_035);
+      deduplicateOclc(marcRecord, subfields);
     }
   }
 
@@ -131,7 +133,7 @@ public final class MarcRecordModifier {
   public static String get004ControlFieldData(Record marcRecord) {
     return marcRecord.getControlFields()
       .stream()
-      .filter(controlField -> controlField.getTag().equals(TAG_004))
+      .filter(controlField -> controlField.getTag().equals(TAG_004) && controlField.getData() != null)
       .findFirst()
       .map(controlField -> controlField.getData().trim())
       .orElse(null);
@@ -171,9 +173,8 @@ public final class MarcRecordModifier {
    * @return marc4j Record
    */
   public static Record fromJsonContent(String jsonContent) {
-    try {
-      MarcJsonReader reader = new MarcJsonReader(
-        new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8)));
+    try (ByteArrayInputStream bis = new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8))) {
+      MarcJsonReader reader = new MarcJsonReader(bis);
       if (reader.hasNext()) {
         return reader.next();
       }
@@ -194,50 +195,45 @@ public final class MarcRecordModifier {
   private static VariableField getSingleFieldByIndicators(Record marcRecord, String tag) {
     for (VariableField field : marcRecord.getVariableFields(tag)) {
       if (field instanceof DataField dataField
-          && dataField.getIndicator1() == INDICATOR_F
-          && dataField.getIndicator2() == INDICATOR_F) {
+        && dataField.getIndicator1() == INDICATOR_F
+        && dataField.getIndicator2() == INDICATOR_F) {
         return field;
       }
     }
     return null;
   }
 
-  private static List<Subfield> get035SubfieldOclcValues(Record srcRecord, String tag) {
-    return Optional.ofNullable(srcRecord)
-      .stream()
-      .flatMap(marcRecord -> marcRecord.getVariableFields(tag).stream())
-      .flatMap(field -> get035oclcSubfields(field).stream())
-      .collect(Collectors.toList());
-  }
-
-  private static List<Subfield> get035oclcSubfields(VariableField field) {
-    if (field instanceof DataField dataField) {
-      return dataField.getSubfields().stream()
-        .filter(sf -> sf.getData().trim().startsWith(OCLC_PREFIX))
-        .toList();
+  private static List<Subfield> get035SubfieldOclcValues(Record marcRecord) {
+    List<Subfield> subfields = new ArrayList<>();
+    for (VariableField field : marcRecord.getVariableFields(TAG_035)) {
+      if (field instanceof DataField dataField) {
+        for (Subfield sf : dataField.getSubfields()) {
+          if (sf.getData() != null && sf.getData().trim().startsWith(OCLC_PREFIX)) {
+            subfields.add(sf);
+          }
+        }
+      }
     }
-    return Collections.emptyList();
+    return subfields;
   }
 
   private static void formatOclc(List<Subfield> subfields) {
-    Pattern pattern = Pattern.compile(OCLC_PATTERN);
-
     for (Subfield subfield : subfields) {
-      String data = subfield.getData().replaceAll("[.\\s]", "");
-      Matcher matcher = pattern.matcher(data);
+      var data = subfield.getData().replaceAll(DOT_OR_WHITESPACE_REGEX, "");
+      var matcher = OCLC_COMPILED.matcher(data);
       if (matcher.find()) {
-        String oclcTag = matcher.group(1); // "OCoLC"
-        String numericAndTrailing = matcher.group(5); // Numeric part and any characters that follow
-        String prefix = matcher.group(2); // Entire prefix including letters and potentially leading zeros
+        var oclcTag = matcher.group(1); // "OCoLC"
+        var numericAndTrailing = matcher.group(5); // Numeric part and any characters that follow
+        var prefix = matcher.group(2); // Entire prefix including letters and potentially leading zeros
 
         if (prefix != null && (prefix.startsWith("ocm") || prefix.startsWith("ocn") || prefix.startsWith("on"))) {
           // If "ocm" or "ocn", strip entirely from the prefix
           subfield.setData("(" + oclcTag + ")" + numericAndTrailing);
         } else {
           // For other cases, strip leading zeros only from the numeric part
-          numericAndTrailing = numericAndTrailing.replaceFirst("^0+", "");
+          numericAndTrailing = numericAndTrailing.replaceFirst(PREFIX_ZEROS_REGEX, "");
           if (prefix != null) {
-            prefix = prefix.replaceAll("\\d+", ""); // Safely remove digits from the prefix if not null
+            prefix = prefix.replaceAll(DIGITS_REGEX, ""); // Safely remove digits from the prefix if not null
           }
           // Add back any other prefix that might have been included like "tfe"
           subfield.setData("(" + oclcTag + ")" + (prefix != null ? prefix : "") + numericAndTrailing);
@@ -246,7 +242,7 @@ public final class MarcRecordModifier {
     }
   }
 
-  private static void deduplicateOclc(Record marcRecord, List<Subfield> subfields, String tag) {
+  private static void deduplicateOclc(Record marcRecord, List<Subfield> subfields) {
     List<Subfield> subfieldsToDelete = new ArrayList<>();
 
     for (Subfield subfield : new ArrayList<>(subfields)) {
@@ -255,7 +251,7 @@ public final class MarcRecordModifier {
         subfields.remove(subfield);
       }
     }
-    var variableFields = marcRecord.getVariableFields(tag);
+    var variableFields = marcRecord.getVariableFields(TAG_035);
     subfieldsToDelete.forEach(subfieldToDelete ->
       variableFields.forEach(field -> removeSubfieldIfExist(marcRecord, field, subfieldToDelete)));
   }

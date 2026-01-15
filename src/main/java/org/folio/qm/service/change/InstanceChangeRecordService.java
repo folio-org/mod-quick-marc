@@ -12,6 +12,7 @@ import org.folio.qm.service.population.DefaultValuesPopulationService;
 import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.ValidationService;
+import org.folio.qm.util.MarcRecordModifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +36,16 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   @Override
   public MarcFormat supportedType() {
     return MarcFormat.BIBLIOGRAPHIC;
+  }
+
+  @Override
+  public void updateNonRequiredFields(QuickMarcRecord qmRecord) {
+    log.debug("updateNonRequiredFields:: removing 003 fields from the instance marc record if exists");
+    var marcRecord = qmRecord.getMarcRecord();
+    MarcRecordModifier.remove003Field(marcRecord);
+    log.debug("updateNonRequiredFields:: normalizing 035 fields in the instance marc record if exists");
+    MarcRecordModifier.normalize035Field(marcRecord);
+    qmRecord.buildParsedContent();
   }
 
   @Override

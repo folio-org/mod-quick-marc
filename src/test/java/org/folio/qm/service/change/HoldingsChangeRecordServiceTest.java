@@ -44,6 +44,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.impl.ControlFieldImpl;
+import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -83,6 +85,36 @@ class HoldingsChangeRecordServiceTest {
     var result = service.supportedType();
 
     assertEquals(MarcFormat.HOLDINGS, result);
+  }
+
+  @Test
+  void shouldRemove003FieldWhenExists() {
+    var marcFactory = new MarcFactoryImpl();
+    var marcRecord = marcFactory.newRecord();
+    var controlField = new ControlFieldImpl("003", "some value");
+    marcRecord.addVariableField(controlField);
+    var qmRecord = new QuickMarcRecord();
+    qmRecord.setParsedContent(new JsonObject());
+    qmRecord.setMarcRecord(marcRecord);
+    qmRecord.setSource(new QuickMarcCreate());
+
+    service.updateNonRequiredFields(qmRecord);
+
+    assertEquals(0, marcRecord.getControlFields().size());
+  }
+
+  @Test
+  void shouldNotThrowExceptionWhen003FieldNotExists() {
+    var marcFactory = new MarcFactoryImpl();
+    var marcRecord = marcFactory.newRecord();
+    var qmRecord = new QuickMarcRecord();
+    qmRecord.setParsedContent(new JsonObject());
+    qmRecord.setMarcRecord(marcRecord);
+    qmRecord.setSource(new QuickMarcCreate());
+
+    service.updateNonRequiredFields(qmRecord);
+
+    assertEquals(0, marcRecord.getControlFields().size());
   }
 
   @Test

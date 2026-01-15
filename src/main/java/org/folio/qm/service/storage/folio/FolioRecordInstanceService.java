@@ -1,5 +1,6 @@
 package org.folio.qm.service.storage.folio;
 
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,6 +45,12 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
     storageClient.updateInstance(id, folioRecord);
     log.info("update:: Instance record updated successfully with id: {}", id);
     updateTitles(id.toString(), folioRecord);
+  }
+
+  public String getInstanceIdByHrid(String instanceHrid) {
+    return Optional.ofNullable(storageClient.getInstanceByHrid(instanceHrid).getInstanceId())
+      .orElseThrow(() -> new IllegalStateException(
+        String.format("Instance ID is missing or more than one instance found for HRID: %s", instanceHrid)));
   }
 
   private void updateTitles(String id, InstanceRecord updatedInstance) {

@@ -27,7 +27,7 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
   @Override
   public F mapNewRecord(QuickMarcRecord qmRecord) {
     log.debug("mapNewRecord:: Mapping new record with parsedRecordId: {}", qmRecord.getParsedRecordId());
-    var result = toFolioRecord(getMappedRecord(qmRecord), null);
+    var result = toFolioRecord(getMappedRecord(qmRecord, true), null);
     log.info("mapNewRecord:: New record mapped successfully");
     return result;
   }
@@ -36,7 +36,7 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
   public F mapUpdatedRecord(QuickMarcRecord qmRecord, F folioRecord) {
     log.debug("mapUpdatedRecord:: Mapping updated record with parsedRecordId: {}, folioRecordId: {}",
       qmRecord.getParsedRecordId(), folioRecord.getId());
-    var result = toFolioRecord(getMappedRecord(qmRecord), folioRecord);
+    var result = toFolioRecord(getMappedRecord(qmRecord, false), folioRecord);
     log.info("mapUpdatedRecord:: Updated record mapped successfully");
     return result;
   }
@@ -45,11 +45,15 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
 
   protected abstract F initFolioRecord();
 
+  protected void mapRequiredFields(QuickMarcRecord qmRecord, @NonNull E mappedRecord, boolean isNewRecord) {
+    // no-op by default
+  }
+
   protected void postProcess(F folioRecord) {
     log.debug("Post processing of folio record: {}", folioRecord);
   }
 
-  private E getMappedRecord(QuickMarcRecord qmRecord) {
+  private E getMappedRecord(QuickMarcRecord qmRecord, boolean isNewRecord) {
     var mappingRecordType = qmRecord.getMappingRecordType();
     var recordId = qmRecord.getParsedRecordId();
     log.debug("getMappedRecord:: Mapping record with parsedRecordId: {}, type: {}", recordId, mappingRecordType);
@@ -60,6 +64,7 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
         qmRecord.getParsedContent(),
         mappingMetadata.mappingParameters(),
         mappingMetadata.mappingRules());
+      mapRequiredFields(qmRecord, mappedRecord, isNewRecord);
       log.debug("getMappedRecord:: Record mapped successfully for parsedRecordId: {}", recordId);
       return mappedRecord;
     } catch (MappingMetadataException e) {

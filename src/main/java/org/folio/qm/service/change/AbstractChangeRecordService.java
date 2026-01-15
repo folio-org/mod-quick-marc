@@ -1,6 +1,5 @@
 package org.folio.qm.service.change;
 
-import static org.folio.Record.RecordType.MARC_BIB;
 import static org.folio.qm.convertion.elements.Constants.TAG_001_CONTROL_FIELD;
 import static org.folio.qm.util.ErrorUtils.buildError;
 
@@ -93,6 +92,10 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     log.debug("postProcess:: Post processing of record with externalId: {}", qmRecord.getExternalId());
   }
 
+  protected void updateNonRequiredFields(QuickMarcRecord qmRecord){
+    // No-op by default
+  }
+
   protected abstract ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord);
 
   protected abstract boolean adding001FieldRequired();
@@ -166,20 +169,6 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     } catch (Exception e) {
       log.error("addRequiredFieldsToMarcRecord:: Failed to add required fields", e);
       throw new IllegalStateException("Failed to add required fields to MARC record", e);
-    }
-  }
-
-  private void updateNonRequiredFields(QuickMarcRecord qmRecord) {
-    var marcRecord = qmRecord.getMarcRecord();
-    if (MARC_BIB.equals(qmRecord.getSourceRecordType())
-      || Record.RecordType.MARC_HOLDING.equals(qmRecord.getSourceRecordType())) {
-      log.debug("updateNonRequiredFields:: removing 003 fields if exists");
-      MarcRecordModifier.remove003Field(marcRecord);
-      if (MARC_BIB.equals(qmRecord.getSourceRecordType())) {
-        log.debug("updateNonRequiredFields:: normalizing 035 fields if exists");
-        MarcRecordModifier.normalize035Field(marcRecord);
-      }
-      qmRecord.buildParsedContent();
     }
   }
 

@@ -45,6 +45,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.impl.ControlFieldImpl;
+import org.marc4j.marc.impl.DataFieldImpl;
+import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -87,6 +90,41 @@ class InstanceChangeRecordServiceTest {
     var result = service.supportedType();
 
     assertEquals(MarcFormat.BIBLIOGRAPHIC, result);
+  }
+
+  @Test
+  void shouldRemove003FieldAndUpdateParsedContent() {
+    var marcFactory = new MarcFactoryImpl();
+    var marcRecord = marcFactory.newRecord();
+    var controlField = new ControlFieldImpl("003", "some value");
+    marcRecord.addVariableField(controlField);
+
+    var qmRecord = new QuickMarcRecord();
+    qmRecord.setParsedContent(new JsonObject());
+    qmRecord.setMarcRecord(marcRecord);
+    qmRecord.setSource(new QuickMarcCreate());
+    service.updateNonRequiredFields(qmRecord);
+
+    assertEquals(0, marcRecord.getControlFields().size());
+  }
+
+  @Test
+  void shouldNormalize035Field() {
+    var marcFactory = new MarcFactoryImpl();
+    var marcRecord = marcFactory.newRecord();
+    var dataField = new DataFieldImpl("035", ' ', ' ');
+    dataField.addSubfield(marcFactory.newSubfield('a', "(OCoLC)000012345"));
+    marcRecord.addVariableField(dataField);
+
+    var qmRecord = new QuickMarcRecord();
+    qmRecord.setParsedContent(new JsonObject());
+    qmRecord.setMarcRecord(marcRecord);
+    qmRecord.setSource(new QuickMarcCreate());
+
+    service.updateNonRequiredFields(qmRecord);
+
+    var updatedField = (DataFieldImpl) marcRecord.getVariableField("035");
+    assertEquals("(OCoLC)12345", updatedField.getSubfield('a').getData());
   }
 
   @Test

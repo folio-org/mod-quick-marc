@@ -31,13 +31,13 @@ public final class MarcRecordModifier {
   public static final String TAG_035 = "035";
   public static final char INDICATOR_F = 'f';
   public static final char SUBFIELD_I = 'i';
-  private static final String DOT_OR_WHITESPACE_REGEX = "[.\\s]";
-  private static final String DIGITS_REGEX = "\\d+";
-  private static final String PREFIX_ZEROS_REGEX = "^0+";
   private static final String OCLC_PREFIX = "(OCoLC)";
   private static final String OCLC = "OCoLC";
   private static final String OCLC_PATTERN = "\\((" + OCLC + ")\\)((ocm|ocn|on)?0*|([a-zA-Z]+)0*)(\\d+\\w*)";
   private static final Pattern OCLC_COMPILED = Pattern.compile(OCLC_PATTERN);
+  private static final Pattern DOT_OR_WHITESPACE_PATTERN = Pattern.compile("[.\\s]");
+  private static final Pattern DIGITS_PATTERN = Pattern.compile("\\d+");
+  private static final Pattern PREFIX_ZEROS_PATTERN = Pattern.compile("^0+");
 
   private static final MarcFactory FACTORY = MarcFactory.newInstance();
 
@@ -219,7 +219,7 @@ public final class MarcRecordModifier {
 
   private static void formatOclc(List<Subfield> subfields) {
     for (Subfield subfield : subfields) {
-      var data = subfield.getData().replaceAll(DOT_OR_WHITESPACE_REGEX, "");
+      var data = DOT_OR_WHITESPACE_PATTERN.matcher(subfield.getData()).replaceAll("");
       var matcher = OCLC_COMPILED.matcher(data);
       if (matcher.find()) {
         var oclcTag = matcher.group(1); // "OCoLC"
@@ -231,9 +231,9 @@ public final class MarcRecordModifier {
           subfield.setData("(" + oclcTag + ")" + numericAndTrailing);
         } else {
           // For other cases, strip leading zeros only from the numeric part
-          numericAndTrailing = numericAndTrailing.replaceFirst(PREFIX_ZEROS_REGEX, "");
+          numericAndTrailing = PREFIX_ZEROS_PATTERN.matcher(numericAndTrailing).replaceFirst("");
           if (prefix != null) {
-            prefix = prefix.replaceAll(DIGITS_REGEX, ""); // Safely remove digits from the prefix if not null
+            prefix = DIGITS_PATTERN.matcher(prefix).replaceAll(""); // Safely remove digits from the prefix if not null
           }
           // Add back any other prefix that might have been included like "tfe"
           subfield.setData("(" + oclcTag + ")" + (prefix != null ? prefix : "") + numericAndTrailing);

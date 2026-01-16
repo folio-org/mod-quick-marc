@@ -17,7 +17,7 @@ public interface InstanceStorageClient {
   @GetMapping(value = "/instances/{id}")
   Optional<InstanceRecord> getInstanceById(@PathVariable UUID id);
 
-  @GetMapping(value = "/instances?query=hrid=={id}&limit=10&offset=0")
+  @GetMapping(value = "/instances?query=hrid=={id}&limit=1&offset=0")
   InstanceResult getInstanceByHrid(@PathVariable String id);
 
   @PostMapping(value = "/instances")

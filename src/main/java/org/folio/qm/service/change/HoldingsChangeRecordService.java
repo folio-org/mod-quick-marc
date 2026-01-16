@@ -34,7 +34,7 @@ public class HoldingsChangeRecordService extends AbstractChangeRecordService<Hol
   }
 
   @Override
-  public void updateNonRequiredFields(QuickMarcRecord qmRecord) {
+  protected void updateNonRequiredFields(QuickMarcRecord qmRecord) {
     log.debug("updateNonRequiredFields:: removing 003 fields from holdings record if exists");
     var marcRecord = qmRecord.getMarcRecord();
     MarcRecordModifier.remove003Field(marcRecord);

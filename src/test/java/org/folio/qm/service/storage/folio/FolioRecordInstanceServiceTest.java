@@ -53,8 +53,9 @@ class FolioRecordInstanceServiceTest {
   @Test
   void get_shouldThrowNotFoundWhenMissing() {
     when(storageClient.getInstanceById(any())).thenReturn(Optional.empty());
+    var id = UUID.randomUUID();
 
-    assertThrows(NotFoundException.class, () -> service.get(UUID.randomUUID()));
+    assertThrows(NotFoundException.class, () -> service.get(id));
   }
 
   @Test

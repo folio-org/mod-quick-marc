@@ -72,7 +72,8 @@ public abstract class MarcMappingAbstractService<F extends FolioRecord, E> imple
     } catch (Exception e) {
       log.error("getMappedRecord:: Error mapping {} record with parsedRecordId: {}", mappingRecordType, recordId, e);
       throw new MappingMetadataException(
-        String.format("Error mapping %s record with parsedRecordId: %s", mappingRecordType, recordId), e);
+        String.format("Failed to map %s record with parsedRecordId %s: %s",
+          mappingRecordType, recordId, e.getMessage()), e);
     }
   }
 

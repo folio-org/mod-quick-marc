@@ -47,7 +47,7 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
   }
 
   public String getInstanceIdByHrid(String instanceHrid) {
-    var response = storageClient.getInstanceByHrid(instanceHrid);
+    var response = storageClient.getInstances(instanceHrid);
     long totalRecords = response.getTotalRecords() != null ? response.getTotalRecords() : 0;
 
     if (totalRecords == 0) {

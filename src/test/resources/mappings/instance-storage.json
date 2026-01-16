@@ -50,6 +50,32 @@
         },
         "bodyFileName": "instance-storage/instances.json"
       }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/instance-storage/instances?query=hrid==non-existing-instance-hrid&limit=1&offset=0"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "instance-storage/emptyInstances.json"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/instance-storage/instances?query=hrid==multiple-instance-hrid&limit=1&offset=0"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "instance-storage/multipleInstances.json"
+      }
     }
   ]
 }

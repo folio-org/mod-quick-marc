@@ -97,7 +97,7 @@ class FolioRecordInstanceServiceTest {
     var instances = new Instances();
     instances.setInstances(List.of(instanceRecord));
     instances.setTotalRecords(1L);
-    when(storageClient.getInstanceByHrid(HRID)).thenReturn(instances);
+    when(storageClient.getInstances(HRID)).thenReturn(instances);
 
     var id = service.getInstanceIdByHrid(HRID);
 
@@ -108,7 +108,7 @@ class FolioRecordInstanceServiceTest {
   void getInstanceIdByHrid_shouldThrowWhenEmptyResult() {
     var instances = new Instances();
     instances.setTotalRecords(0L);
-    when(storageClient.getInstanceByHrid(HRID)).thenReturn(instances);
+    when(storageClient.getInstances(HRID)).thenReturn(instances);
 
     assertThrows(NotFoundException.class, () -> service.getInstanceIdByHrid(HRID));
   }
@@ -122,7 +122,7 @@ class FolioRecordInstanceServiceTest {
     var instances = new Instances();
     instances.setInstances(List.of(instanceRecord));
     instances.setTotalRecords(3L);
-    when(storageClient.getInstanceByHrid(HRID)).thenReturn(instances);
+    when(storageClient.getInstances(HRID)).thenReturn(instances);
 
     assertThrows(IllegalStateException.class, () -> service.getInstanceIdByHrid(HRID));
   }

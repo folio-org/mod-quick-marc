@@ -21,7 +21,7 @@ public class FolioRecordHoldingsService implements FolioRecordService<HoldingsRe
     return storageClient.getHoldingById(id)
       .orElseThrow(() -> {
         log.error("get:: Holdings record not found with id: {}", id);
-        return new NotFoundException(String.format("Authority record with id: %s not found", id));
+        return new NotFoundException(String.format("Holdings record with id: %s not found", id));
       });
   }
 

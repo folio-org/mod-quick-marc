@@ -15,6 +15,7 @@ import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.domain.model.InstanceRecord;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
+import org.folio.rest.jaxrs.model.Instances;
 import org.folio.spring.exception.NotFoundException;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
@@ -93,8 +94,10 @@ class FolioRecordInstanceServiceTest {
     var instanceRecord = new InstanceRecord();
     var instanceId = UUID.randomUUID().toString();
     instanceRecord.setId(instanceId);
-    var result = new InstanceStorageClient.InstanceResult(List.of(instanceRecord), 1);
-    when(storageClient.getInstanceByHrid(HRID)).thenReturn(result);
+    var instances = new Instances();
+    instances.setInstances(List.of(instanceRecord));
+    instances.setTotalRecords(1L);
+    when(storageClient.getInstanceByHrid(HRID)).thenReturn(instances);
 
     var id = service.getInstanceIdByHrid(HRID);
 
@@ -103,10 +106,11 @@ class FolioRecordInstanceServiceTest {
 
   @Test
   void getInstanceIdByHrid_shouldThrowWhenEmptyResult() {
-    var emptyResult = new InstanceStorageClient.InstanceResult(Collections.emptyList(), 0);
-    when(storageClient.getInstanceByHrid(HRID)).thenReturn(emptyResult);
+    var instances = new Instances();
+    instances.setTotalRecords(0L);
+    when(storageClient.getInstanceByHrid(HRID)).thenReturn(instances);
 
-    assertThrows(IllegalStateException.class, () -> service.getInstanceIdByHrid(HRID));
+    assertThrows(NotFoundException.class, () -> service.getInstanceIdByHrid(HRID));
   }
 
   @Test
@@ -114,8 +118,11 @@ class FolioRecordInstanceServiceTest {
     var instanceRecord = new InstanceRecord();
     var instanceId = UUID.randomUUID().toString();
     instanceRecord.setId(instanceId);
-    var result = new InstanceStorageClient.InstanceResult(List.of(instanceRecord), 3);
-    when(storageClient.getInstanceByHrid(HRID)).thenReturn(result);
+
+    var instances = new Instances();
+    instances.setInstances(List.of(instanceRecord));
+    instances.setTotalRecords(3L);
+    when(storageClient.getInstanceByHrid(HRID)).thenReturn(instances);
 
     assertThrows(IllegalStateException.class, () -> service.getInstanceIdByHrid(HRID));
   }

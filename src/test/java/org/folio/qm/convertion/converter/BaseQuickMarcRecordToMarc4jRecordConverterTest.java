@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import org.folio.qm.convertion.field.MarcFieldsConverter;
 import org.folio.qm.domain.dto.FieldItem;
@@ -44,7 +44,9 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
   void convert_shouldConvertBaseMarcRecordWithLeaderAndFields() {
     // given
     var leaderString = "00000nam\\\\2200000\\u\\4500";
-    var fields = List.of(new FieldItem().tag("001"), new FieldItem().tag("245"));
+    var fields = new ArrayList<FieldItem>();
+    fields.add(new FieldItem().tag("001"));
+    fields.add(new FieldItem().tag("245"));
     var source = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leaderString, fields);
 
     var marcRecord = new MarcFactoryImpl().newRecord();
@@ -73,7 +75,8 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
   @ParameterizedTest
   void convert_shouldConvertBaseMarcRecordBlankLeader(String leaderString) {
     // given
-    var fields = List.of(new FieldItem().tag("245"));
+    var fields = new ArrayList<FieldItem>();
+    fields.add(new FieldItem().tag("245"));
     var source = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leaderString, fields);
 
     var marcRecord = new MarcFactoryImpl().newRecord();
@@ -97,15 +100,13 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
   void convert_shouldConvertBaseMarcRecordWithEmptyFields() {
     // given
     var leaderString = "00000nam\\\\2200000\\u\\4500";
-    var source = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leaderString, Collections.emptyList());
+    var source = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leaderString, new ArrayList<>());
 
     var marcRecord = new MarcFactoryImpl().newRecord();
     var leader = new LeaderImpl("00000nam  2200000 u 4500");
 
     when(factory.newRecord()).thenReturn(marcRecord);
     when(factory.newLeader("00000nam  2200000 u 4500")).thenReturn(leader);
-    when(fieldsConverter.convertQmFields(Collections.emptyList(), MarcFormat.BIBLIOGRAPHIC))
-      .thenReturn(Collections.emptyList());
 
     // when
     var result = converter.convert(source);
@@ -115,14 +116,15 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
     assertThat(result.getLeader()).isEqualTo(leader);
     verify(factory).newRecord();
     verify(factory).newLeader("00000nam  2200000 u 4500");
-    verify(fieldsConverter).convertQmFields(Collections.emptyList(), MarcFormat.BIBLIOGRAPHIC);
+    verify(fieldsConverter).convertQmFields(source.getFields(), MarcFormat.BIBLIOGRAPHIC);
   }
 
   @Test
   void convert_shouldRestoreBlanksInLeader() {
     // given
     var leaderString = "00000nam\\\\2200000\\u\\4500";
-    var fields = List.of(new FieldItem().tag("001"));
+    var fields = new ArrayList<FieldItem>();
+    fields.add(new FieldItem().tag("001"));
     var source = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leaderString, fields);
 
     var marcRecord = new MarcFactoryImpl().newRecord();
@@ -145,10 +147,11 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
   @Test
   void convert_shouldAddAllVariableFieldsToRecord() {
     // given
-    var fields = List.of(new FieldItem().tag("001"),
-      new FieldItem().tag("008"),
-      new FieldItem().tag("245"),
-      new FieldItem().tag("650"));
+    var fields = new ArrayList<FieldItem>();
+    fields.add(new FieldItem().tag("001"));
+    fields.add(new FieldItem().tag("008"));
+    fields.add(new FieldItem().tag("245"));
+    fields.add(new FieldItem().tag("650"));
     var leaderString = "00000nam\\\\2200000\\u\\4500";
     var source = new StubQuickMarcRecord(MarcFormat.BIBLIOGRAPHIC, leaderString, fields);
 
@@ -177,7 +180,8 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
   @Test
   void convert_shouldHandleAuthorityMarcFormat() {
     // given
-    var fields = List.of(new FieldItem().tag("100"));
+    var fields = new ArrayList<FieldItem>();
+    fields.add(new FieldItem().tag("100"));
     var leaderString = "00000nz\\\\\\2200000\\u\\4500";
     var source = new StubQuickMarcRecord(MarcFormat.AUTHORITY, leaderString, fields);
 
@@ -202,7 +206,8 @@ class BaseQuickMarcRecordToMarc4jRecordConverterTest {
   @Test
   void convert_shouldHandleHoldingsMarcFormat() {
     // given
-    var fields = List.of(new FieldItem().tag("852"));
+    var fields = new ArrayList<FieldItem>();
+    fields.add(new FieldItem().tag("852"));
     var leaderString = "00000nx\\\\\\2200000\\u\\4500";
     var source = new StubQuickMarcRecord(MarcFormat.HOLDINGS, leaderString, fields);
 

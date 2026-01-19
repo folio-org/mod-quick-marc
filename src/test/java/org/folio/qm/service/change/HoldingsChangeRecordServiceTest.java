@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 import io.vertx.core.json.JsonObject;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import org.folio.ExternalIdsHolder;
 import org.folio.ParsedRecord;
 import org.folio.RawRecord;
@@ -43,6 +44,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.impl.ControlFieldImpl;
+import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -85,6 +88,36 @@ class HoldingsChangeRecordServiceTest {
   }
 
   @Test
+  void shouldRemove003FieldWhenExists() {
+    var marcFactory = new MarcFactoryImpl();
+    var marcRecord = marcFactory.newRecord();
+    var controlField = new ControlFieldImpl("003", "some value");
+    marcRecord.addVariableField(controlField);
+    var qmRecord = new QuickMarcRecord();
+    qmRecord.setParsedContent(new JsonObject());
+    qmRecord.setMarcRecord(marcRecord);
+    qmRecord.setSource(new QuickMarcCreate());
+
+    service.updateNonRequiredFields(qmRecord);
+
+    assertEquals(0, marcRecord.getControlFields().size());
+  }
+
+  @Test
+  void shouldNotThrowExceptionWhen003FieldNotExists() {
+    var marcFactory = new MarcFactoryImpl();
+    var marcRecord = marcFactory.newRecord();
+    var qmRecord = new QuickMarcRecord();
+    qmRecord.setParsedContent(new JsonObject());
+    qmRecord.setMarcRecord(marcRecord);
+    qmRecord.setSource(new QuickMarcCreate());
+
+    service.updateNonRequiredFields(qmRecord);
+
+    assertEquals(0, marcRecord.getControlFields().size());
+  }
+
+  @Test
   @SuppressWarnings("checkstyle:methodLength")
   void shouldUpdateRecordSuccessfully() {
     var recordId = randomUUID();
@@ -118,7 +151,7 @@ class HoldingsChangeRecordServiceTest {
     verify(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class),
       eq(Collections.emptyList()));
     verify(validationService).validate(quickMarcEdit);
-    verify(sourceRecordService).update(eq(recordId), any(Record.class));
+    verify(sourceRecordService).update(eq(UUID.fromString(existingSourceRecord.getMatchedId())), any(Record.class));
     verify(folioRecordService).update(quickMarcEdit.getExternalId(), holdingsRecord);
   }
 
@@ -371,6 +404,7 @@ class HoldingsChangeRecordServiceTest {
 
     return new Record()
       .withId(recordId)
+      .withMatchedId(recordId)
       .withRecordType(RecordType.MARC_HOLDING)
       .withGeneration(0)
       .withRawRecord(new RawRecord().withId(recordId))

@@ -1,5 +1,8 @@
 package org.folio.qm.domain.model;
 
+import static org.folio.qm.util.MarcRecordModifier.TAG_001;
+import static org.folio.qm.util.MarcRecordModifier.TAG_999;
+
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -47,6 +50,11 @@ public class QuickMarcRecord {
    * Computed once and reused everywhere.
    */
   private JsonObject parsedContent;
+
+  /**
+   * Raw MARC content as a string. This represents the parsed content before any modifications are applied
+   */
+  private String rawContent;
 
   /**
    * Associated Folio record (Instance, Holdings, or Authority).
@@ -147,14 +155,20 @@ public class QuickMarcRecord {
     }
 
     var rearrangedArray = new JsonArray();
+    addNodesToRearrangedArray(jsonNodesByTag, TAG_001, rearrangedArray);
     for (FieldItem fieldItem : sourceFields) {
-      Queue<JsonObject> nodes = jsonNodesByTag.get(fieldItem.getTag());
-      if (nodes != null && !nodes.isEmpty()) {
-        rearrangedArray.add(nodes.poll());
-      }
+      addNodesToRearrangedArray(jsonNodesByTag, fieldItem.getTag(), rearrangedArray);
     }
-
+    addNodesToRearrangedArray(jsonNodesByTag, TAG_999, rearrangedArray);
     fieldsArrayNode.clear();
     fieldsArrayNode.addAll(rearrangedArray);
+  }
+
+  private void addNodesToRearrangedArray(Map<String, Queue<JsonObject>> jsonNodesByTag, String tag,
+                                         JsonArray rearrangedArray) {
+    var nodes = jsonNodesByTag.get(tag);
+    if (nodes != null && !nodes.isEmpty()) {
+      rearrangedArray.add(nodes.poll());
+    }
   }
 }

@@ -72,6 +72,14 @@ import org.springframework.util.ReflectionUtils;
 @IntegrationTest
 class RecordsEditorIT extends BaseIT {
 
+  private static final String ERROR_INSTANCE_NOT_FOUND_BY_HRID =
+    "Failed to map marc-holdings record with parsedRecordId null: "
+    + "No instance found for HRID: non-existing-instance-hrid";
+
+  private static final String ERROR_MULTIPLE_INSTANCES_FOUND_BY_HRID =
+    "Failed to map marc-holdings record with parsedRecordId null: "
+    + "Multiple instances found for HRID: multiple-instance-hrid";
+
   @Nested
   class GetRecordCases {
 
@@ -287,6 +295,22 @@ class RecordsEditorIT extends BaseIT {
     }
 
     @ParameterizedTest
+    @MethodSource("provideInvalidInstanceHridCases")
+    @DisplayName("Should return 422 if instance by HRID is not found or multiple found")
+    void testReturn422WhenRecordWithInvalidInstanceHrid(String hrid, String expectedErrorMessage) throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
+      quickMarcRecord.getFields().stream()
+        .filter(field -> field.getTag().equals("004"))
+        .findFirst()
+        .ifPresent(field -> field.setContent(hrid));
+
+      doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
+        .andExpect(status().isUnprocessableEntity())
+        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+        .andExpect(jsonPath("$.message").value(expectedErrorMessage));
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
     @DisplayName("Should return 422 if specification-based validation failed (missing 008)")
     void testReturn422WhenRecordMissing008(String filePath) throws Exception {
@@ -311,6 +335,13 @@ class RecordsEditorIT extends BaseIT {
         Arguments.argumentSet("bibliographic", QM_RECORD_CREATE_BIB_PATH),
         Arguments.argumentSet("holdings", QM_RECORD_CREATE_HOLDINGS_PATH),
         Arguments.argumentSet("authority", QM_RECORD_CREATE_AUTHORITY_PATH)
+      );
+    }
+
+    private static Stream<Arguments> provideInvalidInstanceHridCases() {
+      return Stream.of(
+        Arguments.of("non-existing-instance-hrid", ERROR_INSTANCE_NOT_FOUND_BY_HRID),
+        Arguments.of("multiple-instance-hrid", ERROR_MULTIPLE_INSTANCES_FOUND_BY_HRID)
       );
     }
   }

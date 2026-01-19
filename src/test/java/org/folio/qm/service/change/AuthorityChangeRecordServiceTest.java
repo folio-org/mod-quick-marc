@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 import io.vertx.core.json.JsonObject;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import org.folio.ExternalIdsHolder;
 import org.folio.ParsedRecord;
 import org.folio.RawRecord;
@@ -117,7 +118,7 @@ class AuthorityChangeRecordServiceTest {
     verify(defaultValuesPopulationService).populate(quickMarcEdit);
     verify(validationService).validateMarcRecord(any(BaseQuickMarcRecord.class), eq(Collections.emptyList()));
     verify(validationService).validate(quickMarcEdit);
-    verify(sourceRecordService).update(eq(recordId), any(Record.class));
+    verify(sourceRecordService).update(eq(UUID.fromString(existingSourceRecord.getMatchedId())), any(Record.class));
     verify(folioRecordService).update(quickMarcEdit.getExternalId(), authorityRecord);
   }
 
@@ -370,6 +371,7 @@ class AuthorityChangeRecordServiceTest {
 
     return new Record()
       .withId(recordId)
+      .withMatchedId(recordId)
       .withRecordType(RecordType.MARC_AUTHORITY)
       .withGeneration(0)
       .withRawRecord(new RawRecord().withId(recordId))

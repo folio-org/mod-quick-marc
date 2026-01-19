@@ -24,7 +24,7 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
     return storageClient.getInstanceById(id)
       .orElseThrow(() -> {
         log.error("get:: Instance record not found with id: {}", id);
-        return new NotFoundException(String.format("Authority record with id: %s not found", id));
+        return new NotFoundException(String.format("Instance record with id: %s not found", id));
       });
   }
 
@@ -33,6 +33,7 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
     log.debug("create:: Creating instance record");
     var instance = storageClient.createInstance(folioRecord);
     log.info("create:: Instance record created with id: {}", instance.getId());
+    folioRecord.setId(instance.getId());
     updateTitles(instance.getId(), folioRecord);
     return instance;
   }
@@ -43,6 +44,21 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
     storageClient.updateInstance(id, folioRecord);
     log.info("update:: Instance record updated successfully with id: {}", id);
     updateTitles(id.toString(), folioRecord);
+  }
+
+  public String getInstanceIdByHrid(String instanceHrid) {
+    var response = storageClient.getInstances(instanceHrid);
+    long totalRecords = response.getTotalRecords() != null ? response.getTotalRecords() : 0;
+
+    if (totalRecords == 0) {
+      log.error("getInstanceIdByHrid:: No instance found for HRID: {}", instanceHrid);
+      throw new NotFoundException(String.format("No instance found for HRID: %s", instanceHrid));
+    }
+    if (totalRecords > 1) {
+      log.error("getInstanceIdByHrid:: Multiple instances found for HRID: {}", instanceHrid);
+      throw new IllegalStateException(String.format("Multiple instances found for HRID: %s", instanceHrid));
+    }
+    return response.getInstances().getFirst().getId();
   }
 
   private void updateTitles(String id, InstanceRecord updatedInstance) {

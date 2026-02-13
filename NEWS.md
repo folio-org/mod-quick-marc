@@ -19,6 +19,7 @@
 * Ignore empty subfields during conversion from DTO ([MODQM-445](https://folio-org.atlassian.net/browse/MODQM-445))
 * Implement MARC Record Update Flow ([MODQM-490](https://folio-org.atlassian.net/browse/MODQM-490))
 * Handle 003 and 035 fields in MARC Record Create flow ([MODQM-497](https://folio-org.atlassian.net/browse/MODQM-497))
+* Use Setting API to determine extended authority mapping ([MODQM-501](https://folio-org.atlassian.net/browse/MODQM-501))
 
 ### Bug fixes
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))

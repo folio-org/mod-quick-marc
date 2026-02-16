@@ -1,6 +1,7 @@
 package org.folio.qm.service.support;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.folio.qm.config.CacheConfig.MAPPING_METADATA_CACHE;
 
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class MappingMetadataProvider {
 
   private final MappingMetadataClient client;
 
-  @Cacheable(cacheNames = "mapping-metadata-cache",
+  @Cacheable(cacheNames = MAPPING_METADATA_CACHE,
     key = "@folioExecutionContext.tenantId + #recordType",
     unless = "#result == null")
   public MappingData getMappingData(MappingRecordType recordType) {

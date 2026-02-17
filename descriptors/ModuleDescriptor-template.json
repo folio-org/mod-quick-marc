@@ -59,6 +59,10 @@
     {
       "id": "holdings-storage",
       "version": "8.1"
+    },
+    {
+      "id": "authorities-config",
+      "version": "1.0"
     }
   ],
   "provides": [
@@ -89,7 +93,9 @@
             "inventory-storage.instances.item.post",
             "inventory-storage.instances.preceding-succeeding-titles.collection.put",
             "inventory-storage.holdings.item.post",
-            "inventory-storage.authorities.item.post"
+            "inventory-storage.authorities.item.post",
+            "authorities.config.groups.settings.collection.get",
+            "authorities.config.groups.settings.authorities.collection.get"
           ]
         },
         {
@@ -104,7 +110,9 @@
             "inventory-storage.instances.item.put",
             "inventory-storage.instances.preceding-succeeding-titles.collection.put",
             "inventory-storage.holdings.item.put",
-            "inventory-storage.authorities.item.put"
+            "inventory-storage.authorities.item.put",
+            "authorities.config.groups.settings.collection.get",
+            "authorities.config.groups.settings.authorities.collection.get"
           ]
         },
         {

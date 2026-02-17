@@ -9,20 +9,26 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.vertx.core.json.JsonObject;
+import java.util.List;
 import org.folio.Authority;
+import org.folio.processing.mapping.defaultmapper.MarcToAuthorityMapper;
+import org.folio.processing.mapping.defaultmapper.MarkToAuthorityExtendedMapper;
+import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
 import org.folio.qm.domain.model.AuthorityRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
+import org.folio.qm.service.storage.config.AuthoritiesConfigService;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.folio.qm.service.support.MappingMetadataProvider.MappingData;
 import org.folio.spring.testing.type.UnitTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest
@@ -31,8 +37,17 @@ class MarcMappingAuthorityServiceTest {
 
   private @Mock MappingMetadataProvider mappingMetadataProvider;
   private @Mock FolioRecordMerger<AuthorityRecord, Authority> merger;
+  private @Mock AuthoritiesConfigService authoritiesConfigService;
+  private @Spy RecordMapper<Authority> simpleMapper = new MarcToAuthorityMapper();
+  private @Spy RecordMapper<Authority> extendedMapper = new MarkToAuthorityExtendedMapper();
 
-  private @InjectMocks MarcMappingAuthorityService service;
+  private MarcMappingAuthorityService service;
+
+  @BeforeEach
+  void setUp() {
+    service = new MarcMappingAuthorityService(mappingMetadataProvider, merger, authoritiesConfigService,
+      List.of(simpleMapper, extendedMapper));
+  }
 
   @Test
   void shouldMapNewRecord() {
@@ -105,10 +120,21 @@ class MarcMappingAuthorityServiceTest {
   }
 
   @Test
-  void shouldReturnAuthorityRecordMapper() {
+  void shouldReturnSimpleAuthorityRecordMapper() {
+    when(authoritiesConfigService.isAuthorityExtendedMappingEnabled()).thenReturn(false);
+
     var mapper = service.getRecordMapper();
 
-    assertNotNull(mapper);
+    assertEquals(simpleMapper, mapper);
+  }
+
+  @Test
+  void shouldReturnExtendedAuthorityRecordMapper() {
+    when(authoritiesConfigService.isAuthorityExtendedMappingEnabled()).thenReturn(true);
+
+    var mapper = service.getRecordMapper();
+
+    assertEquals(extendedMapper, mapper);
   }
 
   private QuickMarcRecord createQuickMarcRecord() {

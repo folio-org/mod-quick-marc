@@ -37,8 +37,10 @@ spring:
       - linking-rules-results
       - specifications
       - mapping-metadata-cache
+      - authorities-extended-mapping-cache
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
+    type: caffeine
   cloud:
     openfeign:
       okhttp:

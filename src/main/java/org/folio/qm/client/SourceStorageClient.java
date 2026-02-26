@@ -7,32 +7,32 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.folio.Record;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
-@FeignClient(value = "source-storage")
+@HttpExchange(url = "source-storage", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface SourceStorageClient {
 
-  @GetMapping(value = "/records/{id}/formatted", produces = MediaType.APPLICATION_JSON_VALUE)
-  Optional<Record> getSourceRecord(@PathVariable UUID id, @RequestParam("idType") IdType idType);
+  @GetExchange(value = "/records/{id}/formatted")
+  Optional<Record> getSourceRecord(@PathVariable("id") UUID id, @RequestParam("idType") IdType idType);
 
-  @GetMapping(value = "/records/{id}")
-  Optional<Record> getSourceRecord(@PathVariable UUID id);
+  @GetExchange(value = "/records/{id}")
+  Optional<Record> getSourceRecord(@PathVariable("id") UUID id);
 
-  @PostMapping(value = "/records", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostExchange(value = "/records")
   Record createSourceRecord(@RequestBody Record sourceRecord);
 
-  @PutMapping(value = "/records/{id}/generation")
-  void updateSourceRecord(@PathVariable UUID id, Record sourceRecord);
+  @PutExchange(value = "/records/{id}/generation")
+  void updateSourceRecord(@PathVariable("id") UUID id, @RequestBody Record sourceRecord);
 
-  @PostMapping(value = "/snapshots")
-  SourceRecordSnapshot createSnapshot(SourceRecordSnapshot snapshot);
+  @PostExchange(value = "/snapshots")
+  SourceRecordSnapshot createSnapshot(@RequestBody SourceRecordSnapshot snapshot);
 
   enum IdType {
     EXTERNAL

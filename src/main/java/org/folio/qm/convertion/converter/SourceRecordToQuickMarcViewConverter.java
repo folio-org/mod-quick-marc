@@ -3,7 +3,6 @@ package org.folio.qm.convertion.converter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -18,11 +17,14 @@ import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.RecordState;
 import org.folio.qm.domain.dto.UpdateInfo;
 import org.folio.qm.exception.ConverterException;
+import org.folio.qm.mapper.MarcTypeMapper;
+import org.jspecify.annotations.NonNull;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 @RequiredArgsConstructor

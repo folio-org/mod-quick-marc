@@ -63,6 +63,8 @@ spring:
       continue-on-error: true
 folio:
   environment: ${ENV:folio}
+  exchange:
+    enabled: true
   cache:
     spec:
       specifications:
@@ -77,7 +79,7 @@ folio:
   logging:
     request:
       enabled: false
-    feign:
+    exchange:
       enabled: true
       level: basic
   kafka:

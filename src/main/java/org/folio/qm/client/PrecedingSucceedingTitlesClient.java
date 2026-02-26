@@ -1,13 +1,15 @@
 package org.folio.qm.client;
 
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
-import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
-@FeignClient(value = "preceding-succeeding-titles")
+@HttpExchange(url = "preceding-succeeding-titles", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface PrecedingSucceedingTitlesClient {
 
-  @PutMapping(value = "/instances/{id}")
-  void updateTitles(@PathVariable String id, InstancePrecedingSucceedingTitles titles);
+  @PutExchange(value = "/instances/{id}")
+  void updateTitles(@PathVariable("id") String id, @RequestBody InstancePrecedingSucceedingTitles titles);
 }

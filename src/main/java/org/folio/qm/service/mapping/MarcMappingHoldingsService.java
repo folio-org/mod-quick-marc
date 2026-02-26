@@ -2,6 +2,7 @@ package org.folio.qm.service.mapping;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.log4j.Log4j2;
 import org.folio.Holdings;
 import org.folio.processing.mapping.defaultmapper.MarcToHoldingsMapper;
@@ -12,7 +13,6 @@ import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.storage.folio.FolioRecordInstanceService;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.folio.qm.util.MarcRecordModifier;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service

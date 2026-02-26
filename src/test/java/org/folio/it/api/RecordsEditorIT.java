@@ -305,7 +305,7 @@ class RecordsEditorIT extends BaseIT {
         .ifPresent(field -> field.setContent(hrid));
 
       doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
         .andExpect(jsonPath("$.message").value(expectedErrorMessage));
     }
@@ -443,7 +443,7 @@ class RecordsEditorIT extends BaseIT {
       var quickMarcRecord = prepareRecordWithInvalidIndicators();
 
       doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.errors.size()").value(2))
         .andExpect(jsonPath("$.errors[0].message").value("Should have exactly 2 indicators"))
         .andExpect(jsonPath("$.errors[0].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
@@ -470,7 +470,7 @@ class RecordsEditorIT extends BaseIT {
         });
 
       doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(errorMessageMatch(equalTo("Invalid Date1 field length, must be 4 characters")));
 
       expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
@@ -502,7 +502,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().add(new FieldItem().tag("001").content("$a test value"));
 
       doPut(recordsEditorByIdPath(id), quickMarcRecord)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.issues.size()").value(1))
         .andExpect(jsonPath("$.issues[0].tag").value("001[1]"))
         .andExpect(jsonPath("$.issues[0].severity").value("error"))
@@ -521,7 +521,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("001"));
 
       doPut(recordsEditorByIdPath(id), quickMarcRecord)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(jsonPath("$.issues.size()").value(1))
         .andExpect(jsonPath("$.issues[0].tag").value("001[0]"))
         .andExpect(jsonPath("$.issues[0].severity").value("error"))
@@ -539,7 +539,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().add(new FieldItem().tag("001").content("$a test value"));
 
       doPut(recordsEditorByIdPath(HOLDINGS_ID), quickMarcRecord)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(errorMessageMatch(equalTo(IS_UNIQUE_TAG_ERROR_MSG)));
 
       expectLinksUpdateRequests(0, linksByInstanceIdPath(HOLDINGS_ID));
@@ -554,7 +554,7 @@ class RecordsEditorIT extends BaseIT {
       quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("008"));
 
       doPut(recordsEditorByIdPath(id), quickMarcRecord)
-        .andExpect(status().isUnprocessableEntity())
+        .andExpect(status().isUnprocessableContent())
         .andExpect(errorMessageMatch(equalTo(IS_REQUIRED_TAG_ERROR_MSG)));
 
       expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
@@ -629,7 +629,7 @@ class RecordsEditorIT extends BaseIT {
 
     private String olMessage(String recordId, int storedVersion, int requestVersion) {
       return ("Cannot update record %s because it has been changed "
-              + "(optimistic locking): Stored _version is %s, _version of request is %s")
+        + "(optimistic locking): Stored _version is %s, _version of request is %s")
         .formatted(recordId, storedVersion, requestVersion);
     }
   }

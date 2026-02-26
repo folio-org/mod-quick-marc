@@ -60,9 +60,6 @@ import tools.jackson.databind.ObjectMapper;
 @SuppressWarnings("java:S5786")
 public class BaseIT {
 
-  protected static final String DI_COMPLETE_TOPIC_NAME = "folio.Default.test.DI_COMPLETED";
-  protected static final String DI_ERROR_TOPIC_NAME = "folio.Default.test.DI_ERROR";
-  protected static final String QM_COMPLETE_TOPIC_NAME = "folio.Default.test.QM_COMPLETED";
   protected static final String SPECIFICATION_COMPLETE_TOPIC_NAME =
     "folio.test.specification-storage.specification.updated";
 
@@ -120,21 +117,6 @@ public class BaseIT {
         .contentType(APPLICATION_JSON)
         .content(""))
       .andDo(log());
-  }
-
-  @SneakyThrows
-  protected void sendDataImportKafkaRecord(String eventPayloadFilePath, String topicName) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", readFile(eventPayloadFilePath));
-    String message = jsonObject.toString();
-    sendKafkaRecord(message, topicName);
-  }
-
-  @SneakyThrows
-  protected void sendQuickMarcKafkaRecord(String eventPayload) {
-    var jsonObject = new JSONObject();
-    jsonObject.put("eventPayload", eventPayload);
-    sendKafkaRecord(jsonObject.toString(), BaseIT.QM_COMPLETE_TOPIC_NAME);
   }
 
   @SneakyThrows

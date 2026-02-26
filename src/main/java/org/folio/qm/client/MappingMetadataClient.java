@@ -1,14 +1,15 @@
 package org.folio.qm.client;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
 
-@FeignClient("mapping-metadata")
+@HttpExchange(url = "mapping-metadata", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface MappingMetadataClient {
 
-  @GetMapping(value = "/type/{recordType}")
-  MappingMetadata getMappingMetadata(@PathVariable String recordType);
+  @GetExchange(value = "/type/{recordType}")
+  MappingMetadata getMappingMetadata(@PathVariable("recordType") String recordType);
 
   record MappingMetadata(String mappingRules, String mappingParams) {
   }

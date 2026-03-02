@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.folio.ExternalIdsHolder;
 import org.folio.ParsedRecord;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Log4j2
 public class SourceRecordToQuickMarcViewConverter implements Converter<org.folio.Record, QuickMarcView> {
 
   private static final Map<MarcFormat, Function<ExternalIdsHolder, String>> EXTERNAL_ID_EXTRACTORS = Map.of(
@@ -48,8 +46,6 @@ public class SourceRecordToQuickMarcViewConverter implements Converter<org.folio
 
   @Override
   public QuickMarcView convert(org.folio.Record source) {
-    log.info("Converting source record with id: {} to QuickMarcView", source.getId());
-    log.info("Converting source record with MatchedId: {} to QuickMarcView", source.getMatchedId());
     var parsedRecord = source.getParsedRecord();
     var marcRecord = extractMarcRecord(parsedRecord);
 
@@ -63,7 +59,7 @@ public class SourceRecordToQuickMarcViewConverter implements Converter<org.folio
       .fields(reorderedFields)
       .marcFormat(format)
       .parsedRecordId(UUID.fromString(parsedRecord.getId()))
-      .parsedRecordDtoId(UUID.fromString(source.getId()))
+      .parsedRecordDtoId(UUID.fromString(source.getMatchedId()))
       .sourceVersion(source.getGeneration())
       .externalId(UUID.fromString(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder())))
       .externalHrid(EXTERNAL_HRID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))

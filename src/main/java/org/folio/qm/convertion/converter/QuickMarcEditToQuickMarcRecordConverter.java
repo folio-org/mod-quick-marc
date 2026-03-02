@@ -1,7 +1,6 @@
 package org.folio.qm.convertion.converter;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.folio.Record.RecordType;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcEdit;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@Log4j2
 public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickMarcEdit, QuickMarcRecord> {
 
   private final Converter<BaseQuickMarcRecord, Record> marcConverter;
@@ -27,10 +25,7 @@ public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickM
 
   @Override
   public QuickMarcRecord convert(QuickMarcEdit source) {
-    log.info("Converting QuickMarcEdit to QuickMarcRecord for getParsedRecordDtoId: {}", source.getParsedRecordDtoId());
     var marcRecord = marcConverter.convert(source);
-    log.info("After converting QuickMarcEdit to QuickMarcRecord for getParsedRecordDtoId: {}",
-      source.getParsedRecordDtoId());
     return QuickMarcRecord.builder()
       .marcRecord(marcRecord)
       .source(source)

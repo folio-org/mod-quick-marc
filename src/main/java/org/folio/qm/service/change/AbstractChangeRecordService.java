@@ -196,7 +196,6 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
 
   private Record buildUpdatedRecord(QuickMarcRecord qmRecord, Record existingRecord) {
     var recordId = qmRecord.getParsedRecordDtoId().toString();
-    log.info("buildUpdatedRecord:: Building updated source record for recordId: {}", recordId);
     return new Record()
       .withId(recordId)
       .withSnapshotId(existingRecord.getSnapshotId())

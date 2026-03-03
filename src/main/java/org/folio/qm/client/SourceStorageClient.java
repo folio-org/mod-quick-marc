@@ -2,6 +2,7 @@ package org.folio.qm.client;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -38,10 +39,10 @@ public interface SourceStorageClient {
     EXTERNAL
   }
 
-  record SourceRecordSnapshot(UUID jobExecutionId, Status status) {
+  record SourceRecordSnapshot(UUID jobExecutionId, Status status, Date processingStartedDate) {
 
     public static SourceRecordSnapshot snapshot() {
-      return new SourceRecordSnapshot(UUID.randomUUID(), Status.COMMITTED);
+      return new SourceRecordSnapshot(UUID.randomUUID(), Status.COMMITTED, new Date());
     }
 
     public enum Status {

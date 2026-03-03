@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Date;
 import java.util.UUID;
 import org.folio.qm.client.SourceStorageClient.SourceRecordSnapshot;
 import org.folio.qm.client.SourceStorageClient.SourceRecordSnapshot.Status;
@@ -25,7 +26,7 @@ class SourceStorageClientTest {
   @Test
   void shouldCreateSnapshotWithCustomValues() {
     var jobExecutionId = UUID.randomUUID();
-    var snapshot = new SourceRecordSnapshot(jobExecutionId, Status.COMMITTED);
+    var snapshot = new SourceRecordSnapshot(jobExecutionId, Status.COMMITTED, new Date());
 
     assertNotNull(snapshot);
     assertEquals(jobExecutionId, snapshot.jobExecutionId());

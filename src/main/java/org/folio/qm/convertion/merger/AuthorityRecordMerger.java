@@ -10,6 +10,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface AuthorityRecordMerger extends FolioRecordMerger<AuthorityRecord, Authority> {
 
-  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void merge(Authority source, @MappingTarget AuthorityRecord target);
 }

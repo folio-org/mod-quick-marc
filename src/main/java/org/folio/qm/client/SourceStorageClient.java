@@ -41,7 +41,7 @@ public interface SourceStorageClient {
   record SourceRecordSnapshot(UUID jobExecutionId, Status status) {
 
     public static SourceRecordSnapshot snapshot() {
-      return new SourceRecordSnapshot(UUID.randomUUID(), Status.PARSING_IN_PROGRESS);
+      return new SourceRecordSnapshot(UUID.randomUUID(), Status.COMMITTED);
     }
 
     public enum Status {

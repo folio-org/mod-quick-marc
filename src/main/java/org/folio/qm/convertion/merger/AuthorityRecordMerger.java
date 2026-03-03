@@ -2,7 +2,9 @@ package org.folio.qm.convertion.merger;
 
 import org.folio.Authority;
 import org.folio.qm.domain.model.AuthorityRecord;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -12,4 +14,14 @@ public interface AuthorityRecordMerger extends FolioRecordMerger<AuthorityRecord
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
   void merge(Authority source, @MappingTarget AuthorityRecord target);
+
+  @BeforeMapping
+  default void beforeMerge(Authority source, @MappingTarget AuthorityRecord target) {
+    source.setVersion(target.getVersion());
+  }
+
+  @AfterMapping
+  default void afterMerge(Authority source, @MappingTarget AuthorityRecord target) {
+    target.setSource(Authority.Source.MARC);
+  }
 }

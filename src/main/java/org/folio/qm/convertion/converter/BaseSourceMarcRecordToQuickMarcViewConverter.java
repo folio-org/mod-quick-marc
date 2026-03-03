@@ -5,6 +5,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.util.List;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.BaseSourceMarcRecord;
@@ -14,6 +15,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class BaseSourceMarcRecordToQuickMarcViewConverter implements Converter<BaseSourceMarcRecord, QuickMarcView> {
 
   @Override
@@ -37,6 +39,7 @@ public class BaseSourceMarcRecordToQuickMarcViewConverter implements Converter<B
     if (isNotEmpty(content.getSubfields())) {
       fieldItem.content(mapSubfieldsToString(content.getSubfields()));
     }
+    log.info("Field {} content: {}", fieldItem.getTag(), content.getLinkDetails());
     return fieldItem.linkDetails(content.getLinkDetails());
   }
 

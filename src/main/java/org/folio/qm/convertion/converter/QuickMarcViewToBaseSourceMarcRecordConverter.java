@@ -6,6 +6,7 @@ import static org.folio.qm.util.MarcUtils.extractSubfields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.QuickMarcView;
@@ -16,6 +17,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class QuickMarcViewToBaseSourceMarcRecordConverter implements Converter<QuickMarcView, BaseSourceMarcRecord> {
 
   @Override
@@ -35,6 +37,8 @@ public class QuickMarcViewToBaseSourceMarcRecordConverter implements Converter<Q
     if (fieldItem.getContent() instanceof String) {
       sourceContent.setSubfields(mapStringToSubfields(fieldItem));
     }
+    log.info("Mapping field with tag {} and content {} to SourceFieldItem", fieldItem.getTag(),
+      fieldItem.getLinkDetails());
     sourceContent.setLinkDetails(fieldItem.getLinkDetails());
     return Map.of(fieldItem.getTag(), sourceContent);
   }

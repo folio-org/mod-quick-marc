@@ -110,3 +110,8 @@ management:
       access: unrestricted
 server:
   port: 8081
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG
+    com.zaxxer.hikari: DEBUG

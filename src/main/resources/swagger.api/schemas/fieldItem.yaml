@@ -1,0 +1,43 @@
+description: MARC field structure containing tag, content, and optional indicators
+type: object
+properties:
+  tag:
+    description: Field's tag
+    type: string
+    pattern: ^[0-9]{3}$
+    example: "001"
+  content:
+    description: Field's content (string for control fields, object with subfields
+      for data fields)
+    type: object
+    example:
+      $a: "393893"
+      $b: "Mike"
+  indicators:
+    description: Field's indicators
+    type: array
+    items:
+      type: string
+      minLength: 1
+      maxLength: 1
+    minItems: 0
+    maxItems: 2
+  isProtected:
+    description: Flag indicates if the field data is protected
+    type: boolean
+    readOnly: true
+    example: true
+  linkDetails:
+    $ref: 'linkDetails.yaml'
+required:
+- tag
+- content
+example:
+  tag: "100"
+  content:
+    $a: "393893"
+    $b: "Mike"
+  indicators:
+  - "1"
+  - "2"
+  isProtected: true

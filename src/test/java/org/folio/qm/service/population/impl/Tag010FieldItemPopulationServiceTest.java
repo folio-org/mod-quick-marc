@@ -7,9 +7,9 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
 import java.util.stream.Stream;
-import org.folio.qm.domain.dto.BaseMarcRecord;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.spring.testing.type.UnitTest;
+import org.folio.support.StubQuickMarcRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,10 +24,22 @@ class Tag010FieldItemPopulationServiceTest {
   @MethodSource("fieldData")
   void shouldPopulateSubfieldValue(String dtoContent, String expectedContent) {
     var field = new FieldItem().tag("010").content(dtoContent);
+    var marcRecord = new StubQuickMarcRecord();
+    marcRecord.setFields(List.of(field));
 
-    populationService.populate(new BaseMarcRecord().fields(List.of(field)));
+    populationService.populate(marcRecord);
 
     assertEquals(expectedContent, field.getContent());
+  }
+
+  @Test
+  void testCanProcess() {
+    assertTrue(populationService.canProcess(new FieldItem().tag("010")));
+  }
+
+  @Test
+  void testCannotProcess() {
+    assertFalse(populationService.canProcess(new FieldItem().tag("011")));
   }
 
   private static Stream<Arguments> fieldData() {
@@ -48,15 +60,5 @@ class Tag010FieldItemPopulationServiceTest {
       arguments("$a  e  45000067", "$ae  45000067 "),
       arguments("$a agr25000003  ", "$aagr25000003 ")
     );
-  }
-
-  @Test
-  void testCanProcess() {
-    assertTrue(populationService.canProcess(new FieldItem().tag("010")));
-  }
-
-  @Test
-  void testCannotProcess() {
-    assertFalse(populationService.canProcess(new FieldItem().tag("011")));
   }
 }

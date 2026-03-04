@@ -1,0 +1,22 @@
+package org.folio.qm.convertion.field.qm;
+
+import org.folio.qm.convertion.field.FieldItemConverter;
+import org.folio.qm.domain.dto.FieldItem;
+import org.folio.qm.domain.dto.MarcFormat;
+import org.marc4j.marc.VariableField;
+import org.marc4j.marc.impl.ControlFieldImpl;
+import org.springframework.stereotype.Component;
+
+@Component
+public class SimpleControlFieldItemConverter implements FieldItemConverter {
+
+  @Override
+  public VariableField convert(FieldItem field) {
+    return new ControlFieldImpl(field.getTag(), field.getContent().toString());
+  }
+
+  @Override
+  public boolean canProcess(FieldItem field, MarcFormat marcFormat) {
+    return isSimpleControlField(field);
+  }
+}

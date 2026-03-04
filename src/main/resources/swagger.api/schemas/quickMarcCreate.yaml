@@ -1,0 +1,5 @@
+type: object
+description: MARC record creation model
+x-implements: ['org.folio.qm.domain.model.BaseQuickMarcRecord']
+allOf:
+  - $ref: 'baseMarcRecord.yaml'

@@ -27,12 +27,6 @@ env:
   API_WARNINGS: false
 
 on:
-  push:
-    paths:
-      - 'src/main/resources/swagger.api/**'
-  pull_request:
-    paths:
-      - 'src/main/resources/swagger.api/**'
   workflow_dispatch:
 
 jobs:

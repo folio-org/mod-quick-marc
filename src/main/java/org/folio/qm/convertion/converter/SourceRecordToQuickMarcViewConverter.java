@@ -3,7 +3,6 @@ package org.folio.qm.convertion.converter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.folio.qm.util.MarcUtils.masqueradeBlanks;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +22,7 @@ import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 @RequiredArgsConstructor
@@ -59,7 +59,7 @@ public class SourceRecordToQuickMarcViewConverter implements Converter<org.folio
       .fields(reorderedFields)
       .marcFormat(format)
       .parsedRecordId(UUID.fromString(parsedRecord.getId()))
-      .parsedRecordDtoId(UUID.fromString(source.getId()))
+      .parsedRecordDtoId(UUID.fromString(source.getMatchedId()))
       .sourceVersion(source.getGeneration())
       .externalId(UUID.fromString(EXTERNAL_ID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder())))
       .externalHrid(EXTERNAL_HRID_EXTRACTORS.get(format).apply(source.getExternalIdsHolder()))

@@ -3,13 +3,14 @@ package org.folio.qm.client;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.MediaType;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
 
-@FeignClient(value = "authorities/config")
+@HttpExchange(url = "authorities/config", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface AuthorityTenantSettingsClient {
 
-  @GetMapping(value = "/groups/authorities/settings")
+  @GetExchange(value = "/groups/authorities/settings")
   Optional<SettingCollection> getAuthoritiesSettings();
 
   @Getter

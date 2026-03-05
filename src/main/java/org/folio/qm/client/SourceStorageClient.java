@@ -2,6 +2,7 @@ package org.folio.qm.client;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
-import org.springframework.web.service.annotation.HttpExchange;
 
 @HttpExchange(url = "source-storage", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface SourceStorageClient {
@@ -38,10 +39,10 @@ public interface SourceStorageClient {
     EXTERNAL
   }
 
-  record SourceRecordSnapshot(UUID jobExecutionId, Status status) {
+  record SourceRecordSnapshot(UUID jobExecutionId, Status status, Date processingStartedDate) {
 
     public static SourceRecordSnapshot snapshot() {
-      return new SourceRecordSnapshot(UUID.randomUUID(), Status.PARSING_IN_PROGRESS);
+      return new SourceRecordSnapshot(UUID.randomUUID(), Status.COMMITTED, new Date());
     }
 
     public enum Status {

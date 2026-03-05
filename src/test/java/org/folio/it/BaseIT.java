@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,6 +64,9 @@ public class BaseIT {
 
   protected static OkapiConfiguration okapiConfiguration;
   private static boolean dbInitialized = false;
+  // Okapi extension with HTTP/2 disabled to avoid issues with "IOException: GOAWAY received" errors in Http2Connection
+  @RegisterExtension
+  private static OkapiExtensionHttp2Disabled okapiExtension = new OkapiExtensionHttp2Disabled();
   protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
   @Autowired
   protected FolioModuleMetadata metadata;

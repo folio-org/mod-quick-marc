@@ -135,7 +135,6 @@ public class QuickMarcRecord {
     try (ByteArrayOutputStream os = new ByteArrayOutputStream();
          QmMarcJsonWriter writer = new QmMarcJsonWriter(os)) {
       writer.write(marcRecord);
-
       var convertedContent = new JsonObject(Buffer.buffer(os.toByteArray()));
       reorderContentTagsBasedOnSource(convertedContent, source.getFields());
       this.parsedContent = convertedContent;
@@ -146,7 +145,6 @@ public class QuickMarcRecord {
 
   private void reorderContentTagsBasedOnSource(JsonObject convertedContent, List<FieldItem> sourceFields) {
     var fieldsArrayNode = convertedContent.getJsonArray("fields");
-
     Map<String, Queue<JsonObject>> jsonNodesByTag = new HashMap<>();
     for (int i = 0; i < fieldsArrayNode.size(); i++) {
       var node = fieldsArrayNode.getJsonObject(i);
@@ -155,7 +153,9 @@ public class QuickMarcRecord {
     }
 
     var rearrangedArray = new JsonArray();
-    addNodesToRearrangedArray(jsonNodesByTag, TAG_001, rearrangedArray);
+    if (sourceFields.stream().noneMatch(f -> TAG_001.equals(f.getTag()))) {
+      addNodesToRearrangedArray(jsonNodesByTag, TAG_001, rearrangedArray);
+    }
     for (FieldItem fieldItem : sourceFields) {
       addNodesToRearrangedArray(jsonNodesByTag, fieldItem.getTag(), rearrangedArray);
     }

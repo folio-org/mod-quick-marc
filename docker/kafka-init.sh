@@ -11,9 +11,6 @@ echo "Creating Kafka topics..."
 # Example topics
 TOPICS=(
 "${ENV}.ALL.specification-storage.specification.updated"
-"${ENV}.ALL.Default.DI_COMPLETED"
-"${ENV}.ALL.Default.DI_ERROR"
-"${ENV}.ALL.Default.QM_COMPLETED"
 )
 
 # Updated to use the full path to kafka-topics.sh

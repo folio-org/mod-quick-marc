@@ -171,10 +171,10 @@ public class ErrorHandling {
   }
 
   @ExceptionHandler(MappingMetadataException.class)
-  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
   public Error handleMappingMetadataException(MappingMetadataException e) {
     log.error("Mapping metadata error occurred: ", e);
-    return buildError(HttpStatus.UNPROCESSABLE_ENTITY, INTERNAL, e.getMessage());
+    return buildError(HttpStatus.UNPROCESSABLE_CONTENT, INTERNAL, e.getMessage());
   }
 
   @ExceptionHandler(Exception.class)

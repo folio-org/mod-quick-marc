@@ -15,12 +15,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.folio.qm.ModQuickMarcApplication;
@@ -38,18 +36,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.ObjectMapper;
 
-@Log4j2
 @EnableOkapi
 @EnableKafka
 @EnablePostgres
@@ -65,7 +64,10 @@ public class BaseIT {
 
   protected static OkapiConfiguration okapiConfiguration;
   private static boolean dbInitialized = false;
-
+  // Okapi extension with HTTP/2 disabled to avoid issues with "IOException: GOAWAY received" errors in Http2Connection
+  @RegisterExtension
+  private static OkapiExtensionHttp2Disabled okapiExtension = new OkapiExtensionHttp2Disabled();
+  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
   @Autowired
   protected FolioModuleMetadata metadata;
   @Autowired
@@ -76,8 +78,6 @@ public class BaseIT {
   private CacheManager cacheManager;
   @Autowired
   private ObjectMapper objectMapper;
-  protected final WireMockServer wireMockServer = okapiConfiguration.wireMockServer();
-
   @Value("${folio.okapi-url}")
   private String okapiUrl;
 

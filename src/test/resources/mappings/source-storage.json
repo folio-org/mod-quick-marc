@@ -60,6 +60,25 @@
     {
       "request": {
         "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000011111/formatted"
+      },
+      "response": {
+        "fault": "CONNECTION_RESET_BY_PEER"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000022222/formatted"
+      },
+      "response": {
+        "status": 500,
+        "body": "FOLIO source storage service is unavailable"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
         "url": "/source-storage/records/00000000-0000-0000-0000-000000000001"
       },
       "response": {

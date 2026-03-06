@@ -1,6 +1,7 @@
 ## v8.0.0 YYYY-mm-DD
 ### Breaking changes
 * Update QuickMARC to use generation field from SRS for optimistic locking ([MODQM-478](https://folio-org.atlassian.net/browse/MODQM-478))
+* Upgrade module to SpringBoot 4.0.x and Spring 7.0.x ([MODQM-487](https://folio-org.atlassian.net/browse/MODQM-487))
 
 ### New APIs versions
 * Provides `API_NAME vX.Y`
@@ -28,6 +29,7 @@
 * Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))
 * Restructure documentation in `README.md` ([MODQM-470](https://folio-org.atlassian.net/browse/MODQM-470))
 * Refactor code to comply with Checkstyle method length limit (max 25 lines) ([MODQM-488](https://folio-org.atlassian.net/browse/MODQM-488))
+* Use GitHub workflow for CI/CD ([MODQM-499](https://folio-org.atlassian.net/browse/MODQM-499))
 * Add "apt upgrade" to Dockerfile, add .dockerignore
 
 ### Dependencies

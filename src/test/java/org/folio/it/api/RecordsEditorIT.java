@@ -578,6 +578,30 @@ class RecordsEditorIT extends BaseIT {
       expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
     }
 
+    @Test
+    @DisplayName("Should return 400 Bad Request when external service is unreachable (ResourceAccessException)")
+    void testHandleResourceAccessException() throws Exception {
+      var id = "00000000-0000-0000-0000-000000011111";
+
+      doGet(recordsEditorPath(id))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
+        .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
+    @DisplayName("Should return Server Error when external service returns HTTP error (HttpStatusCodeException)")
+    void testHandleHttpStatusCodeException() throws Exception {
+      var id = "00000000-0000-0000-0000-000000022222";
+
+      doGet(recordsEditorPath(id))
+        .andExpect(status().isInternalServerError())
+        .andExpect(jsonPath("$.type")
+          .value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
+        .andExpect(jsonPath("$.message")
+          .value("FOLIO source storage service is unavailable"));
+    }
+
     private QuickMarcEdit prepareRecordWithInvalidIndicators() {
       var field333 = getFieldWithValue("333", "$333 content").content("$333 content")
         .indicators(Collections.singletonList(" "));

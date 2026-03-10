@@ -55,6 +55,8 @@ folio:
   tenant:
     validation:
       enabled: true
+  exchange:
+    enabled: true
   logging:
     request:
       enabled: false

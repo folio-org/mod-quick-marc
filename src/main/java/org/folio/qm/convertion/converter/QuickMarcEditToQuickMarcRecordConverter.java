@@ -26,7 +26,6 @@ public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickM
   @Override
   public QuickMarcRecord convert(QuickMarcEdit source) {
     var marcRecord = marcConverter.convert(source);
-
     return QuickMarcRecord.builder()
       .marcRecord(marcRecord)
       .source(source)

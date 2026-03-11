@@ -41,10 +41,6 @@ spring:
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
     type: caffeine
-  cloud:
-    openfeign:
-      okhttp:
-        enabled: true
   sql:
     init:
       # to boot up application despite of any DB connection issues
@@ -59,10 +55,12 @@ folio:
   tenant:
     validation:
       enabled: true
+  exchange:
+    enabled: true
   logging:
     request:
       enabled: false
-    feign:
+    exchange:
       enabled: true
       level: full
   kafka:

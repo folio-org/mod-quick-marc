@@ -12,7 +12,7 @@ import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.storage.folio.FolioRecordInstanceService;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.folio.qm.util.MarcRecordModifier;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +39,7 @@ public class MarcMappingHoldingsService extends MarcMappingAbstractService<Holdi
   }
 
   @Override
-  protected void mapRequiredFields(QuickMarcRecord qmRecord, @NotNull Holdings mappedRecord, boolean isNewRecord) {
+  protected void mapRequiredFields(QuickMarcRecord qmRecord, @NonNull Holdings mappedRecord, boolean isNewRecord) {
     if (isNewRecord) {
       var instanceHrid = MarcRecordModifier.get004ControlFieldData(qmRecord.getMarcRecord());
       if (isBlank(instanceHrid)) {

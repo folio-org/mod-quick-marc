@@ -3,22 +3,23 @@ package org.folio.qm.client;
 import java.util.Optional;
 import java.util.UUID;
 import org.folio.qm.domain.model.HoldingsRecord;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
-@FeignClient("holdings-storage")
+@HttpExchange(url = "holdings-storage", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface HoldingsStorageClient {
 
-  @GetMapping(value = "/holdings/{id}")
-  Optional<HoldingsRecord> getHoldingById(@PathVariable UUID id);
+  @GetExchange(value = "/holdings/{id}")
+  Optional<HoldingsRecord> getHoldingById(@PathVariable("id") UUID id);
 
-  @PostMapping(value = "/holdings")
+  @PostExchange(value = "/holdings")
   HoldingsRecord createHolding(@RequestBody HoldingsRecord holdingsRecord);
 
-  @PutMapping(value = "/holdings/{id}")
-  void updateHolding(@PathVariable UUID id, HoldingsRecord holdingsRecord);
+  @PutExchange(value = "/holdings/{id}")
+  void updateHolding(@PathVariable("id") UUID id, @RequestBody HoldingsRecord holdingsRecord);
 }

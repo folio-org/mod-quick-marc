@@ -18,6 +18,6 @@ public class ConverterException extends QuickMarcException {
 
   @Override
   public int getStatus() {
-    return HttpStatus.UNPROCESSABLE_ENTITY.value();
+    return HttpStatus.UNPROCESSABLE_CONTENT.value();
   }
 }

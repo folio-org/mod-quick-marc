@@ -3,14 +3,14 @@ package org.folio.qm.client;
 import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
 
-@FeignClient(value = "linking-rules", dismiss404 = true)
+@HttpExchange(url = "linking-rules", accept = MediaType.APPLICATION_JSON_VALUE)
 public interface LinkingRulesClient {
 
-  @GetMapping(value = "instance-authority", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetExchange(value = "instance-authority")
   List<LinkingRuleDto> fetchLinkingRules();
 
   @Data

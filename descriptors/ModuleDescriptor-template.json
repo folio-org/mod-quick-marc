@@ -68,7 +68,7 @@
   "provides": [
     {
       "id": "marc-records-editor",
-      "version": "7.0",
+      "version": "6.0",
       "handlers": [
         {
           "methods": ["GET"],

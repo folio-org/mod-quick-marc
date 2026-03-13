@@ -1,5 +1,6 @@
 package org.folio.qm.client;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public interface LinksClient {
   @PutExchange("/instances/{instanceId}")
   void putLinksByInstanceId(@PathVariable("instanceId") UUID instanceId, @RequestBody InstanceLinks instanceLinks);
 
+  @JsonInclude
   record InstanceLinks(List<InstanceLink> links, Integer totalRecords) {
   }
 

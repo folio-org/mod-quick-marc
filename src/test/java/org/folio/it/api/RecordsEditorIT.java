@@ -1,71 +1,63 @@
 package org.folio.it.api;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.UUID.fromString;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.folio.qm.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
-import static org.folio.qm.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
-import static org.folio.support.utils.ApiTestUtils.CHANGE_MANAGER_JOB_EXECUTION_PATH;
+import static org.folio.qm.service.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
+import static org.folio.qm.service.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.folio.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
-import static org.folio.support.utils.ApiTestUtils.QM_RECORD_ID;
 import static org.folio.support.utils.ApiTestUtils.linksByInstanceIdPath;
 import static org.folio.support.utils.ApiTestUtils.mockGet;
+import static org.folio.support.utils.ApiTestUtils.recordsEditorByIdPath;
 import static org.folio.support.utils.ApiTestUtils.recordsEditorPath;
-import static org.folio.support.utils.ApiTestUtils.recordsEditorStatusPath;
 import static org.folio.support.utils.ApiTestUtils.recordsEditorValidatePath;
 import static org.folio.support.utils.ApiTestUtils.sourceStoragePath;
 import static org.folio.support.utils.ApiTestUtils.usersByIdPath;
-import static org.folio.support.utils.DataBaseTestUtils.RECORD_CREATION_STATUS_TABLE_NAME;
-import static org.folio.support.utils.DataBaseTestUtils.getCreationStatusById;
-import static org.folio.support.utils.DataBaseTestUtils.saveCreationStatus;
 import static org.folio.support.utils.JsonTestUtils.getMockAsObject;
 import static org.folio.support.utils.JsonTestUtils.getObjectFromJson;
 import static org.folio.support.utils.JsonTestUtils.readQuickMarc;
 import static org.folio.support.utils.TestEntitiesUtils.AUTHORITY_ID;
-import static org.folio.support.utils.TestEntitiesUtils.DI_EVENT_WITH_AUTHORITY;
-import static org.folio.support.utils.TestEntitiesUtils.DI_EVENT_WITH_HOLDINGS;
-import static org.folio.support.utils.TestEntitiesUtils.DI_EVENT_WITH_INSTANCE;
 import static org.folio.support.utils.TestEntitiesUtils.HOLDINGS_ID;
 import static org.folio.support.utils.TestEntitiesUtils.INSTANCE_ID;
-import static org.folio.support.utils.TestEntitiesUtils.JOB_EXECUTION_ID;
 import static org.folio.support.utils.TestEntitiesUtils.JOHN_USER_ID;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_CREATE_AUTHORITY_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_CREATE_BIB_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_CREATE_HOLDINGS_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_AUTHORITY_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_BIB_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_EDIT_HOLDINGS_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_VALIDATE_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_VALIDATE_SUBFIELD_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_VIEW_AUTHORITY_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_VIEW_BIB_PATH;
 import static org.folio.support.utils.TestEntitiesUtils.QM_RECORD_VIEW_HOLDINGS_PATH;
+import static org.folio.support.utils.TestEntitiesUtils.getFieldWithValue;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.github.tomakehurst.wiremock.http.Fault;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import lombok.extern.log4j.Log4j2;
 import org.folio.it.BaseIT;
-import org.folio.qm.domain.dto.CreationStatus;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcCreate;
+import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.dto.ValidatableRecord;
-import org.folio.qm.domain.entity.RecordCreationStatusEnum;
 import org.folio.qm.util.ErrorUtils;
-import org.folio.spring.testing.extension.DatabaseCleanup;
 import org.folio.spring.testing.type.IntegrationTest;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -73,10 +65,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.util.ReflectionUtils;
 
 @Log4j2
 @IntegrationTest
 class RecordsEditorIT extends BaseIT {
+
+  private static final String ERROR_INSTANCE_NOT_FOUND_BY_HRID =
+    "Failed to map marc-holdings record with parsedRecordId null: "
+      + "No instance found for HRID: non-existing-instance-hrid";
+
+  private static final String ERROR_MULTIPLE_INSTANCES_FOUND_BY_HRID =
+    "Failed to map marc-holdings record with parsedRecordId null: "
+      + "Multiple instances found for HRID: multiple-instance-hrid";
 
   @Nested
   class GetRecordCases {
@@ -224,135 +226,32 @@ class RecordsEditorIT extends BaseIT {
   }
 
   @Nested
-  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
-  class GetCreationStatusCases {
-
-    @Test
-    @DisplayName("Should return creation status successfully")
-    void testGetCreationStatus() throws Exception {
-      var id = UUID.randomUUID().toString();
-      var expectedDatePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.+");
-      saveCreationStatus(id, id, metadata, jdbcTemplate);
-
-      doGet(recordsEditorStatusPath(QM_RECORD_ID, id))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.qmRecordId").value(id))
-        .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.NEW.getValue()))
-        .andExpect(jsonPath("$.metadata").value(notNullValue()))
-        .andExpect(jsonPath("$.metadata.createdAt", matchesPattern(expectedDatePattern)));
-    }
-
-    @Test
-    @DisplayName("Should return 404 if status not found")
-    void testReturn404IfStatusNotFound() throws Exception {
-      var notExistedId = UUID.randomUUID().toString();
-
-      doGet(recordsEditorStatusPath(QM_RECORD_ID, notExistedId))
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.message").value(containsString("not found")));
-    }
-
-    @Test
-    @DisplayName("Should return 400 if qmRecordId is invalid")
-    void testReturn400IfQmRecordIdIsInvalid() throws Exception {
-      doGet(recordsEditorStatusPath(QM_RECORD_ID, "invalidId"))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is invalid")));
-    }
-
-    @Test
-    @DisplayName("Should return 400 if qmRecordId is missing")
-    void testReturn400IfQmRecordIdIsMissing() throws Exception {
-      log.info("===== Verify GET record status: Parameter missing =====");
-
-      doGet(recordsEditorStatusPath())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is required")));
-    }
-
-    @Test
-    @DisplayName("Should return 400 if qmRecordId is empty")
-    void testReturn400IfQmRecordIdIsEmpty() throws Exception {
-      log.info("===== Verify GET record status: Parameter empty =====");
-
-      doGet(recordsEditorStatusPath(QM_RECORD_ID, ""))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message").value(containsString("Parameter 'qmRecordId' is required")));
-    }
-  }
-
-  @Nested
-  @DatabaseCleanup(tables = RECORD_CREATION_STATUS_TABLE_NAME)
   class CreateRecordCases {
-
-    public static Stream<Arguments> testCreateMarcRecordWithout001FieldCases() {
-      return Stream.of(
-        Arguments.argumentSet("bibliographic", QM_RECORD_CREATE_BIB_PATH, DI_EVENT_WITH_INSTANCE),
-        Arguments.argumentSet("authority", QM_RECORD_CREATE_AUTHORITY_PATH, DI_EVENT_WITH_AUTHORITY)
-      );
-    }
-
-    static Stream<Arguments> testCreateMarcRecordPositiveCases() {
-      return Stream.of(
-        Arguments.argumentSet("bibliographic", QM_RECORD_CREATE_BIB_PATH, DI_EVENT_WITH_INSTANCE),
-        Arguments.argumentSet("holdings", QM_RECORD_CREATE_HOLDINGS_PATH, DI_EVENT_WITH_HOLDINGS),
-        Arguments.argumentSet("authority", QM_RECORD_CREATE_AUTHORITY_PATH, DI_EVENT_WITH_AUTHORITY)
-      );
-    }
 
     @ParameterizedTest
     @MethodSource("testCreateMarcRecordPositiveCases")
     @DisplayName("Should create record successfully")
-    void testCreateMarcRecordPositive(String requestBody, String eventBody) throws Exception {
+    void testCreateMarcRecordPositive(String requestBody) throws Exception {
       var quickMarcRecord = readQuickMarc(requestBody, QuickMarcCreate.class);
 
-      var result = doPost(recordsEditorPath(), quickMarcRecord)
+      doPost(recordsEditorPath(), quickMarcRecord)
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.jobExecutionId").value(JOB_EXECUTION_ID))
-        .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
-        .andReturn().getResponse().getContentAsString();
-
-      var qmRecordId = getObjectFromJson(result, CreationStatus.class).getQmRecordId();
-
-      // send DI_COMPLETE topic event
-      sendDataImportKafkaRecord(eventBody, DI_COMPLETE_TOPIC_NAME);
-
-      // wait until the status of creation changed to CREATED
-      awaitAndAssertStatus(qmRecordId);
+        .andExpect(jsonPath("$.externalId").isNotEmpty())
+        .andExpect(jsonPath("$.externalHrid").isNotEmpty());
     }
 
     @ParameterizedTest
     @MethodSource("testCreateMarcRecordWithout001FieldCases")
     @DisplayName("Should create record successfully without 001")
-    void testCreateMarcRecordWithout001Field(String requestBody, String eventBody) throws Exception {
+    void testCreateMarcRecordWithout001Field(String requestBody) throws Exception {
       var quickMarcRecord = readQuickMarc(requestBody, QuickMarcCreate.class);
       // remove the 001 field from the record and try to create a record
       quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("001"));
 
-      var result = doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
+      doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.jobExecutionId").value(JOB_EXECUTION_ID))
-        .andExpect(jsonPath("$.status").value(CreationStatus.StatusEnum.IN_PROGRESS.getValue()))
-        .andReturn().getResponse().getContentAsString();
-
-      var qmRecordId = getObjectFromJson(result, CreationStatus.class).getQmRecordId();
-
-      // send DI_COMPLETE topic event
-      sendDataImportKafkaRecord(eventBody, DI_COMPLETE_TOPIC_NAME);
-
-      // wait until the status of creation changed to CREATED
-      awaitAndAssertStatus(qmRecordId);
-    }
-
-    @Test
-    @DisplayName("Should return 422 if user id is invalid")
-    void testReturn401WhenInvalidUserId() throws Exception {
-      var quickMarcRecord = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
-
-      doPost(recordsEditorPath(), quickMarcRecord, Map.of("x-okapi-custom", "invalid-id"))
-        .andExpect(status().isUnprocessableContent())
-        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
-        .andExpect(jsonPath("$.code").value("UNPROCESSABLE_CONTENT"));
+        .andExpect(jsonPath("$.externalId").isNotEmpty())
+        .andExpect(jsonPath("$.externalHrid").isNotEmpty());
     }
 
     @Test
@@ -396,6 +295,22 @@ class RecordsEditorIT extends BaseIT {
     }
 
     @ParameterizedTest
+    @MethodSource("provideInvalidInstanceHridCases")
+    @DisplayName("Should return 422 if instance by HRID is not found or multiple found")
+    void testReturn422WhenRecordWithInvalidInstanceHrid(String hrid, String expectedErrorMessage) throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_CREATE_HOLDINGS_PATH, QuickMarcCreate.class);
+      quickMarcRecord.getFields().stream()
+        .filter(field -> field.getTag().equals("004"))
+        .findFirst()
+        .ifPresent(field -> field.setContent(hrid));
+
+      doPost(recordsEditorPath(), quickMarcRecord, JOHN_USER_ID_HEADER)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+        .andExpect(jsonPath("$.message").value(expectedErrorMessage));
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {QM_RECORD_CREATE_BIB_PATH, QM_RECORD_CREATE_HOLDINGS_PATH})
     @DisplayName("Should return 422 if specification-based validation failed (missing 008)")
     void testReturn422WhenRecordMissing008(String filePath) throws Exception {
@@ -408,35 +323,338 @@ class RecordsEditorIT extends BaseIT {
         .andExpect(jsonPath("$.message").value(IS_REQUIRED_TAG_ERROR_MSG));
     }
 
-    @Test
-    @DisplayName("Should return 400 if connection reset")
-    void testReturn400WhenConnectionReset() throws Exception {
-      wireMockServer.stubFor(post(urlEqualTo(CHANGE_MANAGER_JOB_EXECUTION_PATH))
-        .atPriority(1)
-        .willReturn(aResponse()
-          .withStatus(SC_OK)
-          .withFault(Fault.CONNECTION_RESET_BY_PEER)
-        ));
-
-      QuickMarcCreate quickMarcJson = readQuickMarc(QM_RECORD_CREATE_BIB_PATH, QuickMarcCreate.class);
-
-      doPost(recordsEditorPath(), quickMarcJson)
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
-        .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value(containsString("Connection reset")));
+    private static Stream<Arguments> testCreateMarcRecordWithout001FieldCases() {
+      return Stream.of(
+        Arguments.argumentSet("bibliographic", QM_RECORD_CREATE_BIB_PATH),
+        Arguments.argumentSet("authority", QM_RECORD_CREATE_AUTHORITY_PATH)
+      );
     }
 
-    private void awaitAndAssertStatus(UUID qmRecordId) {
-      await().atMost(5, SECONDS)
-        .untilAsserted(() -> assertThat(getCreationStatusById(qmRecordId, metadata, jdbcTemplate).getStatus())
-          .isEqualTo(RecordCreationStatusEnum.CREATED));
-      var creationStatus = getCreationStatusById(qmRecordId, metadata, jdbcTemplate);
-      assertThat(creationStatus)
-        .hasNoNullFieldsOrPropertiesExcept("errorMessage")
-        .hasFieldOrPropertyWithValue("id", qmRecordId)
-        .hasFieldOrPropertyWithValue("status", RecordCreationStatusEnum.CREATED)
-        .hasFieldOrPropertyWithValue("jobExecutionId", UUID.fromString(JOB_EXECUTION_ID));
+    private static Stream<Arguments> testCreateMarcRecordPositiveCases() {
+      return Stream.of(
+        Arguments.argumentSet("bibliographic", QM_RECORD_CREATE_BIB_PATH),
+        Arguments.argumentSet("holdings", QM_RECORD_CREATE_HOLDINGS_PATH),
+        Arguments.argumentSet("authority", QM_RECORD_CREATE_AUTHORITY_PATH)
+      );
+    }
+
+    private static Stream<Arguments> provideInvalidInstanceHridCases() {
+      return Stream.of(
+        Arguments.of("non-existing-instance-hrid", ERROR_INSTANCE_NOT_FOUND_BY_HRID),
+        Arguments.of("multiple-instance-hrid", ERROR_MULTIPLE_INSTANCES_FOUND_BY_HRID)
+      );
+    }
+  }
+
+  @Nested
+  class UpdateRecordCases {
+    @ParameterizedTest
+    @MethodSource("testUpdateQuickMarcRecordCases")
+    @DisplayName("Should update QuickMarc record successfully")
+    void testUpdateQuickMarcRecord(String filePath, String externalId) throws Exception {
+      var quickMarcRecord = readQuickMarc(filePath, QuickMarcEdit.class);
+
+      doPut(recordsEditorByIdPath(externalId), quickMarcRecord)
+        .andDo(log())
+        .andExpect(status().isAccepted());
+
+      if (quickMarcRecord.getMarcFormat() == MarcFormat.BIBLIOGRAPHIC) {
+        expectLinksUpdateRequests(1, linksByInstanceIdPath(externalId));
+      } else {
+        expectLinksUpdateRequests(0, linksByInstanceIdPath(externalId));
+      }
+    }
+
+    @Test
+    @DisplayName("Should fail with optimistic locking when source version doesn't match")
+    void testUpdateQuickMarcRecordFailedWithOptimisticLocking() throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
+        .sourceVersion(8);
+
+      doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
+        .andExpect(status().isConflict())
+        .andExpect(optimisticLockingMessage(INSTANCE_ID, 1, 8));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+    }
+
+    @Test
+    @DisplayName("Should fail with 404 when source record doesn't exist")
+    void testUpdateQuickMarcRecordWrongUuid() throws Exception {
+      log.info("===== Verify PUT record: Not found =====");
+      var wrongUuid = UUID.randomUUID().toString();
+
+      mockGet(sourceStoragePath(wrongUuid), "{}", SC_NOT_FOUND, wireMockServer);
+
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
+        .parsedRecordId(UUID.fromString(wrongUuid))
+        .parsedRecordDtoId(UUID.fromString(wrongUuid))
+        .externalId(UUID.fromString(wrongUuid));
+
+      doPut(recordsEditorByIdPath(wrongUuid), quickMarcRecord)
+        .andExpect(status().isNotFound());
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(wrongUuid));
+    }
+
+    @Test
+    @DisplayName("Should fail with 400 when path Id and externalDtoId are not equal")
+    void testUpdateQuickMarcRecordIdsNotEqual() throws Exception {
+      var id = fromString(INSTANCE_ID);
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class)
+        .parsedRecordDtoId(id)
+        .externalId(id);
+
+      var pathId = UUID.randomUUID().toString();
+      doPut(recordsEditorByIdPath(pathId), quickMarcRecord)
+        .andExpect(status().isBadRequest())
+        .andExpect(errorMessageMatch(equalTo("Request id and entity id are not equal")));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(pathId));
+    }
+
+    @Test
+    @DisplayName("Should fail with 400 when MARC tag has alphabetic symbols")
+    void testUpdateQuickMarcRecordTagIsInvalid() throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
+      quickMarcRecord.getFields().getFirst().setTag("001-invalid");
+
+      doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
+        .andExpect(status().isBadRequest())
+        .andExpect(errorMessageMatch(equalTo("Parameter 'fields[0].tag' must match \"^[0-9]{3}$\"")));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+    }
+
+    @Test
+    @DisplayName("Should fail with 400 when empty request body")
+    void testUpdateQuickMarcRecordWithEmptyBody() throws Exception {
+      doPut(recordsEditorByIdPath(INSTANCE_ID))
+        .andExpect(status().isBadRequest())
+        .andExpect(errorMessageMatch(containsString("Required request body is missing")));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+    }
+
+    @Test
+    @DisplayName("Should fail with 400 when MARC indicators are invalid")
+    void testUpdateQuickMarcRecordInvalidBody() throws Exception {
+      var quickMarcRecord = prepareRecordWithInvalidIndicators();
+
+      doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(jsonPath("$.errors.size()").value(2))
+        .andExpect(jsonPath("$.errors[0].message").value("Should have exactly 2 indicators"))
+        .andExpect(jsonPath("$.errors[0].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+        .andExpect(jsonPath("$.errors[0].parameters[0].key").value("333"))
+
+        .andExpect(jsonPath("$.errors[1].message").value("Is required tag"))
+        .andExpect(jsonPath("$.errors[1].type").value(ErrorUtils.ErrorType.INTERNAL.getTypeCode()))
+        .andExpect(jsonPath("$.errors[1].parameters[0].key").value("008"));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+    }
+
+    @Test
+    @DisplayName("Should fail with 400 when invalid fixed length field items")
+    void testUpdateQuickMarcRecordInvalidFixedFieldItemLength() throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
+
+      quickMarcRecord.getFields().stream()
+        .filter(fieldItem -> fieldItem.getTag().equals("008"))
+        .forEach(fieldItem -> {
+          @SuppressWarnings("unchecked")
+          var content = (Map<String, Object>) fieldItem.getContent();
+          content.put("Date1", "12345");
+        });
+
+      doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(errorMessageMatch(equalTo("Invalid Date1 field length, must be 4 characters")));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+    }
+
+    @Test
+    @DisplayName("Should update record when leader and ignore 008 Elvl mismatch")
+    void testUpdateQuickMarcRecordIgnoreElvlLeaderMismatch() throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
+
+      quickMarcRecord.getFields().stream()
+        .filter(fieldItem -> fieldItem.getTag().equals("008"))
+        .forEach(fieldItem -> {
+          @SuppressWarnings("unchecked")
+          var content = (Map<String, Object>) fieldItem.getContent();
+          content.put("Elvl", "a");
+        });
+
+      doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
+        .andExpect(status().isAccepted());
+    }
+
+    @ParameterizedTest
+    @MethodSource("testUpdateQuickMarcValidationCases")
+    @DisplayName("Should fail with 422 when multiple 001 tags")
+    void testUpdateReturn422WhenRecordWithMultiple001(String filePath, String id) throws Exception {
+      var quickMarcRecord = readQuickMarc(filePath, QuickMarcEdit.class);
+      // Now we add the new 001 field to the record and try to update existing record
+      quickMarcRecord.getFields().add(new FieldItem().tag("001").content("$a test value"));
+
+      doPut(recordsEditorByIdPath(id), quickMarcRecord)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(jsonPath("$.issues.size()").value(1))
+        .andExpect(jsonPath("$.issues[0].tag").value("001[1]"))
+        .andExpect(jsonPath("$.issues[0].severity").value("error"))
+        .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+        .andExpect(jsonPath("$.issues[0].message").value("Field is non-repeatable."));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
+    }
+
+    @ParameterizedTest
+    @MethodSource("testUpdateQuickMarcValidationCases")
+    @DisplayName("Should fail with 422 when missing 001 tag")
+    void testUpdateReturn422WhenRecordWithout001Field(String filePath, String id) throws Exception {
+      var quickMarcRecord = readQuickMarc(filePath, QuickMarcEdit.class);
+      // remove the 001 field from the record and try to update existing record
+      quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("001"));
+
+      doPut(recordsEditorByIdPath(id), quickMarcRecord)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(jsonPath("$.issues.size()").value(1))
+        .andExpect(jsonPath("$.issues[0].tag").value("001[0]"))
+        .andExpect(jsonPath("$.issues[0].severity").value("error"))
+        .andExpect(jsonPath("$.issues[0].definitionType").value("field"))
+        .andExpect(jsonPath("$.issues[0].message").value("Field 001 is required."));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
+    }
+
+    @Test
+    @DisplayName("Should fail with 422 when holdings has multiple 001 tags")
+    void testUpdateReturn422WhenHoldingsRecordWithMultiple001() throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_HOLDINGS_PATH, QuickMarcEdit.class);
+      // Now we add the new 001 field to the record and try to update existing record
+      quickMarcRecord.getFields().add(new FieldItem().tag("001").content("$a test value"));
+
+      doPut(recordsEditorByIdPath(HOLDINGS_ID), quickMarcRecord)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(errorMessageMatch(equalTo(IS_UNIQUE_TAG_ERROR_MSG)));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(HOLDINGS_ID));
+    }
+
+    @ParameterizedTest
+    @MethodSource("testUpdateQuickMarcRecordCases")
+    @DisplayName("Should fail with 422 when missing 008 tag")
+    void testUpdateReturn422WhenRecordMissed008(String filePath, String id) throws Exception {
+      var quickMarcRecord = readQuickMarc(filePath, QuickMarcEdit.class);
+      // Now we remove the 008 field from the record and try to update existing record
+      quickMarcRecord.getFields().removeIf(field -> field.getTag().equals("008"));
+
+      doPut(recordsEditorByIdPath(id), quickMarcRecord)
+        .andExpect(status().isUnprocessableContent())
+        .andExpect(errorMessageMatch(equalTo(IS_REQUIRED_TAG_ERROR_MSG)));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(id));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Should fail with 400 when record misses required field")
+    @ValueSource(strings = {"externalHrid", "externalId", "parsedRecordDtoId", "parsedRecordId"})
+    void testUpdateReturn400WhenRecordDoNotHaveRequiredFields(String fieldName) throws Exception {
+      var quickMarcRecord = readQuickMarc(QM_RECORD_EDIT_BIB_PATH, QuickMarcEdit.class);
+      // set field to null
+      Arrays.stream(ReflectionUtils.getAllDeclaredMethods(QuickMarcEdit.class))
+        .filter(method -> method.getName().equals(fieldName))
+        .findFirst()
+        .ifPresent(method -> ReflectionUtils.invokeMethod(method, quickMarcRecord, (Object) null));
+
+      doPut(recordsEditorByIdPath(INSTANCE_ID), quickMarcRecord)
+        .andExpect(status().isBadRequest())
+        .andExpect(errorMessageMatch(equalTo(String.format("Parameter '%s' must not be null", fieldName))));
+
+      expectLinksUpdateRequests(0, linksByInstanceIdPath(INSTANCE_ID));
+    }
+
+    @Test
+    @DisplayName("Should return 400 Bad Request when external service is unreachable (ResourceAccessException)")
+    void testHandleResourceAccessException() throws Exception {
+      var id = "00000000-0000-0000-0000-000000011111";
+
+      doGet(recordsEditorPath(id))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.type").value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
+        .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
+    @DisplayName("Should return Server Error when external service returns HTTP error (HttpStatusCodeException)")
+    void testHandleHttpStatusCodeException() throws Exception {
+      var id = "00000000-0000-0000-0000-000000022222";
+
+      doGet(recordsEditorPath(id))
+        .andExpect(status().isInternalServerError())
+        .andExpect(jsonPath("$.type")
+          .value(ErrorUtils.ErrorType.FOLIO_EXTERNAL_OR_UNDEFINED.getTypeCode()))
+        .andExpect(jsonPath("$.message")
+          .value("FOLIO source storage service is unavailable"));
+    }
+
+    private QuickMarcEdit prepareRecordWithInvalidIndicators() {
+      var field333 = getFieldWithValue("333", "$333 content").content("$333 content")
+        .indicators(Collections.singletonList(" "));
+      var field245 = getFieldWithValue("245", "$a content");
+      var field246 = getFieldWithValue("246", "$a content");
+      var field001 = getFieldWithValue("001", "$a content");
+
+      var id = fromString(INSTANCE_ID);
+      return new QuickMarcEdit()
+        .leader("01542ccm a22002533  4500")
+        .fields(Arrays.asList(field333, field333, field245, field246, field001))
+        .parsedRecordId(UUID.randomUUID())
+        .parsedRecordDtoId(UUID.randomUUID())
+        .externalId(UUID.randomUUID())
+        .externalHrid("hr0001")
+        .sourceVersion(1)
+        .parsedRecordDtoId(id)
+        .marcFormat(MarcFormat.BIBLIOGRAPHIC)
+        .parsedRecordId(id)
+        .externalId(id);
+    }
+
+    private static Stream<Arguments> testUpdateQuickMarcRecordCases() {
+      return Stream.of(
+        Arguments.argumentSet("bibliographic", QM_RECORD_EDIT_BIB_PATH, INSTANCE_ID),
+        Arguments.argumentSet("holdings", QM_RECORD_EDIT_HOLDINGS_PATH, HOLDINGS_ID),
+        Arguments.argumentSet("authority", QM_RECORD_EDIT_AUTHORITY_PATH, AUTHORITY_ID)
+      );
+    }
+
+    private static Stream<Arguments> testUpdateQuickMarcValidationCases() {
+      return Stream.of(
+        Arguments.argumentSet("bibliographic", QM_RECORD_EDIT_BIB_PATH, INSTANCE_ID),
+        Arguments.argumentSet("authority", QM_RECORD_EDIT_AUTHORITY_PATH, AUTHORITY_ID)
+      );
+    }
+
+    private void expectLinksUpdateRequests(int expected, String url) {
+      wireMockServer.verify(exactly(expected), putRequestedFor(urlEqualTo(url)));
+    }
+
+    private ResultMatcher errorMessageMatch(Matcher<String> errorMessageMatcher) {
+      return jsonPath("$.message", errorMessageMatcher);
+    }
+
+    private ResultMatcher optimisticLockingMessage(String recordId, int storedVersion, int requestVersion) {
+      return jsonPath("$.message", equalTo(olMessage(recordId, storedVersion, requestVersion)));
+    }
+
+    private String olMessage(String recordId, int storedVersion, int requestVersion) {
+      return ("Cannot update record %s because it has been changed "
+        + "(optimistic locking): Stored _version is %s, _version of request is %s")
+        .formatted(recordId, storedVersion, requestVersion);
     }
   }
 }

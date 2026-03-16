@@ -17,16 +17,12 @@
   ],
   "optional": [
     {
-      "id": "source-manager-parsed-records",
-      "version": "4.0"
+      "id": "source-storage-snapshots",
+      "version": "2.1"
     },
     {
-      "id": "source-manager-job-executions",
+      "id": "source-storage-records",
       "version": "3.4"
-    },
-    {
-      "id": "source-manager-records",
-      "version": "2.0"
     },
     {
       "id": "field-protection-settings",
@@ -43,6 +39,30 @@
     {
       "id": "instance-authority-links-suggestions",
       "version": "1.2"
+    },
+    {
+      "id": "instance-preceding-succeeding-titles",
+      "version": "0.1"
+    },
+    {
+      "id": "mapping-metadata-provider",
+      "version": "1.1"
+    },
+    {
+      "id": "authority-storage",
+      "version": "2.0"
+    },
+    {
+      "id": "instance-storage",
+      "version": "11.2"
+    },
+    {
+      "id": "holdings-storage",
+      "version": "8.1"
+    },
+    {
+      "id": "authorities-config",
+      "version": "1.0"
     }
   ],
   "provides": [
@@ -55,7 +75,7 @@
           "pathPattern": "/records-editor/records",
           "permissionsRequired": ["marc-records-editor.item.get"],
           "modulePermissions": [
-            "source-storage.source-records.item.get",
+            "source-storage.records.item.get",
             "users.item.get",
             "converter-storage.field-protection-settings.collection.get",
             "instance-authority-links.instances.collection.get",
@@ -67,10 +87,15 @@
           "pathPattern": "/records-editor/records",
           "permissionsRequired": ["marc-records-editor.item.post"],
           "modulePermissions": [
-            "change-manager.jobexecutions.post",
-            "change-manager.jobExecutions.jobProfile.item.put",
-            "change-manager.records.post",
-            "specification-storage.specifications.collection.get"
+            "specification-storage.specifications.collection.get",
+            "source-storage.snapshots.post",
+            "source-storage.records.post",
+            "inventory-storage.instances.item.post",
+            "inventory-storage.instances.preceding-succeeding-titles.collection.put",
+            "inventory-storage.holdings.item.post",
+            "inventory-storage.authorities.item.post",
+            "authorities.config.groups.settings.collection.get",
+            "authorities.config.groups.settings.authorities.collection.get"
           ]
         },
         {
@@ -78,16 +103,17 @@
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["marc-records-editor.item.put"],
           "modulePermissions": [
-            "change-manager.parsedrecords.put",
-            "source-storage.source-records.item.get",
+            "source-storage.records.item.get",
             "instance-authority-links.instances.collection.put",
-            "specification-storage.specifications.collection.get"
+            "specification-storage.specifications.collection.get",
+            "source-storage.records.put",
+            "inventory-storage.instances.item.put",
+            "inventory-storage.instances.preceding-succeeding-titles.collection.put",
+            "inventory-storage.holdings.item.put",
+            "inventory-storage.authorities.item.put",
+            "authorities.config.groups.settings.collection.get",
+            "authorities.config.groups.settings.authorities.collection.get"
           ]
-        },
-        {
-          "methods": ["GET"],
-          "pathPattern": "/records-editor/records/status",
-          "permissionsRequired": ["marc-records-editor.status.item.get"]
         },
         {
           "methods": ["POST"],
@@ -159,11 +185,6 @@
       "description": "Update a record"
     },
     {
-      "permissionName": "marc-records-editor.status.item.get",
-      "displayName": "marc-records-editor - get record creation status",
-      "description": "Get record creation status"
-    },
-    {
       "permissionName": "marc-records-editor.links.suggestion.post",
       "displayName": "marc-records-editor - get record creation status",
       "description": "Suggest links for record collection"
@@ -181,7 +202,6 @@
         "marc-records-editor.item.get",
         "marc-records-editor.item.post",
         "marc-records-editor.item.put",
-        "marc-records-editor.status.item.get",
         "marc-records-editor.links.suggestion.post",
         "marc-records-editor.validate.post"
       ]

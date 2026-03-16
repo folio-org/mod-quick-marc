@@ -6,6 +6,11 @@
 ### New APIs versions
 * Provides `API_NAME vX.Y`
 * Changed to optional: `instance-authority-links`, `instance-authority-linking-rules`, `instance-authority-links-suggestions`
+* Optional `mapping-metadata-provider v1.1`
+* Optional `authority-storage v2.0`
+* Optional `instance-storage v11.2`
+* Optional `holdings-storage v8.8`
+* Optional `instance-preceding-succeeding-titles v0.1`
 
 ### Features
 * Add “allowedValues” to the MARC authority 008 spec response ([MODQM-455](https://folio-org.atlassian.net/browse/MODQM-455))
@@ -13,6 +18,9 @@
 * Convert subfield to lowercase during quick-marc to source record convertion ([MODQM-477](https://folio-org.atlassian.net/browse/MODQM-477))
 * Use unique consumer group per instance for specification-storage.specification.updated topic ([MODQM-483](https://folio-org.atlassian.net/browse/MODQM-483))
 * Ignore empty subfields during conversion from DTO ([MODQM-445](https://folio-org.atlassian.net/browse/MODQM-445))
+* Implement MARC Record Update Flow ([MODQM-490](https://folio-org.atlassian.net/browse/MODQM-490))
+* Handle 003 and 035 fields in MARC Record Create flow ([MODQM-497](https://folio-org.atlassian.net/browse/MODQM-497))
+* Use Setting API to determine extended authority mapping ([MODQM-501](https://folio-org.atlassian.net/browse/MODQM-501))
 
 ### Bug fixes
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
@@ -28,6 +36,8 @@
 * Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
 * Add `LIB_NAME VERSION`
 * Remove `LIB_NAME`
+* Add `data-import-processing-core v4.5.0-SNAPSHOT`
+* Add `mod-inventory-storage-dto v30.0.0-SNAPSHOT`
 
 ---
 

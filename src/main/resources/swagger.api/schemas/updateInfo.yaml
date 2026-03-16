@@ -1,0 +1,11 @@
+type: object
+description: Record metadata
+properties:
+  recordState:
+    $ref: 'recordState.yaml'
+  updateDate:
+    description: Date and time of last successful update of the record
+    type: string
+    format: date-time
+  updatedBy:
+    $ref: 'userInfo.yaml'

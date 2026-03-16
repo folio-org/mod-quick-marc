@@ -1,0 +1,42 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/authority-storage/authorities/00000000-0000-0000-0000-000000000003"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "authority-storage/authority.json"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/authority-storage/authorities/00000000-0000-0000-0000-000000000003"
+      },
+      "response": {
+        "status": 204,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/authority-storage/authorities"
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "authority-storage/authority.json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+type: object
+description: Details of a validation issue found in a MARC record
+properties:
+  tag:
+    description: Associated tag for the issue identified
+    type: string
+  severity:
+    description: Level of impact of the discovered issue
+    type: string
+  definitionType:
+    description: Type of definition flagged during validation
+    type: string
+  helpUrl:
+    description: Help URL that is defined in the definition
+    type: string
+  message:
+    description: A concise summary of the identified issue
+    type: string

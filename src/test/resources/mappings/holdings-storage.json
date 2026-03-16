@@ -1,0 +1,42 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/holdings-storage/holdings/00000000-0000-0000-0000-000000000002"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "holdings-storage/holdings.json"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/holdings-storage/holdings/00000000-0000-0000-0000-000000000002"
+      },
+      "response": {
+        "status": 204,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/holdings-storage/holdings"
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "holdings-storage/holdings.json"
+      }
+    }
+  ]
+}

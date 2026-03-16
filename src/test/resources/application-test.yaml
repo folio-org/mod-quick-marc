@@ -14,13 +14,13 @@ spring:
         format_sql: true
   cache:
     cache-names:
-      - job-profiles
-      - qm-update-results
-      - data-import-results
       - linking-rules-results
       - specifications
+      - mapping-metadata-cache
+      - authorities-extended-mapping-cache
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
+    type: caffeine
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}
 logging:
@@ -51,15 +51,8 @@ folio:
         numPartitions: ${NUMBER_OF_PARTITIONS:1}
         replicationFactor: ${REPLICATION_FACTOR:1}
     listener:
-      di-completed:
+      specification-updated:
         concurrency: 1
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.DI_COMPLETED}
-        group-id: ${folio.environment}-mod-quick-marc-di-completed-group
-      di-error:
-        concurrency: 1
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.DI_ERROR}
-        group-id: ${folio.environment}-mod-quick-marc-di-error-group
-      qm-completed:
-        concurrency: 1
-        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)[a-zA-z0-9-]+\.\w+\.QM_COMPLETED}
-        group-id: ${folio.environment}-mod-quick-marc-qm-group
+        topic-pattern: ${KAFKA_EVENTS_CONSUMER_PATTERN:(${folio.environment}\.)(.*\.)specification-storage\.specification\.updated}
+        group-id: ${folio.environment}-mod-quick-marc-specification-group
+        shared-group: false

@@ -1,0 +1,37 @@
+description: Link-related fields
+type: object
+properties:
+  authorityId:
+    description: Id of the authority that controls subfields
+    type: string
+    format: uuid
+    example: c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1
+  authorityNaturalId:
+    description: Natural id of the authority that controls subfields
+    type: string
+    example: n1234567890
+  linkingRuleId:
+    description: Linking rule ID by which the link was created
+    type: integer
+    example: 1
+  status:
+    description: Link status
+    type: string
+    readOnly: true
+    example: ACTUAL
+  errorCause:
+    description: Cause of error status
+    type: string
+    readOnly: true
+    example: Optimistic locking
+required:
+  - authorityId
+  - authorityNaturalId
+  - linkingRuleId
+  - status
+example:
+  authorityId: c9db5d6a-e1d4-11e8-9f32-f2801f1b9fd1
+  authorityNaturalId: n1234567890
+  linkingRuleId: 1
+  status: ERROR
+  errorCause: Optimistic locking

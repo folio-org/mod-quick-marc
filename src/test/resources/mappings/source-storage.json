@@ -1,0 +1,222 @@
+{
+  "mappings": [
+    {
+      "name": "Get source bibliographic record by instance id",
+      "request": {
+        "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000000001/formatted",
+        "queryParameters": {
+          "idType": {
+            "equalTo": "EXTERNAL"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "source-storage/bibliographic.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "name": "Get source holdings record by holdings id",
+      "request": {
+        "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000000002/formatted",
+        "queryParameters": {
+          "idType": {
+            "equalTo": "EXTERNAL"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "source-storage/holdings.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "name": "Get source authority record by authority id",
+      "request": {
+        "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000000003/formatted",
+        "queryParameters": {
+          "idType": {
+            "equalTo": "EXTERNAL"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "source-storage/authority.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000011111/formatted"
+      },
+      "response": {
+        "fault": "CONNECTION_RESET_BY_PEER"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/source-storage/records/00000000-0000-0000-0000-000000022222/formatted"
+      },
+      "response": {
+        "status": 500,
+        "body": "FOLIO source storage service is unavailable"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/source-storage/records/00000000-0000-0000-0000-000000000001"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/bibliographic.json"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/source-storage/records/00000000-0000-0000-0000-000000000001/generation"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/source-storage/records/00000000-0000-0000-0000-000000000002"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/holdings.json"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/source-storage/records/00000000-0000-0000-0000-000000000002/generation"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/source-storage/records/00000000-0000-0000-0000-000000000003"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/authority.json"
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/source-storage/records/00000000-0000-0000-0000-000000000003/generation"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/source-storage/snapshots"
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/snapshot.json"
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/source-storage/records",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.recordType == 'MARC_AUTHORITY')]"
+          }
+        ]
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/authority.json"
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/source-storage/records",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.recordType == 'MARC_HOLDING')]"
+          }
+        ]
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/holdings.json"
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/source-storage/records",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.recordType == 'MARC_BIB')]"
+          }
+        ]
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "source-storage/bibliographic.json"
+      }
+    }
+  ]
+}

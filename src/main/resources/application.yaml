@@ -46,13 +46,13 @@ spring:
     default-property-inclusion: NON_EMPTY
   cache:
     cache-names:
-      - job-profiles
-      - qm-update-results
-      - data-import-results
       - linking-rules-results
       - specifications
+      - mapping-metadata-cache
+      - authorities-extended-mapping-cache
     caffeine:
       spec: maximumSize=500,expireAfterAccess=3600s
+    type: caffeine
   sql:
     init:
       # to boot up application despite of any DB connection issues
@@ -66,11 +66,6 @@ folio:
       specifications:
         maximum-size: 500
         ttl: 24h
-  qm:
-    creation-status:
-      clear:
-        initial-delay-ms: 3_600_000
-        fixed-delay-ms: 86_400_000
   tenant:
     validation:
       enabled: true
@@ -94,18 +89,6 @@ folio:
         numPartitions: ${NUMBER_OF_PARTITIONS:1}
         replicationFactor: ${REPLICATION_FACTOR:1}
     listener:
-      di-completed:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.DI_COMPLETED
-        group-id: ${folio.environment}-mod-quick-marc-di-completed-group
-      di-error:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.DI_ERROR
-        group-id: ${folio.environment}-mod-quick-marc-di-error-group
-      qm-completed:
-        concurrency: ${KAFKA_EVENTS_CONCURRENCY:2}
-        topic-pattern: (${folio.environment}\.)[A-Za-z0-9-]+\.\w+\.QM_COMPLETED
-        group-id: ${folio.environment}-mod-quick-marc-qm-group
       specification-updated:
         concurrency: ${KAFKA_EVENTS_CONCURRENCY:1}
         topic-pattern: (${folio.environment}\.)(.*\.)specification-storage\.specification\.updated

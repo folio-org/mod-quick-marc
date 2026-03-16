@@ -105,9 +105,6 @@ The module can be configured using the following environment variables:
 #### Kafka Topics
 
 The module consumes from the following Kafka topics:
-- `{ENV}.*.DI_COMPLETED` - Data import completion events
-- `{ENV}.*.DI_ERROR` - Data import error events
-- `{ENV}.*.QM_COMPLETED` - QuickMARC operation completion events
 - `{ENV}.*.specification-storage.specification.updated` - MARC specification update events
 
 ### Server Configuration
@@ -135,7 +132,6 @@ Management endpoints are available at `/admin`:
 | GET    | `/records-editor/records`          | **Query:**<br/>• `externalId` (UUID, required)                                                                                                                                   | `marc-records-editor.item.get`              | Retrieve a MARC record by external ID (instance, holdings, or authority)            |
 | POST   | `/records-editor/records`          | **Body:** MARC record data                                                                                                                                                       | `marc-records-editor.item.post`             | Create a new MARC record and related entity (bibliographic, holdings, or authority) |
 | PUT    | `/records-editor/records/{id}`     | **Path:**<br/>• `id` (UUID, record ID)<br/>**Body:** Updated MARC record data                                                                                                    | `marc-records-editor.item.put`              | Update an existing MARC record and related entity (async operation, returns 202)    |
-| GET    | `/records-editor/records/status`   | **Query:**<br/>• `qmRecordId` (UUID, required)                                                                                                                                   | `marc-records-editor.status.item.get`       | Get the creation status of a MARC record                                            |
 | POST   | `/records-editor/links/suggestion` | **Query:**<br/>• `authoritySearchParameter` (ID/NATURAL_ID, default: NATURAL_ID)<br/>• `ignoreAutoLinkingEnabled` (boolean, default: false)<br/>**Body:** MARC record to process | `marc-records-editor.links.suggestion.post` | Generate authority linking suggestions for a MARC bibliographic record              |
 | POST   | `/records-editor/validate`         | **Body:** MARC record to validate                                                                                                                                                | `marc-records-editor.validate.post`         | Validate a MARC record without saving                                               |
 

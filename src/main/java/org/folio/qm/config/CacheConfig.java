@@ -20,6 +20,11 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties({CacheProperties.class, CustomCacheProperties.class})
 public class CacheConfig {
 
+  public static final String QM_FETCH_LINKING_RULES_RESULTS = "linking-rules-results";
+  public static final String SPECIFICATION_STORAGE_CACHE = "specifications";
+  public static final String MAPPING_METADATA_CACHE = "mapping-metadata-cache";
+  public static final String AUTHORITIES_EXTENDED_MAPPING_CACHE = "authorities-extended-mapping-cache";
+
   @Bean
   public CacheManager cacheManager(CacheProperties cacheProperties, CustomCacheProperties customCacheProperties) {
     Collection<Cache> caches = new ArrayList<>();

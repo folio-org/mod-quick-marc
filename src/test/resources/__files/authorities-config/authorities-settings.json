@@ -1,0 +1,38 @@
+{
+  "settings": [
+    {
+      "key": "mapping.extended",
+      "value": false,
+      "type": "BOOLEAN",
+      "groupId": "authorities",
+      "description": "Enable extended mapping for authorities",
+      "metadata": {
+        "createdDate": "2026-02-03T10:33:29.622487Z",
+        "updatedDate": "2026-02-03T10:33:29.622487Z"
+      }
+    },
+    {
+      "key": "archives.expiration.enabled",
+      "value": true,
+      "type": "BOOLEAN",
+      "groupId": "authorities",
+      "description": "Enable authority archives expiration",
+      "metadata": {
+        "createdDate": "2026-02-03T10:33:29.622487Z",
+        "updatedDate": "2026-02-03T10:33:29.622487Z"
+      }
+    },
+    {
+      "key": "archives.expiration.period",
+      "value": 7,
+      "type": "INTEGER",
+      "groupId": "authorities",
+      "description": "The retention period in days for keeping the deleted authorities",
+      "metadata": {
+        "createdDate": "2026-02-03T10:33:29.622487Z",
+        "updatedDate": "2026-02-12T14:04:25.390337Z"
+      }
+    }
+  ],
+  "totalRecords": 3
+}

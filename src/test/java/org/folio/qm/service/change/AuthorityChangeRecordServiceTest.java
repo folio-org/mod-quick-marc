@@ -107,7 +107,7 @@ class AuthorityChangeRecordServiceTest {
 
     var existingSourceRecord = createSourceRecord();
     existingSourceRecord.setGeneration(1);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
+    when(sourceRecordService.getByExternalId(quickMarcRecord.getExternalId())).thenReturn(existingSourceRecord);
 
     var authorityRecord = createAuthorityRecord();
     when(folioRecordService.get(quickMarcEdit.getExternalId())).thenReturn(authorityRecord);
@@ -151,12 +151,13 @@ class AuthorityChangeRecordServiceTest {
 
     var quickMarcRecord = createQuickMarcRecord();
     quickMarcRecord.setParsedRecordId(recordId);
+    quickMarcRecord.setExternalId(quickMarcEdit.getExternalId());
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
     var existingSourceRecord = createSourceRecord();
     existingSourceRecord.setGeneration(2);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
+    when(sourceRecordService.getByExternalId(quickMarcEdit.getExternalId())).thenReturn(existingSourceRecord);
 
     assertThrows(OptimisticLockingException.class, () -> service.update(recordId, quickMarcEdit));
 

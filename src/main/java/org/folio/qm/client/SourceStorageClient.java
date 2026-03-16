@@ -23,9 +23,6 @@ public interface SourceStorageClient {
   @GetExchange(value = "/records/{id}/formatted")
   Optional<Record> getSourceRecord(@PathVariable("id") UUID id, @RequestParam("idType") IdType idType);
 
-  @GetExchange(value = "/records/{id}")
-  Optional<Record> getSourceRecord(@PathVariable("id") UUID id);
-
   @PostExchange(value = "/records")
   Record createSourceRecord(@RequestBody Record sourceRecord);
 

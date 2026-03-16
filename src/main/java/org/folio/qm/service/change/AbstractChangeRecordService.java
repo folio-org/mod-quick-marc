@@ -109,9 +109,8 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
   }
 
   private void updateSourceRecord(QuickMarcRecord qmRecord) {
-    var recordId = qmRecord.getParsedRecordId();
-    log.debug("updateSourceRecord:: Updating source record for parsedRecordId: {}", recordId);
-    var existingRecord = sourceRecordService.get(recordId);
+    log.debug("updateSourceRecord:: Updating source record for parsedRecordId: {}", qmRecord.getParsedRecordId());
+    var existingRecord = sourceRecordService.getByExternalId(qmRecord.getExternalId());
     validateRecordVersion(qmRecord, existingRecord);
     var sourceRecord = buildUpdatedRecord(qmRecord, existingRecord);
     sourceRecordService.update(UUID.fromString(sourceRecord.getMatchedId()), sourceRecord);

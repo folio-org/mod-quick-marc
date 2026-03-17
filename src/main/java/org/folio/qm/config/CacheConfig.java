@@ -24,6 +24,7 @@ public class CacheConfig {
   public static final String SPECIFICATION_STORAGE_CACHE = "specifications";
   public static final String MAPPING_METADATA_CACHE = "mapping-metadata-cache";
   public static final String AUTHORITIES_EXTENDED_MAPPING_CACHE = "authorities-extended-mapping-cache";
+  public static final String CONSORTIUM_CENTRAL_TENANT_CACHE = "consortium-central-tenant-cache";
 
   @Bean
   public CacheManager cacheManager(CacheProperties cacheProperties, CustomCacheProperties customCacheProperties) {

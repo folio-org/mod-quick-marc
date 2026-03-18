@@ -1,11 +1,14 @@
 package org.folio.qm.client;
 
+import static org.folio.spring.integration.XOkapiHeaders.TENANT;
+
 import java.util.Optional;
 import java.util.UUID;
 import org.folio.qm.domain.model.HoldingsRecord;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
@@ -18,7 +21,8 @@ public interface HoldingsStorageClient {
   Optional<HoldingsRecord> getHoldingById(@PathVariable("id") UUID id);
 
   @PostExchange(value = "/holdings")
-  HoldingsRecord createHolding(@RequestBody HoldingsRecord holdingsRecord);
+  HoldingsRecord createHolding(@RequestBody HoldingsRecord holdingsRecord,
+                               @RequestHeader(TENANT) String tenantId);
 
   @PutExchange(value = "/holdings/{id}")
   void updateHolding(@PathVariable("id") UUID id, @RequestBody HoldingsRecord holdingsRecord);

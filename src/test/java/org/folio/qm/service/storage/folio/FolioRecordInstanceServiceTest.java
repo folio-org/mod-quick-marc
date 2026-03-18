@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +19,6 @@ import java.util.concurrent.Callable;
 import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.domain.model.InstanceRecord;
-import org.folio.qm.service.mapping.InstanceToInstanceRecordMapper;
 import org.folio.qm.service.storage.tenant.UserTenantsService;
 import org.folio.rest.jaxrs.model.Instance;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
@@ -48,8 +45,6 @@ class FolioRecordInstanceServiceTest {
   private InstanceStorageClient storageClient;
   @Mock
   private PrecedingSucceedingTitlesClient precedingSucceedingTitlesClient;
-  @Mock
-  private InstanceToInstanceRecordMapper instanceMapper;
   @Mock
   private UserTenantsService userTenantsService;
   @Mock
@@ -114,7 +109,7 @@ class FolioRecordInstanceServiceTest {
   }
 
   @Test
-  void update_shouldCallStorageAndUpdateTitles() {
+  void update_shouldCallStorage() {
     var id = UUID.randomUUID();
     var folioRecord = new InstanceRecord();
     folioRecord.setId(UUID.randomUUID().toString());
@@ -155,86 +150,6 @@ class FolioRecordInstanceServiceTest {
   }
 
   @Test
-  void getInstanceIdByHrid_shouldCreateShadowCopyWhenNoLocalInstanceAndConsortiumMember() {
-    // Central tenant returns one shared instance
-    var sharedInstance = new Instance().withId(UUID.randomUUID().toString());
-    var centralInstances = getInstances(List.of(sharedInstance), 1L);
-
-    // Local tenant has no instances
-    var localInstances = getInstances(null, 0L);
-    when(storageClient.getInstances(SHARED_INSTANCE_HRID))
-      .thenReturn(localInstances)   // first call → local tenant
-      .thenReturn(centralInstances); // second call → central tenant
-
-    // Titles for the shared instance
-    var titles = new InstancePrecedingSucceedingTitles().withTotalRecords(0L);
-    when(precedingSucceedingTitlesClient.getTitles(sharedInstance.getId())).thenReturn(titles);
-
-    mockExecutionServiceExecute();
-
-    // Mapper returns a new InstanceRecord
-    var mappedRecord = new InstanceRecord();
-    when(instanceMapper.toInstanceRecord(sharedInstance)).thenReturn(mappedRecord);
-
-    // Shadow copy created
-    var shadowCopy = new InstanceRecord();
-    shadowCopy.setId(UUID.randomUUID().toString());
-    when(storageClient.createInstance(mappedRecord)).thenReturn(shadowCopy);
-
-    // Act
-    var resultId = service.getInstanceIdByHrid(SHARED_INSTANCE_HRID);
-
-    // Assert
-    assertThat(resultId).isEqualTo(shadowCopy.getId());
-    // Verify that shadow copy was created
-    verify(storageClient).createInstance(mappedRecord);
-    // Verify that titles were not updated since there are no titles for the shared instance
-    verify(precedingSucceedingTitlesClient, never()).updateTitles(any(), any());
-    // Ensure execute was called with correct tenant
-    verify(executionService).execute(eq("central"), eq(folioExecutionContext), any(Callable.class));
-  }
-
-  @Test
-  void getInstanceIdByHrid_shouldCreateShadowCopyAndTitlesWhenNoLocalInstanceAndConsortiumMember() {
-    // Central tenant returns one shared instance
-    var sharedInstance = new Instance().withId(UUID.randomUUID().toString());
-    var centralInstances = getInstances(List.of(sharedInstance), 1L);
-    // Local tenant has no instances
-    var localInstances = getInstances(null, 0L);
-    when(storageClient.getInstances(SHARED_INSTANCE_HRID))
-      .thenReturn(localInstances)   // first call → local tenant
-      .thenReturn(centralInstances); // second call → central tenant
-
-    // Titles for the shared instance
-    var titles = new InstancePrecedingSucceedingTitles().withTotalRecords(3L);
-    when(precedingSucceedingTitlesClient.getTitles(sharedInstance.getId())).thenReturn(titles);
-    doNothing().when(precedingSucceedingTitlesClient).updateTitles(any(), any());
-
-    mockExecutionServiceExecute();
-
-    // Mapper returns a new InstanceRecord
-    var mappedRecord = new InstanceRecord();
-    when(instanceMapper.toInstanceRecord(sharedInstance)).thenReturn(mappedRecord);
-
-    // Shadow copy created
-    var shadowCopy = new InstanceRecord();
-    shadowCopy.setId(UUID.randomUUID().toString());
-    when(storageClient.createInstance(mappedRecord)).thenReturn(shadowCopy);
-
-    // Act
-    var resultId = service.getInstanceIdByHrid(SHARED_INSTANCE_HRID);
-
-    // Assert
-    assertThat(resultId).isEqualTo(shadowCopy.getId());
-    // Verify that shadow copy was created and titles were updated
-    verify(storageClient).createInstance(mappedRecord);
-    verify(precedingSucceedingTitlesClient).updateTitles(any(), any());
-
-    // Ensure execute was called with correct tenant
-    verify(executionService).execute(eq("central"), eq(folioExecutionContext), any(Callable.class));
-  }
-
-  @Test
   void getInstanceIdByHrid_shouldThrowWhenNoSharedInstanceInConsortiumMember() {
     // Central tenant returns one shared instance
     var centralInstances = getInstances(null, 0L);
@@ -251,9 +166,6 @@ class FolioRecordInstanceServiceTest {
       () -> service.getInstanceIdByHrid(SHARED_INSTANCE_HRID));
 
     assertThat(ex.getMessage()).contains("No instance found for HRID: " + SHARED_INSTANCE_HRID + " in tenant: central");
-    // Verify that shadow copy was not created since there is no shared instance in central tenant
-    verify(storageClient, never()).createInstance(any());
-    verify(precedingSucceedingTitlesClient, never()).updateTitles(any(), any());
 
     // Ensure execute was called with correct tenant
     verify(executionService).execute(eq("central"), eq(folioExecutionContext), any(Callable.class));

@@ -56,8 +56,10 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
     var tenantId = context.getTenantId();
     var instances = storageClient.getInstances(instanceHrid);
     long totalRecords = instances.getTotalRecords() != null ? instances.getTotalRecords() : 0;
-    if (totalRecords == 0 && isConsortiumMemberTenant()) {
-      tenantId = getConsortiumCentralTenant(tenantId);
+    var consortiumCentralTenant = getConsortiumCentralTenant(tenantId);
+    var isConsortiumMemberTenant = consortiumCentralTenant != null && !consortiumCentralTenant.equals(tenantId);
+    if (totalRecords == 0 && isConsortiumMemberTenant) {
+      tenantId = consortiumCentralTenant;
       instances = executionService.execute(tenantId, context, () -> storageClient.getInstances(instanceHrid));
       totalRecords = instances.getTotalRecords() != null ? instances.getTotalRecords() : 0;
     }
@@ -76,12 +78,6 @@ public class FolioRecordInstanceService implements FolioRecordService<InstanceRe
   private String getConsortiumCentralTenant(String tenantId) {
     var centralTenant = userTenantsService.getCentralTenant(tenantId);
     return centralTenant.orElse(null);
-  }
-
-  private boolean isConsortiumMemberTenant() {
-    var tenantId = context.getTenantId();
-    var consortiumCentralTenant = getConsortiumCentralTenant(tenantId);
-    return consortiumCentralTenant != null && !consortiumCentralTenant.equals(tenantId);
   }
 
   private void validateTotalRecords(String instanceHrid, long totalRecords, String tenantId) {

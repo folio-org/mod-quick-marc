@@ -74,11 +74,11 @@ class RecordsEditorIT extends BaseIT {
 
   private static final String ERROR_INSTANCE_NOT_FOUND_BY_HRID =
     "Failed to map marc-holdings record with parsedRecordId null: "
-      + "No instance found for HRID: non-existing-instance-hrid";
+      + "No instance found for HRID: non-existing-instance-hrid in tenant: test";
 
   private static final String ERROR_MULTIPLE_INSTANCES_FOUND_BY_HRID =
     "Failed to map marc-holdings record with parsedRecordId null: "
-      + "Multiple instances found for HRID: multiple-instance-hrid";
+      + "Multiple instances found for HRID: multiple-instance-hrid in tenant: test";
 
   @Nested
   class GetRecordCases {

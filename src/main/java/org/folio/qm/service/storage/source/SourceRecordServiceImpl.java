@@ -16,16 +16,6 @@ public class SourceRecordServiceImpl implements SourceRecordService {
   private final SourceStorageClient sourceStorageClient;
 
   @Override
-  public Record get(UUID id) {
-    log.debug("get:: Retrieving source record by id: {}", id);
-    return sourceStorageClient.getSourceRecord(id)
-      .orElseThrow(() -> {
-        log.error("get:: Source record not found by id: {}", id);
-        return new NotFoundException(String.format("The source record was not found by id: %s", id));
-      });
-  }
-
-  @Override
   public Record getByExternalId(UUID externalId) {
     log.debug("getByExternalId:: Retrieving source record by externalId: {}", externalId);
     return sourceStorageClient.getSourceRecord(externalId, SourceStorageClient.IdType.EXTERNAL)

@@ -12,6 +12,7 @@ import org.folio.qm.client.MappingMetadataClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
 import org.folio.qm.client.SourceStorageClient;
 import org.folio.qm.client.SpecificationStorageClient;
+import org.folio.qm.client.UserTenantsClient;
 import org.folio.qm.client.UsersClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,5 +84,10 @@ public class HttpClientConfiguration {
   @Bean
   public AuthorityTenantSettingsClient authorityTenantSettingsClient(HttpServiceProxyFactory factory) {
     return factory.createClient(AuthorityTenantSettingsClient.class);
+  }
+
+  @Bean
+  public UserTenantsClient userTenantsClient(HttpServiceProxyFactory factory) {
+    return factory.createClient(UserTenantsClient.class);
   }
 }

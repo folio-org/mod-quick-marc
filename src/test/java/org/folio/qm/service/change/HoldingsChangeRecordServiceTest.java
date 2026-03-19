@@ -139,7 +139,7 @@ class HoldingsChangeRecordServiceTest {
 
     var existingSourceRecord = createSourceRecord();
     existingSourceRecord.setGeneration(1);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
+    when(sourceRecordService.getByExternalId(quickMarcRecord.getExternalId())).thenReturn(existingSourceRecord);
 
     var holdingsRecord = createHoldingsRecord();
     when(folioRecordService.get(quickMarcEdit.getExternalId())).thenReturn(holdingsRecord);
@@ -184,12 +184,13 @@ class HoldingsChangeRecordServiceTest {
 
     var quickMarcRecord = createQuickMarcRecord();
     quickMarcRecord.setParsedRecordId(recordId);
+    quickMarcRecord.setExternalId(quickMarcEdit.getExternalId());
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
     var existingSourceRecord = createSourceRecord();
     existingSourceRecord.setGeneration(2);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
+    when(sourceRecordService.getByExternalId(quickMarcRecord.getExternalId())).thenReturn(existingSourceRecord);
 
     assertThrows(OptimisticLockingException.class, () -> service.update(recordId, quickMarcEdit));
 

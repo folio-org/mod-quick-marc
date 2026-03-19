@@ -149,7 +149,7 @@ class InstanceChangeRecordServiceTest {
 
     var existingSourceRecord = createSourceRecord();
     existingSourceRecord.setGeneration(1);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
+    when(sourceRecordService.getByExternalId(quickMarcRecord.getExternalId())).thenReturn(existingSourceRecord);
 
     var instanceRecord = createInstanceRecord();
     when(folioRecordService.get(quickMarcEdit.getExternalId())).thenReturn(instanceRecord);
@@ -194,12 +194,13 @@ class InstanceChangeRecordServiceTest {
 
     var quickMarcRecord = createQuickMarcRecord();
     quickMarcRecord.setParsedRecordId(recordId);
+    quickMarcRecord.setExternalId(quickMarcEdit.getExternalId());
     quickMarcRecord.setSourceVersion(1);
     when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
 
     var existingSourceRecord = createSourceRecord();
     existingSourceRecord.setGeneration(2);
-    when(sourceRecordService.get(recordId)).thenReturn(existingSourceRecord);
+    when(sourceRecordService.getByExternalId(quickMarcRecord.getExternalId())).thenReturn(existingSourceRecord);
 
     assertThrows(OptimisticLockingException.class, () -> service.update(recordId, quickMarcEdit));
 

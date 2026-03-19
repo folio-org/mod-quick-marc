@@ -5,8 +5,6 @@ import org.folio.Record;
 
 public interface SourceRecordService {
 
-  Record get(UUID id);
-
   Record getByExternalId(UUID externalId);
 
   Record create(Record sourceRecord);

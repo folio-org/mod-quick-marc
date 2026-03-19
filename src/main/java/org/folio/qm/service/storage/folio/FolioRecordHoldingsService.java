@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.HoldingsStorageClient;
 import org.folio.qm.domain.model.HoldingsRecord;
-import org.folio.spring.FolioExecutionContext;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class FolioRecordHoldingsService implements FolioRecordService<HoldingsRecord> {
 
   private final HoldingsStorageClient storageClient;
-  private final FolioExecutionContext context;
 
   @Override
   public HoldingsRecord get(UUID id) {
@@ -30,7 +28,7 @@ public class FolioRecordHoldingsService implements FolioRecordService<HoldingsRe
   @Override
   public HoldingsRecord create(HoldingsRecord folioRecord) {
     log.debug("create:: Creating holdings record");
-    var created = storageClient.createHolding(folioRecord, context.getTenantId());
+    var created = storageClient.createHolding(folioRecord);
     log.info("create:: Holdings record created with id: {}", created.getId());
     return created;
   }

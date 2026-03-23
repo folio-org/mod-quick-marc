@@ -3,8 +3,12 @@
   "name": "quickMARC",
   "requires": [
     {
-      "id": "source-storage-source-records",
-      "version": "3.3"
+      "id": "source-storage-snapshots",
+      "version": "2.1"
+    },
+    {
+      "id": "source-storage-records",
+      "version": "3.4"
     },
     {
       "id": "specification-storage",
@@ -13,17 +17,13 @@
     {
       "id": "users",
       "version": "15.0 16.0"
+    },
+    {
+      "id": "user-tenants",
+      "version": "1.0"
     }
   ],
   "optional": [
-    {
-      "id": "source-storage-snapshots",
-      "version": "2.1"
-    },
-    {
-      "id": "source-storage-records",
-      "version": "3.4"
-    },
     {
       "id": "field-protection-settings",
       "version": "1.2"
@@ -68,14 +68,14 @@
   "provides": [
     {
       "id": "marc-records-editor",
-      "version": "6.0",
+      "version": "7.0",
       "handlers": [
         {
           "methods": ["GET"],
           "pathPattern": "/records-editor/records",
           "permissionsRequired": ["marc-records-editor.item.get"],
           "modulePermissions": [
-            "source-storage.records.item.get",
+            "source-storage.records.formatted.item.get",
             "users.item.get",
             "converter-storage.field-protection-settings.collection.get",
             "instance-authority-links.instances.collection.get",
@@ -90,10 +90,13 @@
             "specification-storage.specifications.collection.get",
             "source-storage.snapshots.post",
             "source-storage.records.post",
+            "user-tenants.collection.get",
+            "inventory-storage.instances.collection.get",
             "inventory-storage.instances.item.post",
             "inventory-storage.instances.preceding-succeeding-titles.collection.put",
             "inventory-storage.holdings.item.post",
             "inventory-storage.authorities.item.post",
+            "mapping-metadata.type.item.get",
             "authorities.config.groups.settings.collection.get",
             "authorities.config.groups.settings.authorities.collection.get"
           ]
@@ -103,14 +106,17 @@
           "pathPattern": "/records-editor/records/{id}",
           "permissionsRequired": ["marc-records-editor.item.put"],
           "modulePermissions": [
-            "source-storage.records.item.get",
+            "source-storage.records.formatted.item.get",
+            "source-storage.records.generation.item.put",
             "instance-authority-links.instances.collection.put",
             "specification-storage.specifications.collection.get",
-            "source-storage.records.put",
             "inventory-storage.instances.item.put",
             "inventory-storage.instances.preceding-succeeding-titles.collection.put",
             "inventory-storage.holdings.item.put",
             "inventory-storage.authorities.item.put",
+            "inventory-storage.authorities.item.get",
+            "inventory-storage.holdings.item.get",
+            "mapping-metadata.type.item.get",
             "authorities.config.groups.settings.collection.get",
             "authorities.config.groups.settings.authorities.collection.get"
           ]

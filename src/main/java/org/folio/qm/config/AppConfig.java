@@ -1,6 +1,12 @@
 package org.folio.qm.config;
 
-import org.folio.qm.domain.dto.BaseMarcRecord;
+import static org.folio.ActionProfile.FolioRecord.MARC_AUTHORITY;
+import static org.folio.ActionProfile.FolioRecord.MARC_AUTHORITY_EXTENDED;
+
+import org.folio.Authority;
+import org.folio.processing.mapping.defaultmapper.RecordMapper;
+import org.folio.processing.mapping.defaultmapper.RecordMapperBuilder;
+import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.rspec.i18n.TranslationProvider;
 import org.folio.rspec.validation.SpecificationGuidedValidator;
 import org.folio.rspec.validation.validator.marc.model.MarcRecord;
@@ -36,7 +42,18 @@ public class AppConfig {
 
   @Bean("validatableRecordValidator")
   public SpecificationGuidedValidator validatableRecordValidator(TranslationProvider translationProvider,
-                                                                 Converter<BaseMarcRecord, MarcRecord> converter) {
-    return new SpecificationGuidedValidator(translationProvider, source -> converter.convert((BaseMarcRecord) source));
+                                                                 Converter<BaseQuickMarcRecord, MarcRecord> converter) {
+    return new SpecificationGuidedValidator(translationProvider,
+      source -> converter.convert((BaseQuickMarcRecord) source));
+  }
+
+  @Bean
+  public RecordMapper<Authority> extendedRecordMapper() {
+    return RecordMapperBuilder.buildMapper(MARC_AUTHORITY_EXTENDED.value());
+  }
+
+  @Bean
+  public RecordMapper<Authority> simpleRecordMapper() {
+    return RecordMapperBuilder.buildMapper(MARC_AUTHORITY.value());
   }
 }

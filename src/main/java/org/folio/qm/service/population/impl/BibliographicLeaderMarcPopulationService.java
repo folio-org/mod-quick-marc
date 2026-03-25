@@ -1,9 +1,9 @@
 package org.folio.qm.service.population.impl;
 
-import static org.folio.qm.converter.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
+import static org.folio.qm.convertion.elements.Constants.COMMON_CONSTANT_LEADER_ITEMS;
 
 import java.util.List;
-import org.folio.qm.converter.elements.LeaderItem;
+import org.folio.qm.convertion.elements.LeaderItem;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.service.population.LeaderMarcPopulationService;
 import org.springframework.stereotype.Service;

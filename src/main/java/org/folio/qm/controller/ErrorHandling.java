@@ -12,7 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.folio.qm.domain.dto.ValidationResult;
 import org.folio.qm.exception.ConverterException;
 import org.folio.qm.exception.FieldsValidationException;
-import org.folio.qm.exception.JobProfileNotFoundException;
+import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.exception.MarcRecordValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
 import org.folio.qm.exception.QuickMarcException;
@@ -150,12 +150,6 @@ public class ErrorHandling {
     return buildBadRequestResponse(message);
   }
 
-  @ExceptionHandler(JobProfileNotFoundException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Error handleJobProfileNotFoundException(JobProfileNotFoundException e) {
-    return buildBadRequestResponse(e.getMessage());
-  }
-
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleConstraintViolationException(Exception e) {
@@ -174,6 +168,13 @@ public class ErrorHandling {
   @ResponseStatus(HttpStatus.CONFLICT)
   public Error handleOptimisticLockingException(OptimisticLockingException e) {
     return ErrorUtils.buildError(ErrorUtils.ErrorType.EXTERNAL_OR_UNDEFINED, e.getMessage());
+  }
+
+  @ExceptionHandler(MappingMetadataException.class)
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
+  public Error handleMappingMetadataException(MappingMetadataException e) {
+    log.error("Mapping metadata error occurred: ", e);
+    return buildError(HttpStatus.UNPROCESSABLE_CONTENT, INTERNAL, e.getMessage());
   }
 
   @ExceptionHandler(Exception.class)

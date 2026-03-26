@@ -28,7 +28,7 @@
 * Use Setting API to determine extended authority mapping ([MODQM-501](https://folio-org.atlassian.net/browse/MODQM-501))
 
 ### Bug fixes
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+* Fix QuickMARC pane not opening for existing MARC bib records ([MODQM-503](https://folio-org.atlassian.net/browse/MODQM-503))
 
 ### Tech Dept
 * Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))

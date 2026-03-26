@@ -49,7 +49,7 @@ class UserServiceImplTest {
     when(usersClient.fetchUserById(userId)).thenReturn(Optional.of(userDto));
     when(conversionService.convert(userDto, UserInfo.class)).thenReturn(userInfo);
 
-    var result = userService.fetchUser(userId);
+    var result = userService.fetchUser(userId.toString());
 
     assertTrue(result.isPresent());
     assertEquals(userInfo, result.get());
@@ -62,7 +62,7 @@ class UserServiceImplTest {
     var userId = UUID.randomUUID();
     when(usersClient.fetchUserById(userId)).thenReturn(Optional.empty());
 
-    var result = userService.fetchUser(userId);
+    var result = userService.fetchUser(userId.toString());
 
     assertFalse(result.isPresent());
     verify(usersClient).fetchUserById(userId);

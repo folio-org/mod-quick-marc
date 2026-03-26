@@ -38,7 +38,7 @@ public class FetchRecordServiceImpl implements FetchRecordService {
 
   private void setUserInfo(QuickMarcView quickMarc, Record sourceRecord) {
     if (sourceRecord.getMetadata() != null) {
-      userService.fetchUser(UUID.fromString(sourceRecord.getMetadata().getUpdatedByUserId()))
+      userService.fetchUser(sourceRecord.getMetadata().getUpdatedByUserId())
         .ifPresent(userInfo -> {
           var updateInfo = quickMarc.getUpdateInfo();
           if (updateInfo == null) {

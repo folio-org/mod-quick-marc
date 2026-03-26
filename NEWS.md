@@ -28,7 +28,7 @@
 * Use Setting API to determine extended authority mapping ([MODQM-501](https://folio-org.atlassian.net/browse/MODQM-501))
 
 ### Bug fixes
-* Fix NullPointerException in setUserInfo causing failure to open “Edit MARC bibliographic record” and “Derive new MARC bibliographic record” for existing records ([MODQM-503](https://folio-org.atlassian.net/browse/MODQM-503))
+* Fix NullPointerException in setUserInfo causing failure to fetch SRS record by external ID ([MODQM-503](https://folio-org.atlassian.net/browse/MODQM-503))
 
 ### Tech Dept
 * Improve Docker Compose setup for local development ([MODQM-481](https://folio-org.atlassian.net/browse/MODQM-481))

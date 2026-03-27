@@ -39,6 +39,9 @@ public class SourceRecordServiceImpl implements SourceRecordService {
   @Override
   public void update(UUID id, Record sourceRecord) {
     log.debug("update:: Updating source record with id: {}", id);
+    var createdSnapshot = sourceStorageClient.createSnapshot(SourceStorageClient.SourceRecordSnapshot.snapshot());
+    log.debug("update:: Snapshot created with id: {}", createdSnapshot.jobExecutionId());
+    sourceRecord.setSnapshotId(createdSnapshot.jobExecutionId().toString());
     sourceStorageClient.updateSourceRecord(id, sourceRecord);
     log.info("update:: Source record updated successfully with id: {}", id);
   }

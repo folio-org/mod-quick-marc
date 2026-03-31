@@ -1,96 +1,112 @@
 package org.folio.qm.convertion.merger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import org.folio.Instance;
 import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 
 @UnitTest
 class InstanceRecordMergerTest {
 
-  private static final String ID = "id";
-  private static final String SOURCE_TITLE = "sourceTitle";
-  private static final String TARGET_TITLE = "targetTitle";
-  private static final String SOURCE_HRID = "sourceHrid";
-  private static final String TARGET_HRID = "targetHrid";
-  private static final String SOURCE_NOTE = "sourceNote";
-  private static final String TARGET_NOTE = "targetNote";
+  private static final String TARGET_ID = "target-id";
+  private static final String SOURCE_ID = "source-id";
+  private static final String TARGET_TITLE = "target-title";
+  private static final String SOURCE_TITLE = "source-title";
+  private static final String TARGET_HRID = "target-hrid";
+  private static final String SOURCE_HRID = "source-hrid";
+  private static final String TARGET_NOTE = "target-note";
+  private static final String SOURCE_NOTE = "source-note";
+  private static final String TARGET_STATUS_ID = "target-status-id";
+  private static final String SOURCE_STATUS_ID = "source-status-id";
+  private static final String TARGET_STATISTICAL_CODE_ID = "target-statistical-code-id";
+  private static final String SOURCE_STATISTICAL_CODE_ID = "source-statistical-code-id";
+  private static final String TARGET_NATURE_OF_CONTENT_ID = "target-nature-of-content-id";
+  private static final String SOURCE_NATURE_OF_CONTENT_ID = "source-nature-of-content-id";
 
-  private final InstanceRecordMerger mapper = Mappers.getMapper(InstanceRecordMerger.class);
+  private final InstanceRecordMerger merger = new InstanceRecordMergerImpl();
 
   @Test
-  void shouldUpdateNonNullFields() {
-    var source = createFolioInstance(ID, SOURCE_TITLE, SOURCE_HRID, new ArrayList<>(List.of(SOURCE_NOTE)));
-    var target = createInstance(TARGET_HRID, new ArrayList<>(List.of(TARGET_NOTE)));
+  void merge_positive_nonIgnoredNonNullFieldsAreUpdated() {
+    // Arrange
+    var source = createFolioInstance(SOURCE_ID, SOURCE_TITLE, SOURCE_HRID);
+    var target = createInstanceRecord();
 
-    mapper.merge(source, target);
+    // Act
+    merger.merge(source, target);
 
-    assertEquals(ID, target.getId());
-    assertEquals(SOURCE_TITLE, target.getTitle());
-    assertEquals(SOURCE_HRID, target.getHrid());
-    assertEquals(List.of(SOURCE_NOTE), target.getAdministrativeNotes());
+    // Assert
+    assertThat(target.getId()).isEqualTo(SOURCE_ID);
+    assertThat(target.getTitle()).isEqualTo(SOURCE_TITLE);
+    assertThat(target.getHrid()).isEqualTo(SOURCE_HRID);
   }
 
   @Test
-  void shouldNotOverwriteWithNullFields() {
-    var source = createFolioInstance(null, null, SOURCE_HRID, Collections.emptyList());
-    var target = createInstance(null, new ArrayList<>(List.of(TARGET_NOTE)));
+  @SuppressWarnings("checkstyle:MethodLength")
+  void merge_positive_ignoredFieldsRemainUnchangedWhenSourceProvidesValues() {
+    // Arrange
+    var source = createFolioInstance(SOURCE_ID, SOURCE_TITLE, SOURCE_HRID);
+    source.setStaffSuppress(false);
+    source.setDiscoverySuppress(true);
+    source.setStatisticalCodeIds(List.of(SOURCE_STATISTICAL_CODE_ID));
+    source.setNatureOfContentTermIds(List.of(SOURCE_NATURE_OF_CONTENT_ID));
+    source.setPreviouslyHeld(false);
+    source.setStatusId(SOURCE_STATUS_ID);
+    source.setAdministrativeNotes(List.of(SOURCE_NOTE));
+    var target = createInstanceRecord();
+    target.setStaffSuppress(true);
+    target.setDiscoverySuppress(false);
+    target.setStatisticalCodeIds(new LinkedHashSet<>(Set.of(TARGET_STATISTICAL_CODE_ID)));
+    target.setNatureOfContentTermIds(new LinkedHashSet<>(Set.of(TARGET_NATURE_OF_CONTENT_ID)));
+    target.setPreviouslyHeld(true);
+    target.setStatusId(TARGET_STATUS_ID);
+    target.setAdministrativeNotes(List.of(TARGET_NOTE));
 
-    mapper.merge(source, target);
+    // Act
+    merger.merge(source, target);
 
-    assertEquals(ID, target.getId());
-    assertEquals(TARGET_TITLE, target.getTitle());
-    assertEquals(SOURCE_HRID, target.getHrid());
-    assertTrue(target.getAdministrativeNotes().isEmpty());
+    // Assert
+    assertThat(target.getAdministrativeNotes()).containsExactly(TARGET_NOTE);
+    assertThat(target.getStaffSuppress()).isTrue();
+    assertThat(target.getDiscoverySuppress()).isFalse();
+    assertThat(target.getStatisticalCodeIds()).containsExactly(TARGET_STATISTICAL_CODE_ID);
+    assertThat(target.getNatureOfContentTermIds()).containsExactly(TARGET_NATURE_OF_CONTENT_ID);
+    assertThat(target.getPreviouslyHeld()).isTrue();
+    assertThat(target.getStatusId()).isEqualTo(TARGET_STATUS_ID);
   }
 
   @Test
-  void shouldDoNothingIfSourceIsAllNull() {
-    var source = createFolioInstance(null, null, null, null);
-    var target = createInstance(TARGET_HRID, new ArrayList<>(List.of(TARGET_NOTE)));
+  void merge_positive_allNullNonIgnoredSourceFieldsAreNotUpdatedToNullInTarget() {
+    // Arrange
+    var source = createFolioInstance(null, null, null);
+    var target = createInstanceRecord();
 
-    mapper.merge(source, target);
+    // Act
+    merger.merge(source, target);
 
-    assertEquals(ID, target.getId());
-    assertEquals(TARGET_TITLE, target.getTitle());
-    assertEquals(TARGET_HRID, target.getHrid());
-    assertTrue(target.getAdministrativeNotes().isEmpty());
+    // Assert
+    assertThat(target.getId()).isEqualTo(TARGET_ID);
+    assertThat(target.getTitle()).isEqualTo(TARGET_TITLE);
+    assertThat(target.getHrid()).isEqualTo(TARGET_HRID);
   }
 
-  @Test
-  void shouldThrowIfTargetIsNull() {
-    var source = createFolioInstance(ID, null, null, null);
-
-    assertThrows(NullPointerException.class, () -> mapper.merge(source, null));
-  }
-
-  private Instance createFolioInstance(String id, String title, String hrid, List<String> notes) {
+  private static Instance createFolioInstance(String id, String title, String hrid) {
     var instance = new Instance();
     instance.setId(id);
     instance.setTitle(title);
     instance.setHrid(hrid);
-    if (notes != null) {
-      instance.setAdministrativeNotes(notes);
-    }
     return instance;
   }
 
-  private InstanceFolioRecord createInstance(String hrid, List<String> notes) {
+  private InstanceFolioRecord createInstanceRecord() {
     var instance = new InstanceFolioRecord();
-    instance.setId(ID);
+    instance.setId(TARGET_ID);
     instance.setTitle(TARGET_TITLE);
-    instance.setHrid(hrid);
-    if (notes != null) {
-      instance.setAdministrativeNotes(notes);
-    }
+    instance.setHrid(TARGET_HRID);
     return instance;
   }
 }

@@ -4,12 +4,20 @@ import org.folio.Instance;
 import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface InstanceRecordMerger extends FolioRecordMerger<InstanceFolioRecord, Instance> {
 
+  @Mapping(target = "staffSuppress", ignore = true)
+  @Mapping(target = "discoverySuppress", ignore = true)
+  @Mapping(target = "statisticalCodeIds", ignore = true)
+  @Mapping(target = "administrativeNotes", ignore = true)
+  @Mapping(target = "natureOfContentTermIds", ignore = true)
+  @Mapping(target = "previouslyHeld", ignore = true)
+  @Mapping(target = "statusId", ignore = true)
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void merge(Instance source, @MappingTarget InstanceFolioRecord target);
 }

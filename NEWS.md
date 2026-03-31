@@ -29,7 +29,8 @@
 
 ### Bug fixes
 * Fix NullPointerException in setUserInfo causing failure to fetch SRS record by external ID ([MODQM-503](https://folio-org.atlassian.net/browse/MODQM-503))
-* Сreate a new snapshot each time a marc record is updated to ensure the last snapshot has a filled processing_started_date and status COMMITTED   ([MODQM-504](https://folio-org.atlassian.net/browse/MODQM-504))
+* Create a new snapshot each time a marc record is updated to ensure the last snapshot has a filled processing_started_date and status COMMITTED ([MODQM-504](https://folio-org.atlassian.net/browse/MODQM-504))
+* Ignore Holdings and Instance fields that are not mapped from MARC ([MODQM-505](https://folio-org.atlassian.net/browse/MODQM-505))
 * Remove the cache for mapping metadata ([MODQM-508](https://folio-org.atlassian.net/browse/MODQM-508))
 
 ### Tech Dept

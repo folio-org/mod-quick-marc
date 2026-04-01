@@ -4,19 +4,19 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.qm.client.AuthorityStorageClient;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.folio.spring.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class FolioRecordAuthorityService implements FolioRecordService<AuthorityRecord> {
+public class FolioRecordAuthorityService implements FolioRecordService<AuthorityFolioRecord> {
 
   private final AuthorityStorageClient storageClient;
 
   @Override
-  public AuthorityRecord get(UUID id) {
+  public AuthorityFolioRecord get(UUID id) {
     log.debug("get:: Retrieving authority record by id: {}", id);
     return storageClient.getAuthorityById(id)
       .orElseThrow(() -> {
@@ -26,7 +26,7 @@ public class FolioRecordAuthorityService implements FolioRecordService<Authority
   }
 
   @Override
-  public AuthorityRecord create(AuthorityRecord folioRecord) {
+  public AuthorityFolioRecord create(AuthorityFolioRecord folioRecord) {
     log.debug("create:: Creating authority record");
     var created = storageClient.createAuthority(folioRecord);
     log.info("create:: Authority record created with id: {}", created.getId());
@@ -34,7 +34,7 @@ public class FolioRecordAuthorityService implements FolioRecordService<Authority
   }
 
   @Override
-  public void update(UUID id, AuthorityRecord folioRecord) {
+  public void update(UUID id, AuthorityFolioRecord folioRecord) {
     log.debug("update:: Updating authority record with id: {}", id);
     storageClient.updateAuthority(id, folioRecord);
     log.info("update:: Authority record updated successfully with id: {}", id);

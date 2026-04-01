@@ -2,7 +2,7 @@ package org.folio.qm.client;
 
 import java.util.Optional;
 import java.util.UUID;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +15,11 @@ import org.springframework.web.service.annotation.PutExchange;
 public interface AuthorityStorageClient {
 
   @GetExchange(value = "/authorities/{id}")
-  Optional<AuthorityRecord> getAuthorityById(@PathVariable("id") UUID id);
+  Optional<AuthorityFolioRecord> getAuthorityById(@PathVariable("id") UUID id);
 
   @PutExchange(value = "/authorities/{id}")
-  void updateAuthority(@PathVariable("id") UUID id, @RequestBody AuthorityRecord authority);
+  void updateAuthority(@PathVariable("id") UUID id, @RequestBody AuthorityFolioRecord authority);
 
   @PostExchange(value = "/authorities")
-  AuthorityRecord createAuthority(@RequestBody AuthorityRecord authority);
+  AuthorityFolioRecord createAuthority(@RequestBody AuthorityFolioRecord authority);
 }

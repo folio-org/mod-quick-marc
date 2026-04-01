@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.folio.Instance;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -83,8 +83,8 @@ class InstanceRecordMergerTest {
     return instance;
   }
 
-  private InstanceRecord createInstance(String hrid, List<String> notes) {
-    var instance = new InstanceRecord();
+  private InstanceFolioRecord createInstance(String hrid, List<String> notes) {
+    var instance = new InstanceFolioRecord();
     instance.setId(ID);
     instance.setTitle(TARGET_TITLE);
     instance.setHrid(hrid);

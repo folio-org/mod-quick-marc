@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import org.folio.qm.client.InstanceStorageClient;
 import org.folio.qm.client.PrecedingSucceedingTitlesClient;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.qm.service.storage.tenant.UserTenantsService;
 import org.folio.rest.jaxrs.model.Instance;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
@@ -64,7 +64,7 @@ class FolioRecordInstanceServiceTest {
   @Test
   void get_shouldReturnInstanceWhenFound() {
     var id = UUID.randomUUID();
-    var instance = new InstanceRecord();
+    var instance = new InstanceFolioRecord();
     instance.setId(UUID.randomUUID().toString());
     when(storageClient.getInstanceById(id)).thenReturn(Optional.of(instance));
 
@@ -84,9 +84,9 @@ class FolioRecordInstanceServiceTest {
 
   @Test
   void create_shouldReturnCreatedInstanceAndSetIdOnInputAndUpdateTitles() {
-    var instanceRecord = new InstanceRecord();
+    var instanceRecord = new InstanceFolioRecord();
     instanceRecord.setTitle("title");
-    var createdInstance = new InstanceRecord();
+    var createdInstance = new InstanceFolioRecord();
     createdInstance.setId(UUID.randomUUID().toString());
     when(storageClient.createInstance(instanceRecord)).thenReturn(createdInstance);
 
@@ -111,7 +111,7 @@ class FolioRecordInstanceServiceTest {
   @Test
   void update_shouldCallStorage() {
     var id = UUID.randomUUID();
-    var folioRecord = new InstanceRecord();
+    var folioRecord = new InstanceFolioRecord();
     folioRecord.setId(UUID.randomUUID().toString());
 
     var expectedTitles = new InstancePrecedingSucceedingTitles(Collections.emptyList(), 0L);
@@ -124,7 +124,7 @@ class FolioRecordInstanceServiceTest {
 
   @Test
   void getInstanceIdByHrid_shouldReturnIdWhenSingleResult() {
-    var instanceRecord = new InstanceRecord();
+    var instanceRecord = new InstanceFolioRecord();
     var instanceId = UUID.randomUUID().toString();
     instanceRecord.setId(instanceId);
 
@@ -140,7 +140,7 @@ class FolioRecordInstanceServiceTest {
   @Test
   void getInstanceIdByHrid_shouldThrowWhenTotalCountMoreOne() {
     var instanceId = UUID.randomUUID().toString();
-    var instanceRecord = new InstanceRecord().withId(instanceId);
+    var instanceRecord = new InstanceFolioRecord().withId(instanceId);
 
     var instances = getInstances(List.of(instanceRecord), 3L);
     when(storageClient.getInstances(HRID)).thenReturn(instances);

@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.folio.Holdings;
-import org.folio.qm.domain.model.HoldingsRecord;
+import org.folio.qm.domain.model.HoldingsFolioRecord;
+import org.folio.rest.jaxrs.model.HoldingsRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -74,8 +74,8 @@ class HoldingsRecordMergerTest {
     assertThrows(NullPointerException.class, () -> mapper.merge(source, null));
   }
 
-  private Holdings createHoldings(String id, String callNumber, String hrid, List<String> notes) {
-    var holdings = new Holdings();
+  private HoldingsRecord createHoldings(String id, String callNumber, String hrid, List<String> notes) {
+    var holdings = new HoldingsRecord();
     holdings.setId(id);
     holdings.setCallNumber(callNumber);
     holdings.setHrid(hrid);
@@ -83,8 +83,8 @@ class HoldingsRecordMergerTest {
     return holdings;
   }
 
-  private HoldingsRecord createHoldingsRecord(String id, String callNumber, String hrid, List<String> notes) {
-    var holdingsRecord = new HoldingsRecord();
+  private HoldingsFolioRecord createHoldingsRecord(String id, String callNumber, String hrid, List<String> notes) {
+    var holdingsRecord = new HoldingsFolioRecord();
     holdingsRecord.setId(id);
     holdingsRecord.setCallNumber(callNumber);
     holdingsRecord.setHrid(hrid);

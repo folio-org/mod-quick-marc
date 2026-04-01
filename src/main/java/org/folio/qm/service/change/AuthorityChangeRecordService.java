@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.folio.ExternalIdsHolder;
 import org.folio.qm.convertion.RecordConversionService;
 import org.folio.qm.domain.dto.MarcFormat;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.service.mapping.MarcMappingService;
 import org.folio.qm.service.population.DefaultValuesPopulationService;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class AuthorityChangeRecordService extends AbstractChangeRecordService<AuthorityRecord> {
+public class AuthorityChangeRecordService extends AbstractChangeRecordService<AuthorityFolioRecord> {
 
   protected AuthorityChangeRecordService(ValidationService validationService,
                                          RecordConversionService conversionService,
                                          SourceRecordService sourceRecordService,
-                                         MarcMappingService<AuthorityRecord> mappingService,
-                                         FolioRecordService<AuthorityRecord> folioRecordService,
+                                         MarcMappingService<AuthorityFolioRecord> mappingService,
+                                         FolioRecordService<AuthorityFolioRecord> folioRecordService,
                                          DefaultValuesPopulationService defaultValuesPopulationService) {
     super(validationService, conversionService, sourceRecordService, mappingService, folioRecordService,
       defaultValuesPopulationService);

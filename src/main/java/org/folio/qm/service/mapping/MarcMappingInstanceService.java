@@ -4,15 +4,15 @@ import org.folio.Instance;
 import org.folio.processing.mapping.defaultmapper.MarcToInstanceMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MarcMappingInstanceService extends MarcMappingAbstractService<InstanceRecord, Instance> {
+public class MarcMappingInstanceService extends MarcMappingAbstractService<InstanceFolioRecord, Instance> {
 
   public MarcMappingInstanceService(MappingMetadataProvider mappingMetadataProvider,
-                                    FolioRecordMerger<InstanceRecord, Instance> merger) {
+                                    FolioRecordMerger<InstanceFolioRecord, Instance> merger) {
     super(mappingMetadataProvider, merger);
   }
 
@@ -22,7 +22,7 @@ public class MarcMappingInstanceService extends MarcMappingAbstractService<Insta
   }
 
   @Override
-  protected InstanceRecord initFolioRecord() {
-    return new InstanceRecord();
+  protected InstanceFolioRecord initFolioRecord() {
+    return new InstanceFolioRecord();
   }
 }

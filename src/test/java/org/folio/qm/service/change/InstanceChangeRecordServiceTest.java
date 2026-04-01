@@ -28,7 +28,7 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.BaseQuickMarcRecord;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
@@ -62,9 +62,9 @@ class InstanceChangeRecordServiceTest {
   @Mock
   private SourceRecordService sourceRecordService;
   @Mock
-  private MarcMappingService<InstanceRecord> mappingService;
+  private MarcMappingService<InstanceFolioRecord> mappingService;
   @Mock
-  private FolioRecordService<InstanceRecord> folioRecordService;
+  private FolioRecordService<InstanceFolioRecord> folioRecordService;
   @Mock
   private LinksService linksService;
   @Mock
@@ -403,8 +403,8 @@ class InstanceChangeRecordServiceTest {
       .build();
   }
 
-  private InstanceRecord createInstanceRecord() {
-    var instanceRecord = new InstanceRecord();
+  private InstanceFolioRecord createInstanceRecord() {
+    var instanceRecord = new InstanceFolioRecord();
     instanceRecord.setId(randomUUID().toString());
     instanceRecord.setHrid("in00000001");
     return instanceRecord;

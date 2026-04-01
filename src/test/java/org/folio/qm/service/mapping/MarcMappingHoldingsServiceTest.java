@@ -13,17 +13,17 @@ import static org.mockito.Mockito.when;
 import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.UUID;
-import org.folio.Holdings;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
-import org.folio.qm.domain.model.HoldingsRecord;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.HoldingsFolioRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
 import org.folio.qm.service.storage.folio.FolioRecordInstanceService;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.folio.qm.service.support.MappingMetadataProvider.MappingData;
+import org.folio.rest.jaxrs.model.HoldingsRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MarcMappingHoldingsServiceTest {
 
   private @Mock MappingMetadataProvider mappingMetadataProvider;
-  private @Mock FolioRecordMerger<HoldingsRecord, Holdings> merger;
+  private @Mock FolioRecordMerger<HoldingsFolioRecord, HoldingsRecord> merger;
   private @Mock FolioRecordInstanceService folioRecordInstanceService;
   private @InjectMocks MarcMappingHoldingsService service;
 
@@ -46,12 +46,12 @@ class MarcMappingHoldingsServiceTest {
     var mappingData = createMappingData();
     when(mappingMetadataProvider.getMappingData(MappingRecordType.MARC_HOLDINGS))
       .thenReturn(mappingData);
-    var instanceRecord = new InstanceRecord();
+    var instanceRecord = new InstanceFolioRecord();
     var instanceId = UUID.randomUUID().toString();
     instanceRecord.setId(instanceId);
     when(folioRecordInstanceService.getInstanceIdByHrid(any())).thenReturn(instanceId);
     doAnswer(invocation -> {
-      HoldingsRecord holdingsRecord = invocation.getArgument(1);
+      HoldingsFolioRecord holdingsRecord = invocation.getArgument(1);
       holdingsRecord.setInstanceId(instanceId);
       return null;
     }).when(merger).merge(any(), any());
@@ -69,7 +69,7 @@ class MarcMappingHoldingsServiceTest {
   @Test
   void shouldMapUpdatedRecord() {
     var qmRecord = createQuickMarcRecord();
-    var existingRecord = new HoldingsRecord();
+    var existingRecord = new HoldingsFolioRecord();
     existingRecord.setId("existing-holdings-id");
     var mappingData = createMappingData();
 
@@ -87,7 +87,7 @@ class MarcMappingHoldingsServiceTest {
   @Test
   void mapRequiredFields_shouldSetInstanceId_when004Present() {
     var qmRecord = createQuickMarcRecord();
-    var holdings = new Holdings();
+    var holdings = new HoldingsRecord();
     var instanceId = UUID.randomUUID().toString();
     when(folioRecordInstanceService.getInstanceIdByHrid("instanceHrid")).thenReturn(instanceId);
 
@@ -99,7 +99,7 @@ class MarcMappingHoldingsServiceTest {
   @Test
   void mapRequiredFields_shouldNotSetInstanceId_whenUpdateRecord() {
     var qmRecord = createQuickMarcRecord();
-    var holdings = new Holdings();
+    var holdings = new HoldingsRecord();
 
     service.mapRequiredFields(qmRecord, holdings, false);
 
@@ -112,7 +112,7 @@ class MarcMappingHoldingsServiceTest {
     var qmRecord = createQuickMarcRecord();
     // Remove 004 field
     qmRecord.getMarcRecord().getControlFields().removeIf(f -> "004".equals(f.getTag()));
-    var holdings = new Holdings();
+    var holdings = new HoldingsRecord();
 
     assertThrows(IllegalStateException.class, () -> service.mapRequiredFields(qmRecord, holdings, true));
   }
@@ -120,7 +120,7 @@ class MarcMappingHoldingsServiceTest {
   @Test
   void shouldPreserveRecordIdAfterMapping() {
     var qmRecord = createQuickMarcRecord();
-    var existingRecord = new HoldingsRecord();
+    var existingRecord = new HoldingsFolioRecord();
     var originalId = "original-id";
     existingRecord.setId(originalId);
     var mappingData = createMappingData();

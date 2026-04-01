@@ -40,7 +40,7 @@ class InstanceRecordMergerTest {
     merger.merge(source, target);
 
     // Assert
-    assertThat(target.getId()).isEqualTo(SOURCE_ID);
+    assertThat(target.getId()).isEqualTo(TARGET_ID);
     assertThat(target.getTitle()).isEqualTo(SOURCE_TITLE);
     assertThat(target.getHrid()).isEqualTo(SOURCE_HRID);
   }
@@ -80,7 +80,7 @@ class InstanceRecordMergerTest {
   }
 
   @Test
-  void merge_positive_allNullNonIgnoredSourceFieldsAreNotUpdatedToNullInTarget() {
+  void merge_positive_allNullNonIgnoredSourceFieldsSetTargetFieldsToNull() {
     // Arrange
     var source = createFolioInstance(null, null, null);
     var target = createInstanceRecord();
@@ -90,8 +90,8 @@ class InstanceRecordMergerTest {
 
     // Assert
     assertThat(target.getId()).isEqualTo(TARGET_ID);
-    assertThat(target.getTitle()).isEqualTo(TARGET_TITLE);
-    assertThat(target.getHrid()).isEqualTo(TARGET_HRID);
+    assertThat(target.getTitle()).isNull();
+    assertThat(target.getHrid()).isNull();
   }
 
   private static Instance createFolioInstance(String id, String title, String hrid) {
@@ -105,6 +105,7 @@ class InstanceRecordMergerTest {
   private InstanceFolioRecord createInstanceRecord() {
     var instance = new InstanceFolioRecord();
     instance.setId(TARGET_ID);
+    instance.setVersion(1L);
     instance.setTitle(TARGET_TITLE);
     instance.setHrid(TARGET_HRID);
     return instance;

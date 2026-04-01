@@ -48,7 +48,7 @@ class AuthorityRecordMergerTest {
 
     merger.merge(source, target);
 
-    assertNull(target.getId());
+    assertEquals(ID, target.getId());
     assertEquals(1, target.getVersion());
     assertNull(target.getPersonalName());
     assertEquals(SOURCE_FILE_ID, target.getSourceFileId());
@@ -62,7 +62,7 @@ class AuthorityRecordMergerTest {
 
     merger.merge(source, target);
 
-    assertNull(target.getId());
+    assertEquals(ID, target.getId());
     assertEquals(1, target.getVersion());
     assertNull(target.getPersonalName());
     assertNull(target.getSourceFileId());

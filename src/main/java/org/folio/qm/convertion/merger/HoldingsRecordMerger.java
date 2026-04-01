@@ -3,6 +3,7 @@ package org.folio.qm.convertion.merger;
 import org.folio.qm.domain.model.HoldingsFolioRecord;
 import org.folio.rest.jaxrs.model.HoldingsRecord;
 import org.mapstruct.BeanMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -21,6 +22,13 @@ public interface HoldingsRecordMerger extends FolioRecordMerger<HoldingsFolioRec
   @Mapping(target = "acquisitionMethod", ignore = true)
   @Mapping(target = "receivingHistory", ignore = true)
   @Mapping(target = "temporaryLocationId", ignore = true)
-  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
   void merge(HoldingsRecord source, @MappingTarget HoldingsFolioRecord target);
+
+  @BeforeMapping
+  default void beforeMerge(HoldingsRecord source, @MappingTarget HoldingsFolioRecord target) {
+    source.setId(target.getId());
+    source.setInstanceId(target.getInstanceId());
+    source.setVersion(target.getVersion());
+  }
 }

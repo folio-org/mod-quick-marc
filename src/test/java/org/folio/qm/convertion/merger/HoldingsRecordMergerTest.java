@@ -48,14 +48,14 @@ class HoldingsRecordMergerTest {
     merger.merge(source, target);
 
     // Assert
-    assertThat(target.getId()).isEqualTo(SOURCE_ID);
+    assertThat(target.getId()).isEqualTo(TARGET_ID);
     assertThat(target.getCallNumber()).isEqualTo(SOURCE_CALL_NUMBER);
     assertThat(target.getHrid()).isEqualTo(SOURCE_HRID);
     assertThat(target.getAdministrativeNotes()).containsExactly(TARGET_NOTE);
   }
 
   @Test
-  void merge_positive_nullSourceFieldsDoNotOverwriteTargetValues() {
+  void merge_positive_nullSourceFieldsOverwriteNonIgnoredTargetValues() {
     // Arrange
     var source = createHoldings(null, null, SOURCE_HRID, List.of(SOURCE_NOTE));
     var target = createHoldingsRecord(TARGET_ID, TARGET_CALL_NUMBER, TARGET_HRID, List.of(TARGET_NOTE));
@@ -65,7 +65,7 @@ class HoldingsRecordMergerTest {
 
     // Assert
     assertThat(target.getId()).isEqualTo(TARGET_ID);
-    assertThat(target.getCallNumber()).isEqualTo(TARGET_CALL_NUMBER);
+    assertThat(target.getCallNumber()).isNull();
     assertThat(target.getHrid()).isEqualTo(SOURCE_HRID);
     assertThat(target.getAdministrativeNotes()).containsExactly(TARGET_NOTE);
   }
@@ -86,7 +86,7 @@ class HoldingsRecordMergerTest {
   }
 
   @Test
-  void merge_positive_allNullNonIgnoredSourceFieldsLeaveTargetUnchanged() {
+  void merge_positive_allNullSourceFieldsSetNonIgnoredFieldsToNull() {
     // Arrange
     var source = createHoldings(null, null, null, null);
     var target = createHoldingsRecord(TARGET_ID, TARGET_CALL_NUMBER, TARGET_HRID, List.of(TARGET_NOTE));
@@ -96,8 +96,8 @@ class HoldingsRecordMergerTest {
 
     // Assert
     assertThat(target.getId()).isEqualTo(TARGET_ID);
-    assertThat(target.getCallNumber()).isEqualTo(TARGET_CALL_NUMBER);
-    assertThat(target.getHrid()).isEqualTo(TARGET_HRID);
+    assertThat(target.getCallNumber()).isNull();
+    assertThat(target.getHrid()).isNull();
     assertThat(target.getAdministrativeNotes()).containsExactly(TARGET_NOTE);
   }
 
@@ -125,6 +125,7 @@ class HoldingsRecordMergerTest {
   private HoldingsFolioRecord createHoldingsRecord(String id, String callNumber, String hrid, List<String> notes) {
     var holdingsRecord = new HoldingsFolioRecord();
     holdingsRecord.setId(id);
+    holdingsRecord.setVersion(1L);
     holdingsRecord.setCallNumber(callNumber);
     holdingsRecord.setHrid(hrid);
     if (notes != null) {
@@ -142,7 +143,7 @@ class HoldingsRecordMergerTest {
     source.setAcquisitionMethod(SOURCE_ACQUISITION_METHOD);
   }
 
-  private static void setIgnoredTargetFields(HoldingsRecord target) {
+  private static void setIgnoredTargetFields(HoldingsFolioRecord target) {
     target.setStatisticalCodeIds(new LinkedHashSet<>(Set.of(TARGET_STATISTICAL_CODE_ID)));
     target.setIllPolicyId(TARGET_ILL_POLICY_ID);
     target.setDigitizationPolicy(TARGET_DIGITIZATION_POLICY);
@@ -151,7 +152,7 @@ class HoldingsRecordMergerTest {
     target.setAcquisitionMethod(TARGET_ACQUISITION_METHOD);
   }
 
-  private static void assertIgnoredTargetFieldsUnchanged(HoldingsRecord target) {
+  private static void assertIgnoredTargetFieldsUnchanged(HoldingsFolioRecord target) {
     assertThat(target.getAdministrativeNotes()).containsExactly(TARGET_NOTE);
     assertThat(target.getStatisticalCodeIds()).containsExactly(TARGET_STATISTICAL_CODE_ID);
     assertThat(target.getIllPolicyId()).isEqualTo(TARGET_ILL_POLICY_ID);

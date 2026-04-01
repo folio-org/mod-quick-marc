@@ -16,6 +16,7 @@ public interface AuthorityRecordMerger extends FolioRecordMerger<AuthorityFolioR
 
   @BeforeMapping
   default void beforeMerge(Authority source, @MappingTarget AuthorityFolioRecord target) {
+    source.setId(target.getId());
     source.setVersion(target.getVersion());
   }
 }

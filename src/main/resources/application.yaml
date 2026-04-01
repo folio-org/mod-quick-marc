@@ -48,7 +48,6 @@ spring:
     cache-names:
       - linking-rules-results
       - specifications
-      - mapping-metadata-cache
       - authorities-extended-mapping-cache
       - consortium-central-tenant-cache
     caffeine:

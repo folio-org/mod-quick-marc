@@ -27,7 +27,7 @@ import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
@@ -58,9 +58,9 @@ class AuthorityChangeRecordServiceTest {
   @Mock
   private SourceRecordService sourceRecordService;
   @Mock
-  private MarcMappingService<AuthorityRecord> mappingService;
+  private MarcMappingService<AuthorityFolioRecord> mappingService;
   @Mock
-  private FolioRecordService<AuthorityRecord> folioRecordService;
+  private FolioRecordService<AuthorityFolioRecord> folioRecordService;
   @Mock
   private DefaultValuesPopulationService defaultValuesPopulationService;
 
@@ -359,8 +359,8 @@ class AuthorityChangeRecordServiceTest {
       .build();
   }
 
-  private AuthorityRecord createAuthorityRecord() {
-    var authorityRecord = new AuthorityRecord();
+  private AuthorityFolioRecord createAuthorityRecord() {
+    var authorityRecord = new AuthorityFolioRecord();
     authorityRecord.setId(randomUUID().toString());
     authorityRecord.setNaturalId("au00000001");
     return authorityRecord;

@@ -11,7 +11,7 @@ import io.vertx.core.json.JsonObject;
 import org.folio.Instance;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MarcMappingInstanceServiceTest {
 
   private @Mock MappingMetadataProvider mappingMetadataProvider;
-  private @Mock FolioRecordMerger<InstanceRecord, Instance> merger;
+  private @Mock FolioRecordMerger<InstanceFolioRecord, Instance> merger;
   private @InjectMocks MarcMappingInstanceService service;
 
   @Test
@@ -50,7 +50,7 @@ class MarcMappingInstanceServiceTest {
   @Test
   void shouldMapUpdatedRecord() {
     var qmRecord = createQuickMarcRecord();
-    var existingRecord = new InstanceRecord();
+    var existingRecord = new InstanceFolioRecord();
     existingRecord.setId("existing-instance-id");
     var mappingData = createMappingData();
 
@@ -68,7 +68,7 @@ class MarcMappingInstanceServiceTest {
   @Test
   void shouldPreserveRecordIdAfterMapping() {
     var qmRecord = createQuickMarcRecord();
-    var existingRecord = new InstanceRecord();
+    var existingRecord = new InstanceFolioRecord();
     var originalId = "original-instance-id";
     existingRecord.setId(originalId);
     var mappingData = createMappingData();

@@ -8,7 +8,7 @@ import org.folio.rest.jaxrs.model.Instance;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 
 @Getter
-public class InstanceRecord extends Instance implements FolioRecord {
+public class InstanceFolioRecord extends Instance implements FolioRecord {
 
   @Setter
   @JsonIgnore

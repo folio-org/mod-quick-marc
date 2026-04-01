@@ -16,7 +16,7 @@ import org.folio.processing.mapping.defaultmapper.MarkToAuthorityExtendedMapper;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.processing.mapping.defaultmapper.processor.parameters.MappingParameters;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.MappingMetadataException;
@@ -36,7 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MarcMappingAuthorityServiceTest {
 
   private @Mock MappingMetadataProvider mappingMetadataProvider;
-  private @Mock FolioRecordMerger<AuthorityRecord, Authority> merger;
+  private @Mock FolioRecordMerger<AuthorityFolioRecord, Authority> merger;
   private @Mock AuthoritiesConfigService authoritiesConfigService;
   private @Spy RecordMapper<Authority> simpleMapper = new MarcToAuthorityMapper();
   private @Spy RecordMapper<Authority> extendedMapper = new MarkToAuthorityExtendedMapper();
@@ -68,7 +68,7 @@ class MarcMappingAuthorityServiceTest {
   @Test
   void shouldMapUpdatedRecord() {
     var qmRecord = createQuickMarcRecord();
-    var existingRecord = new AuthorityRecord();
+    var existingRecord = new AuthorityFolioRecord();
     existingRecord.setId("existing-id");
     var mappingData = createMappingData();
 

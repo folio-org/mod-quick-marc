@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.experimental.UtilityClass;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitles;
 
 @UtilityClass
 public class PrecedingSucceedingTitlesHelper {
 
-  public static InstancePrecedingSucceedingTitles collectPrecedingSucceedingTitles(InstanceRecord instance) {
+  public static InstancePrecedingSucceedingTitles collectPrecedingSucceedingTitles(InstanceFolioRecord instance) {
     List<InstancePrecedingSucceedingTitle> titlesList = new ArrayList<>();
     preparePrecedingTitles(instance, titlesList);
     prepareSucceedingTitles(instance, titlesList);
     return new InstancePrecedingSucceedingTitles(titlesList, (long) titlesList.size());
   }
 
-  private static void preparePrecedingTitles(InstanceRecord instance,
+  private static void preparePrecedingTitles(InstanceFolioRecord instance,
                                              List<InstancePrecedingSucceedingTitle> preparedTitles) {
     if (instance.getPrecedingTitles() != null) {
       for (InstancePrecedingSucceedingTitle parent : instance.getPrecedingTitles()) {
@@ -35,7 +35,7 @@ public class PrecedingSucceedingTitlesHelper {
     }
   }
 
-  private static void prepareSucceedingTitles(InstanceRecord instance,
+  private static void prepareSucceedingTitles(InstanceFolioRecord instance,
                                               List<InstancePrecedingSucceedingTitle> preparedTitles) {
     if (instance.getSucceedingTitles() != null) {
       for (InstancePrecedingSucceedingTitle child : instance.getSucceedingTitles()) {

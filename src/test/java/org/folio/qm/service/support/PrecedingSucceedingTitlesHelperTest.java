@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.UUID;
-import org.folio.qm.domain.model.InstanceRecord;
+import org.folio.qm.domain.model.InstanceFolioRecord;
 import org.folio.rest.jaxrs.model.InstancePrecedingSucceedingTitle;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
@@ -80,10 +80,10 @@ class PrecedingSucceedingTitlesHelperTest {
     assertTrue(result.getPrecedingSucceedingTitles().isEmpty());
   }
 
-  private InstanceRecord createInstance(String id,
-                                        List<InstancePrecedingSucceedingTitle> preceding,
-                                        List<InstancePrecedingSucceedingTitle> succeeding) {
-    var instance = new InstanceRecord();
+  private InstanceFolioRecord createInstance(String id,
+                                             List<InstancePrecedingSucceedingTitle> preceding,
+                                             List<InstancePrecedingSucceedingTitle> succeeding) {
+    var instance = new InstanceFolioRecord();
     instance.setId(id);
     instance.setPrecedingTitles(preceding);
     instance.setSucceedingTitles(succeeding);

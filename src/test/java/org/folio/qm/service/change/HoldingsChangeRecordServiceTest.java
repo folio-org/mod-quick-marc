@@ -28,7 +28,7 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.dto.QuickMarcView;
 import org.folio.qm.domain.model.BaseQuickMarcRecord;
-import org.folio.qm.domain.model.HoldingsRecord;
+import org.folio.qm.domain.model.HoldingsFolioRecord;
 import org.folio.qm.domain.model.QuickMarcRecord;
 import org.folio.qm.exception.FieldsValidationException;
 import org.folio.qm.exception.OptimisticLockingException;
@@ -60,9 +60,9 @@ class HoldingsChangeRecordServiceTest {
   @Mock
   private SourceRecordService sourceRecordService;
   @Mock
-  private MarcMappingService<HoldingsRecord> mappingService;
+  private MarcMappingService<HoldingsFolioRecord> mappingService;
   @Mock
-  private FolioRecordService<HoldingsRecord> folioRecordService;
+  private FolioRecordService<HoldingsFolioRecord> folioRecordService;
   @Mock
   private DefaultValuesPopulationService defaultValuesPopulationService;
 
@@ -392,8 +392,8 @@ class HoldingsChangeRecordServiceTest {
       .build();
   }
 
-  private HoldingsRecord createHoldingsRecord() {
-    var holdingsRecord = new HoldingsRecord();
+  private HoldingsFolioRecord createHoldingsRecord() {
+    var holdingsRecord = new HoldingsFolioRecord();
     holdingsRecord.setId(randomUUID().toString());
     holdingsRecord.setHrid("ho00000001");
     return holdingsRecord;

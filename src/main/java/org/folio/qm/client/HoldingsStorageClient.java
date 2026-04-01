@@ -2,7 +2,7 @@ package org.folio.qm.client;
 
 import java.util.Optional;
 import java.util.UUID;
-import org.folio.qm.domain.model.HoldingsRecord;
+import org.folio.qm.domain.model.HoldingsFolioRecord;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +15,11 @@ import org.springframework.web.service.annotation.PutExchange;
 public interface HoldingsStorageClient {
 
   @GetExchange(value = "/holdings/{id}")
-  Optional<HoldingsRecord> getHoldingById(@PathVariable("id") UUID id);
+  Optional<HoldingsFolioRecord> getHoldingById(@PathVariable("id") UUID id);
 
   @PostExchange(value = "/holdings")
-  HoldingsRecord createHolding(@RequestBody HoldingsRecord holdingsRecord);
+  HoldingsFolioRecord createHolding(@RequestBody HoldingsFolioRecord holdingsRecord);
 
   @PutExchange(value = "/holdings/{id}")
-  void updateHolding(@PathVariable("id") UUID id, @RequestBody HoldingsRecord holdingsRecord);
+  void updateHolding(@PathVariable("id") UUID id, @RequestBody HoldingsFolioRecord holdingsRecord);
 }

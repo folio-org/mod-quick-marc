@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.folio.Note_;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.folio.spring.testing.type.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -75,9 +75,9 @@ class AuthorityRecordMergerTest {
     assertThrows(NullPointerException.class, () -> merger.merge(source, null));
   }
 
-  private AuthorityRecord createAuthority(String id, int version, String personalName,
-                                          String sourceFileId, List<Note_> notes) {
-    var authority = new AuthorityRecord();
+  private AuthorityFolioRecord createAuthority(String id, int version, String personalName,
+                                               String sourceFileId, List<Note_> notes) {
+    var authority = new AuthorityFolioRecord();
     authority.setId(id);
     authority.setVersion(version);
     authority.setPersonalName(personalName);

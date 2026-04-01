@@ -11,19 +11,19 @@ import org.folio.ActionProfile;
 import org.folio.Authority;
 import org.folio.processing.mapping.defaultmapper.RecordMapper;
 import org.folio.qm.convertion.merger.FolioRecordMerger;
-import org.folio.qm.domain.model.AuthorityRecord;
+import org.folio.qm.domain.model.AuthorityFolioRecord;
 import org.folio.qm.service.storage.config.AuthoritiesConfigService;
 import org.folio.qm.service.support.MappingMetadataProvider;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MarcMappingAuthorityService extends MarcMappingAbstractService<AuthorityRecord, Authority> {
+public class MarcMappingAuthorityService extends MarcMappingAbstractService<AuthorityFolioRecord, Authority> {
 
   private final AuthoritiesConfigService authoritiesConfigService;
   private final Map<ActionProfile.FolioRecord, RecordMapper<Authority>> recordMappers;
 
   public MarcMappingAuthorityService(MappingMetadataProvider mappingMetadataProvider,
-                                     FolioRecordMerger<AuthorityRecord, Authority> merger,
+                                     FolioRecordMerger<AuthorityFolioRecord, Authority> merger,
                                      AuthoritiesConfigService authoritiesConfigService,
                                      List<RecordMapper<Authority>> recordMappers) {
     super(mappingMetadataProvider, merger);
@@ -42,12 +42,12 @@ public class MarcMappingAuthorityService extends MarcMappingAbstractService<Auth
   }
 
   @Override
-  protected AuthorityRecord initFolioRecord() {
-    return new AuthorityRecord();
+  protected AuthorityFolioRecord initFolioRecord() {
+    return new AuthorityFolioRecord();
   }
 
   @Override
-  protected void postProcess(AuthorityRecord folioRecord) {
+  protected void postProcess(AuthorityFolioRecord folioRecord) {
     folioRecord.setSource(Authority.Source.MARC);
   }
 }

@@ -22,13 +22,13 @@ public interface HoldingsRecordMerger extends FolioRecordMerger<HoldingsFolioRec
   @Mapping(target = "acquisitionMethod", ignore = true)
   @Mapping(target = "receivingHistory", ignore = true)
   @Mapping(target = "temporaryLocationId", ignore = true)
+  @Mapping(target = "tags", ignore = true)
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
   void merge(HoldingsRecord source, @MappingTarget HoldingsFolioRecord target);
 
   @BeforeMapping
   default void beforeMerge(HoldingsRecord source, @MappingTarget HoldingsFolioRecord target) {
     source.setId(target.getId());
-    source.setInstanceId(target.getInstanceId());
     source.setVersion(target.getVersion());
   }
 }

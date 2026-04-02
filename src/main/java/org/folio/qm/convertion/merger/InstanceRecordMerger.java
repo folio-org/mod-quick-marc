@@ -19,6 +19,8 @@ public interface InstanceRecordMerger extends FolioRecordMerger<InstanceFolioRec
   @Mapping(target = "natureOfContentTermIds", ignore = true)
   @Mapping(target = "previouslyHeld", ignore = true)
   @Mapping(target = "statusId", ignore = true)
+  @Mapping(target = "catalogedDate", ignore = true)
+  @Mapping(target = "tags", ignore = true)
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
   void merge(Instance source, @MappingTarget InstanceFolioRecord target);
 

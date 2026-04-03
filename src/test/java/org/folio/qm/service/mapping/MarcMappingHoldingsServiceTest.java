@@ -2,11 +2,9 @@ package org.folio.qm.service.mapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -91,20 +89,9 @@ class MarcMappingHoldingsServiceTest {
     var instanceId = UUID.randomUUID().toString();
     when(folioRecordInstanceService.getInstanceIdByHrid("instanceHrid")).thenReturn(instanceId);
 
-    service.mapRequiredFields(qmRecord, holdings, true);
+    service.mapRequiredFields(qmRecord, holdings);
 
     assertEquals(instanceId, holdings.getInstanceId());
-  }
-
-  @Test
-  void mapRequiredFields_shouldNotSetInstanceId_whenUpdateRecord() {
-    var qmRecord = createQuickMarcRecord();
-    var holdings = new HoldingsRecord();
-
-    service.mapRequiredFields(qmRecord, holdings, false);
-
-    assertNull(holdings.getInstanceId());
-    verify(folioRecordInstanceService, never()).getInstanceIdByHrid(any());
   }
 
   @Test
@@ -114,7 +101,7 @@ class MarcMappingHoldingsServiceTest {
     qmRecord.getMarcRecord().getControlFields().removeIf(f -> "004".equals(f.getTag()));
     var holdings = new HoldingsRecord();
 
-    assertThrows(IllegalStateException.class, () -> service.mapRequiredFields(qmRecord, holdings, true));
+    assertThrows(IllegalStateException.class, () -> service.mapRequiredFields(qmRecord, holdings));
   }
 
   @Test

@@ -40,16 +40,13 @@ public class MarcMappingHoldingsService extends MarcMappingAbstractService<Holdi
 
   @Override
   protected void mapRequiredFields(QuickMarcRecord qmRecord,
-                                   @NonNull HoldingsRecord mappedRecord,
-                                   boolean isNewRecord) {
-    if (isNewRecord) {
-      var instanceHrid = MarcRecordModifier.get004ControlFieldData(qmRecord.getMarcRecord());
-      if (isBlank(instanceHrid)) {
-        log.warn("setInstanceId:: 004 field is missing or empty for externalId: {}", qmRecord.getExternalId());
-        throw new IllegalStateException("004 field is missing or empty in MARC holdings record");
-      }
-      var instanceId = folioRecordInstanceService.getInstanceIdByHrid(instanceHrid);
-      mappedRecord.setInstanceId(instanceId);
+                                   @NonNull HoldingsRecord mappedRecord) {
+    var instanceHrid = MarcRecordModifier.get004ControlFieldData(qmRecord.getMarcRecord());
+    if (isBlank(instanceHrid)) {
+      log.warn("setInstanceId:: 004 field is missing or empty for externalId: {}", qmRecord.getExternalId());
+      throw new IllegalStateException("004 field is missing or empty in MARC holdings record");
     }
+    var instanceId = folioRecordInstanceService.getInstanceIdByHrid(instanceHrid);
+    mappedRecord.setInstanceId(instanceId);
   }
 }

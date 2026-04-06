@@ -19,6 +19,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickMarcEdit, QuickMarcRecord> {
 
+  private static final int LEADER_RECORD_STATUS_POSITION = 5;
+  private static final char LEADER_RECORD_STATUS_DELETED = 'd';
+
   private final Converter<BaseQuickMarcRecord, Record> marcConverter;
   private final Converter<MarcFormat, MappingRecordType> toMappingRecordTypeConverter;
   private final Converter<MarcFormat, RecordType> toRecordTypeConverter;
@@ -33,11 +36,18 @@ public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickM
       .mappingRecordType(toMappingRecordTypeConverter.convert(source.getMarcFormat()))
       .sourceRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
       .sourceVersion(source.getSourceVersion())
-      .suppressDiscovery(source.getSuppressDiscovery())
+      .suppressDiscovery(isLeaderStatusDeleted(source.getLeader())
+        || Boolean.TRUE.equals(source.getSuppressDiscovery()))
       .externalId(source.getExternalId())
       .externalHrid(source.getExternalHrid())
       .parsedRecordId(source.getParsedRecordId())
       .parsedRecordDtoId(source.getParsedRecordDtoId())
       .build();
+  }
+
+  private static boolean isLeaderStatusDeleted(String leader) {
+    return leader != null
+      && leader.length() > LEADER_RECORD_STATUS_POSITION
+      && leader.charAt(LEADER_RECORD_STATUS_POSITION) == LEADER_RECORD_STATUS_DELETED;
   }
 }

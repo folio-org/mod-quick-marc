@@ -4,6 +4,7 @@ import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -163,6 +164,44 @@ class InstanceChangeRecordServiceTest {
     verify(sourceRecordService).update(eq(UUID.fromString(existingSourceRecord.getMatchedId())), any(Record.class));
     verify(folioRecordService).update(quickMarcEdit.getExternalId(), instanceRecord);
     verify(linksService).updateRecordLinks(quickMarcRecord);
+  }
+
+  @Test
+  @SuppressWarnings("checkstyle:methodLength")
+  void shouldSetStaffSuppressAndDiscoverySuppressWhenLeaderStatusIsDeleted() {
+    var recordId = randomUUID();
+    var quickMarcEdit = new QuickMarcEdit();
+    quickMarcEdit.setParsedRecordId(recordId);
+    quickMarcEdit.setParsedRecordDtoId(randomUUID());
+    quickMarcEdit.setExternalId(randomUUID());
+    quickMarcEdit.setSourceVersion(1);
+    quickMarcEdit.setLeader("00000dam a2200000 a 4500"); // LDR/05 = 'd'
+
+    mockDefaultValuesPopulation(quickMarcEdit);
+    mockSuccessfulValidation(quickMarcEdit);
+
+    var quickMarcRecord = createQuickMarcRecord();
+    quickMarcRecord.setParsedRecordId(recordId);
+    quickMarcRecord.setParsedRecordDtoId(quickMarcEdit.getParsedRecordDtoId());
+    quickMarcRecord.setExternalId(quickMarcEdit.getExternalId());
+    quickMarcRecord.setSourceVersion(1);
+    quickMarcRecord.setSource(quickMarcEdit);
+    when(conversionService.convert(quickMarcEdit, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
+
+    var existingSourceRecord = createSourceRecord();
+    existingSourceRecord.setGeneration(1);
+    when(sourceRecordService.getByExternalId(quickMarcRecord.getExternalId())).thenReturn(existingSourceRecord);
+
+    var instanceRecord = createInstanceRecord();
+    instanceRecord.setStaffSuppress(false);
+    instanceRecord.setDiscoverySuppress(false);
+    when(folioRecordService.get(quickMarcEdit.getExternalId())).thenReturn(instanceRecord);
+    when(mappingService.mapUpdatedRecord(quickMarcRecord, instanceRecord)).thenReturn(instanceRecord);
+
+    service.update(recordId, quickMarcEdit);
+
+    assertTrue(instanceRecord.getStaffSuppress(), "staffSuppress should be true when LDR/05 is 'd'");
+    assertTrue(instanceRecord.getDiscoverySuppress(), "discoverySuppress should be true when LDR/05 is 'd'");
   }
 
   @Test

@@ -92,7 +92,11 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     log.debug("postProcess:: Post processing of record with externalId: {}", qmRecord.getExternalId());
   }
 
-  protected void updateNonRequiredFields(QuickMarcRecord qmRecord){
+  protected void updateNonRequiredFields(QuickMarcRecord qmRecord) {
+    // No-op by default
+  }
+
+  protected void postProcessMappedRecord(QuickMarcRecord qmRecord, T mappedRecord) {
     // No-op by default
   }
 
@@ -136,6 +140,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     log.debug("updateFolioRecord:: Updating folio record with id: {}", externalId);
     var existingRecord = folioRecordService.get(externalId);
     var mappedRecord = getMappedRecord(qmRecord, existingRecord);
+    postProcessMappedRecord(qmRecord, mappedRecord);
     folioRecordService.update(externalId, mappedRecord);
     log.debug("updateFolioRecord:: Folio record updated successfully for id: {}", externalId);
   }

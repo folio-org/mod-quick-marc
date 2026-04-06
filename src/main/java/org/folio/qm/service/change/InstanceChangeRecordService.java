@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class InstanceChangeRecordService extends AbstractChangeRecordService<InstanceFolioRecord> {
 
+  private static final int LEADER_RECORD_STATUS_POSITION = 5;
+  private static final char LEADER_RECORD_STATUS_DELETED = 'd';
+
   private final LinksService linksService;
 
   protected InstanceChangeRecordService(ValidationService validationService,
@@ -57,6 +60,17 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   }
 
   @Override
+  protected void postProcessMappedRecord(QuickMarcRecord qmRecord, InstanceFolioRecord mappedRecord) {
+    var leader = qmRecord.getSource().getLeader();
+    if (isLeaderStatusDeleted(leader)) {
+      log.debug("postProcessMappedRecord:: LDR/05 is '{}', setting staffSuppress and discoverySuppress to true",
+        LEADER_RECORD_STATUS_DELETED);
+      mappedRecord.setStaffSuppress(true);
+      mappedRecord.setDiscoverySuppress(true);
+    }
+  }
+
+  @Override
   protected ExternalIdsHolder getExternalIdsHolder(QuickMarcRecord qmRecord) {
     return new ExternalIdsHolder()
       .withInstanceId(qmRecord.getExternalId().toString())
@@ -66,5 +80,11 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   @Override
   protected boolean adding001FieldRequired() {
     return true;
+  }
+
+  private static boolean isLeaderStatusDeleted(String leader) {
+    return leader != null
+      && leader.length() > LEADER_RECORD_STATUS_POSITION
+      && leader.charAt(LEADER_RECORD_STATUS_POSITION) == LEADER_RECORD_STATUS_DELETED;
   }
 }

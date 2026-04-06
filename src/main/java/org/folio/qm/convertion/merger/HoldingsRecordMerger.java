@@ -12,6 +12,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface HoldingsRecordMerger extends FolioRecordMerger<HoldingsFolioRecord, HoldingsRecord> {
 
+  @Mapping(target = "discoverySuppress", ignore = true)
   @Mapping(target = "statisticalCodeIds", ignore = true)
   @Mapping(target = "administrativeNotes", ignore = true)
   @Mapping(target = "additionalCallNumbers", ignore = true)

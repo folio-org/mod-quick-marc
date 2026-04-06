@@ -149,6 +149,7 @@ public abstract class AbstractChangeRecordService<T extends FolioRecord> impleme
     log.debug("createFolioRecord:: Creating folio record");
     updateNonRequiredFields(qmRecord);
     var mappedRecord = getMappedRecord(qmRecord);
+    postProcessMappedRecord(qmRecord, mappedRecord);
     var createdRecord = folioRecordService.create(mappedRecord);
     qmRecord.setExternalId(UUID.fromString(createdRecord.getId()));
     qmRecord.setExternalHrid(createdRecord.getHrid());

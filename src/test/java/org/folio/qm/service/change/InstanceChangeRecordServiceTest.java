@@ -442,6 +442,33 @@ class InstanceChangeRecordServiceTest {
       .build();
   }
 
+  @Test
+  void shouldSetStaffSuppressAndDiscoverySuppressWhenLeaderStatusIsDeletedOnCreate() {
+    var quickMarcCreate = new QuickMarcCreate();
+    quickMarcCreate.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    quickMarcCreate.setLeader("00000dam a2200000 a 4500"); // LDR/05 = 'd'
+
+    mockDefaultValuesPopulation(quickMarcCreate);
+    mockSuccessfulValidation(quickMarcCreate);
+
+    var quickMarcRecord = createQuickMarcRecordForCreate();
+    quickMarcRecord.setSource(quickMarcCreate);
+    when(conversionService.convert(quickMarcCreate, QuickMarcRecord.class)).thenReturn(quickMarcRecord);
+
+    var instanceRecord = createInstanceRecord();
+    instanceRecord.setStaffSuppress(false);
+    instanceRecord.setDiscoverySuppress(false);
+    when(mappingService.mapNewRecord(quickMarcRecord)).thenReturn(instanceRecord);
+    when(folioRecordService.create(instanceRecord)).thenReturn(instanceRecord);
+    when(sourceRecordService.create(any(Record.class))).thenReturn(createSourceRecord());
+    when(conversionService.convert(any(), eq(QuickMarcView.class))).thenReturn(new QuickMarcView());
+
+    service.create(quickMarcCreate);
+
+    assertTrue(instanceRecord.getStaffSuppress(), "staffSuppress should be true when LDR/05 is 'd'");
+    assertTrue(instanceRecord.getDiscoverySuppress(), "discoverySuppress should be true when LDR/05 is 'd'");
+  }
+
   private InstanceFolioRecord createInstanceRecord() {
     var instanceRecord = new InstanceFolioRecord();
     instanceRecord.setId(randomUUID().toString());

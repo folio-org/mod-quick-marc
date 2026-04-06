@@ -13,14 +13,12 @@ import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.ValidationService;
 import org.folio.qm.util.MarcRecordModifier;
+import org.folio.qm.util.MarcUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
 public class InstanceChangeRecordService extends AbstractChangeRecordService<InstanceFolioRecord> {
-
-  private static final int LEADER_RECORD_STATUS_POSITION = 5;
-  private static final char LEADER_RECORD_STATUS_DELETED = 'd';
 
   private final LinksService linksService;
 
@@ -61,10 +59,8 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
 
   @Override
   protected void postProcessMappedRecord(QuickMarcRecord qmRecord, InstanceFolioRecord mappedRecord) {
-    var leader = qmRecord.getSource().getLeader();
-    if (isLeaderStatusDeleted(leader)) {
-      log.debug("postProcessMappedRecord:: LDR/05 is '{}', setting staffSuppress and discoverySuppress to true",
-        LEADER_RECORD_STATUS_DELETED);
+    if (MarcUtils.isLeaderStatusDeleted(qmRecord.getSource().getLeader())) {
+      log.debug("postProcessMappedRecord:: LDR/05 is 'd', setting staffSuppress and discoverySuppress to true");
       mappedRecord.setStaffSuppress(true);
       mappedRecord.setDiscoverySuppress(true);
     }
@@ -80,11 +76,5 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
   @Override
   protected boolean adding001FieldRequired() {
     return true;
-  }
-
-  private static boolean isLeaderStatusDeleted(String leader) {
-    return leader != null
-      && leader.length() > LEADER_RECORD_STATUS_POSITION
-      && leader.charAt(LEADER_RECORD_STATUS_POSITION) == LEADER_RECORD_STATUS_DELETED;
   }
 }

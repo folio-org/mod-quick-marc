@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.qm.convertion.elements.LeaderItem;
 import org.folio.qm.domain.dto.FieldItem;
 import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.marc4j.marc.Subfield;
@@ -23,6 +24,7 @@ public final class MarcUtils {
     Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 
   private static final String DOLLAR_EXPRESSION = "{dollar}";
+  private static final char LEADER_RECORD_STATUS_DELETED = 'd';
 
   private MarcUtils() {
   }
@@ -72,6 +74,20 @@ public final class MarcUtils {
 
   public static boolean isValidUuid(String id) {
     return UUID_REGEX.matcher(id).matches();
+  }
+
+  /**
+   * Returns true if the MARC leader record status (LDR/05) indicates the record is deleted.
+   * Uses {@link LeaderItem#BIB_RECORD_STATUS} to resolve the leader position.
+   *
+   * @param leader the MARC leader string
+   * @return true when LDR/05 is {@code 'd'}, false otherwise
+   */
+  public static boolean isLeaderStatusDeleted(String leader) {
+    var position = LeaderItem.BIB_RECORD_STATUS.getPosition();
+    return leader != null
+      && leader.length() > position
+      && leader.charAt(position) == LEADER_RECORD_STATUS_DELETED;
   }
 
   /**

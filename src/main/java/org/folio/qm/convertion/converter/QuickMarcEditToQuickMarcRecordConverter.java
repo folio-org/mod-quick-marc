@@ -7,6 +7,7 @@ import org.folio.qm.domain.dto.QuickMarcEdit;
 import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
+import org.folio.qm.util.MarcUtils;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickMarcEdit, QuickMarcRecord> {
-
-  private static final int LEADER_RECORD_STATUS_POSITION = 5;
-  private static final char LEADER_RECORD_STATUS_DELETED = 'd';
 
   private final Converter<BaseQuickMarcRecord, Record> marcConverter;
   private final Converter<MarcFormat, MappingRecordType> toMappingRecordTypeConverter;
@@ -36,18 +34,12 @@ public class QuickMarcEditToQuickMarcRecordConverter implements Converter<QuickM
       .mappingRecordType(toMappingRecordTypeConverter.convert(source.getMarcFormat()))
       .sourceRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
       .sourceVersion(source.getSourceVersion())
-      .suppressDiscovery(isLeaderStatusDeleted(source.getLeader())
+      .suppressDiscovery(MarcUtils.isLeaderStatusDeleted(source.getLeader())
         || Boolean.TRUE.equals(source.getSuppressDiscovery()))
       .externalId(source.getExternalId())
       .externalHrid(source.getExternalHrid())
       .parsedRecordId(source.getParsedRecordId())
       .parsedRecordDtoId(source.getParsedRecordDtoId())
       .build();
-  }
-
-  private static boolean isLeaderStatusDeleted(String leader) {
-    return leader != null
-      && leader.length() > LEADER_RECORD_STATUS_POSITION
-      && leader.charAt(LEADER_RECORD_STATUS_POSITION) == LEADER_RECORD_STATUS_DELETED;
   }
 }

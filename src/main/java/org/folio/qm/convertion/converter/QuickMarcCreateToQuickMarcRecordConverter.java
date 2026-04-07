@@ -7,6 +7,7 @@ import org.folio.qm.domain.dto.QuickMarcCreate;
 import org.folio.qm.domain.model.BaseQuickMarcRecord;
 import org.folio.qm.domain.model.MappingRecordType;
 import org.folio.qm.domain.model.QuickMarcRecord;
+import org.folio.qm.util.MarcUtils;
 import org.marc4j.marc.Record;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,8 @@ public class QuickMarcCreateToQuickMarcRecordConverter implements Converter<Quic
       .marcFormat(source.getMarcFormat())
       .sourceRecordType(toRecordTypeConverter.convert(source.getMarcFormat()))
       .mappingRecordType(toMappingRecordTypeConverter.convert(source.getMarcFormat()))
-      .suppressDiscovery(source.getSuppressDiscovery())
+      .suppressDiscovery(MarcUtils.isLeaderStatusDeleted(source.getLeader())
+        || Boolean.TRUE.equals(source.getSuppressDiscovery()))
       .build();
   }
 }

@@ -236,4 +236,32 @@ class QuickMarcCreateToQuickMarcRecordConverterTest {
     newRecord.setLeader(factory.newLeader("00000cam a2200000 a 4500"));
     return newRecord;
   }
+
+  @Test
+  void shouldForceSuppressDiscoveryWhenLeaderStatusIsDeleted() {
+    var quickMarcCreate = new QuickMarcCreate();
+    quickMarcCreate.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    quickMarcCreate.setSuppressDiscovery(false);
+    quickMarcCreate.setLeader("00000dam a2200000 a 4500"); // LDR/05 = 'd'
+
+    when(marcConverter.convert(any(QuickMarcCreate.class))).thenReturn(createMarcRecord());
+
+    var result = converter.convert(quickMarcCreate);
+
+    assertTrue(result.isSuppressDiscovery());
+  }
+
+  @Test
+  void shouldPreserveSuppressDiscoveryFalseWhenLeaderStatusIsNotDeleted() {
+    var quickMarcCreate = new QuickMarcCreate();
+    quickMarcCreate.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    quickMarcCreate.setSuppressDiscovery(false);
+    quickMarcCreate.setLeader("00000cam a2200000 a 4500"); // LDR/05 = 'c', not deleted
+
+    when(marcConverter.convert(any(QuickMarcCreate.class))).thenReturn(createMarcRecord());
+
+    var result = converter.convert(quickMarcCreate);
+
+    assertFalse(result.isSuppressDiscovery());
+  }
 }

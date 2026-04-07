@@ -1,6 +1,7 @@
 package org.folio.qm.convertion.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -150,6 +151,40 @@ class QuickMarcEditToQuickMarcRecordConverterTest {
     verify(toRecordTypeConverter).convert(MarcFormat.BIBLIOGRAPHIC);
     assertEquals(MappingRecordType.MARC_BIB, result.getMappingRecordType());
     assertEquals(RecordType.MARC_BIB, result.getSourceRecordType());
+  }
+
+  @Test
+  void shouldForceSuppressDiscoveryWhenLeaderStatusIsDeleted() {
+    var quickMarcEdit = new QuickMarcEdit();
+    quickMarcEdit.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    quickMarcEdit.setSuppressDiscovery(false);
+    quickMarcEdit.setLeader("00000dam a2200000 a 4500"); // LDR/05 = 'd'
+    quickMarcEdit.setExternalId(UUID.randomUUID());
+    quickMarcEdit.setParsedRecordId(UUID.randomUUID());
+    quickMarcEdit.setParsedRecordDtoId(UUID.randomUUID());
+
+    when(marcConverter.convert(any(QuickMarcEdit.class))).thenReturn(createMarcRecord());
+
+    var result = converter.convert(quickMarcEdit);
+
+    assertTrue(result.isSuppressDiscovery());
+  }
+
+  @Test
+  void shouldPreserveSuppressDiscoveryFalseWhenLeaderStatusIsNotDeleted() {
+    var quickMarcEdit = new QuickMarcEdit();
+    quickMarcEdit.setMarcFormat(MarcFormat.BIBLIOGRAPHIC);
+    quickMarcEdit.setSuppressDiscovery(false);
+    quickMarcEdit.setLeader("00000cam a2200000 a 4500"); // LDR/05 = 'c', not deleted
+    quickMarcEdit.setExternalId(UUID.randomUUID());
+    quickMarcEdit.setParsedRecordId(UUID.randomUUID());
+    quickMarcEdit.setParsedRecordDtoId(UUID.randomUUID());
+
+    when(marcConverter.convert(any(QuickMarcEdit.class))).thenReturn(createMarcRecord());
+
+    var result = converter.convert(quickMarcEdit);
+
+    assertFalse(result.isSuppressDiscovery());
   }
 
   private QuickMarcEdit createQuickMarcEdit(MarcFormat marcFormat) {

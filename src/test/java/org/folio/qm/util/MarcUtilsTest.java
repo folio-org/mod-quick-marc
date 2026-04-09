@@ -114,4 +114,24 @@ class MarcUtilsTest {
       .extracting(Subfield::getData)
       .containsExactly("$bb", "$cc");
   }
+
+  @Test
+  void isLeaderStatusDeleted_returnsTrueWhenLdr05IsD() {
+    assertTrue(MarcUtils.isLeaderStatusDeleted("00000dam a2200000 a 4500"));
+  }
+
+  @Test
+  void isLeaderStatusDeleted_returnsFalseWhenLdr05IsNotD() {
+    assertFalse(MarcUtils.isLeaderStatusDeleted("00000cam a2200000 a 4500"));
+  }
+
+  @Test
+  void isLeaderStatusDeleted_returnsFalseWhenLeaderIsNull() {
+    assertFalse(MarcUtils.isLeaderStatusDeleted(null));
+  }
+
+  @Test
+  void isLeaderStatusDeleted_returnsFalseWhenLeaderIsTooShort() {
+    assertFalse(MarcUtils.isLeaderStatusDeleted("0000"));
+  }
 }

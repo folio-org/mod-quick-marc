@@ -13,6 +13,7 @@ import org.folio.qm.service.storage.folio.FolioRecordService;
 import org.folio.qm.service.storage.source.SourceRecordService;
 import org.folio.qm.service.validation.ValidationService;
 import org.folio.qm.util.MarcRecordModifier;
+import org.folio.qm.util.MarcUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,6 +55,15 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
     log.debug("postProcess:: Updating links for instance with id: {}", qmRecord.getExternalId());
     linksService.updateRecordLinks(qmRecord);
     log.debug("postProcess:: Links updated successfully for instance with id: {}", qmRecord.getExternalId());
+  }
+
+  @Override
+  protected void postProcessMappedRecord(QuickMarcRecord qmRecord, InstanceFolioRecord mappedRecord) {
+    if (MarcUtils.isLeaderStatusDeleted(qmRecord.getSource().getLeader())) {
+      log.debug("postProcessMappedRecord:: LDR/05 is 'd', setting staffSuppress and discoverySuppress to true");
+      mappedRecord.setStaffSuppress(true);
+      mappedRecord.setDiscoverySuppress(true);
+    }
   }
 
   @Override

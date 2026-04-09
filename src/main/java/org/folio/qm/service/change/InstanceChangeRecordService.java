@@ -2,6 +2,7 @@ package org.folio.qm.service.change;
 
 import lombok.extern.log4j.Log4j2;
 import org.folio.ExternalIdsHolder;
+import org.folio.processing.util.MarcRecordNormalizer;
 import org.folio.qm.convertion.RecordConversionService;
 import org.folio.qm.domain.dto.MarcFormat;
 import org.folio.qm.domain.model.InstanceFolioRecord;
@@ -45,7 +46,7 @@ public class InstanceChangeRecordService extends AbstractChangeRecordService<Ins
     var marcRecord = qmRecord.getMarcRecord();
     MarcRecordModifier.remove003Field(marcRecord);
     log.debug("updateNonRequiredFields:: normalizing 035 fields in the instance marc record if exists");
-    MarcRecordModifier.normalize035Field(marcRecord);
+    MarcRecordNormalizer.normalize035Field(marcRecord);
     qmRecord.buildParsedContent();
   }
 

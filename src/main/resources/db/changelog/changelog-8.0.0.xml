@@ -5,4 +5,5 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
   <include file="changes/v8.0.0/remove-legacy-tables.xml" relativeToChangelogFile="true"/>
+  <include file="changes/v8.0.0/update-marc-specification-bibliographic.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -27,6 +27,7 @@
 * Handle 003 and 035 fields in MARC Record Create flow ([MODQM-497](https://folio-org.atlassian.net/browse/MODQM-497))
 * Use Setting API to determine extended authority mapping ([MODQM-501](https://folio-org.atlassian.net/browse/MODQM-501))
 * Use MarcRecordNormalizer from data-import-processing-core for MARC OCLC 035 value normalization ([MODQM-498](https://folio-org.atlassian.net/browse/MODQM-498))
+*  Update LoC MARC bib specification for field 008 position 25 to allow 'r' value ([MODQM-511](https://folio-org.atlassian.net/browse/MODQM-511))
 
 ### Bug fixes
 * Set staffSuppress, discoverySuppress and suppressDiscovery to true when LDR/05 is 'd' on create or update ([MODQM-509](https://folio-org.atlassian.net/browse/MODQM-509))

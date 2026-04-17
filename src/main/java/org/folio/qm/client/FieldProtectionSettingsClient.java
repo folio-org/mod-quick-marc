@@ -1,5 +1,6 @@
 package org.folio.qm.client;
 
+import java.util.Optional;
 import org.folio.MarcFieldProtectionSettingsCollection;
 import org.springframework.http.MediaType;
 import org.springframework.web.service.annotation.GetExchange;
@@ -9,5 +10,5 @@ import org.springframework.web.service.annotation.HttpExchange;
 public interface FieldProtectionSettingsClient {
 
   @GetExchange(value = "/marc?limit=1000")
-  MarcFieldProtectionSettingsCollection getFieldProtectionSettings();
+  Optional<MarcFieldProtectionSettingsCollection> getFieldProtectionSettings();
 }

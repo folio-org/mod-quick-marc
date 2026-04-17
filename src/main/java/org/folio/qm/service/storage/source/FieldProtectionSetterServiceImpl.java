@@ -31,10 +31,13 @@ public class FieldProtectionSetterServiceImpl implements FieldProtectionSetterSe
     log.debug("applyFieldProtection:: Applying field protection for record with {} fields", 
       qmRecord.getFields().size());
     var fieldProtectionSettings = dicsClient.getFieldProtectionSettings();
-    log.trace("applyFieldProtection:: Retrieved {} field protection settings", 
-      fieldProtectionSettings.getMarcFieldProtectionSettings().size());
-    qmRecord.getFields().forEach(field -> setProtectedStatus(field, fieldProtectionSettings));
-    log.debug("applyFieldProtection:: Field protection applied successfully");
+    if  (fieldProtectionSettings.isPresent()) {
+      var fieldProtectionCollection = fieldProtectionSettings.get();
+      log.trace("applyFieldProtection:: Retrieved {} field protection settings",
+        fieldProtectionCollection.getMarcFieldProtectionSettings().size());
+      qmRecord.getFields().forEach(field -> setProtectedStatus(field, fieldProtectionCollection));
+      log.debug("applyFieldProtection:: Field protection applied successfully");
+    }
   }
 
   private void setProtectedStatus(FieldItem field, MarcFieldProtectionSettingsCollection settings) {

@@ -6,6 +6,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.folio.MarcFieldProtectionSettingsCollection;
 import org.folio.qm.client.FieldProtectionSettingsClient;
@@ -40,7 +41,7 @@ class FieldProtectionSetterServiceImplTest {
   void testFieldProtectionSettingsSet(MarcFieldProtectionSetting setting, FieldItem fieldItem) {
     var settingsCollection = new MarcFieldProtectionSettingsCollection();
     settingsCollection.setMarcFieldProtectionSettings(List.of(setting));
-    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
+    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(Optional.of(settingsCollection));
 
     var marcView = new QuickMarcView().fields(List.of(fieldItem));
     service.applyFieldProtection(marcView);
@@ -56,7 +57,7 @@ class FieldProtectionSetterServiceImplTest {
     var settingsCollection = new MarcFieldProtectionSettingsCollection();
     var setting = createMarcFieldProtectionSetting("245", ANY, ANY, "b", ANY);
     settingsCollection.setMarcFieldProtectionSettings(List.of(setting));
-    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(settingsCollection);
+    when(protectionSettingsClient.getFieldProtectionSettings()).thenReturn(Optional.of(settingsCollection));
 
     var marcView = new QuickMarcView().fields(List.of(fieldItem));
     service.applyFieldProtection(marcView);

@@ -1,15 +1,39 @@
-## v8.0.0 YYYY-mm-DD
+## v8.1.0 YYYY-mm-DD
+### Breaking changes
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### New APIs versions
+* Provides `API_NAME vX.Y`
+* Requires `API_NAME vX.Y`
+
+### Features
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Bug fixes
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Tech Dept
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Dependencies
+* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
+* Add `LIB_NAME VERSION`
+* Remove `LIB_NAME`
+
+---
+
+## v8.0.0 2026-04-17
 ### Breaking changes
 * Update QuickMARC to use generation field from SRS for optimistic locking ([MODQM-478](https://folio-org.atlassian.net/browse/MODQM-478))
 * Upgrade module to SpringBoot 4.0.x and Spring 7.0.x ([MODQM-487](https://folio-org.atlassian.net/browse/MODQM-487))
 
 ### New APIs versions
-* Provides `API_NAME vX.Y`
-* Changed to optional: `instance-authority-links`, `instance-authority-linking-rules`, `instance-authority-links-suggestions`
+* Provides `marc-records-editor v7.0`
+* Changed to optional: `field-protection-settings`, `instance-authority-links`, `instance-authority-linking-rules`, `instance-authority-links-suggestions`
 * Optional `mapping-metadata-provider v1.1`
 * Optional `authority-storage v2.0`
 * Optional `instance-storage v11.2`
-* Optional `holdings-storage v8.8`
+* Optional `holdings-storage v8.1`
 * Optional `instance-preceding-succeeding-titles v0.1`
 * Optional `authorities-config v1.0`
 * Requires `source-storage-snapshots v2.1`
@@ -27,7 +51,7 @@
 * Handle 003 and 035 fields in MARC Record Create flow ([MODQM-497](https://folio-org.atlassian.net/browse/MODQM-497))
 * Use Setting API to determine extended authority mapping ([MODQM-501](https://folio-org.atlassian.net/browse/MODQM-501))
 * Use MarcRecordNormalizer from data-import-processing-core for MARC OCLC 035 value normalization ([MODQM-498](https://folio-org.atlassian.net/browse/MODQM-498))
-*  Update LoC MARC bib specification for field 008 position 25 to allow 'r' value ([MODQM-511](https://folio-org.atlassian.net/browse/MODQM-511))
+* Update LoC MARC bib specification for field 008 position 25 to allow 'r' value ([MODQM-511](https://folio-org.atlassian.net/browse/MODQM-511))
 
 ### Bug fixes
 * Set staffSuppress, discoverySuppress and suppressDiscovery to true when LDR/05 is 'd' on create or update ([MODQM-509](https://folio-org.atlassian.net/browse/MODQM-509))
@@ -45,11 +69,18 @@
 * Add "apt upgrade" to Dockerfile, add .dockerignore
 
 ### Dependencies
-* Bump `LIB_NAME` from `OLD_VERSION` to `NEW_VERSION`
-* Add `LIB_NAME VERSION`
-* Remove `LIB_NAME`
-* Add `data-import-processing-core v4.5.0-SNAPSHOT`
-* Add `mod-inventory-storage-dto v30.0.0-SNAPSHOT`
+* Bump `spring-boot` from `3.4.3` to `4.0.5`
+* Bump `folio-spring-support` from `9.0.0` to `10.0.0`
+* Bump `folio-service-tools` from `5.0.0` to `6.0.0`
+* Bump `mod-record-specifications-validator` from `2.0.0` to `3.0.0`
+* Add `data-import-processing-core v5.0.0`
+* Add `mod-inventory-storage-dto v30.0.0`
+* Add `spring-boot-starter-webmvc-test`
+* Add `spring-boot-devtools`
+* Add `spring-boot-docker-compose`
+* Replace `spring-kafka` with `spring-boot-starter-kafka`
+* Replace `hibernate-validator` with `spring-boot-starter-validation`
+* Remove `jackson-module-jaxb-annotations`
 
 ---
 

@@ -64,6 +64,16 @@ class MarcSpecificationsIT extends BaseIT {
   }
 
   @Test
+  void testGetMarcSpecificationsSuccess_allowedValuesIn25PositionExists() throws Exception {
+    log.info("===== Verify GET MARC Specifications allowedValues in 25 position: Successful =====");
+
+    doGet(marcSpecificationsByRecordTypeAndFieldTag(RecordType.MARC_BIBLIOGRAPHIC.getValue(), "008"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.spec.types[6].items[8].allowedValues[8].name").value("Remote sensing image"))
+      .andExpect(jsonPath("$.spec.types[6].items[8].allowedValues[8].code").value("r"));
+  }
+
+  @Test
   void testGetMarcSpecificationsBadRequest() throws Exception {
     log.info("===== Verify GET MARC Specifications: Bad request =====");
 

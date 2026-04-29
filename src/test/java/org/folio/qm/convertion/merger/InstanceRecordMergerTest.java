@@ -23,6 +23,8 @@ class InstanceRecordMergerTest {
   private static final String SOURCE_NOTE = "source-note";
   private static final String TARGET_STATUS_ID = "target-status-id";
   private static final String SOURCE_STATUS_ID = "source-status-id";
+  private static final String TARGET_STATUS_UPDATED_DATE = "target-status-updated-date";
+  private static final String SOURCE_STATUS_UPDATED_DATE = "source-status-updated-date";
   private static final String TARGET_STATISTICAL_CODE_ID = "target-statistical-code-id";
   private static final String SOURCE_STATISTICAL_CODE_ID = "source-statistical-code-id";
   private static final String TARGET_NATURE_OF_CONTENT_ID = "target-nature-of-content-id";
@@ -56,6 +58,7 @@ class InstanceRecordMergerTest {
     source.setNatureOfContentTermIds(List.of(SOURCE_NATURE_OF_CONTENT_ID));
     source.setPreviouslyHeld(false);
     source.setStatusId(SOURCE_STATUS_ID);
+    source.setStatusUpdatedDate(SOURCE_STATUS_UPDATED_DATE);
     source.setAdministrativeNotes(List.of(SOURCE_NOTE));
     var target = createInstanceRecord();
     target.setStaffSuppress(true);
@@ -64,6 +67,7 @@ class InstanceRecordMergerTest {
     target.setNatureOfContentTermIds(new LinkedHashSet<>(Set.of(TARGET_NATURE_OF_CONTENT_ID)));
     target.setPreviouslyHeld(true);
     target.setStatusId(TARGET_STATUS_ID);
+    target.setStatusUpdatedDate(TARGET_STATUS_UPDATED_DATE);
     target.setAdministrativeNotes(List.of(TARGET_NOTE));
 
     // Act
@@ -77,6 +81,7 @@ class InstanceRecordMergerTest {
     assertThat(target.getNatureOfContentTermIds()).containsExactly(TARGET_NATURE_OF_CONTENT_ID);
     assertThat(target.getPreviouslyHeld()).isTrue();
     assertThat(target.getStatusId()).isEqualTo(TARGET_STATUS_ID);
+    assertThat(target.getStatusUpdatedDate()).isEqualTo(TARGET_STATUS_UPDATED_DATE);
   }
 
   @Test

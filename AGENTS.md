@@ -1,4 +1,4 @@
-# Copilot Instructions — mod-quick-marc
+# AGENTS.md — mod-quick-marc
 
 Spring Boot 4 / Java 21 backend module that provides a REST API for editing MARC bibliographic, holdings, and authority records stored in Source Record Storage (SRS).
 
@@ -112,7 +112,7 @@ The `specifications` cache uses custom config keys (`folio.cache.spec.specificat
 - Branch names follow Jira issue IDs: `MODQM-NNN` or `MODQM-NNN-short-description`
 - Commits follow [Conventional Commits](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/1400654/Conventional+Commits+Guideline): `fix(scope): message`, `feat(scope): message`, `docs: message`, etc.
 - `NEWS.md` must be updated for every bug fix or feature under the current version section.
-- PRs must follow `.github/PULL_REQUEST_TEMPLATE.md`.
+- PRs must follow the template in [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md): fill in **Purpose**, **Approach**, and tick all items in the **Changes Checklist** (API changes, schema changes, interface versions, permissions, logging, unit/integration/manual testing, NEWS).
 
 ### Sonar exclusions
 `entity`, `client`, and `repository` packages are excluded from SonarQube analysis (see `pom.xml` `sonar.exclusions`). Do not add logic to these packages.
@@ -120,4 +120,4 @@ The `specifications` cache uses custom config keys (`folio.cache.spec.specificat
 ---
 
 ## Feature documentation
-Behavioral feature docs live in `docs/features/`. Each file follows the structure defined in `.github/prompts/` (if present) with fixed sections: What it does, Why it exists, Entry point(s), Business rules, Error behavior, Caching, Configuration, Dependencies. Feature names describe observable behavior, not implementation mechanisms.
+Behavioral feature docs live in `docs/features/`. Each file uses fixed sections in this order: What it does, Why it exists, Entry point(s), Business rules, Error behavior, Caching, Configuration, Dependencies. Feature names describe observable behavior, not implementation mechanisms.

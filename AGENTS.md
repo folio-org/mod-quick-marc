@@ -111,6 +111,9 @@ The `specifications` cache uses custom config keys (`folio.cache.spec.specificat
 ### Commit and branch conventions
 - Branch names follow Jira issue IDs: `MODQM-NNN` or `MODQM-NNN-short-description`
 - Commits follow [Conventional Commits](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/1400654/Conventional+Commits+Guideline): `fix(scope): message`, `feat(scope): message`, `docs: message`, etc.
+  The **scope** should be a feature ID from [`docs/features/`](docs/features/):
+  `get-record` · `create-record` · `update-record` · `validate-record` · `links-suggestions` · `specification-refresh`
+  Example: `fix(get-record): preserve leading blanks in MARC 008 Date Entered`
 - `NEWS.md` must be updated for every bug fix or feature under the current version section.
 - PRs must follow the template in [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md): fill in **Purpose**, **Approach**, and tick all items in the **Changes Checklist** (API changes, schema changes, interface versions, permissions, logging, unit/integration/manual testing, NEWS).
 

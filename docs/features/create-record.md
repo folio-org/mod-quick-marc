@@ -18,12 +18,18 @@ Cataloguers need the ability to create original MARC records without importing f
 | POST | /records-editor/records | Creates a new MARC record and its linked FOLIO entity |
 
 ## Business rules and constraints
+
+#### Sequencing
 - **Validation before creation:** The MARC record is validated before creation. For Bibliographic and Authority formats, validation is run against the MARC specification with the `001 MISSING_FIELD` rule skipped (the 001 field is added automatically after the FOLIO entity is created). Holdings records skip specification-based validation.
 - **Inventory first:** The inventory entity is created first; the resulting external UUID and HRID are stored in the new MARC record.
+
+#### Field generation
 - **Auto-added fields:** Required MARC fields are added automatically after inventory creation:
   - A `999 $i` field containing the external entity UUID is added for all record types.
   - A `001` field containing the HRID is added for Instance and Holdings records.
 - **Instance normalisation:** For Instance (Bibliographic) records, `003` fields are removed and `035` fields are normalised before the SRS record is created.
+
+#### Persistence
 - **Initial SRS state:** The SRS record is created with `generation = 0`, `state = ACTUAL`, and `deleted = false`.
 
 ## Dependencies and interactions

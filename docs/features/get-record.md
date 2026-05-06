@@ -18,10 +18,16 @@ The quickMARC editor needs to load an existing MARC record for display and editi
 | GET | /records-editor/records | Returns a `quickMarcView` for the given external entity UUID |
 
 ## Business rules and constraints
+
+#### Input validation
 - **External ID:** `externalId` query parameter is required and must be a valid UUID.
+
+#### Response enrichment
 - **Field protection:** Flags are applied based on MARC field protection settings fetched from the data-import-converter-storage service; each field's `isProtected` property reflects the result.
 - **Authority links:** Details (authority ID, natural ID, linking rule ID, link status, and error cause) are populated only for Bibliographic (`MARC_BIB`) records; Holdings and Authority records are returned without link data.
 - **Last editor info:** The `updateInfo.updatedBy` field is populated only when the underlying SRS record carries a `metadata.updatedByUserId` and the Users service resolves that ID to a user.
+
+#### MARC field handling
 - **008 blank characters:** All blank characters in the MARC 008 fixed-length field (including leading ones at positions 00-05, the Date Entered on File) are preserved and represented as `\` in the quickMARC view. Fields are padded or truncated to their expected length using `\` for any missing positions.
 
 ## Dependencies and interactions

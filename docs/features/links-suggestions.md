@@ -18,11 +18,17 @@ Manually linking MARC bibliographic fields to authority records is time-consumin
 | POST | /records-editor/links/suggestion | Returns a `quickMarcView` with authority link suggestions applied |
 
 ## Business rules and constraints
+
+#### Request parameters
 - **Authority search parameter:** The `authoritySearchParameter` query parameter controls which authority field is used to match candidates: `ID` (authority UUID) or `NATURAL_ID` (default). When not provided, `NATURAL_ID` is used.
 - **Auto-linking flag:** The `ignoreAutoLinkingEnabled` flag, when `true`, includes fields regardless of whether their linking rule has auto-linking enabled. Default is `false`.
+
+#### Processing
 - **Format conversion:** The request record is converted to the internal SRS representation before being sent to the entity-links suggestions API. The first record in the response is converted back to `quickMarcView` format.
-- **No suggestions fallback:** If the suggestions response contains no records, the original submitted `quickMarcView` is returned without modification.
 - **Linking rules:** Only fields that match a configured linking rule (from the linking-rules service) receive link details.
+
+#### Response behavior
+- **No suggestions fallback:** If the suggestions response contains no records, the original submitted `quickMarcView` is returned without modification.
 
 ## Caching
 Linking rules are cached in the `linking-rules-results` Caffeine cache (maximum 500 entries, 1-hour access TTL). The rules are fetched from the entity-links service and reused across suggestion requests.

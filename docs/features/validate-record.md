@@ -18,10 +18,14 @@ The quickMARC editor validates records on demand before the user submits a save,
 | POST | /records-editor/validate | Validates a `validatableRecord` and returns `validationResult` |
 
 ## Business rules and constraints
+
+#### Pre-processing
 - **Specification resolution:** The MARC specification used for validation is resolved by `marcFormat` from the request body (BIBLIOGRAPHIC, HOLDINGS, or AUTHORITY).
-- **Specification-guided:** Issues are produced by comparing the record's fields, indicators, and subfields against the specification fetched from the specification-storage service.
-- **Severity filter:** Only issues with severity `ERROR` are returned; warnings and informational notices are suppressed.
 - **Default field population:** Default field values are populated before validation to ensure system-managed fields do not produce false errors.
+- **Specification-guided:** Issues are produced by comparing the record's fields, indicators, and subfields against the specification fetched from the specification-storage service.
+
+#### Response format
+- **Severity filter:** Only issues with severity `ERROR` are returned; warnings and informational notices are suppressed.
 - **Help URLs:** Each returned `ValidationIssue` includes a `helpUrl` pointing to the field's specification page when available in the fetched specification.
 - **Blank indicators:** For indicator-related error codes (`INVALID_INDICATOR`, `UNDEFINED_INDICATOR`), blank indicators are represented as `\` (backslash) in the message rather than `#`.
 

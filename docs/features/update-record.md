@@ -1,7 +1,7 @@
 ---
 feature_id: update-record
 title: Update Record
-updated: 2026-04-01
+updated: 2026-05-06
 ---
 
 # Update Record
@@ -22,6 +22,7 @@ The quickMARC editor is the primary tool for cataloguers to correct or enrich MA
 - MARC records are validated against the MARC specification before saving. For Bibliographic and Authority formats, validation errors result in a `422` response with a `validationResult` payload listing issues by tag. Holdings records skip specification-based validation.
 - An optimistic-locking check compares the `_version` (generation) supplied in the request against the stored generation; a mismatch results in a `409 Conflict`.
 - When updating a Bibliographic (Instance) record, authority links embedded in the fields are extracted and written back to the entity-links service after the SRS update.
+- In the MARC 008 fixed-length field, the `Entered` sub-field (Date Entered on File, positions 00-05) is automatically set to the current date if the stored value is absent, all-blank (`\\\\\\\\\\\`), non-numeric, or the sentinel value `000000`. This ensures the field always carries a valid date after a save.
 - Holdings and Instance MARC-to-FOLIO field mapping uses `SET_TO_NULL` merge semantics: fields derived from MARC that are absent in the incoming record will be set to `null` in the inventory record (non-mapped fields such as `acquisitionMethod`, `temporaryLocationId`, `statisticalCodeIds`, etc., are preserved unchanged).
 - The `id`, `instanceId` (Holdings), and `version` of the existing FOLIO record are always preserved from the stored record before merge to prevent accidental overwrites.
 

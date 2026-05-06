@@ -1,7 +1,7 @@
 ---
 feature_id: get-record
 title: Get Record
-updated: 2026-04-01
+updated: 2026-05-06
 ---
 
 # Get Record
@@ -22,6 +22,7 @@ The quickMARC editor needs to load an existing MARC record for display and editi
 - Field protection flags are applied based on MARC field protection settings fetched from the data-import-converter-storage service; each field's `isProtected` property reflects the result.
 - Authority link details (authority ID, natural ID, linking rule ID, link status, and error cause) are populated only for Bibliographic (`MARC_BIB`) records; Holdings and Authority records are returned without link data.
 - The `updateInfo.updatedBy` field is populated only when the underlying SRS record carries a `metadata.updatedByUserId` and the Users service resolves that ID to a user.
+- In the MARC 008 fixed-length field, all blank characters (including leading ones at positions 00-05, the Date Entered on File) are preserved and represented as `\` in the quickMARC view. Fields are padded or truncated to their expected length using `\` for any missing positions.
 
 ## Dependencies and interactions
 - **mod-source-record-storage** – fetches the raw SRS record by external ID.

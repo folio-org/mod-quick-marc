@@ -28,7 +28,7 @@ class MarcUtilsTest {
       arguments(null, "\\\\\\\\\\"),
       arguments("", "\\\\\\\\\\"),
       arguments("hello", "hello"),
-      arguments(" hello  ", "hello"),
+      arguments(" hello  ", "\\hell"),
       arguments("this is a very long string", "this\\")
     );
   }

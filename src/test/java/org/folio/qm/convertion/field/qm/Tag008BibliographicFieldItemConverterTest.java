@@ -23,7 +23,7 @@ class Tag008BibliographicFieldItemConverterTest {
               mode = EnumSource.Mode.EXCLUDE,
               names = {"HOLDINGS", "HOLDINGS_NO_DATE_ENTERED", "HOLDINGS_WITH_GT_LEN", "HOLDINGS_WITH_LT_LEN",
                        "AUTHORITY", "AUTHORITY_NO_DATE_ENTERED", "AUTHORITY_WITH_GT_LEN", "AUTHORITY_WITH_LT_LEN",
-                       "BIB_BOOKS_WITH_LT_LEN"})
+                       "BIB_BOOKS_WITH_LT_LEN", "BIB_BOOKS_WITH_BLANK_DATE_ENTERED"})
   void testConvertField(Tag008FieldTestData testData) {
     var actualQmField = converter.convert(new FieldItem().tag("007").content(testData.getQmContent()));
     assertEquals(testData.getDtoData(), ((ControlField) actualQmField).getData());

@@ -11,6 +11,7 @@
 
 ### Bug fixes
 * Ignore `statusUpdatedDate` Instance field that is not mapped from MARC ([MODQM-514](https://folio-org.atlassian.net/browse/MODQM-514))
+* Fix MARC 008 fields shifting left when positions 00-05 contain blank characters ([MODQM-515](https://folio-org.atlassian.net/browse/MODQM-515))
 
 ### Tech Dept
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))

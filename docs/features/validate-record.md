@@ -18,12 +18,12 @@ The quickMARC editor validates records on demand before the user submits a save,
 | POST | /records-editor/validate | Validates a `validatableRecord` and returns `validationResult` |
 
 ## Business rules and constraints
-- The MARC specification used for validation is resolved by `marcFormat` from the request body (BIBLIOGRAPHIC, HOLDINGS, or AUTHORITY).
-- Validation is specification-guided: issues are produced by comparing the record's fields, indicators, and subfields against the specification fetched from the specification-storage service.
-- Only issues with severity `ERROR` are returned; warnings and informational notices are suppressed.
-- Default field values are populated before validation to ensure system-managed fields do not produce false errors.
-- Each returned `ValidationIssue` includes a `helpUrl` pointing to the field's specification page when available in the fetched specification.
-- For indicator-related error codes (`INVALID_INDICATOR`, `UNDEFINED_INDICATOR`), blank indicators are represented as `\` (backslash) in the message rather than `#`.
+- **Specification resolution:** The MARC specification used for validation is resolved by `marcFormat` from the request body (BIBLIOGRAPHIC, HOLDINGS, or AUTHORITY).
+- **Specification-guided:** Issues are produced by comparing the record's fields, indicators, and subfields against the specification fetched from the specification-storage service.
+- **Severity filter:** Only issues with severity `ERROR` are returned; warnings and informational notices are suppressed.
+- **Default field population:** Default field values are populated before validation to ensure system-managed fields do not produce false errors.
+- **Help URLs:** Each returned `ValidationIssue` includes a `helpUrl` pointing to the field's specification page when available in the fetched specification.
+- **Blank indicators:** For indicator-related error codes (`INVALID_INDICATOR`, `UNDEFINED_INDICATOR`), blank indicators are represented as `\` (backslash) in the message rather than `#`.
 
 ## Error behavior
 - `200 OK` – always returned when validation completes, even if issues are found (issues are in the response body).

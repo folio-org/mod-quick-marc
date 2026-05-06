@@ -27,9 +27,9 @@ MARC specifications are cached to avoid repeated remote calls to the specificati
   4. If the `specifications` cache is not present in the cache manager (misconfiguration), the update is skipped and a warning is logged.
 
 ## Business rules and constraints
-- Only the single specification identified by `specificationId` is refreshed; all other cache entries remain valid.
-- Cache population uses `put` (not evict), so the first request after the event does not experience a cache miss.
-- The listener operates with the concurrency configured via `KAFKA_EVENTS_CONCURRENCY` (default: `1`).
+- **Targeted refresh:** Only the single specification identified by `specificationId` is refreshed; all other cache entries remain valid.
+- **No cache miss:** Cache population uses `put` (not evict), so the first request after the event does not experience a cache miss.
+- **Concurrency:** The listener operates with the concurrency configured via `KAFKA_EVENTS_CONCURRENCY` (default: `1`).
 
 ## Configuration
 | Variable | Purpose |

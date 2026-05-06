@@ -61,7 +61,7 @@ public final class MarcUtils {
     if (length <= 0 || length == Integer.MAX_VALUE) {
       throw new IllegalArgumentException("Length must be > 0 and < 2^31-1");
     }
-    var source = masqueradeBlanks(StringUtils.trimToEmpty(sourceString));
+    var source = masqueradeBlanks(StringUtils.defaultString(sourceString));
     var sourceLength = source.length();
     if (sourceLength == length) {
       return source;

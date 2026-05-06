@@ -22,6 +22,8 @@ public enum Tag008FieldTestData {
   BIB_BOOKS_WITH_EMPTY_ITEMS("123456ghijklmnopqrabcde     klmn opstuvw", "00158caa a2200073   4500",
     getBooksWithEmptyItemsContent()),
   BIB_BOOKS_WITH_LT_LEN("123456gh", "00158caa a2200073   4500", getBooksWithLtLenContent()),
+  BIB_BOOKS_WITH_BLANK_DATE_ENTERED("      ghijklmnopqrabcdefghijklmn opstuvw", "00158caa a2200073   4500",
+    getBooksWithBlankDateEnteredContent()),
   BIB_CONTINUING("123456ghijklmnopqrab cdefghijk   lmstuvw", "00158csb a2200073   4500", getContinuingContent()),
   BIB_FILED("123456ghijklmnopqr    ab  c d      stuvw", "00158cma a2200073   4500", getFiledContent()),
   BIB_MAPS("123456ghijklmnopqrabcdef g  hi j klstuvw", "00158cea a2200073   4500", getMapsContent()),
@@ -267,6 +269,12 @@ public enum Tag008FieldTestData {
     content.put("Indx", "\\");
     content.put("LitF", "\\");
     content.put("Biog", "\\");
+    return content;
+  }
+
+  private static Map<String, Object> getBooksWithBlankDateEnteredContent() {
+    var content = getBooksNoDateEnteredContent();
+    content.put("Entered", "\\\\\\\\\\\\"); // 6 backslashes representing 6 blank positions (MODQM-515)
     return content;
   }
 

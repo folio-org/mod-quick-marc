@@ -1,3 +1,8 @@
+## v8.0.1 2026-05-12
+### Bug fixes
+* Ignore `statusUpdatedDate` Instance field that is not mapped from MARC ([MODQM-514](https://folio-org.atlassian.net/browse/MODQM-514))
+* Fix MARC 008 fields shifting left when positions 00-05 contain blank characters ([MODQM-515](https://folio-org.atlassian.net/browse/MODQM-515))
+
 ## v8.0.0 2026-04-17
 ### Breaking changes
 * Update QuickMARC to use generation field from SRS for optimistic locking ([MODQM-478](https://folio-org.atlassian.net/browse/MODQM-478))

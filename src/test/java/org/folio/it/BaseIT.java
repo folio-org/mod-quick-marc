@@ -17,12 +17,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.folio.qm.ModQuickMarcApplication;
+import org.folio.qm.util.TenantContextUtils;
 import org.folio.rspec.domain.dto.SpecificationUpdatedEvent;
+import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.spring.testing.extension.EnableKafka;
@@ -97,6 +100,11 @@ public class BaseIT {
   @Test
   void contextLoads() {
     Assertions.assertTrue(true, "Context loaded successfully");
+  }
+
+  protected void runInTenantContext(Runnable runnable) {
+    var context = new DefaultFolioExecutionContext(metadata, Map.of(TENANT, List.of(TENANT_ID)));
+    TenantContextUtils.runInFolioContext(context, runnable);
   }
 
   protected ResultActions doGet(String uri) throws Exception {

@@ -4,8 +4,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static java.util.UUID.fromString;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.folio.qm.service.validation.FieldValidationRule.IS_REQUIRED_TAG_ERROR_MSG;
 import static org.folio.qm.service.validation.FieldValidationRule.IS_UNIQUE_TAG_ERROR_MSG;
 import static org.folio.support.utils.ApiTestUtils.JOHN_USER_ID_HEADER;
@@ -41,6 +39,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wiremock.org.apache.hc.core5.http.HttpStatus.SC_NOT_FOUND;
+import static wiremock.org.apache.hc.core5.http.HttpStatus.SC_OK;
 
 import java.util.Arrays;
 import java.util.Collections;

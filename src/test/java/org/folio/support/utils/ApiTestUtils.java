@@ -5,8 +5,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.folio.spring.integration.XOkapiHeaders.USER_ID;
+import static wiremock.org.apache.hc.core5.http.HttpStatus.SC_OK;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.net.URLEncoder;

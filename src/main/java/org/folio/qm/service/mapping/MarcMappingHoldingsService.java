@@ -1,6 +1,6 @@
 package org.folio.qm.service.mapping;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import lombok.extern.log4j.Log4j2;
 import org.folio.processing.mapping.defaultmapper.MarcToHoldingsMapper;

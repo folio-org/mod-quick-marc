@@ -1,3 +1,9 @@
+## v7.0.1 2026-10-29
+### Features
+* Update LoC MARC bib specification for field 008 position 21 (Type of continuing resource) to allow 'a', 'i' and 'q' values ([MODQM-530](https://folio-org.atlassian.net/browse/MODQM-530))
+
+---
+
 ## v7.0.0 2025-03-03
 ### Breaking changes
 * Upgrade to Java 21 ([MODQM-458](https://issues.folio.org/browse/MODQM-458))

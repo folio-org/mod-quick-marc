@@ -1,3 +1,9 @@
+## v8.0.2 2026-10-29
+### Features
+* Update LoC MARC bib specification for field 008 position 21 (Type of continuing resource) to allow 'a', 'i' and 'q' values ([MODQM-530](https://folio-org.atlassian.net/browse/MODQM-530))
+
+---
+
 ## v8.0.1 2026-05-12
 ### Bug fixes
 * Ignore `statusUpdatedDate` Instance field that is not mapped from MARC ([MODQM-514](https://folio-org.atlassian.net/browse/MODQM-514))

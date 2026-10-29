@@ -2,6 +2,11 @@
 ### Features
 * Update LoC MARC bib specification for field 008 position 21 (Type of continuing resource) to allow 'a', 'i' and 'q' values ([MODQM-530](https://folio-org.atlassian.net/browse/MODQM-530))
 
+### Dependencies
+* Bump `spring-boot` from `4.0.5` to `4.1.1`
+* Bump `folio-spring-support` from `10.0.0` to `10.0.1`
+* Bump `liquibase` from `5.0.x` to `4.33.0`
+
 ---
 
 ## v8.0.1 2026-05-12
